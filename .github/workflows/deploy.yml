@@ -1,4 +1,4 @@
-name: Deploy TechNotes to GitHub Pages
+name: Deploy personal site to GitHub Pages
 on:
   push:
     branches: [main]
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+      - uses: actions/configure-pages@v5
       - run: npm install
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
