@@ -1,0 +1,1 @@
+{"name":"technotes","version":"4.0.0","private":true,"type":"module","scripts":{"dev":"astro dev","build":"astro check && astro build","preview":"astro preview"},"dependencies":{"@astrojs/mdx":"^4.0.0","@astrojs/sitemap":"^3.2.1","astro":"^5.0.0"},"devDependencies":{"typescript":"^5.7.2"}}

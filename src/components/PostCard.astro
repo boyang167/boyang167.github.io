@@ -1,0 +1,4 @@
+---
+const {entry}=Astro.props;const d=entry.data;const href=entry.collection==="notes"?`/notes/${entry.id}`:`/blog/${entry.id}`;
+---
+<a class="card" href={href}><div class="meta">{entry.collection} · {d.date.toLocaleDateString("en-CA")}</div><h3>{d.title}</h3><p>{d.description}</p><div>{d.tags.map((tag:string)=><span class="tag">{tag}</span>)}</div></a>

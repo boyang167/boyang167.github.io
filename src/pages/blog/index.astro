@@ -1,0 +1,4 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";import {getCollection} from "astro:content";const posts=(await getCollection("blog",({data})=>!data.draft)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+---
+<BaseLayout title="Blog · Boyang Wang"><main class="container"><header class="page-head"><div class="eyebrow">Technical writing</div><h1>Blog</h1><p class="muted">AI Agent, Data, Engineering and Bioprocess.</p></header><section class="post-list">{posts.map(post=><a class="post-row" href={`/blog/${post.id}`}><div class="meta"><time>{post.data.date.toLocaleDateString("en-CA")}</time><span>{post.data.category}</span></div><div><h2>{post.data.title}</h2><p class="muted">{post.data.description}</p>{post.data.tags.map(tag=><span class="tag">{tag}</span>)}</div></a>)}</section></main></BaseLayout>

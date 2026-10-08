@@ -1,0 +1,4 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";const projects=[["TechNotes","Personal knowledge hub for technical writing and retrieval.",["Astro","Markdown","GitHub Pages"]],["Data Agent","Patterns for natural-language analysis over governed data.",["RAG","Text2SQL","Python"]],["Agent Workflow","Composable agent workflows and MCP integrations.",["Agents","MCP","Architecture"]]];
+---
+<BaseLayout title="Projects · Boyang Wang"><main class="container"><header class="page-head"><div class="eyebrow">Portfolio</div><h1>Projects</h1><p class="muted">Selected work at the intersection of AI, data and engineering.</p></header><section class="grid">{projects.map(([name,desc,stack])=><a class="card" href="https://github.com/boyang167"><div class="meta">PROJECT</div><h3>{name}</h3><p>{desc}</p><div>{stack.map((x:string)=><span class="tag">{x}</span>)}</div></a>)}</section></main></BaseLayout>

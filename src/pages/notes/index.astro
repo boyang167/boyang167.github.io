@@ -1,0 +1,4 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";import {getCollection} from "astro:content";const notes=(await getCollection("notes",({data})=>!data.draft)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+---
+<BaseLayout title="Notes · Boyang Wang"><main class="container"><header class="page-head"><div class="eyebrow">Knowledge base</div><h1>Notes</h1><p class="muted">Short, reusable technical notes that feed the knowledge hub.</p></header><section class="post-list">{notes.map(note=><a class="post-row" href={`/notes/${note.id}`}><div class="meta">{note.data.area}</div><div><h2>{note.data.title}</h2><p class="muted">{note.data.description}</p>{note.data.tags.map(tag=><span class="tag">{tag}</span>)}</div></a>)}</section></main></BaseLayout>
