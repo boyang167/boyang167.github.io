@@ -4,6 +4,7 @@ import "../styles/global.css";
 const {
   title = "Boyang Wang — Tech Notes",
   description = "AI, Data, Agent, Architecture and Bioprocess.",
+  language = "en",
 } = Astro.props;
 const currentPath = Astro.url.pathname;
 const navigation = [
@@ -20,7 +21,7 @@ const isCurrent = (href: string) =>
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={language}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />

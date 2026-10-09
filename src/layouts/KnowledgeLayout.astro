@@ -17,7 +17,11 @@ const series = data.series || "General";
 const languageLabel = data.language === "zh-CN" ? "中文" : "English";
 ---
 
-<BaseLayout title={`${data.title} · Knowledge`} description={data.description}>
+<BaseLayout
+  title={`${data.title} · Knowledge`}
+  description={data.description}
+  language={data.language}
+>
   <main class="knowledge-shell">
     <KnowledgeSidebar tree={tree} currentId={entry.id} />
 
