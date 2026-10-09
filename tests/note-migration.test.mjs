@@ -61,6 +61,40 @@ test("pairs numbered Chinese and English series documents", () => {
   );
 });
 
+test("does not classify an English document by its Chinese edition link", () => {
+  const result = inferDocument({
+    relativePath:
+      "13-agent/claude-code-docs/docs/01-Architecture-Overview.md",
+    source:
+      "[中文](./01-架构总览.md)\n\n# Architecture Overview\n\nThis chapter explains the complete agent architecture, runtime, tools, permissions, and context management.",
+    modifiedAt: new Date("2026-10-09T00:00:00Z"),
+  });
+
+  assert.equal(result.frontmatter.language, "en");
+});
+
+test("keeps code-heavy Chinese notes classified as Chinese", () => {
+  const result = inferDocument({
+    relativePath: "6-language/go.md",
+    source:
+      "# Go\n\n这是中文笔记。\n\n```go\nfunc HandleRequest(ctx context.Context, request *http.Request) error {\n  return service.Process(ctx, request)\n}\n```",
+    modifiedAt: new Date("2026-10-09T00:00:00Z"),
+  });
+
+  assert.equal(result.frontmatter.language, "zh-CN");
+});
+
+test("keeps mostly English prose classified as English", () => {
+  const result = inferDocument({
+    relativePath: "14-work/context.md",
+    source:
+      "# Context\n\nThis document explains the ontology workflow, data discovery, graph construction, knowledge services, and agent skills in detail.\n\n补充中文说明。",
+    modifiedAt: new Date("2026-10-09T00:00:00Z"),
+  });
+
+  assert.equal(result.frontmatter.language, "en");
+});
+
 test("rewrites migrated markdown links and image references", () => {
   const output = rewriteReferences(
     "[下一章](./02-Agent循环.md)\n![架构](../imgs/01-arch.png)",

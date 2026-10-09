@@ -4,7 +4,7 @@ description: 中文
 date: '2026-06-29'
 area: AI Agent
 tags: []
-language: zh-CN
+language: en
 series: Claude Code Anatomy
 order: 11
 source: 'https://github.com/AnneHeartRecord/claude-code-docs'

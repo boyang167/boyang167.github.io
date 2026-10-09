@@ -40,6 +40,7 @@ export const seriesByPrefix = [
     prefix: "13-agent/claude-code-docs/docs/",
     series: "Claude Code Anatomy",
     translationPrefix: "claude-code-docs",
+    bilingual: true,
   },
   {
     prefix: "13-agent/hermes-agent-anatomy/docs/",

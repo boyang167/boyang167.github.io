@@ -1,22 +1,55 @@
-# TechNotes
+# Boyang Wang Knowledge Base
 
-V4 personal knowledge hub for **Boyang Wang**: AI, Data, Agent, Architecture and Bioprocess.
+Astro 5 personal site and static technical knowledge base for AI agents, data systems, architecture, SRE, web engineering and bioprocess applications.
 
-## Run locally
+## Local development
 
 ```bash
-npm install
+npm ci
+npm test
 npm run dev
 ```
 
-## Write content
+`npm run build` performs Astro type checking, generates the static site, and builds the Pagefind full-text index.
 
-Add Markdown or MDX to `src/content/blog/` or `src/content/notes/`. The site indexes metadata for local search and the retrieval chat automatically.
+## Writing knowledge documents
 
-## Deploy
+The website repository is the only maintained content source. Add new Markdown or MDX files under `src/content/notes/`; the former `3-TechNotes` directory is no longer read or synchronized.
 
-Push to `main`. In GitHub repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**.
+Every note requires:
 
-## AI chat
+```yaml
+---
+title: Agent 上下文工程
+description: 构建长对话 Agent 时管理上下文预算的方法。
+date: 2026-10-09
+updated: 2026-10-09
+area: AI Agent
+series: Agent Architecture
+order: 4
+language: zh-CN
+translationKey: agent-context-engineering
+tags: [Agent, Context Engineering]
+draft: false
+---
+```
 
-The chat page performs local retrieval now. To generate an LLM answer, add a server-side proxy (Cloudflare Worker, Vercel Function, etc.) so API keys never enter browser code.
+- `language` must be `zh-CN` or `en`.
+- Give translated editions the same `translationKey`.
+- `updated`, `series`, `order`, `translationKey`, and `source` are optional.
+- Add `source` for externally attributed material.
+- Put article assets under `public/knowledge-assets/` and reference them with absolute paths such as `/knowledge-assets/ai-agent/diagram.png`.
+
+## Content migration
+
+The one-time migration pipeline remains available for audit and reproducibility:
+
+```powershell
+node scripts/migrate-notes.mjs --source "A:\17-workspace\3-TechNotes"
+```
+
+It normalizes metadata, preserves bilingual pairs, localizes recoverable assets, and records irrecoverable references in `docs/migration-report.md`.
+
+## Deployment
+
+Push to `main`. GitHub Actions installs from `package-lock.json`, builds Astro and Pagefind, and deploys `dist/` to GitHub Pages.

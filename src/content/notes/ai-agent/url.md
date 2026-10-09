@@ -4,7 +4,7 @@ description: 'https://github.com/anneheartrecord/claude code docs'
 date: '2026-06-30'
 area: AI Agent
 tags: []
-language: zh-CN
+language: en
 draft: false
 ---
 https://github.com/anneheartrecord/claude-code-docs

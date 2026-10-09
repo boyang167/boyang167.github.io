@@ -4,7 +4,7 @@ description: basic concept
 date: '2025-03-11'
 area: Deep Learning
 tags: []
-language: zh-CN
+language: en
 order: 2
 draft: false
 ---

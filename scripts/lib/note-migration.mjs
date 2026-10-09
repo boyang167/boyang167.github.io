@@ -64,6 +64,14 @@ function inferDescription(body, title) {
 
 function inferLanguage(relativePath, body) {
   const basename = path.posix.basename(relativePath).toLowerCase();
+  const bilingualSeries = seriesByPrefix.find(
+    ({ prefix, bilingual }) =>
+      bilingual && relativePath.startsWith(prefix),
+  );
+  if (bilingualSeries) {
+    return HAN_CHARACTER.test(basename) ? "zh-CN" : "en";
+  }
+  if (HAN_CHARACTER.test(basename)) return "zh-CN";
   if (
     basename.includes("english") ||
     basename.includes("_en.") ||
@@ -71,11 +79,21 @@ function inferLanguage(relativePath, body) {
   ) {
     return "en";
   }
-  const sample = `${relativePath}\n${body}`.slice(0, 2000);
+  const sample = body
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/https?:\/\/\S+/g, " ")
+    .slice(0, 4000);
   const hanCount = [...sample].filter((character) =>
     HAN_CHARACTER.test(character),
   ).length;
-  return hanCount >= 4 ? "zh-CN" : "en";
+  const latinCount = (sample.match(/[a-z]/gi) || []).length;
+  const languageCharacters = hanCount + latinCount;
+  return hanCount >= 4 &&
+    languageCharacters > 0 &&
+    hanCount / languageCharacters >= 0.08
+    ? "zh-CN"
+    : "en";
 }
 
 function inferSeries(relativePath) {
