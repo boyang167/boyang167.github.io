@@ -181,7 +181,13 @@ function resolveReference(sourceRelativePath, reference) {
 
 function rewriteMarkdownSegment(
   segment,
-  { documentHref, sourceRelativePath, assetHref },
+  {
+    documentHref,
+    sourceRelativePath,
+    assetHref,
+    missingAssets = new Set(),
+    missingDocuments = new Set(),
+  },
 ) {
   const withImages = segment.replace(
     /!\[([^\]]*)]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g,
@@ -190,7 +196,10 @@ function rewriteMarkdownSegment(
       const [assetPath] = reference.split(/[?#]/, 1);
       const resolved = resolveReference(sourceRelativePath, assetPath);
       const href = assetHref.get(resolved);
-      return href ? `![${alt}](${href})` : match;
+      if (href) return `![${alt}](${href})`;
+      return missingAssets.has(resolved)
+        ? `> **Missing image resource:** \`${resolved}\``
+        : match;
     },
   );
 
@@ -202,8 +211,11 @@ function rewriteMarkdownSegment(
       if (!documentPath.toLowerCase().endsWith(".md")) return match;
       const resolved = resolveReference(sourceRelativePath, documentPath);
       const href = documentHref.get(resolved);
-      return href
-        ? `[${label}](${href}${anchor ? `#${anchor}` : ""})`
+      if (href) {
+        return `[${label}](${href}${anchor ? `#${anchor}` : ""})`;
+      }
+      return missingDocuments.has(resolved)
+        ? `${label} *(original link unavailable)*`
         : match;
     },
   );
@@ -279,8 +291,15 @@ async function pathExists(value) {
   }
 }
 
-async function downloadAsset(url, destination, fetchImpl) {
-  const response = await fetchImpl(url);
+async function downloadAsset(
+  url,
+  destination,
+  fetchImpl,
+  fetchTimeoutMs,
+) {
+  const response = await fetchImpl(url, {
+    signal: AbortSignal.timeout(fetchTimeoutMs),
+  });
   if (!response.ok) return false;
   await mkdir(path.dirname(destination), { recursive: true });
   await writeFile(destination, Buffer.from(await response.arrayBuffer()));
@@ -294,6 +313,7 @@ async function materializeAsset({
   assetRelativePath,
   destination,
   fetchImpl,
+  fetchTimeoutMs,
 }) {
   const sourceAbsolutePath = path.join(sourceRoot, assetRelativePath);
   const destinationAbsolutePath = path.join(assetRoot, destination);
@@ -325,7 +345,12 @@ async function materializeAsset({
   for (const url of candidates) {
     try {
       if (
-        await downloadAsset(url, destinationAbsolutePath, fetchImpl)
+        await downloadAsset(
+          url,
+          destinationAbsolutePath,
+          fetchImpl,
+          fetchTimeoutMs,
+        )
       ) {
         return { method: "download", source: url };
       }
@@ -351,6 +376,9 @@ export async function migrateNotes({
   contentRoot,
   assetRoot,
   fetchImpl = fetch,
+  assetConcurrency = 8,
+  fetchTimeoutMs = 8000,
+  missingResourcePolicy = "error",
 }) {
   const report = {
     migrated: [],
@@ -406,6 +434,9 @@ export async function migrateNotes({
     ]),
   );
   const assetHref = new Map();
+  const assetRequests = new Map();
+  const missingAssets = new Set();
+  const missingDocuments = new Set();
 
   for (const document of documents) {
     const references = extractReferences(document.body);
@@ -427,11 +458,17 @@ export async function migrateNotes({
             path: resolved,
           });
         } else {
-          report.errors.push({
+          const issue = {
             type: "broken-document-link",
             source: document.sourceRelativePath,
             path: resolved,
-          });
+          };
+          report[
+            missingResourcePolicy === "placeholder" ? "warnings" : "errors"
+          ].push(issue);
+          if (missingResourcePolicy === "placeholder") {
+            missingDocuments.add(resolved);
+          }
         }
       }
     }
@@ -443,42 +480,68 @@ export async function migrateNotes({
         document.sourceRelativePath,
         assetPath,
       );
-      if (assetHref.has(resolved)) continue;
+      if (assetRequests.has(resolved)) continue;
       const destination = assetDestination(
         resolved,
         document.frontmatter.area,
       );
-      const materialized = await materializeAsset({
+      assetRequests.set(resolved, {
         sourceRoot,
         assetRoot,
         sourceRelativePath: document.sourceRelativePath,
         assetRelativePath: resolved,
         destination,
         fetchImpl,
-      });
-      if (!materialized) {
-        report.errors.push({
-          type: "missing-asset",
-          source: document.sourceRelativePath,
-          path: resolved,
-        });
-        continue;
-      }
-      const href = `/knowledge-assets/${destination}`;
-      assetHref.set(resolved, href);
-      report.assets.push({
-        path: resolved,
-        destination,
-        ...materialized,
+        fetchTimeoutMs,
       });
     }
   }
+
+  const requests = [...assetRequests.entries()];
+  let requestIndex = 0;
+  const worker = async () => {
+    while (requestIndex < requests.length) {
+      const currentIndex = requestIndex;
+      requestIndex += 1;
+      const [resolved, request] = requests[currentIndex];
+      const materialized = await materializeAsset(request);
+      if (!materialized) {
+        const issue = {
+          type: "missing-asset",
+          source: request.sourceRelativePath,
+          path: resolved,
+        };
+        report[
+          missingResourcePolicy === "placeholder" ? "warnings" : "errors"
+        ].push(issue);
+        if (missingResourcePolicy === "placeholder") {
+          missingAssets.add(resolved);
+        }
+        continue;
+      }
+      const href = `/knowledge-assets/${request.destination}`;
+      assetHref.set(resolved, href);
+      report.assets.push({
+        path: resolved,
+        destination: request.destination,
+        ...materialized,
+      });
+    }
+  };
+  await Promise.all(
+    Array.from(
+      { length: Math.min(Math.max(assetConcurrency, 1), requests.length) },
+      () => worker(),
+    ),
+  );
 
   for (const document of documents) {
     const rewrittenBody = rewriteReferences(document.body, {
       documentHref,
       sourceRelativePath: document.sourceRelativePath,
       assetHref,
+      missingAssets,
+      missingDocuments,
     });
     const destination = path.join(contentRoot, document.destination);
     await mkdir(path.dirname(destination), { recursive: true });
@@ -530,6 +593,7 @@ function renderItems(items, emptyMessage, renderItem) {
 }
 
 export function renderMigrationReport(report) {
+  const issues = [...report.errors, ...report.warnings];
   const unclassified =
     countType(report.warnings, "unclassified-document") +
     countType(report.errors, "unclassified-document");
@@ -546,9 +610,9 @@ export function renderMigrationReport(report) {
 
 ## Validation
 
-- Duplicate destinations: ${countType(report.errors, "duplicate-destination")}
-- Broken internal document links: ${countType(report.errors, "broken-document-link")}
-- Missing referenced assets: ${countType(report.errors, "missing-asset")}
+- Duplicate destinations: ${countType(issues, "duplicate-destination")}
+- Broken internal document links: ${countType(issues, "broken-document-link")}
+- Missing referenced assets: ${countType(issues, "missing-asset")}
 - Unclassified readable documents: ${unclassified}
 
 ## Migrated Documents

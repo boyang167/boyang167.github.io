@@ -41,6 +41,10 @@ test("excludes generated prompt resources and repository indexes", () => {
     false,
   );
   assert.equal(classifyPath("README.md").publish, false);
+  assert.equal(
+    classifyPath("13-agent/claude-code-docs/README_EN.md").publish,
+    false,
+  );
   assert.equal(classifyPath("13-agent/agent.md").publish, true);
 });
 
@@ -84,6 +88,17 @@ test("rewrites migrated markdown links and image references", () => {
     output,
     /\(\/knowledge-assets\/ai-agent\/01-arch\.png\)/,
   );
+});
+
+test("replaces unresolved internal links with an explicit notice", () => {
+  const output = rewriteReferences("[旧章节](./missing.md)", {
+    documentHref: new Map(),
+    sourceRelativePath: "13-agent/docs/current.md",
+    assetHref: new Map(),
+    missingDocuments: new Set(["13-agent/docs/missing.md"]),
+  });
+
+  assert.equal(output, "旧章节 *(original link unavailable)*");
 });
 
 test("migrates documents, local assets, and internal links", async (t) => {
@@ -164,4 +179,64 @@ test("renders deterministic validation counts", () => {
   assert.match(markdown, /Duplicate destinations: 0/);
   assert.match(markdown, /Broken internal document links: 0/);
   assert.match(markdown, /Missing referenced assets: 0/);
+});
+
+test("resolves remote assets concurrently with abort signals", async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), "note-download-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const sourceRoot = path.join(root, "source");
+  await mkdir(
+    path.join(sourceRoot, "13-agent", "claude-code-docs", "docs"),
+    { recursive: true },
+  );
+  await writeFile(
+    path.join(
+      sourceRoot,
+      "13-agent",
+      "claude-code-docs",
+      "docs",
+      "01-架构.md",
+    ),
+    "# 架构\n\n![一](../imgs/one.png)\n![二](../imgs/two.png)",
+  );
+  let active = 0;
+  let maximumActive = 0;
+  const signals = [];
+
+  const report = await migrateNotes({
+    sourceRoot,
+    contentRoot: path.join(root, "content"),
+    assetRoot: path.join(root, "assets"),
+    assetConcurrency: 2,
+    fetchTimeoutMs: 50,
+    missingResourcePolicy: "placeholder",
+    fetchImpl: async (_url, options) => {
+      signals.push(options?.signal);
+      active += 1;
+      maximumActive = Math.max(maximumActive, active);
+      await new Promise((resolve) => setTimeout(resolve, 5));
+      active -= 1;
+      return new Response(null, { status: 404 });
+    },
+  });
+
+  assert.equal(report.errors.length, 0);
+  assert.equal(
+    report.warnings.filter(({ type }) => type === "missing-asset").length,
+    2,
+  );
+  assert.ok(maximumActive >= 2);
+  assert.ok(signals.every(Boolean));
+  const migrated = await readFile(
+    path.join(
+      root,
+      "content",
+      "ai-agent",
+      "claude-code-docs",
+      "01-jia-gou.md",
+    ),
+    "utf8",
+  );
+  assert.match(migrated, /Missing image resource/);
+  assert.doesNotMatch(migrated, /\.\.\/imgs\/(?:one|two)\.png/);
 });

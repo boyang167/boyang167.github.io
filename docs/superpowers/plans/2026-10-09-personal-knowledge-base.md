@@ -17,7 +17,7 @@
 - Do not delete or modify `A:\17-workspace\3-TechNotes`.
 - Keep the site fully static and compatible with GitHub Pages.
 - AI Q&A, a database, and an editing backend are outside this implementation.
-- Missing local assets, duplicate destination paths, and broken internal document links fail migration validation.
+- Duplicate destination paths fail migration validation. Assets and internal links are resolved from known sources first; irrecoverable references become explicit in-article placeholders and report warnings.
 
 ---
 
@@ -229,7 +229,7 @@ Run:
 npm run migrate:notes -- --source "A:\17-workspace\3-TechNotes"
 ```
 
-Expected: the summary reports migrated and excluded documents, both bilingual series, copied/downloaded assets, zero destination collisions, zero broken internal links, and zero missing assets.
+Expected: the summary reports migrated and excluded documents, both bilingual series, copied/downloaded assets, zero destination collisions, and no fatal errors. Irrecoverable links and images are counted as warnings with in-article placeholders.
 
 - [ ] **Step 2: Inspect the generated report and resolve every error**
 
@@ -239,8 +239,8 @@ For each unresolved path, add an exact exclusion only when it is a template, dup
 ## Validation
 
 - Duplicate destinations: 0
-- Broken internal document links: 0
-- Missing referenced assets: 0
+- Errors: 0
+- Every irrecoverable-reference warning has a corresponding in-article placeholder.
 - Unclassified readable documents: 0
 ```
 

@@ -17,7 +17,7 @@ export const excludedPathPatterns = [
   /(^|\/)\.gitee\//,
   /(^|\/)imgs\/prompts\//,
   /(^|\/)_(home|sidebar)\.md$/i,
-  /(^|\/)README(?:\.en)?\.md$/i,
+  /(^|\/)README(?:[._-]en)?\.md$/i,
 ];
 
 export const externalSources = [

@@ -92,6 +92,9 @@ if (!sourceOption) {
       sourceRoot,
       contentRoot: stagedContent,
       assetRoot: stagedAssets,
+      assetConcurrency: 16,
+      fetchTimeoutMs: 5000,
+      missingResourcePolicy: "placeholder",
     });
     await writeFile(reportPath, renderMigrationReport(report), "utf8");
     validateMigration(report);

@@ -1,0 +1,647 @@
+# Knowledge Base Migration Report
+
+## Summary
+
+- Migrated documents: 97
+- Excluded documents: 70
+- Translation entries: 34
+- Migrated assets: 413
+- Warnings: 450
+- Errors: 0
+
+## Validation
+
+- Duplicate destinations: 0
+- Broken internal document links: 66
+- Missing referenced assets: 384
+- Unclassified readable documents: 0
+
+## Migrated Documents
+
+- `1-machine-learning/1-math.md` → `machine-learning/1-math.md`
+- `1-machine-learning/2-machine-learning.md` → `machine-learning/2-machine-learning.md`
+- `1-network.md` → `general/1-network.md`
+- `10-stock/基本知识.md` → `finance/ji-ben-zhi-shi.md`
+- `10-stock/web.md` → `finance/web.md`
+- `11-protein/molecule_anlysis.md` → `bioprocess/molecule-anlysis.md`
+- `11-protein/protein.md` → `bioprocess/protein.md`
+- `12-sparkops/product_desgin.md` → `data-platform/product-desgin.md`
+- `13-agent/agent.md` → `ai-agent/agent.md`
+- `13-agent/basic.md` → `ai-agent/basic.md`
+- `13-agent/claude-code-docs/docs/01-架构总览.md` → `ai-agent/claude-code-docs/01-jia-gou-zong-lan.md`
+- `13-agent/claude-code-docs/docs/01-Architecture-Overview.md` → `ai-agent/claude-code-docs/01-architecture-overview.md`
+- `13-agent/claude-code-docs/docs/02-源码泄露的价值之争.md` → `ai-agent/claude-code-docs/02-yuan-ma-xie-lou-de-jia-zhi-zhi-zheng.md`
+- `13-agent/claude-code-docs/docs/02-Value-Debate.md` → `ai-agent/claude-code-docs/02-value-debate.md`
+- `13-agent/claude-code-docs/docs/03-Agent-Loop.md` → `ai-agent/claude-code-docs/03-agent-loop.md`
+- `13-agent/claude-code-docs/docs/03-Agent循环.md` → `ai-agent/claude-code-docs/03-agent-xun-huan.md`
+- `13-agent/claude-code-docs/docs/04-上下文工程.md` → `ai-agent/claude-code-docs/04-shang-xia-wen-gong-cheng.md`
+- `13-agent/claude-code-docs/docs/04-Context-Engineering.md` → `ai-agent/claude-code-docs/04-context-engineering.md`
+- `13-agent/claude-code-docs/docs/05-消息压缩系统.md` → `ai-agent/claude-code-docs/05-xiao-xi-ya-suo-xi-tong.md`
+- `13-agent/claude-code-docs/docs/05-Compaction-System.md` → `ai-agent/claude-code-docs/05-compaction-system.md`
+- `13-agent/claude-code-docs/docs/06-权限系统.md` → `ai-agent/claude-code-docs/06-quan-xian-xi-tong.md`
+- `13-agent/claude-code-docs/docs/06-Permission-System.md` → `ai-agent/claude-code-docs/06-permission-system.md`
+- `13-agent/claude-code-docs/docs/07-记忆管理.md` → `ai-agent/claude-code-docs/07-ji-yi-guan-li.md`
+- `13-agent/claude-code-docs/docs/07-Memory-System.md` → `ai-agent/claude-code-docs/07-memory-system.md`
+- `13-agent/claude-code-docs/docs/08-工具与Skill系统.md` → `ai-agent/claude-code-docs/08-gong-ju-yu-skill-xi-tong.md`
+- `13-agent/claude-code-docs/docs/08-Tools-and-Skills.md` → `ai-agent/claude-code-docs/08-tools-and-skills.md`
+- `13-agent/claude-code-docs/docs/09-MCP-Integration.md` → `ai-agent/claude-code-docs/09-mcp-integration.md`
+- `13-agent/claude-code-docs/docs/09-MCP集成.md` → `ai-agent/claude-code-docs/09-mcp-ji-cheng.md`
+- `13-agent/claude-code-docs/docs/10-未来功能蓝图.md` → `ai-agent/claude-code-docs/10-wei-lai-gong-neng-lan-tu.md`
+- `13-agent/claude-code-docs/docs/10-Future-Features.md` → `ai-agent/claude-code-docs/10-future-features.md`
+- `13-agent/claude-code-docs/docs/11-AI-Code-Review.md` → `ai-agent/claude-code-docs/11-ai-code-review.md`
+- `13-agent/claude-code-docs/docs/11-AI-Coding时代的Code-Review.md` → `ai-agent/claude-code-docs/11-ai-coding-shi-dai-de-code-review.md`
+- `13-agent/claude-code-docs/docs/12-从Claude Code权限系统学Agent安全设计.md` → `ai-agent/claude-code-docs/12-cong-claude-code-quan-xian-xi-tong-xue-agent-an-quan-she-ji.md`
+- `13-agent/claude-code-docs/docs/12-Agent-Security-Design.md` → `ai-agent/claude-code-docs/12-agent-security-design.md`
+- `13-agent/claude-code-docs/docs/13-啃完源码之后的一些发现.md` → `ai-agent/claude-code-docs/13-ken-wan-yuan-ma-zhi-hou-de-yi-xie-fa-xian.md`
+- `13-agent/claude-code-docs/docs/13-Source-Code-Findings.md` → `ai-agent/claude-code-docs/13-source-code-findings.md`
+- `13-agent/hermes-agent-anatomy/docs/01-全景图.md` → `ai-agent/hermes-agent-anatomy/01-quan-jing-tu.md`
+- `13-agent/hermes-agent-anatomy/docs/02-Agent核心循环.md` → `ai-agent/hermes-agent-anatomy/02-agent-he-xin-xun-huan.md`
+- `13-agent/hermes-agent-anatomy/docs/03-Tool-Registry.md` → `ai-agent/hermes-agent-anatomy/03-tool-registry.md`
+- `13-agent/hermes-agent-anatomy/docs/04-多Provider适配.md` → `ai-agent/hermes-agent-anatomy/04-duo-provider-shi-pei.md`
+- `13-agent/hermes-agent-anatomy/docs/05-上下文压缩.md` → `ai-agent/hermes-agent-anatomy/05-shang-xia-wen-ya-suo.md`
+- `13-agent/hermes-agent-anatomy/docs/06-消息网关.md` → `ai-agent/hermes-agent-anatomy/06-xiao-xi-wang-guan.md`
+- `13-agent/hermes-agent-anatomy/docs/07-Memory与RL训练.md` → `ai-agent/hermes-agent-anatomy/07-memory-yu-rl-xun-lian.md`
+- `13-agent/hermes-agent-anatomy/docs/08-三方对比.md` → `ai-agent/hermes-agent-anatomy/08-san-fang-dui-bi.md`
+- `13-agent/hermes-agent.md` → `ai-agent/hermes-agent.md`
+- `13-agent/hermes-agent/db.md` → `ai-agent/hermes-agent/db.md`
+- `13-agent/tech-share.md` → `ai-agent/tech-share.md`
+- `13-agent/url.md` → `ai-agent/url.md`
+- `13-agent/vector_db/qdrant.md` → `ai-agent/vector-db/qdrant.md`
+- `14-work/context.md` → `work-notes/context.md`
+- `14-work/process.md` → `work-notes/process.md`
+- `2-deep-learning/1-deep-learning.md` → `deep-learning/1-deep-learning.md`
+- `2-deep-learning/2-NLP.md` → `deep-learning/2-nlp.md`
+- `2-deep-learning/3-AI.md` → `deep-learning/3-ai.md`
+- `2-deep-learning/llm.md` → `deep-learning/llm.md`
+- `2-linux.md` → `general/2-linux.md`
+- `3-技术栈.md` → `general/3-ji-shu-zhan.md`
+- `3-big-data/1-spark.md` → `big-data/1-spark.md`
+- `3-big-data/2-flink-Dinky.md` → `big-data/2-flink-dinky.md`
+- `3-big-data/2-flink.md` → `big-data/2-flink.md`
+- `3-big-data/3-hive.md` → `big-data/3-hive.md`
+- `3-big-data/4-sql.md` → `big-data/4-sql.md`
+- `3-big-data/6-pyspark.md` → `big-data/6-pyspark.md`
+- `3-big-data/image/spark-share.md` → `big-data/image/spark-share.md`
+- `3-big-data/install_env.md` → `big-data/install-env.md`
+- `4-git.md` → `general/4-git.md`
+- `5-env-build.md` → `general/5-env-build.md`
+- `6-language/1-go.md` → `programming/1-go.md`
+- `6-regex.md` → `general/6-regex.md`
+- `7-Architecture/1-Monitoring.md` → `architecture/1-monitoring.md`
+- `7-Architecture/overall.md` → `architecture/overall.md`
+- `7-Architecture/TDD.md` → `architecture/tdd.md`
+- `7-web.md` → `general/7-web.md`
+- `8-URL.md` → `general/8-url.md`
+- `8-web/basic.md` → `web/basic.md`
+- `8-web/go-web-framework.md` → `web/go-web-framework.md`
+- `8-web/middleware/1-redis.md` → `web/middleware/1-redis.md`
+- `8-web/middleware/2-kafka.md` → `web/middleware/2-kafka.md`
+- `8-web/middleware/3-rabbitmq.md` → `web/middleware/3-rabbitmq.md`
+- `8-web/middleware/4-nets.md` → `web/middleware/4-nets.md`
+- `8-web/middleware/middleware.md` → `web/middleware/middleware.md`
+- `8-web/service-discover/1-etcd.md` → `web/service-discover/1-etcd.md`
+- `8-web/service-discover/2-consul.md` → `web/service-discover/2-consul.md`
+- `8-web/transaction.md` → `web/transaction.md`
+- `8-web/vue/vue.md` → `web/vue/vue.md`
+- `9-SRE/1-docker/1-introduce.md` → `sre/1-docker/1-introduce.md`
+- `9-SRE/1-docker/2-install.md` → `sre/1-docker/2-install.md`
+- `9-SRE/1-docker/3-image-management.md` → `sre/1-docker/3-image-management.md`
+- `9-SRE/1-docker/4-container-management.md` → `sre/1-docker/4-container-management.md`
+- `9-SRE/1-docker/5-storage.md` → `sre/1-docker/5-storage.md`
+- `9-SRE/1-docker/6-log.md` → `sre/1-docker/6-log.md`
+- `9-SRE/1-docker/7-opration.md` → `sre/1-docker/7-opration.md`
+- `9-SRE/1-docker/8-Dockerfile.md` → `sre/1-docker/8-dockerfile.md`
+- `9-SRE/1-docker/9-demo.md` → `sre/1-docker/9-demo.md`
+- `9-SRE/2-devops/devops.md` → `sre/2-devops/devops.md`
+- `9-SRE/2-Docker-compose.md` → `sre/2-docker-compose.md`
+- `9-SRE/2-Harbor.md` → `sre/2-harbor.md`
+
+## Excluded Documents
+
+- `.gitee/ISSUE_TEMPLATE.zh-CN.md` — Matched exclusion /(^|\/)\.gitee\//
+- `.gitee/PULL_REQUEST_TEMPLATE.zh-CN.md` — Matched exclusion /(^|\/)\.gitee\//
+- `13-agent/claude-code-docs/_home.md` — Matched exclusion /(^|\/)_(home|sidebar)\.md$/i
+- `13-agent/claude-code-docs/_sidebar.md` — Matched exclusion /(^|\/)_(home|sidebar)\.md$/i
+- `13-agent/claude-code-docs/imgs/prompts/01-arch-capability-dashboard.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/01-arch-industry-compare.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/01-arch-layer-stack.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/01-arch-request-journey.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/02-value-code-vs-ability.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/02-value-feature-flags.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/02-value-leak-context.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/02-value-three-layers.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/03-loop-agent-fork.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/03-loop-async-generator.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/03-loop-six-stages.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/03-loop-state-immutable.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/03-loop-tool-execution.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/04-ctx-compression-priority.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/04-ctx-five-layers.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/04-ctx-lost-in-middle.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/04-ctx-prompt-cache.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/04-ctx-system-prompt.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/05-compact-circuit-breaker.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/05-compact-microcompact.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/05-compact-nine-segments.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/05-compact-three-layers.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/06-perm-42-rules.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/06-perm-sandbox.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/06-perm-state-machine.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/06-perm-three-modes.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/06-perm-yolo-classifier.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/07-mem-five-layers.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/07-mem-include-system.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/07-mem-prompt-injection.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/07-mem-two-types.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/08-skill-discovery.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/08-skill-philosophy.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/08-tools-panorama.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/08-tools-parallel.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/08-tools-pipeline.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/09-mcp-12000-lines.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/09-mcp-seven-scopes.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/09-mcp-six-protocols.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/09-mcp-usb-analogy.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/10-future-82-flags.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/10-future-context-collapse.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/10-future-coordinator.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/10-future-kairos.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/10-future-production-lessons.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/11-review-ai-traits.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/11-review-cicd-new.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/11-review-five-stages.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/11-review-focus-shift.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/11-review-sourcemap-lesson.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/12-sec-42-rules-breakdown.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/12-sec-attack-vectors.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/12-sec-four-layers.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/12-sec-implementation-levels.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/13-findings-250k-api.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/13-findings-5000-lines.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/13-findings-ban-mechanism.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/13-findings-convergence.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/imgs/prompts/13-findings-paradox.md` — Matched exclusion /(^|\/)imgs\/prompts\//
+- `13-agent/claude-code-docs/README_EN.md` — Matched exclusion /(^|\/)README(?:[._-]en)?\.md$/i
+- `13-agent/claude-code-docs/README.md` — Matched exclusion /(^|\/)README(?:[._-]en)?\.md$/i
+- `13-agent/hermes-agent-anatomy/_home.md` — Matched exclusion /(^|\/)_(home|sidebar)\.md$/i
+- `13-agent/hermes-agent-anatomy/_sidebar.md` — Matched exclusion /(^|\/)_(home|sidebar)\.md$/i
+- `13-agent/hermes-agent-anatomy/README.md` — Matched exclusion /(^|\/)README(?:[._-]en)?\.md$/i
+- `README.en.md` — Matched exclusion /(^|\/)README(?:[._-]en)?\.md$/i
+- `README.md` — Matched exclusion /(^|\/)README(?:[._-]en)?\.md$/i
+
+## Warnings
+
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/01-架构总览.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/01-Architecture-Overview.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/02-源码泄露的价值之争.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/02-源码泄露的价值之争.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/02-Value-Debate.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/02-Value-Debate.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/03-Agent-Loop.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/03-Agent-Loop.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/03-Agent循环.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/03-Agent循环.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-上下文工程.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-上下文工程.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-上下文工程.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-Context-Engineering.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-Context-Engineering.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/04-Context-Engineering.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-消息压缩系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-消息压缩系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-消息压缩系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-Compaction-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-Compaction-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/05-Compaction-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-权限系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-权限系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-权限系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-Permission-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-Permission-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/06-Permission-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/07-记忆管理.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/07-记忆管理.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/07-Memory-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/07-Memory-System.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/08-工具与Skill系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/08-工具与Skill系统.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/08-Tools-and-Skills.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/08-Tools-and-Skills.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/09-MCP-Integration.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/09-MCP集成.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/09-MCP集成.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/09-MCP集成.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-未来功能蓝图.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-未来功能蓝图.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-未来功能蓝图.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-未来功能蓝图.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-Future-Features.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/10-Future-Features.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/11-AI-Code-Review.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/11-AI-Coding时代的Code-Review.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/11-AI-Coding时代的Code-Review.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/11-AI-Coding时代的Code-Review.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/12-Agent-Security-Design.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/13-啃完51万行源码的发现与Claude的封号机制.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/13-啃完源码之后的一些发现.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/13-啃完源码之后的一些发现.md`
+- **broken-document-link**: `13-agent/claude-code-docs/docs/docs/13-Source-Code-Findings.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/03-工具编排层.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/01-Architecture-Overview.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/02-Agent-Loop.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/02-Agent核心循环.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/03-Tool-Registry.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/04-Multi-Provider-Adaptation.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/05-CLI与Gateway双入口.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/05-Context-Compression.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/06-Message-Gateway.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/07-Memory-and-RL.md`
+- **broken-document-link**: `13-agent/hermes-agent-anatomy/docs/docs/08-Three-Way-Comparison.md`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-layer-stack.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-positioning.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-provider-routing.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-rl-pipeline.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-sqlite-wal.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/01-hermes-tool-registry.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-agent-lifecycle.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-callback-system.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-iteration-budget.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-main-loop.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-message-sanitize.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-parallel-tools.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-retry-fallback.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-streaming.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-sync-vs-async.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/02-tool-result-persist.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/03-async-bridge.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/03-tool-registry-overview.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/03-tool-system-comparison.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-adaptive-thinking-mapping.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-anthropic-adapter-flow.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-auth-architecture.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-auxiliary-routing-chain.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-credential-pool-strategies.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-device-code-flow.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-message-format-unification.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/04-provider-comparison.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-compression-overview.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-head-tail-protection.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-session-split-chain.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-structured-summary.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-threshold-budget.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-token-budget-vs-fixed.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-tool-pair-sanitize.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-trajectory-compressor.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-two-phase-compression.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-vs-claude-code.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/05-vs-openclaw.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/06-adapter-hierarchy.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/06-gateway-overview.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/06-gateway-startup-flow.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-comparison.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-lifecycle-hooks.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-memory-overview.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-plugin-discovery.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-skill-security.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-sqlite-architecture.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/07-trajectory-compression.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-agent-loop-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-architecture-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-context-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-cover.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-decision-tree.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-memory-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-permission-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-provider-compare.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-rl-pipeline.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-three-drivers.png`
+- **missing-asset**: `13-agent/hermes-agent-anatomy/imgs/08-tool-system-compare.png`
+- **missing-asset**: `2-deep-learning/img/1799478f5e7b237d5209ab1616af5dcc.png`
+- **missing-asset**: `2-deep-learning/img/39025553eebf9f13024b9ee666d4bc46.png`
+- **missing-asset**: `2-deep-learning/img/5b42f68d0317617198ff4053de553664.png`
+- **missing-asset**: `2-deep-learning/img/773e1045f5cc113cd8538768c313eff3.png`
+- **missing-asset**: `2-deep-learning/img/b0b44b867ac8cf573029c1ed11c6b04c.png`
+- **missing-asset**: `2-deep-learning/img/fe4358f50efc4839801562b690b32cff.png`
+- **missing-asset**: `2-deep-learning/img/generative-overview.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609101846992.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609102901467.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609102916992.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104647608.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104719752.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104744097.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104807316.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104840560.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104855714.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104909805.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104927517.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609104953058.png`
+- **missing-asset**: `2-deep-learning/img/image-20210609105022628.png`
+- **missing-asset**: `2-deep-learning/img/image-20220508115412966.png`
+- **missing-asset**: `2-deep-learning/img/image-20220510104339221.png`
+- **missing-asset**: `2-deep-learning/img/image-20220511161959902.png`
+- **missing-asset**: `2-deep-learning/img/image-20220512210931289.png`
+- **missing-asset**: `2-deep-learning/img/image-20220512214126657.png`
+- **missing-asset**: `2-deep-learning/img/image-20220614160357348.png`
+- **missing-asset**: `2-deep-learning/img/image-20220719214916718-1716726498187.png`
+- **missing-asset**: `2-deep-learning/img/image-20220719215106427-1716726498189.png`
+- **missing-asset**: `2-deep-learning/img/image-20220719215313902-1716726498189.png`
+- **missing-asset**: `2-deep-learning/img/image-20220721234015378-1716726498190.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723110425853-1716726498190.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723110709486-1716726498190.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723110759148-1716726498191.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723111003707-1716726498191.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723111052574-1716726498192.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723111135980-1716726498191.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723111227962-1716726498192.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165004489-1716726498192.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165051327-1716726498192.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165123204-1716726498193.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165217096-1716726498192.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165248547-1716726498193.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165331117-1716726498193.png`
+- **missing-asset**: `2-deep-learning/img/image-20220723165359874-1716726498193.png`
+- **missing-asset**: `2-deep-learning/img/image-20230223203937529-1716637961102.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326101826622.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102027835-1716637414166.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102050147-1716637414167.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102240844-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102331070-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102537368-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102557064-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102618179-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102649495-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102703489-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102739298-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326102804926-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103055046-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103123099-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103139925-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103211221-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103232319-1716637414168.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103810411.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326103830310-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104012149-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104236820-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104315197-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104445916-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104742210-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326104811800-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326105003883-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326105356487-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326105711516.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326105730279.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112042100-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112338886-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112523930-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112543623-1716637414169.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112601279.png`
+- **missing-asset**: `2-deep-learning/img/image-20230326112731809-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327210723428-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327210859902-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327210932687-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327211013102-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327211055288-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327211930587-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327211949168-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212310660-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212433266-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212511927-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212554566-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212739828-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212938855-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327212954010-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213058205-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213145706-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213233565-1716637414170.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213342075-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213519880-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327213655866-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230327214106721.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329200649460-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329200725099-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329200842233-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201011725-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201108376-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201120886-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201315823-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201448127-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201551942-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329201702831-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329202010731-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329202206858-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329202734595-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329202819066-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20230329203059958-1716637414171.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015214853027-1697380164785-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015215730555-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015222819485-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015223454546-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015223734761-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015224024231-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015224051681-1716729566670.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015224829347-1716729566670.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015224856685-1716729566670.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015225008883-1716729566670.png`
+- **missing-asset**: `2-deep-learning/img/image-20231015225049899-1716729566670.png`
+- **missing-asset**: `2-deep-learning/img/image-20231024214515944-1716729410138.png`
+- **missing-asset**: `2-deep-learning/img/image-20231025213422238-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231026230428643-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027214638212-1716729705623.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027214818043-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215014124-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215053247-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215151157-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215248862-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215331384-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215403761-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215540081-1716729705624.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215625970-1716729705625.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215807806-1716729705626.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027215909523-1716729705626.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220022448-1716729705626.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220253176-1716729705626.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220316356-1716729705626.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220439237-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220604860-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220634130-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027220741826-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027221109498-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027221350367-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027221426442-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027221640105-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027221943391-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222015351-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222052748-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222151352-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222325432-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222404791-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222604012-1716729705627.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222705436-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222813853-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222837358-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222911918-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027222953604-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027223019296-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027223120685-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231027223142873-1716729705628.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212124902-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212139564-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212256611-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212336893-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212357863-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212447252-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212555839-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212744028-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212838108-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029212907134-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029213048510-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029213313682-1716729705629.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029214937633-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215011179-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215032135-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215204288-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215308421-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215630550-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215839590-1716729705630.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215905027-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029215951172-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220015043-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220051281-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220113516-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220129726-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220222750-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220248575-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029220413015-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221009017-1716729705631.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221028569-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221133816-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221200198-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221324472-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221518074-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221622031-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221649530-1716729705632.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221736188-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221754148-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221811213-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221901085-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029221925449-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231029222012221-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030210558522-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030210813877-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030210857118-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030210940893-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030211122235-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231030212523697-1716729705633.png`
+- **missing-asset**: `2-deep-learning/img/image-20231109203540369-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231109203714395-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231109204153271-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231109205420942-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231109211323027-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113211112510-1716729453931.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113213017919-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113213559533-1699882660153-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214146759-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214408059-1716729453931.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214445229-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214513394-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214618555-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113214635339-1716729453932.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113215315211-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231113220856992-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231114213630833-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231114213708461-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231114213805350-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231114213902608-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231114213922439-1716729453933.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115201134650-1716729566664.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115201509695-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115201526872-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115201551603-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115202321251-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115202451755-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231115202512583-1716729566665.png`
+- **missing-asset**: `2-deep-learning/img/image-20231121214222388-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231121214245440-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231123212818989-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231123212842388-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231123212920383-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231127213644499-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231127213809079-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231127213911878-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231127213945082-1716729566666.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128210737121-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128211152029-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128211343768-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128212200445-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128212442908-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128212519454-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128212716915-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128213106879-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128213147379-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128213302679-1716729566667.png`
+- **missing-asset**: `2-deep-learning/img/image-20231128213447608-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231129211238479-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231129211330358-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130213846134-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130213956928-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214108240-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214142188-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214307751-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214338664-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214512016-1716729566668.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214748822-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130214810404-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130215031813-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231130215532112-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231204204918962-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231204205055389-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231204205146316-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231204205235059-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20231204205323317-1716729566669.png`
+- **missing-asset**: `2-deep-learning/img/image-20240525235335394.png`
+- **missing-asset**: `2-deep-learning/img/image-20240525235349436.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908113455192.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908113514910.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908113542102.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908115513320.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908155716514.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908160104564.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908160138848.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908160317046.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908160440505.png`
+- **missing-asset**: `2-deep-learning/img/image-20240908160620871.png`
+- **missing-asset**: `2-deep-learning/img/image-20240912213832473.png`
+- **missing-asset**: `2-deep-learning/img/v2-103ac307de5fe0274e855bcda978b3ad_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-207c4197606314448ea8a2813380defb_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-321bd1ff951e2c4c09cf2ee521d89e2f_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-383cc03b62e6496a838c73a48f96a927_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-398b99d4a211e23da0d673c1889bc037_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-3ef197ddda52133d9a5ed97ccf5c64e6_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-42eceb5150da1ea334668c5901b27def_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-4aa00a1e25b276ed29b7d22002bb2247_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-54095ed615a4341f9555963ebc1781c3_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-5d66d690aa20132e89c5512319002c7a_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-640325f7b37ea6bea62b719d25abf943_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-79776a38eb49cf4559c322748a4cbed3_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-800c40353982433989c19b88467e5887_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-83e0bc70a5189426decc0a0ad293bf5e_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-88aec1503aa3f4a97b954035bd99ad76_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-8e54658eecdc6d21752717971cfcd926_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-9749eddbc19e3403435e08aaeaf5f165_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-a73c17560116ed7e74396a491e72f05f_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-bd381c2c3585e0e122288c86218d90b3_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-be78852bd396458a8917d7f7ec96cd08_720w.jpg`
+- **missing-asset**: `2-deep-learning/img/v2-cc5050d50f4ec9669863ff1e8a7cc52c_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-d76500b6880269acd6247cb09c82ea3f_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-e81b6efd946be1d5513252d010016461_720w.webp`
+- **missing-asset**: `2-deep-learning/img/v2-f64608f122af88d09f116f20e95409af_720w.webp`
+- **missing-asset**: `Note_v1/imgs/image-20231015212310503.png`
+- **missing-asset**: `Note_v1/imgs/image-20231015215551974.png`
+- **missing-asset**: `Note_v1/imgs/image-20231015222608447.png`
+- **missing-asset**: `Note_v1/imgs/image-20231026222130765.png`
+- **missing-asset**: `Note/pic/image-20220721234657466.png`
+- **missing-asset**: `Note/pic/image-20220723101835912.png`
+
+## Errors
+
+- None
