@@ -1,4 +1,141 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";import {getCollection} from "astro:content";const notes=(await getCollection("notes",({data})=>!data.draft)).sort((a,b)=>b.data.date.valueOf()-a.data.date.valueOf());
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { buildKnowledgeTree } from "../../lib/knowledge.mjs";
+
+const notes = await getCollection("notes", ({ data }) => !data.draft);
+const tree = buildKnowledgeTree(notes);
+const recent = [...notes]
+  .sort(
+    (left, right) =>
+      (right.data.updated || right.data.date).valueOf() -
+      (left.data.updated || left.data.date).valueOf(),
+  )
+  .slice(0, 8);
+const tagCounts = new Map();
+for (const note of notes) {
+  for (const tag of note.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  }
+}
+const popularTags = [...tagCounts.entries()]
+  .sort(
+    ([leftTag, leftCount], [rightTag, rightCount]) =>
+      rightCount - leftCount || leftTag.localeCompare(rightTag),
+  )
+  .slice(0, 12);
 ---
-<BaseLayout title="Notes · Boyang Wang"><main class="container"><header class="page-head"><div class="eyebrow">Knowledge base</div><h1>Notes</h1><p class="muted">Short, reusable technical notes that feed the knowledge hub.</p></header><section class="post-list">{notes.map(note=><a class="post-row" href={`/notes/${note.id}`}><div class="meta">{note.data.area}</div><div><h2>{note.data.title}</h2><p class="muted">{note.data.description}</p>{note.data.tags.map(tag=><span class="tag">{tag}</span>)}</div></a>)}</section></main></BaseLayout>
+
+<BaseLayout title="Knowledge · Boyang Wang">
+  <main class="container">
+    <header class="knowledge-hero">
+      <div>
+        <div class="eyebrow">Personal knowledge base</div>
+        <h1>Knowledge, organized for reuse.</h1>
+        <p class="lead">
+          {notes.length} technical documents across AI agents, data systems,
+          architecture, SRE, web engineering and applied science.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/search">Search everything</a>
+          {
+            recent[0] && (
+              <a class="button" href={`/notes/${recent[0].id}`}>
+                Read latest
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <div class="knowledge-metrics">
+        <div>
+          <strong>{notes.length}</strong>
+          <span>Documents</span>
+        </div>
+        <div>
+          <strong>{tree.length}</strong>
+          <span>Areas</span>
+        </div>
+        <div>
+          <strong>{popularTags.length}</strong>
+          <span>Top tags</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Explore</div>
+          <h2>Knowledge areas</h2>
+        </div>
+      </div>
+      <div class="area-grid">
+        {
+          tree.map((area) => (
+            <article class="area-card">
+              <div class="area-card-head">
+                <h3>{area.name}</h3>
+                <span>{area.count}</span>
+              </div>
+              <ul>
+                {area.series.map((series) => (
+                  <li>
+                    <span>{series.name}</span>
+                    <small>{series.entries.length}</small>
+                  </li>
+                ))}
+              </ul>
+              {area.series[0]?.entries[0] && (
+                <a href={`/notes/${area.series[0].entries[0].id}`}>
+                  Open area →
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    {
+      popularTags.length > 0 && (
+        <section class="section">
+          <div class="section-head">
+            <h2>Popular tags</h2>
+          </div>
+          <div class="tag-cloud">
+            {popularTags.map(([tag, count]) => (
+              <a class="tag" href={`/search?q=${encodeURIComponent(tag)}`}>
+                {tag} <span>{count}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Recently updated</h2>
+        <a class="muted" href="/search">Search all →</a>
+      </div>
+      <div class="post-list">
+        {
+          recent.map((note) => (
+            <a class="post-row" href={`/notes/${note.id}`}>
+              <div class="meta">
+                {note.data.area}
+                <span>{note.data.language === "zh-CN" ? "中文" : "EN"}</span>
+              </div>
+              <div>
+                <h3>{note.data.title}</h3>
+                <p class="muted">{note.data.description}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+interface NavigationEntry {
+  id: string;
+  title: string;
+  language: "zh-CN" | "en";
+}
+
+interface NavigationSeries {
+  name: string;
+  entries: NavigationEntry[];
+}
+
+interface NavigationArea {
+  name: string;
+  count: number;
+  series: NavigationSeries[];
+}
+
+interface Props {
+  tree: NavigationArea[];
+  currentId: string;
+}
+
+const { tree, currentId } = Astro.props;
+---
+
+<nav class="knowledge-sidebar" aria-label="Knowledge base navigation">
+  <details class="knowledge-nav-toggle">
+    <summary>Browse knowledge</summary>
+    <div class="knowledge-nav-content">
+      {
+        tree.map((area) => (
+          <section class="knowledge-nav-area">
+            <h2>
+              {area.name}
+              <span>{area.count}</span>
+            </h2>
+            {area.series.map((series) => (
+              <div class="knowledge-nav-series">
+                <h3>{series.name}</h3>
+                <ul>
+                  {series.entries.map((entry) => (
+                    <li>
+                      <a
+                        href={`/notes/${entry.id}`}
+                        aria-current={entry.id === currentId ? "page" : undefined}
+                      >
+                        <span>{entry.title}</span>
+                        <small>{entry.language === "zh-CN" ? "中文" : "EN"}</small>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+  </details>
+</nav>

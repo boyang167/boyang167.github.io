@@ -1,0 +1,111 @@
+---
+import KnowledgeSidebar from "../components/KnowledgeSidebar.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+const {
+  entry,
+  tree,
+  headings,
+  translation,
+  previous,
+  next,
+} = Astro.props;
+const { data } = entry;
+const published = data.updated || data.date;
+const series = data.series || "General";
+const languageLabel = data.language === "zh-CN" ? "中文" : "English";
+---
+
+<BaseLayout title={`${data.title} · Knowledge`} description={data.description}>
+  <main class="knowledge-shell">
+    <KnowledgeSidebar tree={tree} currentId={entry.id} />
+
+    <article class="knowledge-article" data-pagefind-body>
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/notes">Knowledge</a>
+        <span aria-hidden="true">/</span>
+        <span data-pagefind-filter="area">{data.area}</span>
+        <span aria-hidden="true">/</span>
+        <span>{series}</span>
+      </nav>
+
+      <header class="article-header">
+        <div class="article-kicker">
+          <span>{languageLabel}</span>
+          <span>Updated {published.toLocaleDateString("en-CA")}</span>
+        </div>
+        <h1 data-pagefind-meta="title">{data.title}</h1>
+        <p class="intro">{data.description}</p>
+        <div class="article-actions">
+          {
+            translation && (
+              <a class="button" href={`/notes/${translation.id}`}>
+                {data.language === "zh-CN" ? "Read in English" : "阅读中文版"}
+              </a>
+            )
+          }
+          {
+            data.source && (
+              <a
+                class="button"
+                href={data.source}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
+            )
+          }
+        </div>
+        {
+          data.tags.length > 0 && (
+            <div class="article-tags">
+              {data.tags.map((tag: string) => (
+                <span class="tag" data-pagefind-filter="tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      {
+        data.source && (
+          <aside class="source-notice">
+            This document was imported from an attributed external source.
+            Review the original project for its license and latest version.
+          </aside>
+        )
+      }
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <nav class="article-adjacent" aria-label="Adjacent articles">
+        {
+          previous ? (
+            <a href={`/notes/${previous.id}`}>
+              <small>Previous</small>
+              <strong>{previous.data.title}</strong>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a href={`/notes/${next.id}`} class="next">
+              <small>Next</small>
+              <strong>{next.data.title}</strong>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+
+    <TableOfContents headings={headings} />
+  </main>
+</BaseLayout>

@@ -1,4 +1,35 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";import {getCollection,render} from "astro:content";export async function getStaticPaths(){return(await getCollection("notes",({data})=>!data.draft)).map(entry=>({params:{slug:entry.id},props:{entry}}));}const {entry}=Astro.props;const {Content}=await render(entry);
+import { getCollection, render } from "astro:content";
+
+import KnowledgeLayout from "../../layouts/KnowledgeLayout.astro";
+import {
+  buildKnowledgeTree,
+  findAdjacent,
+  findTranslation,
+} from "../../lib/knowledge.mjs";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("notes", ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, entries },
+  }));
+}
+
+const { entry, entries } = Astro.props;
+const { Content, headings } = await render(entry);
+const tree = buildKnowledgeTree(entries);
+const translation = findTranslation(entry, entries);
+const { previous, next } = findAdjacent(entry, entries);
 ---
-<BaseLayout title={`${entry.data.title} · Notes`}><article class="article"><div class="eyebrow">{entry.data.area}</div><h1>{entry.data.title}</h1><p class="intro">{entry.data.description}</p><div class="prose"><Content/></div></article></BaseLayout>
+
+<KnowledgeLayout
+  entry={entry}
+  tree={tree}
+  headings={headings}
+  translation={translation}
+  previous={previous}
+  next={next}
+>
+  <Content />
+</KnowledgeLayout>
