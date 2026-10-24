@@ -15,10 +15,28 @@ description: >-
 
 | 项 | 约定 |
 |----|------|
+| 本地目录 | `personal-tech-portal`（工作区路径可不同，以含本 skill 的仓库根为准） |
+| GitHub 远程 | **`boyang167/boyang167.github.io`**（用户站，个人主站） |
+| `origin` URL | `https://github.com/boyang167/boyang167.github.io.git` |
+| 线上地址 | **https://boyang167.github.io/**（根路径，无 `base`） |
 | 默认分支 | `main` |
 | 部署 | 推送到 `main` 触发 `.github/workflows/deploy.yml` |
 | 包管理 | npm（`package-lock.json` 应提交） |
 | 忽略项 | 见根目录 `.gitignore`（含 `node_modules/`、`dist/`、`.astro/`） |
+
+### Astro / Pages 配置（方案 B · 用户根域）
+
+- `astro.config.mjs`：`site: 'https://boyang167.github.io'`，**不要**设置 `base`（除非改回项目站）。
+- Pages 首次启用：仓库 **Settings → Pages → Source = GitHub Actions**（见 `.github/PAGES_SETUP.md`）。
+- **不要**默认推送到 `boyang167/boyang.github.io`（旧项目站路径）；仅当用户明确要求时使用该远程并恢复 `base: '/boyang.github.io'`。
+
+### Windows 提交注意
+
+若 `git commit` 报 `unknown option trailer`，使用完整路径 Git：
+
+`C:\1-install\13-git\Git\mingw64\bin\git.exe`
+
+或用 `git write-tree` + `git commit-tree` + `git update-ref` 创建提交（勿改 git config）。
 
 ## 分支命名
 
@@ -91,9 +109,10 @@ refactor/<short-topic>        # 重构（无行为变化）
 
 ## Push 与 GitHub Pages
 
-- 首次：`git remote add origin <url>`，`git push -u origin main`。
-- 确认 `astro.config.mjs` 中 `site` / `base` 与仓库名（用户页或 project pages）一致后再推 `main`。
-- 部署失败：先看 Actions 日志，本地 `npm run build` 必须通过。
+- 检查远程：`git remote -v`，应为 `boyang167.github.io.git`。
+- 首次：`git remote add origin https://github.com/boyang167/boyang167.github.io.git`，`git push -u origin main`。
+- 推送前确认 `site` 与部署目标一致（当前主站无 `base`）。
+- 部署失败：先看 [Actions](https://github.com/boyang167/boyang167.github.io/actions)，本地 `npm run build` 必须通过；deploy 失败常见原因是 Pages 未选 GitHub Actions。
 
 ## Pull Request（可选）
 
@@ -120,7 +139,8 @@ refactor/<short-topic>        # 重构（无行为变化）
 ```
 feat(blog): add agent-evaluation article stub
 fix(i18n): translate knowledge sidebar labels to English
-docs(readme): document GitHub Pages base path
+docs(readme): document boyang167.github.io root Pages URL
+build(site): set site URL for user GitHub Pages root
 ci(deploy): pin Node version in workflow
 chore(deps): bump astro to 5.x
 skills(git): add git-conventions skill for agents
