@@ -20,12 +20,23 @@ npm run preview
 
 ## 发布到 GitHub Pages
 
-1. 将项目推送到 GitHub 仓库，并将默认分支命名为 `main`。
-2. 如果仓库名为 `你的用户名.github.io`，编辑 `astro.config.mjs`，把 `site` 改成 `https://你的用户名.github.io`。
-3. 如果是普通项目仓库（例如 `personal-tech-portal`），还需要设置 `base: '/personal-tech-portal'`，并确认站内链接策略适配 base 路径；更省事的方式是使用 `用户名.github.io` 仓库或自定义域名。
-4. 在 GitHub 仓库 Settings → Pages → Build and deployment 中选择 **GitHub Actions**。
-5. 推送到 `main` 后，`.github/workflows/deploy.yml` 会自动构建并部署。
-6. 如绑定自定义域名，按 GitHub Pages 指引配置 DNS，并将 `site` 改为最终域名。
+本仓库远程为 **`boyang167/boyang.github.io`**（项目站，非用户根域仓库）。
+
+| 配置项 | 当前值 |
+|--------|--------|
+| `site` | `https://boyang167.github.io` |
+| `base` | `/boyang.github.io` |
+| 线上地址 | https://boyang167.github.io/boyang.github.io/ |
+
+### 首次启用 Pages（必做一次）
+
+1. 打开 [仓库 Pages 设置](https://github.com/boyang167/boyang.github.io/settings/pages)。
+2. **Build and deployment → Source** 选择 **GitHub Actions**（不要选 Deploy from a branch）。
+3. 保存后，在 [Actions](https://github.com/boyang167/boyang.github.io/actions) 中 **Re-run** 最新的 *Deploy Astro to GitHub Pages*，或向 `main` 再推送一次。
+
+### 日常发布
+
+推送到 `main` 后，`.github/workflows/deploy.yml` 会自动构建并部署。
 
 ## 发布前必改内容
 
