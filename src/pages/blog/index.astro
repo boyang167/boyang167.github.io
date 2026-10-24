@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const posts = [
+  {slug:'agentic-workflow', category:'AI Agent', date:'2026-06-10', read:'6 分钟', title:'从 ReAct 到 Agentic Workflow：智能体的演进与实践', desc:'从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。', icon:'◈'},
+  {slug:'llm-wiki', category:'知识管理', date:'2026-05-28', read:'8 分钟', title:'打造个人 LLM Wiki：从 0 到 1 的实践', desc:'将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。', icon:'⌘'},
+  {slug:'data-platform', category:'数据工程', date:'2026-05-12', read:'10 分钟', title:'面向 AI 的数据平台架构思考', desc:'从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。', icon:'⌁'},
+  {slug:'ml-validation', category:'机器学习', date:'2026-04-20', read:'7 分钟', title:'配对数据建模：如何避免验证集泄漏', desc:'当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。', icon:'◉'},
+  {slug:'agent-evaluation', category:'AI Agent', date:'2026-04-05', read:'9 分钟', title:'Agent 评估不止看最终答案', desc:'从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。', icon:'▦'},
+];
+---
+<BaseLayout title="技术博客 · Boyang Wang">
+  <section class="wrap page-hero"><div class="eyebrow">NOTES FROM BUILDING</div><h1>技术博客</h1><p>记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。</p><div class="blog-controls"><div class="filter-row"><button class="filter active" data-filter="全部">全部</button><button class="filter" data-filter="AI Agent">AI Agent</button><button class="filter" data-filter="数据工程">数据工程</button><button class="filter" data-filter="机器学习">机器学习</button><button class="filter" data-filter="知识管理">知识管理</button></div><input id="search" type="search" placeholder="搜索文章…" aria-label="搜索文章" /></div></section>
+  <section class="wrap blog-list">{posts.map((post)=><a class="card post-row" href={`/blog/${post.slug}/`} data-category={post.category} data-title={post.title.toLowerCase()}><div class="post-art"><span>{post.icon}</span></div><div class="post-content"><div class="post-meta"><span class="tag">{post.category}</span><span>{post.date} · 阅读 {post.read}</span></div><h2>{post.title}</h2><p class="muted">{post.desc}</p></div><span class="post-arrow">↗</span></a>)}</section>
+  <div class="wrap empty-state" id="empty-state" hidden>没有找到匹配的文章，试试其他关键词。</div>
+</BaseLayout>
+<script>
+const filters = [...document.querySelectorAll('[data-filter]')];
+const search = document.querySelector('#search');
+const rows = [...document.querySelectorAll('.post-row')];
+let active = '全部';
+function applyFilters(){const q=(search?.value||'').toLowerCase().trim();let visible=0;rows.forEach(row=>{const okCategory=active==='全部'||row.dataset.category===active;const okQuery=!q||row.dataset.title?.includes(q)||row.textContent?.toLowerCase().includes(q);row.hidden=!(okCategory&&okQuery);if(!row.hidden)visible++});const empty=document.querySelector('#empty-state');if(empty)empty.hidden=visible!==0;}
+filters.forEach(btn=>btn.addEventListener('click',()=>{active=btn.dataset.filter||'全部';filters.forEach(f=>f.classList.toggle('active',f===btn));applyFilters()}));search?.addEventListener('input',applyFilters);
+</script>
+<style>
+.blog-controls{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:30px}.filter-row{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:var(--surface);border-radius:100px;padding:8px 13px;color:var(--muted);font-size:11px;cursor:pointer}.filter.active{background:var(--navy);color:#fff;border-color:var(--navy)}#search{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 13px;min-width:190px;font:inherit;font-size:12px;outline-color:var(--blue)}.blog-list{display:grid;gap:13px}.post-row{display:grid;grid-template-columns:120px 1fr 25px;align-items:center;gap:22px;padding:16px;transition:transform .2s}.post-row:hover{transform:translateX(3px)}.post-art{height:105px;border-radius:12px;background:linear-gradient(135deg,#142342,#2e5598);display:grid;place-items:center;color:#b8d0ff;font-size:36px;position:relative;overflow:hidden}.post-art:after{content:'';position:absolute;width:110px;height:110px;border:1px solid #a8c5ff55;transform:rotate(35deg);border-radius:22px}.post-art span{z-index:1}.post-meta{display:flex;align-items:center;gap:12px;font-size:10px;color:var(--muted)}.post-content h2{font-size:18px;margin:10px 0 6px}.post-content p{font-size:12px;margin:0}.post-arrow{color:var(--blue);font-size:20px}.empty-state{text-align:center;padding:40px;color:var(--muted)}[hidden]{display:none!important}@media(max-width:650px){.blog-controls{align-items:stretch;flex-direction:column}.filter-row{gap:6px}#search{width:100%}.post-row{grid-template-columns:76px 1fr;gap:13px;padding:12px}.post-art{height:82px}.post-content h2{font-size:14px}.post-content p{font-size:11px}.post-meta{flex-wrap:wrap;gap:6px}.post-arrow{display:none}}
+</style>

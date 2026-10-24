@@ -1,0 +1,48 @@
+---
+const currentPath = Astro.url.pathname;
+const links = [
+  { href: '/', label: '首页' },
+  { href: '/about/', label: '自我介绍' },
+  { href: '/blog/', label: '技术博客' },
+  { href: '/projects/', label: '项目作品' },
+  { href: '/knowledge/', label: '知识库' },
+];
+---
+<header class="site-header wrap">
+  <a class="brand" href="/" aria-label="返回首页"><span class="brand-mark">B</span><span>Boyang Wang<span class="brand-sub">PERSONAL TECH HUB</span></span></a>
+  <nav aria-label="主导航">
+    {links.map((link) => <a class:list={["nav-link", currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) ? 'active' : '']} href={link.href}>{link.label}</a>)}
+  </nav>
+  <div class="header-actions">
+    <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言">EN</button>
+    <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题">◐</button>
+    <a class="contact-pill" href="/about/#contact">联系我 <span>↗</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="打开导航">☰</button>
+  </div>
+</header>
+<script>
+  const languageButton = document.querySelector('#language-toggle');
+  const themeButton = document.querySelector('#theme-toggle');
+  const menuButton = document.querySelector('#menu-toggle');
+  themeButton?.addEventListener('click', () => {
+    const dark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  });
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  const setLanguageLabel = () => {
+    const english = document.documentElement.lang === 'en';
+    if (languageButton) languageButton.textContent = english ? 'ZH' : 'EN';
+    if (languageButton) languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+    if (languageButton) languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+  };
+  languageButton?.addEventListener('click', () => {
+    const next = document.documentElement.lang === 'en' ? 'zh' : 'en';
+    window.dispatchEvent(new CustomEvent('language-change', { detail: next }));
+    setLanguageLabel();
+  });
+  setLanguageLabel();
+  menuButton?.addEventListener('click', () => document.querySelector('.site-header')?.classList.toggle('menu-open'));
+</script>
+<style>
+  .language-button{border:1px solid var(--line);background:var(--surface);color:var(--blue);border-radius:11px;height:38px;padding:0 11px;font-size:11px;font-weight:800;cursor:pointer}.language-button:hover{background:var(--blue-soft)}
+</style>
