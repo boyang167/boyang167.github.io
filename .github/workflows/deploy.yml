@@ -20,8 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      # 需先在仓库 Settings → Pages → Source 选 GitHub Actions，再运行本 workflow
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
