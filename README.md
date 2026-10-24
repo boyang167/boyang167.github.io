@@ -30,9 +30,11 @@ npm run preview
 
 ### 首次启用 Pages（必做一次）
 
-1. 打开 [仓库 Pages 设置](https://github.com/boyang167/boyang167.github.io/settings/pages)。
-2. **Build and deployment → Source** 选择 **GitHub Actions**（不要选 Deploy from a branch）。
-3. 保存后，在 [Actions](https://github.com/boyang167/boyang167.github.io/actions) 中 **Re-run** 最新的 *Deploy Astro to GitHub Pages*，或向 `main` 再推送一次。
+详见 [.github/PAGES_SETUP.md](.github/PAGES_SETUP.md)。简要步骤：
+
+1. 等 [Actions](https://github.com/boyang167/boyang167.github.io/actions) 中 **Deploy Astro to GitHub Pages** 成功（会创建/更新 `gh-pages` 分支）。
+2. 打开 [Pages 设置](https://github.com/boyang167/boyang167.github.io/settings/pages)。
+3. **Source** 选 **Deploy from a branch** → 分支 **`gh-pages`** → 目录 **`/ (root)`** → Save。
 
 ### 日常发布
 
