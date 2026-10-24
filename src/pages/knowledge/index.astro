@@ -1,18 +1,147 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-const categories=[
- {icon:'⌘',title:'LLM & AI',desc:'大语言模型、提示词、推理与应用实践。',count:'12 篇笔记',href:'/blog/'},
- {icon:'◈',title:'Agent 系统',desc:'Agent 架构、工具调用、工作流与评估。',count:'18 篇笔记',href:'/blog/'},
- {icon:'⌁',title:'数据工程',desc:'数据平台、语义层、数据治理与工程实践。',count:'15 篇笔记',href:'/blog/'},
- {icon:'◉',title:'机器学习',desc:'建模方法、验证策略、指标与可解释性。',count:'10 篇笔记',href:'/blog/'},
- {icon:'▦',title:'系统架构',desc:'系统设计、API、分布式系统与可靠性。',count:'9 篇笔记',href:'/blog/'},
- {icon:'✳',title:'开发工具',desc:'开发环境、自动化、Git 与效率工具。',count:'8 篇笔记',href:'/blog/'},
-];
+import { loadPublishEntries, wikiPublishAvailable } from '../../lib/knowledge-publish';
+
+const entries = loadPublishEntries();
+const submoduleReady = wikiPublishAvailable();
+
+const categoryIcons: Record<string, string> = {
+  'big-data': '⌁',
+  biological: '◉',
+  database: '▦',
+  infrastructure: '▦',
+  kg: '◈',
+  ml: '◉',
+  programming: '✳',
+  tech: '⌘',
+  general: '✳',
+};
+
+function categoryTitle(id: string) {
+  const labels: Record<string, string> = {
+    'big-data': '数据工程',
+    biological: '生信与数据',
+    database: '数据库',
+    infrastructure: '基础设施',
+    kg: '知识图谱',
+    ml: '机器学习',
+    programming: '编程',
+    tech: '技术分享',
+    general: '综合',
+  };
+  return labels[id] ?? id.replace(/-/g, ' ');
+}
+
+const byCategory = new Map<string, typeof entries>();
+for (const entry of entries) {
+  const list = byCategory.get(entry.category) ?? [];
+  list.push(entry);
+  byCategory.set(entry.category, list);
+}
 ---
 <BaseLayout title="技术知识库 · Boyang Wang">
-  <section class="wrap page-hero"><div class="eyebrow">A MAP OF WHAT I'M LEARNING</div><h1>技术知识库</h1><p>把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。</p></section>
-  <section class="wrap knowledge-layout"><aside class="knowledge-sidebar card"><div class="search-fake">⌕ <span>查找知识主题…</span></div><b>知识目录</b><a class="selected" href="#categories">⌂　总览</a><a href="#categories">⌘　LLM & AI</a><a href="#categories">◈　Agent 系统</a><a href="#categories">⌁　数据工程</a><a href="#categories">◉　机器学习</a><a href="#categories">▦　系统架构</a><a href="#categories">✳　开发工具</a><div class="sidebar-note"><span>✦</span><b>持续生长中</b><small>边学习，边整理，边分享。</small></div></aside><div class="knowledge-main" id="categories"><div class="knowledge-heading"><div><h2>按主题探索</h2><p class="muted">从一个主题开始，逐步建立完整的知识图谱。</p></div><span class="tag">公开内容</span></div><div class="grid-2">{categories.map((item)=><a class="card knowledge-card" href={item.href}><div class="card-icon">{item.icon}</div><h3>{item.title}</h3><p class="muted">{item.desc}</p><div class="knowledge-bottom"><span>{item.count}</span><span>→</span></div></a>)}</div><div class="knowledge-banner"><div class="card-icon">✧</div><div><b>从知识库到个人 Wiki</b><p class="muted">建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。</p></div><a href="/about/">了解我的方法 ↗</a></div></div></section>
+  <section class="wrap page-hero">
+    <div class="eyebrow">A MAP OF WHAT I'M LEARNING</div>
+    <h1>技术知识库</h1>
+    <p>
+      公开内容来自
+      <a href="https://github.com/boyang167/personal-knowledge-wiki/tree/main/publish" rel="noopener">personal-knowledge-wiki</a>
+      的 <code>publish/</code> 目录；更新后会自动同步到本站点。
+    </p>
+  </section>
+  <section class="wrap knowledge-layout">
+    <aside class="knowledge-sidebar card">
+      <div class="search-fake">⌕ <span>按主题浏览</span></div>
+      <b>知识目录</b>
+      <a class="selected" href="#articles">⌂　总览</a>
+      {[...byCategory.keys()].map((cat) => (
+        <a href={`#cat-${cat}`}>{categoryIcons[cat] ?? '◈'}　{categoryTitle(cat)}</a>
+      ))}
+      <div class="sidebar-note">
+        <span>✦</span>
+        <b>{submoduleReady ? '已关联 wiki' : '未初始化 submodule'}</b>
+        <small>
+          {submoduleReady
+            ? `${entries.length} 篇已发布笔记`
+            : '运行 git submodule update --init'}
+        </small>
+      </div>
+    </aside>
+    <div class="knowledge-main" id="articles">
+      <div class="knowledge-heading">
+        <div>
+          <h2>已发布笔记</h2>
+          <p class="muted">仅展示经审核的 publish 副本，与 Agent 用的 wiki 主库分离。</p>
+        </div>
+        <span class="tag">公开内容</span>
+      </div>
+      {entries.length === 0 ? (
+        <div class="card empty-card">
+          <p class="muted">暂无 publish 文章。在 wiki 仓库复制内容到 <code>publish/</code> 并 push 后，门户会自动重新部署。</p>
+        </div>
+      ) : (
+        <>
+          {[...byCategory.entries()].map(([cat, list]) => (
+            <div class="category-block" id={`cat-${cat}`}>
+              <h3>{categoryTitle(cat)}</h3>
+              <div class="grid-2">
+                {list.map((item) => (
+                  <a class="card knowledge-card" href={`/knowledge/${item.slug}/`}>
+                    <div class="card-icon">{categoryIcons[cat] ?? '◈'}</div>
+                    <h3>{item.title}</h3>
+                    <p class="muted">{item.summary || '—'}</p>
+                    <div class="knowledge-bottom">
+                      <span>{item.updated || item.tags.slice(0, 2).join(' · ') || 'publish'}</span>
+                      <span>→</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+      <div class="knowledge-banner">
+        <div class="card-icon">✧</div>
+        <div>
+          <b>仓库关联</b>
+          <p class="muted">Submodule：<code>external/personal-knowledge-wiki</code>。push publish/ 触发门户 Actions 重建。</p>
+        </div>
+        <a href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">Wiki 仓库 ↗</a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
 <style>
-.knowledge-layout{display:grid;grid-template-columns:220px 1fr;gap:25px}.knowledge-sidebar{padding:16px;height:max-content;display:grid;gap:6px}.search-fake{padding:10px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px;margin-bottom:12px}.knowledge-sidebar>b{font-size:11px;padding:0 8px 6px}.knowledge-sidebar>a{padding:9px;border-radius:8px;color:var(--muted);font-size:11px}.knowledge-sidebar>a.selected,.knowledge-sidebar>a:hover{background:var(--blue-soft);color:var(--blue)}.sidebar-note{margin-top:20px;padding:14px;background:var(--surface-2);border-radius:10px;display:grid;gap:4px}.sidebar-note span{color:var(--blue)}.sidebar-note b{font-size:11px}.sidebar-note small{font-size:10px;color:var(--muted)}.knowledge-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.knowledge-heading h2{font-size:22px;margin:0 0 5px}.knowledge-heading p{font-size:11px;margin:0}.knowledge-card{padding:22px;transition:transform .2s}.knowledge-card:hover{transform:translateY(-3px)}.knowledge-card .card-icon{margin-bottom:15px}.knowledge-card h3{margin:0 0 8px}.knowledge-card p{font-size:11px;min-height:40px}.knowledge-bottom{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;font-size:10px;color:var(--muted)}.knowledge-bottom span:last-child{color:var(--blue)}.knowledge-banner{display:flex;align-items:center;gap:14px;margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}.knowledge-banner .card-icon{margin:0;flex-shrink:0}.knowledge-banner>div:nth-child(2){flex:1}.knowledge-banner b{font-size:12px}.knowledge-banner p{font-size:10px;margin:4px 0 0}.knowledge-banner>a{font-size:10px;color:var(--blue);font-weight:700;white-space:nowrap}@media(max-width:760px){.knowledge-layout{grid-template-columns:1fr}.knowledge-sidebar{display:none}.knowledge-banner{align-items:flex-start;flex-wrap:wrap}.knowledge-banner>a{margin-left:55px}}
+.knowledge-layout{display:grid;grid-template-columns:220px 1fr;gap:25px}
+.knowledge-sidebar{padding:16px;height:max-content;display:grid;gap:6px}
+.search-fake{padding:10px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px;margin-bottom:12px}
+.knowledge-sidebar>b{font-size:11px;padding:0 8px 6px}
+.knowledge-sidebar>a{padding:9px;border-radius:8px;color:var(--muted);font-size:11px}
+.knowledge-sidebar>a.selected,.knowledge-sidebar>a:hover{background:var(--blue-soft);color:var(--blue)}
+.sidebar-note{margin-top:20px;padding:14px;background:var(--surface-2);border-radius:10px;display:grid;gap:4px}
+.sidebar-note span{color:var(--blue)}
+.sidebar-note b{font-size:11px}
+.sidebar-note small{font-size:10px;color:var(--muted)}
+.knowledge-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.knowledge-heading h2{font-size:22px;margin:0 0 5px}
+.knowledge-heading p{font-size:11px;margin:0}
+.category-block{margin-bottom:28px}
+.category-block h3{font-size:14px;margin:0 0 12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.knowledge-card{padding:22px;transition:transform .2s}
+.knowledge-card:hover{transform:translateY(-3px)}
+.knowledge-card .card-icon{margin-bottom:15px}
+.knowledge-card h3{margin:0 0 8px;font-size:15px}
+.knowledge-card p{font-size:11px;min-height:40px}
+.knowledge-bottom{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;font-size:10px;color:var(--muted)}
+.knowledge-bottom span:last-child{color:var(--blue)}
+.empty-card{padding:24px}
+.knowledge-banner{display:flex;align-items:center;gap:14px;margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+.knowledge-banner .card-icon{margin:0;flex-shrink:0}
+.knowledge-banner>div:nth-child(2){flex:1}
+.knowledge-banner b{font-size:12px}
+.knowledge-banner p{font-size:10px;margin:4px 0 0}
+.knowledge-banner>a{font-size:10px;color:var(--blue);font-weight:700;white-space:nowrap}
+.page-hero code{font-size:.9em}
+@media(max-width:760px){.knowledge-layout{grid-template-columns:1fr}.knowledge-sidebar{display:none}.knowledge-banner{align-items:flex-start;flex-wrap:wrap}.knowledge-banner>a{margin-left:55px}}
 </style>

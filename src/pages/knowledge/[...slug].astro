@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadPublishEntries } from '../../lib/knowledge-publish';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  return loadPublishEntries().map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const html = marked.parse(entry.body, { async: false }) as string;
+const categoryLabel = entry.category.replace(/-/g, ' ');
+---
+<BaseLayout title={`${entry.title} · 知识库`} description={entry.summary || entry.title}>
+  <article class="wrap article-page">
+    <a class="back-link" href="/knowledge/">← 返回知识库</a>
+    <header class="article-header">
+      <span class="tag">{categoryLabel}</span>
+      <h1>{entry.title}</h1>
+      {entry.summary && <p class="article-intro">{entry.summary}</p>}
+      <div class="byline">
+        <span class="byline-avatar">KB</span>
+        <span>
+          <b>Published wiki</b>
+          {entry.updated && <small>{entry.updated}</small>}
+        </span>
+      </div>
+    </header>
+    <div class="article-layout article-layout-single">
+      <div class="article-body-content knowledge-md" set:html={html} />
+    </div>
+  </article>
+</BaseLayout>
+<style>
+  .article-page{padding-top:28px}
+  .back-link{font-size:12px;color:var(--muted)}
+  .article-header{max-width:820px;margin:48px auto 32px}
+  .article-header h1{font-size:clamp(28px,4vw,42px);margin:18px 0}
+  .article-intro{font-size:17px;color:var(--muted);max-width:760px}
+  .byline{display:flex;align-items:center;gap:10px;margin-top:25px}
+  .byline-avatar{width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800}
+  .byline>span:last-child{display:grid}
+  .byline b{font-size:12px}
+  .byline small{font-size:10px;color:var(--muted)}
+  .article-layout-single{max-width:720px;margin:0 auto 55px}
+  .knowledge-md :global(h2){font-size:22px;margin:28px 0 12px}
+  .knowledge-md :global(h3){font-size:18px;margin:22px 0 10px}
+  .knowledge-md :global(p){color:var(--muted);line-height:1.85;font-size:15px}
+  .knowledge-md :global(ul){color:var(--muted);padding-left:1.2em;line-height:1.75}
+  .knowledge-md :global(a){color:var(--blue)}
+  .knowledge-md :global(table){width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+  .knowledge-md :global(th),
+  .knowledge-md :global(td){border:1px solid var(--line);padding:8px 10px;text-align:left}
+</style>

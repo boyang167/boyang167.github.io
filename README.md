@@ -70,4 +70,18 @@ astro.config.mjs
 
 - 以内容和工程实践为中心，采用留白、低饱和背景、蓝色强调和卡片布局。
 - About 页面是个人品牌入口：定位、技术理念、能力方向、经历、公开内容与联系方式。
-- 当前不依赖数据库或服务端 API，适合静态托管；知识库先作为公开入口，后续可独立迁移到 Starlight。
+- 当前不依赖数据库或服务端 API，适合静态托管；知识库内容来自关联仓库 **`publish/`**（见下方）。
+
+## 关联知识库（personal-knowledge-wiki）
+
+| 项 | 说明 |
+|----|------|
+| Submodule | `external/personal-knowledge-wiki` → [boyang167/personal-knowledge-wiki](https://github.com/boyang167/personal-knowledge-wiki) |
+| 线上路径 | [/knowledge/](https://boyang167.github.io/knowledge/) |
+| 自动同步 | wiki 的 `publish/` push 后触发门户部署（需 wiki 配置 `PORTAL_REPO_TOKEN`） |
+
+克隆与 Token 配置见 [.github/KNOWLEDGE_WIKI_SETUP.md](.github/KNOWLEDGE_WIKI_SETUP.md)。
+
+```bash
+git submodule update --init --recursive
+```
