@@ -20,19 +20,19 @@ npm run preview
 
 ## 发布到 GitHub Pages
 
-本仓库远程为 **`boyang167/boyang.github.io`**（项目站，非用户根域仓库）。
+本仓库远程为 **`boyang167/boyang167.github.io`**（GitHub 用户站，根路径部署）。
 
 | 配置项 | 当前值 |
 |--------|--------|
 | `site` | `https://boyang167.github.io` |
-| `base` | `/boyang.github.io` |
-| 线上地址 | https://boyang167.github.io/boyang.github.io/ |
+| `base` | （无，站点在域名根路径） |
+| 线上地址 | https://boyang167.github.io/ |
 
 ### 首次启用 Pages（必做一次）
 
-1. 打开 [仓库 Pages 设置](https://github.com/boyang167/boyang.github.io/settings/pages)。
+1. 打开 [仓库 Pages 设置](https://github.com/boyang167/boyang167.github.io/settings/pages)。
 2. **Build and deployment → Source** 选择 **GitHub Actions**（不要选 Deploy from a branch）。
-3. 保存后，在 [Actions](https://github.com/boyang167/boyang.github.io/actions) 中 **Re-run** 最新的 *Deploy Astro to GitHub Pages*，或向 `main` 再推送一次。
+3. 保存后，在 [Actions](https://github.com/boyang167/boyang167.github.io/actions) 中 **Re-run** 最新的 *Deploy Astro to GitHub Pages*，或向 `main` 再推送一次。
 
 ### 日常发布
 
