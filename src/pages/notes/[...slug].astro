@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { categoryLabel as noteCategoryLabel } from '../../lib/note-categories';
+import { renderMarkdownDocument } from '../../lib/render-markdown';
+import { loadWikiNotes, rewriteNoteMediaUrls } from '../../lib/wiki-notes';
+import 'katex/dist/katex.min.css';
+
+export function getStaticPaths() {
+  return loadWikiNotes().map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
+---
+<BaseLayout title={`${entry.title} · 笔记`} description={entry.summary || entry.title}>
+  <article class="wrap article-page">
+    <a class="back-link" href="/notes/">← 返回笔记</a>
+    <header class="article-header">
+      <span class="tag">{noteCategoryLabel(entry.category)}</span>
+      {entry.status && <span class="tag tag-muted">{entry.status}</span>}
+      <h1>{entry.title}</h1>
+      {entry.summary && <p class="article-intro">{entry.summary}</p>}
+      <div class="byline">
+        <span class="byline-avatar">NT</span>
+        <span>
+          <b>raw/1-Note</b>
+          {entry.updated && <small>{entry.updated}</small>}
+        </span>
+      </div>
+    </header>
+    <div class:list={['article-layout', { 'article-layout--no-toc': toc.length === 0 }]}>
+      {toc.length > 0 && (
+        <aside class="toc" aria-label="本文目录">
+          <b>本文目录</b>
+          <nav class="toc-nav">
+            {toc.map((item) => (
+              <a href={`#${item.id}`} class={`toc-link depth-${item.depth}`}>
+                {item.text}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      )}
+      <div class="article-body-content knowledge-md" set:html={html} />
+    </div>
+    <p class="note-crosslink muted">
+      经审核的对外副本见 <a href="/knowledge/">知识库</a>（<code>publish/</code>，路径与 wiki 主题对应）。
+    </p>
+  </article>
+</BaseLayout>
+<style>
+  .article-page {
+    padding-top: 28px;
+  }
+  .back-link {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .article-header {
+    max-width: 820px;
+    margin: 48px auto 32px;
+  }
+  .article-header h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    margin: 18px 0;
+  }
+  .article-intro {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 760px;
+  }
+  .tag-muted {
+    margin-left: 6px;
+    opacity: 0.85;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+  }
+  .byline-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--blue-soft);
+    color: var(--blue);
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .byline > span:last-child {
+    display: grid;
+  }
+  .byline b {
+    font-size: 12px;
+  }
+  .byline small {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .article-layout {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 720px);
+    gap: 48px;
+    justify-content: center;
+    margin: 0 auto 24px;
+    max-width: 980px;
+  }
+  .article-layout--no-toc {
+    grid-template-columns: minmax(0, 720px);
+    max-width: 720px;
+  }
+  .toc {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    font-size: 11px;
+    color: var(--muted);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  .toc b {
+    display: block;
+    color: var(--text);
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .toc-nav {
+    display: grid;
+    gap: 8px;
+  }
+  .toc-link {
+    color: var(--muted);
+    line-height: 1.45;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    padding-left: 0;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .toc-link:hover {
+    color: var(--blue);
+  }
+  .toc-link.depth-2 {
+    padding-left: 0;
+  }
+  .toc-link.depth-3 {
+    padding-left: 12px;
+    font-size: 10px;
+  }
+  .toc-link.depth-4 {
+    padding-left: 22px;
+    font-size: 10px;
+    opacity: 0.92;
+  }
+  .toc-link.depth-5 {
+    padding-left: 32px;
+    font-size: 10px;
+    opacity: 0.85;
+  }
+  @media (max-width: 860px) {
+    .article-layout {
+      display: block;
+      max-width: 720px;
+      padding: 0;
+    }
+    .toc {
+      position: static;
+      max-height: none;
+      margin-bottom: 28px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+  }
+  .knowledge-md :global(h2),
+  .knowledge-md :global(h3),
+  .knowledge-md :global(h4),
+  .knowledge-md :global(h5) {
+    scroll-margin-top: 28px;
+  }
+  .knowledge-md :global(h2) {
+    font-size: 22px;
+    margin: 28px 0 12px;
+  }
+  .knowledge-md :global(h3) {
+    font-size: 18px;
+    margin: 22px 0 10px;
+  }
+  .knowledge-md :global(p) {
+    color: var(--muted);
+    line-height: 1.85;
+    font-size: 15px;
+  }
+  .knowledge-md :global(ul) {
+    color: var(--muted);
+    padding-left: 1.2em;
+    line-height: 1.75;
+  }
+  .knowledge-md :global(a) {
+    color: var(--blue);
+  }
+  .knowledge-md :global(img) {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 16px 0;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .knowledge-md :global(.math-display) {
+    margin: 20px 0;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .knowledge-md :global(.math-inline) {
+    display: inline;
+  }
+  .knowledge-md :global(.math-fallback) {
+    font-size: 13px;
+    white-space: pre-wrap;
+  }
+  .knowledge-md :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  .knowledge-md :global(th),
+  .knowledge-md :global(td) {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .note-crosslink {
+    max-width: 720px;
+    margin: 0 auto 55px;
+    font-size: 12px;
+  }
+  .note-crosslink a {
+    color: var(--blue);
+    font-weight: 700;
+  }
+</style>

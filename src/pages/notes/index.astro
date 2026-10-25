@@ -1,0 +1,278 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  categoryLabel,
+  NOTE_CATEGORY_ICONS,
+} from '../../lib/note-categories';
+import {
+  listNoteCategories,
+  loadWikiNotes,
+  wikiNotesAvailable,
+} from '../../lib/wiki-notes';
+
+const entries = loadWikiNotes();
+const categories = listNoteCategories();
+const submoduleReady = wikiNotesAvailable();
+
+const catAnchor = (id: string) => `cat-${id.replace(/[^a-zA-Z0-9-]/g, '-')}`;
+
+const byCategory = new Map<string, typeof entries>();
+for (const entry of entries) {
+  const list = byCategory.get(entry.category) ?? [];
+  list.push(entry);
+  byCategory.set(entry.category, list);
+}
+---
+<BaseLayout
+  title="学习笔记 · Boyang Wang"
+  description="Markdown 个人笔记，目录与 personal-knowledge-wiki/raw/1-Note 保持一致。"
+>
+  <section class="wrap page-hero">
+    <div class="eyebrow">MARKDOWN NOTES</div>
+    <h1>学习笔记</h1>
+    <p class="muted hero-desc">
+      展示 <code>raw/1-Note</code> 下的 Markdown 原笔记（含子目录与图片资源）。经审核对外发布的副本见
+      <a class="text-link" href="/knowledge/">知识库 ↗</a>。
+    </p>
+  </section>
+  <section class="wrap knowledge-layout">
+    <aside class="knowledge-sidebar card">
+      <div class="search-fake">⌕ <span>按主题浏览</span></div>
+      <b>笔记目录</b>
+      <a class="selected" href="#articles">⌂　总览</a>
+      {categories.map((cat) => (
+        <a href={`#${catAnchor(cat)}`}>
+          {NOTE_CATEGORY_ICONS[cat] ?? '◈'}　{categoryLabel(cat)}
+        </a>
+      ))}
+      <div class="sidebar-note">
+        <span>✎</span>
+        <b>{submoduleReady ? 'raw/1-Note' : '未找到笔记目录'}</b>
+        <small>
+          {submoduleReady
+            ? `${categories.length} 个主题 · ${entries.length} 篇 Markdown`
+            : '初始化 submodule 或放置 sibling wiki 仓库'}
+        </small>
+      </div>
+    </aside>
+    <div class="knowledge-main" id="articles">
+      <div class="knowledge-heading">
+        <div>
+          <h2>全部笔记</h2>
+          <p class="muted">目录结构与仓库 <code>raw/1-Note</code> 一致，图片从 <code>img/</code> 加载。</p>
+        </div>
+        <span class="tag">Markdown</span>
+      </div>
+      {categories.map((cat) => {
+        const list = byCategory.get(cat) ?? [];
+        return (
+          <div class="category-block" id={catAnchor(cat)}>
+            <h3>{categoryLabel(cat)}</h3>
+            {list.length === 0 ? (
+              <p class="muted category-empty">该主题下暂无 Markdown 文件，可在对应文件夹中添加 .md 笔记。</p>
+            ) : (
+              <div class="grid-2">
+                {list.map((item) => (
+                  <a class="card knowledge-card" href={`/notes/${item.slug}/`}>
+                    <div class="card-icon">{NOTE_CATEGORY_ICONS[cat] ?? '◈'}</div>
+                    <h3>{item.title}</h3>
+                    <p class="muted">{item.summary || '—'}</p>
+                    <div class="knowledge-bottom">
+                      <span>{item.updated || item.tags.slice(0, 2).join(' · ') || item.status}</span>
+                      <span>→</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+      <div class="knowledge-banner">
+        <div class="card-icon">▤</div>
+        <div>
+          <b>与知识库的区别</b>
+          <p class="muted">
+            <strong>笔记</strong> 读取 <code>raw/1-Note/</code>（个人原笔记）；<strong>知识库</strong> 读取
+            <code>publish/</code>（审核后公开）。
+          </p>
+        </div>
+        <a href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">Wiki 仓库 ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .hero-desc {
+    max-width: 640px;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .hero-desc .text-link {
+    color: var(--blue);
+    font-weight: 700;
+  }
+  .knowledge-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+  }
+  .knowledge-sidebar {
+    padding: 16px;
+    height: max-content;
+    display: grid;
+    gap: 6px;
+  }
+  .search-fake {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .knowledge-sidebar > b {
+    font-size: 11px;
+    padding: 0 8px 6px;
+  }
+  .knowledge-sidebar > a {
+    padding: 9px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .knowledge-sidebar > a.selected,
+  .knowledge-sidebar > a:hover {
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .sidebar-note {
+    margin-top: 20px;
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    display: grid;
+    gap: 4px;
+  }
+  .sidebar-note span {
+    color: var(--blue);
+  }
+  .sidebar-note b {
+    font-size: 11px;
+  }
+  .sidebar-note small {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .knowledge-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .knowledge-heading h2 {
+    font-size: 22px;
+    margin: 0 0 5px;
+  }
+  .knowledge-heading p {
+    font-size: 11px;
+    margin: 0;
+  }
+  .category-block {
+    margin-bottom: 28px;
+  }
+  .category-block h3 {
+    font-size: 14px;
+    margin: 0 0 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .category-empty {
+    font-size: 12px;
+    margin: 0 0 8px;
+    padding: 14px 16px;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+  }
+  .knowledge-card {
+    padding: 22px;
+    transition: transform 0.2s;
+  }
+  .knowledge-card:hover {
+    transform: translateY(-3px);
+  }
+  .knowledge-card .card-icon {
+    margin-bottom: 15px;
+  }
+  .knowledge-card h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+  }
+  .knowledge-card p {
+    font-size: 11px;
+    min-height: 40px;
+  }
+  .knowledge-bottom {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .knowledge-bottom span:last-child {
+    color: var(--blue);
+  }
+  .empty-card {
+    padding: 24px;
+  }
+  .knowledge-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: var(--surface);
+  }
+  .knowledge-banner .card-icon {
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .knowledge-banner > div:nth-child(2) {
+    flex: 1;
+  }
+  .knowledge-banner b {
+    font-size: 12px;
+  }
+  .knowledge-banner p {
+    font-size: 10px;
+    margin: 4px 0 0;
+  }
+  .knowledge-banner > a {
+    font-size: 10px;
+    color: var(--blue);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .page-hero code {
+    font-size: 0.9em;
+  }
+  @media (max-width: 760px) {
+    .knowledge-layout {
+      grid-template-columns: 1fr;
+    }
+    .knowledge-sidebar {
+      display: none;
+    }
+    .knowledge-banner {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .knowledge-banner > a {
+      margin-left: 55px;
+    }
+  }
+</style>

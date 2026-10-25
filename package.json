@@ -3,10 +3,16 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "scripts": { "dev": "astro dev", "build": "astro build", "preview": "astro preview" },
+  "scripts": {
+    "prepare:notes": "node scripts/prepare-note-assets.mjs",
+    "dev": "npm run prepare:notes && astro dev",
+    "build": "npm run prepare:notes && astro build",
+    "preview": "astro preview"
+  },
   "dependencies": {
     "astro": "^5.0.0",
     "gray-matter": "^4.0.3",
+    "katex": "^0.19.1",
     "marked": "^15.0.0"
   }
 }

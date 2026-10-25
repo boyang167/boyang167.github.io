@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { loadPublishEntries } from '../../lib/knowledge-publish';
-import { marked } from 'marked';
+import { renderMarkdownWithMath } from '../../lib/render-markdown';
+import 'katex/dist/katex.min.css';
 
 export function getStaticPaths() {
   return loadPublishEntries().map((entry) => ({
@@ -11,7 +12,7 @@ export function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const html = marked.parse(entry.body, { async: false }) as string;
+const html = renderMarkdownWithMath(entry.body);
 const categoryLabel = entry.category.replace(/-/g, ' ');
 ---
 <BaseLayout title={`${entry.title} · 知识库`} description={entry.summary || entry.title}>
