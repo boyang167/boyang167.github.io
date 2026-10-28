@@ -1,0 +1,348 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MermaidInit from '../../components/MermaidInit.astro';
+import { renderMarkdownDocument } from '../../lib/render-markdown';
+import { blogPostSlug, formatBlogDate, getPublishedBlogPosts } from '../../lib/blog';
+import type { BlogEntry } from '../../lib/blog';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedBlogPosts();
+  return posts.map((post) => ({
+    params: { slug: blogPostSlug(post) },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: BlogEntry;
+}
+
+const { post } = Astro.props;
+const { title, description, category, date, readTime, icon } = post.data;
+const { html, toc } = renderMarkdownDocument(post.body ?? '');
+const dateLabel = formatBlogDate(date);
+---
+<BaseLayout title={`${title} · Boyang Wang`} description={description}>
+  <article class="wrap post-page">
+    <header class="post-top">
+      <a class="text-link post-back" href="/blog/">← 返回技术博客</a>
+      <div class="post-banner">
+        <span class="post-banner-icon" aria-hidden="true">{icon}</span>
+      </div>
+      <div class="post-head">
+        <div class="eyebrow">{category}</div>
+        <h1>{title}</h1>
+        <p class="post-lead">{description}</p>
+        <p class="post-meta muted">
+          <span>Boyang Wang</span>
+          <span class="post-meta-sep">·</span>
+          <span>{dateLabel}</span>
+          <span class="post-meta-sep">·</span>
+          <span>阅读 {readTime}</span>
+        </p>
+      </div>
+    </header>
+
+    <div class:list={['post-layout', { 'post-layout--solo': toc.length === 0 }]}>
+      {toc.length > 0 && (
+        <aside class="post-toc" aria-label="本文目录">
+          <p class="post-toc-title">本文目录</p>
+          <nav class="post-toc-nav">
+            {toc.map((item) => (
+              <a href={`#${item.id}`} class={`post-toc-link depth-${item.depth}`}>
+                {item.text}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      )}
+
+      <div class="post-main">
+        <div class="post-prose prose" set:html={html} />
+        <footer class="post-end">
+          <span class="muted">如果这篇文章对你有帮助，欢迎分享或交流。</span>
+          <a class="text-link" href="/about/#contact">与我交流 ↗</a>
+        </footer>
+      </div>
+    </div>
+  </article>
+  <MermaidInit />
+</BaseLayout>
+<style>
+  .post-page {
+    padding: 48px 0 80px;
+  }
+  .post-top {
+    max-width: 760px;
+    margin: 0 auto 40px;
+  }
+  .post-back {
+    font-size: 12px;
+    margin-bottom: 22px;
+  }
+  .post-banner {
+    height: 132px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+    background: linear-gradient(135deg, #142342 0%, #2e5598 100%);
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .post-banner::after {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border: 1px solid rgba(168, 197, 255, 0.35);
+    border-radius: 24px;
+    transform: rotate(32deg);
+  }
+  .post-banner-icon {
+    position: relative;
+    z-index: 1;
+    font-size: 46px;
+    color: #b8d0ff;
+    line-height: 1;
+  }
+  .post-head h1 {
+    font-size: clamp(30px, 3.5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin: 12px 0 14px;
+  }
+  .post-lead {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .post-meta {
+    font-size: 12px;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  .post-meta-sep {
+    opacity: 0.45;
+  }
+  .post-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 720px);
+    gap: 64px;
+    justify-content: center;
+    align-items: start;
+  }
+  .post-layout--solo {
+    grid-template-columns: minmax(0, 720px);
+  }
+  .post-toc {
+    position: sticky;
+    top: 96px;
+    padding-top: 4px;
+  }
+  .post-toc-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--muted);
+    margin: 0 0 14px;
+    letter-spacing: 0.04em;
+  }
+  .post-toc-nav {
+    display: grid;
+    gap: 10px;
+  }
+  .post-toc-link {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--muted);
+    transition: color 0.15s ease;
+  }
+  .post-toc-link:hover {
+    color: var(--blue);
+  }
+  .post-toc-link.depth-3 {
+    padding-left: 14px;
+    font-size: 11px;
+  }
+  .post-toc-link.depth-4,
+  .post-toc-link.depth-5 {
+    padding-left: 24px;
+    font-size: 11px;
+    opacity: 0.88;
+  }
+  .post-main {
+    min-width: 0;
+  }
+  .post-end {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .post-end .text-link {
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  /* 正文：与全站语气一致，避免过灰、过多边框 */
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    scroll-margin-top: 96px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .prose :global(h2) {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 40px 0 14px;
+  }
+  .prose :global(h3) {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 28px 0 10px;
+  }
+  .prose :global(h4) {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 22px 0 8px;
+  }
+  .prose :global(p) {
+    font-size: 15px;
+    line-height: 1.78;
+    color: var(--text);
+    margin: 0 0 16px;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    font-size: 15px;
+    line-height: 1.72;
+    color: var(--text);
+    margin: 0 0 18px;
+    padding-left: 1.2em;
+  }
+  .prose :global(li) {
+    margin-bottom: 6px;
+  }
+  .prose :global(strong) {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .prose :global(a) {
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .prose :global(blockquote) {
+    margin: 20px 0;
+    padding: 0 0 0 16px;
+    border-left: 3px solid var(--line);
+    color: var(--muted);
+  }
+  .prose :global(blockquote p) {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+  }
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 36px 0;
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 20px 0;
+    line-height: 1.5;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose :global(th) {
+    font-weight: 700;
+    background: var(--surface);
+  }
+  .prose :global(pre) {
+    font-size: 12px;
+    line-height: 1.55;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    overflow-x: auto;
+    margin: 18px 0;
+  }
+  .prose :global(code) {
+    font-size: 0.9em;
+  }
+  .prose :global(p code),
+  .prose :global(li code) {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--surface-2);
+  }
+  .prose :global(.math-display) {
+    overflow-x: auto;
+    margin: 18px 0;
+  }
+  .prose :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 16px 0;
+  }
+  .prose :global(.mermaid-wrap) {
+    margin: 24px 0;
+    padding: 20px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    overflow-x: auto;
+  }
+  .prose :global(.mermaid-wrap pre.mermaid) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0;
+  }
+  .prose :global(.mermaid-wrap svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .post-page {
+      padding-top: 32px;
+    }
+    .post-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .post-toc {
+      position: static;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .post-end {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

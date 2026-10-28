@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import MermaidInit from '../../components/MermaidInit.astro';
 import { categoryLabel as noteCategoryLabel } from '../../lib/note-categories';
 import { renderMarkdownDocument } from '../../lib/render-markdown';
 import { loadWikiNotes, rewriteNoteMediaUrls } from '../../lib/wiki-notes';
@@ -50,6 +51,7 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
       经审核的对外副本见 <a href="/knowledge/">知识库</a>（<code>publish/</code>，路径与 wiki 主题对应）。
     </p>
   </article>
+  <MermaidInit />
 </BaseLayout>
 <style>
   .article-page {

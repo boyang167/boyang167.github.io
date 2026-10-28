@@ -32,42 +32,42 @@ const principles = [
 const skillAreas = [
   {
     n: '01',
-    badge: '✳',
     layout: 'agent',
     title: 'Agent Engineering & Harness & Open-Source Ecosystem',
     summary:
       '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。',
     groups: [
       {
-        section: '01',
         label: '架构设计与推理范式 · Architecture & Reasoning',
         items:
           'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
       },
       {
-        section: '02',
         label: '运行时与工具编排 · Runtime & Orchestration',
         items:
           'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
       },
       {
-        section: '03',
         label: '检索与上下文工程 · Retrieval & Context Engineering',
         items:
           'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
       },
       {
-        section: '04',
         label: '开源 Agent 项目研究 · Open-Source Agent Projects',
         projects: [
           { category: 'Personal Agent', items: 'OpenClaw · Hermes Agent' },
           { category: 'General-Purpose Agent', items: 'DeerFlow' },
-          { category: 'Code Agent', items: 'Pi · Codex · Claude Code' },
+          { category: 'Code Agent', items: 'Pi · Codex · Claude Code · Cursor' },
           { category: 'Multi-Agent Collaboration', items: 'Multica · Orca' },
-          { category: 'Data Agent', items: 'DB-GPT' },
+          { category: 'Data Agent', items: 'DB-GPT · Wren' },
           {
             category: 'Agent Development Framework',
             items: 'Vercel AI SDK · LangGraph',
+          },
+          {
+            category: 'Workflow Orchestration',
+            items: 'Dify · n8n',
+            layout: 'rail',
           },
         ],
       },
@@ -94,7 +94,6 @@ const skillAreas = [
   },
   {
     n: '03',
-    badge: '◉',
     layout: 'ml',
     title: 'Machine Learning & Deep Learning',
     summary: '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。',
@@ -271,18 +270,24 @@ const splitSkillItems = (items: string) =>
               <div
                 class:list={[
                   'skill-group',
-                  group.section && 'skill-group-section',
+                  area.layout === 'agent' &&
+                    !('projects' in group && group.projects) &&
+                    'skill-group-section',
                   'projects' in group && group.projects && 'skill-group-projects',
                 ]}
               >
                 <dt>
-                  {group.section && <span class="skill-section-no">{group.section} /</span>}
                   <span class="skill-group-label">{group.label}</span>
                 </dt>
                 {'projects' in group && group.projects ? (
                   <dd class="skill-project-list">
                     {group.projects.map((row) => (
-                      <div class="skill-project-row">
+                      <div
+                        class:list={[
+                          'skill-project-row',
+                          row.layout === 'rail' && 'skill-project-row-rail',
+                        ]}
+                      >
                         <span class="skill-project-cat">{row.category}</span>
                         <div class="skill-chips">
                           {splitSkillItems(row.items).map((item) => (
@@ -585,13 +590,14 @@ const splitSkillItems = (items: string) =>
   }
   .skill-area-agent .skill-group-projects dt {
     margin: 0 0 14px;
-    padding-bottom: 0;
-    border-bottom: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
     font-size: 12px;
   }
   .skill-area-agent .skill-project-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+    align-items: stretch;
   }
   .skill-area-agent .skill-project-row {
     grid-template-columns: 1fr;
@@ -600,6 +606,29 @@ const splitSkillItems = (items: string) =>
     background: var(--surface);
     border: 1px solid var(--line);
     box-shadow: 0 1px 0 color-mix(in srgb, var(--line) 70%, transparent);
+    min-height: 100%;
+  }
+  .skill-area-agent .skill-project-row-rail {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(120px, 168px) 1fr;
+    align-items: center;
+    gap: 10px 14px;
+    margin-top: 2px;
+    padding: 11px 16px;
+    min-height: 0;
+    background: linear-gradient(
+      95deg,
+      color-mix(in srgb, var(--blue-soft) 72%, var(--surface)) 0%,
+      var(--surface) 58%
+    );
+    border-color: color-mix(in srgb, var(--blue) 16%, var(--line));
+  }
+  .skill-area-agent .skill-project-row-rail .skill-project-cat {
+    margin: 0;
+    color: color-mix(in srgb, var(--blue) 82%, var(--text));
+  }
+  .skill-area-agent .skill-project-row-rail .skill-chips {
+    justify-content: flex-start;
   }
   .skill-area-agent .skill-project-cat {
     margin: 0 0 8px;
@@ -766,6 +795,13 @@ const splitSkillItems = (items: string) =>
     }
     .skill-area-agent .skill-project-list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .skill-area-agent .skill-project-row-rail {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .skill-area-agent .skill-project-row-rail .skill-project-cat {
+      margin-bottom: 6px;
     }
   }
   @media (max-width: 900px) {

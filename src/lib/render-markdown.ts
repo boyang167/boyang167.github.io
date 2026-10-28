@@ -30,6 +30,25 @@ function renderTex(tex: string, displayMode: boolean): string {
   }
 }
 
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"');
+}
+
+/** 将 marked 输出的 mermaid 代码块转为 Mermaid.js 可识别的节点 */
+function transformMermaidInHtml(html: string): string {
+  return html.replace(
+    /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi,
+    (_, raw) => {
+      const source = decodeHtmlEntities(raw).trim();
+      return `<div class="mermaid-wrap"><pre class="mermaid">${escapeHtml(source)}</pre></div>`;
+    },
+  );
+}
+
 function injectMath(markdown: string): string {
   let out = markdown.replace(BLOCK_MATH, (_, tex) => {
     const html = renderTex(tex, true);
@@ -49,7 +68,8 @@ export function renderMarkdownWithMath(
 ): string {
   const body = preprocess ? preprocess(markdown) : markdown;
   const withMath = injectMath(body);
-  return marked.parse(withMath, { async: false, gfm: true }) as string;
+  const html = marked.parse(withMath, { async: false, gfm: true }) as string;
+  return transformMermaidInHtml(html);
 }
 
 export type RenderedMarkdownDocument = {

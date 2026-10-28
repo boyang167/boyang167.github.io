@@ -46,7 +46,7 @@ npm run preview
 - 在 `src/pages/about.astro` 替换个人简介、经历、技术理念和联系信息。时间线文案是结构示例，不是已经核实的个人履历。
 - 在 `src/pages/about.astro` 将 GitHub、LinkedIn、邮箱占位链接替换为真实链接。
 - 在 `src/pages/projects/index.astro` 替换项目描述、状态和真实成果；不公开的企业信息不要放入公开站点。
-- 在 `src/pages/blog/index.astro` 更新文章列表；每篇文章需要在 `src/pages/blog/[slug].astro` 的 `getStaticPaths()` 中添加对应数据，或后续迁移到 Astro Content Collections。
+- 技术博客：在关联仓库 **`personal-knowledge-wiki/raw/3-blog/`** 新增 Markdown（可复制门户 `docs/blog-article-template.md`）。支持子目录，如 `agent/foo.md` → `/blog/agent/foo/`；`draft: true` 不发布；`featured: true` 可上首页精选。本地需 sibling `../personal-knowledge-wiki` 或 submodule `external/personal-knowledge-wiki`。
 - 当前头像为字母缩写的 CSS 占位设计，可替换为本人授权使用的照片。
 
 ## 目录结构
@@ -58,8 +58,9 @@ src/
   pages/
     index.astro
     about.astro
+    lib/blog-root.ts
     blog/index.astro
-    blog/[slug].astro
+    blog/[...slug].astro
     projects/index.astro
     knowledge/index.astro
 .github/workflows/deploy.yml

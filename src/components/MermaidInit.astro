@@ -1,0 +1,34 @@
+---
+/** 客户端渲染 Markdown 中的 `<pre class="mermaid">` 块 */
+---
+<script>
+  import mermaid from 'mermaid';
+
+  const init = () => {
+    const nodes = document.querySelectorAll('pre.mermaid:not([data-processed])');
+    if (nodes.length === 0) return;
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'loose',
+      fontFamily: "'DM Sans','Noto Sans SC',sans-serif",
+      themeVariables: {
+        primaryColor: '#edf2ff',
+        primaryTextColor: '#18243b',
+        primaryBorderColor: '#c5d4f5',
+        lineColor: '#69758c',
+        secondaryColor: '#f0f3fa',
+        tertiaryColor: '#fff',
+      },
+    });
+
+    void mermaid.run({ nodes: [...nodes] });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+</script>

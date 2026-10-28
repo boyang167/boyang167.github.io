@@ -1,26 +1,496 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-const posts = [
-  {slug:'agentic-workflow', category:'AI Agent', date:'2026-06-10', read:'6 分钟', title:'从 ReAct 到 Agentic Workflow：智能体的演进与实践', desc:'从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。', icon:'◈'},
-  {slug:'llm-wiki', category:'知识管理', date:'2026-05-28', read:'8 分钟', title:'打造个人 LLM Wiki：从 0 到 1 的实践', desc:'将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。', icon:'⌘'},
-  {slug:'data-platform', category:'数据工程', date:'2026-05-12', read:'10 分钟', title:'面向 AI 的数据平台架构思考', desc:'从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。', icon:'⌁'},
-  {slug:'ml-validation', category:'机器学习', date:'2026-04-20', read:'7 分钟', title:'配对数据建模：如何避免验证集泄漏', desc:'当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。', icon:'◉'},
-  {slug:'agent-evaluation', category:'AI Agent', date:'2026-04-05', read:'9 分钟', title:'Agent 评估不止看最终答案', desc:'从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。', icon:'▦'},
-];
+import {
+  BLOG_LIST_PAGE_SIZE,
+  collectBlogCategories,
+  formatBlogDate,
+  getPublishedBlogPosts,
+  blogPostHref,
+  groupBlogPostsByYear,
+} from '../../lib/blog';
+
+const posts = await getPublishedBlogPosts();
+const filterCategories = collectBlogCategories(posts);
+const postCount = posts.length;
+const yearGroups = groupBlogPostsByYear(posts);
+const showYearGroups = postCount >= 6;
+let order = 0;
 ---
 <BaseLayout title="技术博客 · Boyang Wang">
-  <section class="wrap page-hero"><div class="eyebrow">NOTES FROM BUILDING</div><h1>技术博客</h1><p>记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。</p><div class="blog-controls"><div class="filter-row"><button class="filter active" data-filter="全部">全部</button><button class="filter" data-filter="AI Agent">AI Agent</button><button class="filter" data-filter="数据工程">数据工程</button><button class="filter" data-filter="机器学习">机器学习</button><button class="filter" data-filter="知识管理">知识管理</button></div><input id="search" type="search" placeholder="搜索文章…" aria-label="搜索文章" /></div></section>
-  <section class="wrap blog-list">{posts.map((post)=><a class="card post-row" href={`/blog/${post.slug}/`} data-category={post.category} data-title={post.title.toLowerCase()}><div class="post-art"><span>{post.icon}</span></div><div class="post-content"><div class="post-meta"><span class="tag">{post.category}</span><span>{post.date} · 阅读 {post.read}</span></div><h2>{post.title}</h2><p class="muted">{post.desc}</p></div><span class="post-arrow">↗</span></a>)}</section>
-  <div class="wrap empty-state" id="empty-state" hidden>没有找到匹配的文章，试试其他关键词。</div>
+  <section class="wrap page-hero blog-hero">
+    <div class="eyebrow">NOTES FROM BUILDING</div>
+    <p class="blog-stat muted">
+      <span id="blog-stat-total">{postCount}</span> 篇已发布
+      <span class="blog-stat-sep" id="blog-stat-sep" hidden> · </span>
+      <span id="blog-stat-range" hidden></span>
+    </p>
+  </section>
+
+  <section class="wrap blog-toolbar" aria-label="筛选与搜索">
+    <div class="blog-toolbar-panel">
+      <div class="filter-row" role="group" aria-label="按分类筛选">
+        <button type="button" class="filter active" data-filter="全部" aria-pressed="true">
+          全部
+        </button>
+        {filterCategories.map((cat) => (
+          <button type="button" class="filter" data-filter={cat} aria-pressed="false">
+            {cat}
+          </button>
+        ))}
+      </div>
+      <label class="blog-search">
+        <span class="blog-search-icon" aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="搜索文章…" aria-label="搜索文章" autocomplete="off" />
+      </label>
+    </div>
+  </section>
+
+  <section class="wrap blog-list-section">
+    <div class="blog-feed" id="blog-feed" data-page-size={BLOG_LIST_PAGE_SIZE} data-total={postCount}>
+      {yearGroups.map(({ year, posts: yearPosts }) => (
+        <section class="blog-year-block" data-year={year}>
+          {showYearGroups && (
+            <h2 class="blog-year-heading">
+              <span>{year}</span>
+            </h2>
+          )}
+          <div class="blog-grid">
+            {yearPosts.map((post) => {
+              const i = order++;
+              return (
+                <a
+                  class="card blog-card blog-item"
+                  href={blogPostHref(post)}
+                  data-category={post.data.category}
+                  data-title={post.data.title.toLowerCase()}
+                  data-description={post.data.description.toLowerCase()}
+                  data-year={year}
+                  data-order={i}
+                >
+                  <div class="blog-card-head">
+                    <span class="blog-card-icon" aria-hidden="true">{post.data.icon}</span>
+                    <span class="tag">{post.data.category}</span>
+                  </div>
+                  <h3 class="blog-card-title">{post.data.title}</h3>
+                  <p class="blog-card-desc muted">{post.data.description}</p>
+                  <div class="blog-card-foot">
+                    <time datetime={formatBlogDate(post.data.date)}>{formatBlogDate(post.data.date)}</time>
+                    <span>阅读 {post.data.readTime} ↗</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+    <p class="empty-state muted" id="empty-state" hidden>
+      没有找到匹配的文章，试试其他关键词或分类。
+    </p>
+    <div class="blog-list-footer" id="blog-list-footer" hidden={postCount <= BLOG_LIST_PAGE_SIZE}>
+      <button type="button" class="button-secondary blog-load-more" id="blog-load-more">
+        加载更多
+      </button>
+    </div>
+  </section>
 </BaseLayout>
-<script>
-const filters = [...document.querySelectorAll('[data-filter]')];
-const search = document.querySelector('#search');
-const rows = [...document.querySelectorAll('.post-row')];
-let active = '全部';
-function applyFilters(){const q=(search?.value||'').toLowerCase().trim();let visible=0;rows.forEach(row=>{const okCategory=active==='全部'||row.dataset.category===active;const okQuery=!q||row.dataset.title?.includes(q)||row.textContent?.toLowerCase().includes(q);row.hidden=!(okCategory&&okQuery);if(!row.hidden)visible++});const empty=document.querySelector('#empty-state');if(empty)empty.hidden=visible!==0;}
-filters.forEach(btn=>btn.addEventListener('click',()=>{active=btn.dataset.filter||'全部';filters.forEach(f=>f.classList.toggle('active',f===btn));applyFilters()}));search?.addEventListener('input',applyFilters);
+
+<script define:vars={{ pageSize: BLOG_LIST_PAGE_SIZE }}>
+  const feed = document.querySelector('#blog-feed');
+  const filters = [...document.querySelectorAll('[data-filter]')];
+  const search = document.querySelector('#search');
+  const rows = [...document.querySelectorAll('.blog-item')];
+  const yearBlocks = [...document.querySelectorAll('.blog-year-block')];
+  const empty = document.querySelector('#empty-state');
+  const footer = document.querySelector('#blog-list-footer');
+  const loadMore = document.querySelector('#blog-load-more');
+  const statSep = document.querySelector('#blog-stat-sep');
+  const statRange = document.querySelector('#blog-stat-range');
+
+  const PAGE_SIZE = Number(feed?.dataset.pageSize || pageSize) || 10;
+  let active = '全部';
+  let pagesShown = 1;
+
+  function setActiveFilter(btn) {
+    active = btn.dataset.filter || '全部';
+    filters.forEach((f) => {
+      const on = f === btn;
+      f.classList.toggle('active', on);
+      f.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function matchingRows() {
+    const q = (search?.value || '').toLowerCase().trim();
+    return rows
+      .filter((row) => {
+        const okCategory = active === '全部' || row.dataset.category === active;
+        const haystack = [row.dataset.title, row.dataset.description].filter(Boolean).join(' ');
+        const okQuery = !q || haystack.includes(q);
+        return okCategory && okQuery;
+      })
+      .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+  }
+
+  function syncYearBlocks() {
+    const q = (search?.value || '').trim();
+    const showYearHeadings = active === '全部' && !q;
+    yearBlocks.forEach((block) => {
+      const items = [...block.querySelectorAll('.blog-item')];
+      const visibleCount = items.filter((i) => !i.hidden).length;
+      block.hidden = visibleCount === 0;
+      const heading = block.querySelector('.blog-year-heading');
+      if (heading) heading.hidden = !showYearHeadings;
+    });
+  }
+
+  function applyListState() {
+    const matched = matchingRows();
+    const limit = pagesShown * PAGE_SIZE;
+    let shown = 0;
+
+    rows.forEach((row) => {
+      row.hidden = true;
+    });
+
+    matched.forEach((row, index) => {
+      const show = index < limit;
+      row.hidden = !show;
+      if (show) shown++;
+    });
+
+    const totalMatched = matched.length;
+    const hasMore = totalMatched > limit;
+
+    if (feed) feed.hidden = totalMatched === 0;
+    if (empty) empty.hidden = totalMatched !== 0;
+    if (footer) footer.hidden = totalMatched <= PAGE_SIZE;
+    if (loadMore) {
+      loadMore.hidden = !hasMore;
+      const rest = totalMatched - limit;
+      loadMore.textContent =
+        rest > 0 ? `加载更多（还有 ${rest} 篇）` : '加载更多';
+    }
+
+    syncYearBlocks();
+
+    if (statRange && statSep) {
+      if (totalMatched === 0) {
+        statSep.hidden = true;
+        statRange.hidden = true;
+        statRange.textContent = '';
+      } else if (totalMatched > PAGE_SIZE || active !== '全部' || (search?.value || '').trim()) {
+        statSep.hidden = false;
+        statRange.hidden = false;
+        statRange.textContent = `当前显示 ${shown} / ${totalMatched} 篇`;
+      } else {
+        statSep.hidden = true;
+        statRange.hidden = true;
+        statRange.textContent = '';
+      }
+    }
+  }
+
+  function resetAndApply() {
+    pagesShown = 1;
+    applyListState();
+  }
+
+  filters.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      setActiveFilter(btn);
+      resetAndApply();
+    }),
+  );
+  search?.addEventListener('input', resetAndApply);
+  loadMore?.addEventListener('click', () => {
+    pagesShown += 1;
+    applyListState();
+  });
+
+  resetAndApply();
 </script>
+
 <style>
-.blog-controls{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:30px}.filter-row{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:var(--surface);border-radius:100px;padding:8px 13px;color:var(--muted);font-size:11px;cursor:pointer}.filter.active{background:var(--navy);color:#fff;border-color:var(--navy)}#search{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 13px;min-width:190px;font:inherit;font-size:12px;outline-color:var(--blue)}.blog-list{display:grid;gap:13px}.post-row{display:grid;grid-template-columns:120px 1fr 25px;align-items:center;gap:22px;padding:16px;transition:transform .2s}.post-row:hover{transform:translateX(3px)}.post-art{height:105px;border-radius:12px;background:linear-gradient(135deg,#142342,#2e5598);display:grid;place-items:center;color:#b8d0ff;font-size:36px;position:relative;overflow:hidden}.post-art:after{content:'';position:absolute;width:110px;height:110px;border:1px solid #a8c5ff55;transform:rotate(35deg);border-radius:22px}.post-art span{z-index:1}.post-meta{display:flex;align-items:center;gap:12px;font-size:10px;color:var(--muted)}.post-content h2{font-size:18px;margin:10px 0 6px}.post-content p{font-size:12px;margin:0}.post-arrow{color:var(--blue);font-size:20px}.empty-state{text-align:center;padding:40px;color:var(--muted)}[hidden]{display:none!important}@media(max-width:650px){.blog-controls{align-items:stretch;flex-direction:column}.filter-row{gap:6px}#search{width:100%}.post-row{grid-template-columns:76px 1fr;gap:13px;padding:12px}.post-art{height:82px}.post-content h2{font-size:14px}.post-content p{font-size:11px}.post-meta{flex-wrap:wrap;gap:6px}.post-arrow{display:none}}
+  .blog-hero {
+    padding-bottom: 32px;
+  }
+  .blog-stat {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+  .blog-stat-sep {
+    opacity: 0.5;
+  }
+  #blog-stat-range {
+    font-weight: 500;
+  }
+
+  .blog-toolbar {
+    margin-bottom: 28px;
+  }
+  .blog-toolbar-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--surface-2);
+    border: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+  }
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .filter {
+    border: none;
+    background: transparent;
+    border-radius: 100px;
+    padding: 8px 14px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .filter:hover {
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+  }
+  .filter.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(24, 36, 59, 0.06);
+  }
+  .filter:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--blue) 55%, transparent);
+    outline-offset: 2px;
+  }
+
+  .blog-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 1 240px;
+    min-width: 160px;
+    padding: 0 12px;
+    min-height: 40px;
+    border-radius: 11px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .blog-search-icon {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1;
+    user-select: none;
+  }
+  .blog-search input {
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0;
+    outline: none;
+  }
+  .blog-search input::placeholder {
+    color: color-mix(in srgb, var(--muted) 88%, transparent);
+  }
+
+  .blog-list-section {
+    padding-bottom: 72px;
+  }
+  .blog-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .blog-year-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .blog-year-heading {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .blog-year-heading span {
+    font-variant-numeric: tabular-nums;
+  }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 20px;
+  }
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+    min-height: 100%;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(24, 36, 59, 0.08);
+    border-color: color-mix(in srgb, var(--blue) 22%, var(--line));
+  }
+  .blog-card:focus-visible {
+    outline: none;
+    box-shadow:
+      var(--shadow),
+      0 0 0 3px color-mix(in srgb, var(--blue) 40%, transparent);
+  }
+  .blog-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .blog-card-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .blog-card-head .tag {
+    max-width: 55%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .blog-card-title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .blog-card-desc {
+    margin: 0 0 18px;
+    font-size: 13px;
+    line-height: 1.65;
+    flex: 1 1 auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .blog-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .blog-card-foot time {
+    font-variant-numeric: tabular-nums;
+  }
+  .blog-card-foot span:last-child {
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  .blog-list-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 24px;
+  }
+  .blog-load-more {
+    min-width: 200px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    font-size: 14px;
+    margin: 0;
+  }
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (min-width: 1180px) {
+    .blog-toolbar,
+    .blog-hero {
+      max-width: 920px;
+      margin-inline: auto;
+      width: min(var(--content-max), calc(100% - var(--page-gutter) * 2));
+    }
+    .blog-grid {
+      gap: 22px;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .blog-toolbar-panel {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 12px;
+    }
+    .filter-row {
+      gap: 4px;
+    }
+    .filter {
+      padding: 7px 12px;
+      font-size: 11px;
+    }
+    .blog-search {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .blog-card {
+      padding: 18px;
+    }
+    .blog-grid {
+      gap: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-card,
+    .filter {
+      transition: none;
+    }
+    .blog-card:hover {
+      transform: none;
+    }
+  }
+
+  .dark .filter.active {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  .dark .blog-card:hover {
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+  }
 </style>
