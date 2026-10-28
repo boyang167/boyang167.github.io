@@ -42,6 +42,20 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Verify wiki blog source
+        run: |
+          BLOG_DIR="external/personal-knowledge-wiki/raw/3-blog"
+          if [ ! -d "$BLOG_DIR" ]; then
+            echo "::error::Missing $BLOG_DIR — push raw/3-blog to personal-knowledge-wiki and bump the portal submodule."
+            exit 1
+          fi
+          COUNT="$(find "$BLOG_DIR" -name '*.md' | wc -l | tr -d ' ')"
+          echo "Blog markdown files in submodule: $COUNT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::No .md files under $BLOG_DIR"
+            exit 1
+          fi
+
       - name: Build
         run: npm run build
 
