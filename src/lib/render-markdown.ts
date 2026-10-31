@@ -3,8 +3,12 @@ import { marked } from 'marked';
 import { annotateHtmlHeadings, type TocItem } from './markdown-toc';
 
 const BLOCK_MATH = /\$\$([\s\S]*?)\$\$/g;
+/** 块级 \\[ ... \\]（Typora / LaTeX 常见） */
+const BLOCK_MATH_BRACKET = /\\\[([\s\S]*?)\\\]/g;
 /** 行内 $...$（排除 $$） */
 const INLINE_MATH = /(?<!\$)\$(?!\$)((?:\\.|[^$\\\n])+?)\$(?!\$)/g;
+/** 行内 \\( ... \\) */
+const INLINE_MATH_PAREN = /\\\(([\s\S]*?)\\\)/g;
 
 function escapeHtml(text: string): string {
   return text
@@ -54,14 +58,22 @@ function injectMath(markdown: string): string {
     const html = renderTex(tex, true);
     return html ? `\n\n<div class="math-display">${html}</div>\n\n` : '';
   });
+  out = out.replace(BLOCK_MATH_BRACKET, (_, tex) => {
+    const html = renderTex(tex, true);
+    return html ? `\n\n<div class="math-display">${html}</div>\n\n` : '';
+  });
   out = out.replace(INLINE_MATH, (_, tex) => {
     const html = renderTex(tex, false);
     return html ? `<span class="math-inline">${html}</span>` : `$${tex}$`;
   });
+  out = out.replace(INLINE_MATH_PAREN, (_, tex) => {
+    const html = renderTex(tex, false);
+    return html ? `<span class="math-inline">${html}</span>` : `\\(${tex}\\)`;
+  });
   return out;
 }
 
-/** Markdown → HTML，支持 Typora 风格 $ / $$ 公式（KaTeX 静态渲染） */
+/** Markdown → HTML，支持 $ / $$ 与 \\( \\) / \\[ \\] 公式（KaTeX 静态渲染） */
 export function renderMarkdownWithMath(
   markdown: string,
   preprocess?: (md: string) => string,

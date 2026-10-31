@@ -100,13 +100,101 @@ const skillAreas = [
     groups: [
       {
         label: '经典机器学习',
-        items: 'SVM · K-Means · EM · HMM · CRF · Random Forest · XGBoost · LightGBM',
-        note: '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）',
+        projects: [
+          {
+            category: '分类',
+            items:
+              'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+          },
+          {
+            category: '回归',
+            items: 'Linear Regression · Ridge · Lasso · Tree Regression',
+          },
+          {
+            category: '聚类 · 主题 · 关联',
+            items:
+              'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+          },
+          {
+            category: '序列 · 集成',
+            items: 'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+          },
+        ],
       },
       {
-        label: '深度学习与 NLP',
-        items:
-          'CNN · RNN · LSTM · Attention · Transformer · Word2Vec · FastText · BERT · LayoutLM',
+        label: '深度学习 · NLP',
+        projects: [
+          {
+            category: 'Word Repr.',
+            items: 'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+          },
+          {
+            category: 'Transformer',
+            items: 'Transformer · Transformer-XL',
+          },
+          {
+            category: 'Autoencoder LM',
+            items: 'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+          },
+          {
+            category: 'Autoregressive LM',
+            items: 'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+          },
+          { category: 'Sequence', items: 'RNN · LSTM · Attention' },
+        ],
+      },
+      {
+        label: '深度学习 · Vision & Gen',
+        projects: [
+          {
+            category: 'Backbone',
+            items: 'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+          },
+          { category: 'Detection', items: 'Faster R-CNN · YOLO' },
+          {
+            category: 'Classical CV',
+            items: 'Morphology · Binary Ops · Hough · Augmentation',
+          },
+          { category: 'OpenCV', items: 'OpenCV · cv2 Pipeline' },
+          { category: 'Generative', items: 'GAN · U-Net · VAE · Flow' },
+          { category: 'Protein', items: 'ESM · AlphaFold2' },
+        ],
+      },
+      {
+        label: '深度学习 · Graph',
+        projects: [
+          { category: 'Analytics', items: 'PageRank · HITS' },
+          {
+            category: 'Embedding',
+            items: 'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+          },
+          { category: 'Message Passing', items: 'GCN · GAT · GraphSAGE' },
+          { category: 'Signed · Directed', items: 'SGCN · SiGAT · SDGNN' },
+          {
+            category: 'Heterogeneous',
+            items: 'HAN · GTN · metapath2vec · GATNE · BiNE',
+          },
+          {
+            category: 'Dynamic',
+            items: 'DySAT · EvolveGCN · TGAT · DGNN',
+          },
+        ],
+      },
+      {
+        label: '深度学习 · RL',
+        projects: [
+          { category: 'Foundations', items: 'MDP · MRP · POMDP · Bellman' },
+          { category: 'Bootstrapping', items: 'MC · TD · DP · n-step TD · TD(λ)' },
+          { category: 'Tabular', items: 'Q-Learning · SARSA' },
+          {
+            category: 'Deep Value',
+            items: 'DQN · Double DQN · Prioritized ER',
+          },
+          {
+            category: 'Policy · Actor-Critic',
+            items: 'Policy Gradient · Actor-Critic · PPO · DDPG',
+          },
+        ],
       },
       { label: '训练与推理框架', items: 'PyTorch · TensorFlow · Scikit-learn' },
       {
@@ -149,6 +237,28 @@ const skillAreas = [
       {
         label: '多云基础设施',
         items: 'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+      },
+    ],
+  },
+  {
+    n: '06',
+    layout: 'ml',
+    title: 'Math',
+    summary: '概率基础、信息论、随机过程与采样方法。',
+    groups: [
+      {
+        label: '概率与采样',
+        projects: [
+          { category: 'Monte Carlo', items: 'Monte Carlo Method' },
+          { category: 'Markov Chain', items: 'Markov Chain' },
+          { category: 'MCMC', items: 'MCMC · Metropolis-Hastings' },
+          { category: 'Gibbs', items: 'Gibbs Sampling' },
+        ],
+      },
+      {
+        label: '信息论',
+        items:
+          'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
       },
     ],
   },
@@ -669,6 +779,36 @@ const splitSkillItems = (items: string) =>
     border-top: 1px dashed color-mix(in srgb, var(--line) 85%, transparent);
     font-size: 10px;
     line-height: 1.6;
+  }
+  .skill-area-ml .skill-group-projects dt {
+    margin: 0 0 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .skill-area-ml .skill-project-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .skill-area-ml .skill-project-row {
+    grid-template-columns: minmax(64px, 76px) 1fr;
+    gap: 6px 8px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  .skill-area-ml .skill-project-cat {
+    padding-top: 5px;
+    font-size: 9.5px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+  .skill-area-ml .skill-group-projects .skill-chip {
+    padding: 4px 8px;
+    font-size: 10px;
   }
   .skill-area-head {
     padding: 20px 22px 18px;
