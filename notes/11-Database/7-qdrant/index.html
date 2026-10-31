@@ -1,0 +1,966 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Qdrant"><meta name="theme-color" content="#f7f8fc"><title>7-qdrant · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.Opzu-1vT.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<style>.article-page[data-astro-cid-5eggoaxc]{padding-top:28px}.back-link[data-astro-cid-5eggoaxc]{font-size:12px;color:var(--muted)}.article-header[data-astro-cid-5eggoaxc]{max-width:820px;margin:48px auto 32px}.article-header[data-astro-cid-5eggoaxc] h1[data-astro-cid-5eggoaxc]{font-size:clamp(28px,4vw,42px);margin:18px 0}.article-intro[data-astro-cid-5eggoaxc]{font-size:17px;color:var(--muted);max-width:760px}.tag-muted[data-astro-cid-5eggoaxc]{margin-left:6px;opacity:.85}.byline[data-astro-cid-5eggoaxc]{display:flex;align-items:center;gap:10px;margin-top:25px}.byline-avatar[data-astro-cid-5eggoaxc]{width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800}.byline[data-astro-cid-5eggoaxc]>span[data-astro-cid-5eggoaxc]:last-child{display:grid}.byline[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{font-size:12px}.byline[data-astro-cid-5eggoaxc] small[data-astro-cid-5eggoaxc]{font-size:10px;color:var(--muted)}.article-layout[data-astro-cid-5eggoaxc]{display:grid;grid-template-columns:200px minmax(0,720px);gap:48px;justify-content:center;margin:0 auto 24px;max-width:980px}.article-layout--no-toc[data-astro-cid-5eggoaxc]{grid-template-columns:minmax(0,720px);max-width:720px}.toc[data-astro-cid-5eggoaxc]{position:sticky;top:24px;align-self:start;font-size:11px;color:var(--muted);max-height:calc(100vh - 48px);overflow-y:auto;padding-right:8px}.toc[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{display:block;color:var(--text);font-size:12px;margin-bottom:10px}.toc-nav[data-astro-cid-5eggoaxc]{display:grid;gap:8px}.toc-link[data-astro-cid-5eggoaxc]{color:var(--muted);line-height:1.45;text-decoration:none;border-left:2px solid transparent;padding-left:0;transition:color .15s,border-color .15s}.toc-link[data-astro-cid-5eggoaxc]:hover{color:var(--blue)}.toc-link[data-astro-cid-5eggoaxc].depth-2{padding-left:0}.toc-link[data-astro-cid-5eggoaxc].depth-3{padding-left:12px;font-size:10px}.toc-link[data-astro-cid-5eggoaxc].depth-4{padding-left:22px;font-size:10px;opacity:.92}.toc-link[data-astro-cid-5eggoaxc].depth-5{padding-left:32px;font-size:10px;opacity:.85}@media(max-width:860px){.article-layout[data-astro-cid-5eggoaxc]{display:block;max-width:720px;padding:0}.toc[data-astro-cid-5eggoaxc]{position:static;max-height:none;margin-bottom:28px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}}.knowledge-md[data-astro-cid-5eggoaxc] h2,.knowledge-md[data-astro-cid-5eggoaxc] h3,.knowledge-md[data-astro-cid-5eggoaxc] h4,.knowledge-md[data-astro-cid-5eggoaxc] h5{scroll-margin-top:28px}.knowledge-md[data-astro-cid-5eggoaxc] h2{font-size:22px;margin:28px 0 12px}.knowledge-md[data-astro-cid-5eggoaxc] h3{font-size:18px;margin:22px 0 10px}.knowledge-md[data-astro-cid-5eggoaxc] p{color:var(--muted);line-height:1.85;font-size:15px}.knowledge-md[data-astro-cid-5eggoaxc] ul{color:var(--muted);padding-left:1.2em;line-height:1.75}.knowledge-md[data-astro-cid-5eggoaxc] a{color:var(--blue)}.knowledge-md[data-astro-cid-5eggoaxc] img{max-width:100%;height:auto;display:block;margin:16px 0;border-radius:8px;border:1px solid var(--line)}.knowledge-md[data-astro-cid-5eggoaxc] .math-display{margin:20px 0;overflow-x:auto;padding:4px 0}.knowledge-md[data-astro-cid-5eggoaxc] .math-inline{display:inline}.knowledge-md[data-astro-cid-5eggoaxc] .math-fallback{font-size:13px;white-space:pre-wrap}.knowledge-md[data-astro-cid-5eggoaxc] table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}.knowledge-md[data-astro-cid-5eggoaxc] th,.knowledge-md[data-astro-cid-5eggoaxc] td{border:1px solid var(--line);padding:8px 10px;text-align:left}.note-crosslink[data-astro-cid-5eggoaxc]{max-width:720px;margin:0 auto 55px;font-size:12px}.note-crosslink[data-astro-cid-5eggoaxc] a[data-astro-cid-5eggoaxc]{color:var(--blue);font-weight:700}
+</style></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/projects/" data-astro-cid-3ef6ksr2>项目作品</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),o=document.querySelector("#theme-toggle"),c=document.querySelector("#menu-toggle");o?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light")});localStorage.getItem("theme")==="dark"&&document.documentElement.classList.add("dark");const n=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),n()});n();c?.addEventListener("click",()=>document.querySelector(".site-header")?.classList.toggle("menu-open"));</script>  <main> <article class="wrap article-page" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <header class="article-header" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>11-Database</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> <h1 data-astro-cid-5eggoaxc>7-qdrant</h1> <p class="article-intro" data-astro-cid-5eggoaxc>Qdrant</p> <div class="byline" data-astro-cid-5eggoaxc> <span class="byline-avatar" data-astro-cid-5eggoaxc>NT</span> <span data-astro-cid-5eggoaxc> <b data-astro-cid-5eggoaxc>raw/1-Note</b>  </span> </div> </header> <div class="article-layout article-layout--no-toc" data-astro-cid-5eggoaxc>  <div class="article-body-content knowledge-md" data-astro-cid-5eggoaxc><p>Qdrant</p>
+<p>Qdrant 是一个开源向量数据库，核心用途是做 向量相似度检索 + 结构化过滤。典型场景包括 RAG 知识库、语义搜索、推荐、图片/音频检索、Agent Memory 检索等。</p>
+<p>一句话：Embedding 负责把文本/图片变成向量，Qdrant 负责存向量、建索引、按相似度和 payload 条件快速找回来。</p>
+<ol>
+<li>核心概念</li>
+</ol>
+<p>Point</p>
+<p>Point 是 Qdrant 里最小的数据单元，类似关系型数据库里的一行记录。</p>
+<p>一个 point 通常包含三部分：</p>
+<p>组成</p>
+<p>说明</p>
+<p>id</p>
+<p>唯一 ID，可以是整数或 UUID</p>
+<p>vector</p>
+<p>向量，可以是 dense / sparse / multivector，也可以有多个 named vectors</p>
+<p>payload</p>
+<p>结构化元数据，用于过滤、分组、权限控制、租户隔离</p>
+<p>示例：</p>
+<p>{
+  &quot;id&quot;: &quot;doc-001-chunk-003&quot;,
+  &quot;vector&quot;: [0.12, -0.04, 0.91],
+  &quot;payload&quot;: {
+    &quot;tenant_id&quot;: &quot;team-a&quot;,
+    &quot;doc_id&quot;: &quot;doc-001&quot;,
+    &quot;source&quot;: &quot;qdrant.md&quot;,
+    &quot;chunk_index&quot;: 3,
+    &quot;tags&quot;: [&quot;vector-db&quot;, &quot;rag&quot;]
+  }
+}</p>
+<p>Vector</p>
+<p>向量是语义表示。相似的文本、图片或对象，在向量空间里距离更近。</p>
+<p>常见类型：</p>
+<p>类型</p>
+<p>说明</p>
+<p>场景</p>
+<p>Dense Vector</p>
+<p>稠密向量，如 384 / 768 / 1536 维</p>
+<p>文本语义检索、图片检索</p>
+<p>Sparse Vector</p>
+<p>稀疏向量，类似关键词权重</p>
+<p>BM25 / SPLADE 风格关键词检索</p>
+<p>Multivector</p>
+<p>一个 point 对应多个向量</p>
+<p>ColBERT、多粒度匹配</p>
+<p>Named Vectors</p>
+<p>一个 point 有多个命名向量空间</p>
+<p>同时支持 title/body/image 等不同检索空间</p>
+<p>Payload</p>
+<p>payload 是 point 的元数据，不参与向量距离计算，但可以参与过滤。</p>
+<p>常见用法：</p>
+<p>多租户隔离：tenant_id</p>
+<p>文档归属：doc_id、source</p>
+<p>权限过滤：user_id、visibility</p>
+<p>类型过滤：category、tags</p>
+<p>时间过滤：created_at</p>
+<p>注意：经常用于过滤的 payload 字段建议创建 payload index，否则过滤会拖慢查询。</p>
+<p>Collection</p>
+<p>Collection 是 point 的容器，类似数据库里的表。</p>
+<p>一个 collection 会定义：</p>
+<p>向量维度：如 size=768</p>
+<p>距离度量：如 Cosine / Dot / Euclid</p>
+<p>HNSW 索引配置</p>
+<p>分片、副本、量化、磁盘存储策略</p>
+<p>同一个 vector name 下的向量必须维度相同，并使用同一种距离度量。</p>
+<p>Qdrant 官方实践中，很多场景不建议每个租户都单独建 collection，而是一个 collection + payload 字段区分租户，也就是多租户（Multitenancy）：</p>
+<p>{
+  &quot;payload&quot;: {
+    &quot;tenant_id&quot;: &quot;customer-a&quot;,
+    &quot;doc_type&quot;: &quot;faq&quot;
+  }
+}</p>
+<p>查询时加 filter：</p>
+<p>{
+  &quot;must&quot;: [
+    {&quot;key&quot;: &quot;tenant_id&quot;, &quot;match&quot;: {&quot;value&quot;: &quot;customer-a&quot;}}
+  ]
+}</p>
+<ol start="2">
+<li>Qdrant 能解决什么问题</li>
+</ol>
+<p>传统数据库擅长精确匹配：</p>
+<p>WHERE title = &#39;Qdrant&#39;</p>
+<p>向量数据库擅长语义相似：</p>
+<p>“怎么部署 Qdrant 集群”
+≈ “Qdrant production cluster setup”
+≈ “向量库高可用部署”</p>
+<p>Qdrant 的能力组合：</p>
+<p>能力</p>
+<p>说明</p>
+<p>向量搜索</p>
+<p>找到语义最接近的 top-k point</p>
+<p>Payload Filter</p>
+<p>在语义搜索同时加业务过滤</p>
+<p>Hybrid Search</p>
+<p>Dense + Sparse 组合，提高召回</p>
+<p>多租户</p>
+<p>一个 collection 内用 payload 区分 tenant</p>
+<p>分片/副本</p>
+<p>支持横向扩展和高可用</p>
+<p>量化</p>
+<p>降低内存占用，提高大规模检索性价比</p>
+<p>On-disk</p>
+<p>向量或索引落盘，减少 RAM 压力</p>
+<ol start="3">
+<li>基本使用流程</li>
+</ol>
+<p>使用链路</p>
+<p>flowchart LR
+    A[原始文档] --&gt; B[切 chunk]
+    B --&gt; C[Embedding Model]
+    C --&gt; D[向量 + payload]
+    D --&gt; E[Upsert 到 Qdrant]
+    Q[用户 Query] --&gt; R[Query Embedding]
+    R --&gt; S[Qdrant Search]
+    E --&gt; S
+    S --&gt; T[Top-K 相关 chunks]
+    T --&gt; U[LLM / RAG 回答]</p>
+<p>Docker 快速启动</p>
+<p>docker run -p 6333:6333 -p 6334:6334 <br>  -v &quot;$(pwd)/qdrant_storage:/qdrant/storage&quot; <br>  qdrant/qdrant</p>
+<p>端口：</p>
+<p>端口</p>
+<p>协议</p>
+<p>用途</p>
+<p>6333</p>
+<p>HTTP REST</p>
+<p>管理、写入、搜索</p>
+<p>6334</p>
+<p>gRPC</p>
+<p>高性能客户端调用</p>
+<p>Python 客户端示例</p>
+<p>pip install qdrant-client</p>
+<p>创建 collection：</p>
+<p>from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams</p>
+<p>client = QdrantClient(url=&quot;<a href="http://localhost:6333">http://localhost:6333</a>&quot;)</p>
+<p>client.create_collection(
+    collection_name=&quot;knowledge_base&quot;,
+    vectors_config=VectorParams(
+        size=768,
+        distance=Distance.COSINE,
+    ),
+)</p>
+<p>写入 points：</p>
+<p>from qdrant_client.models import PointStruct</p>
+<p>client.upsert(
+    collection_name=&quot;knowledge_base&quot;,
+    points=[
+        PointStruct(
+            id=&quot;doc-001-0&quot;,
+            vector=[0.01] * 768,
+            payload={
+                &quot;tenant_id&quot;: &quot;team-a&quot;,
+                &quot;doc_id&quot;: &quot;doc-001&quot;,
+                &quot;text&quot;: &quot;Qdrant 是一个向量数据库...&quot;,
+            },
+        )
+    ],
+)</p>
+<p>搜索：</p>
+<p>hits = client.search(
+    collection_name=&quot;knowledge_base&quot;,
+    query_vector=[0.02] * 768,
+    limit=5,
+)</p>
+<p>for hit in hits:
+    print(hit.id, hit.score, hit.payload)</p>
+<p>带 payload 过滤：</p>
+<p>from qdrant_client.models import Filter, FieldCondition, MatchValue</p>
+<p>hits = client.search(
+    collection_name=&quot;knowledge_base&quot;,
+    query_vector=[0.02] * 768,
+    query_filter=Filter(
+        must=[
+            FieldCondition(
+                key=&quot;tenant_id&quot;,
+                match=MatchValue(value=&quot;team-a&quot;),
+            )
+        ]
+    ),
+    limit=5,
+)</p>
+<p>常用 API 动作</p>
+<p>动作</p>
+<p>含义</p>
+<p>create_collection</p>
+<p>创建 collection</p>
+<p>upsert</p>
+<p>插入或更新 point</p>
+<p>search / query_points</p>
+<p>向量搜索</p>
+<p>scroll</p>
+<p>分页扫描 points</p>
+<p>delete</p>
+<p>删除 point</p>
+<p>create_payload_index</p>
+<p>为过滤字段建索引</p>
+<ol start="4">
+<li>架构</li>
+</ol>
+<p>逻辑架构</p>
+<p>flowchart TB
+    Client[Client / SDK / REST / gRPC] --&gt; API[Qdrant API Layer]
+    API --&gt; Router[Collection / Shard Router]
+    Router --&gt; Shard1[Shard 1]
+    Router --&gt; Shard2[Shard 2]</p>
+<pre><code>subgraph Shard1
+    SegA[Segment A]
+    SegB[Segment B]
+end
+
+subgraph SegA[Segment]
+    Vec[Vector Storage]
+    Payload[Payload Storage]
+    HNSW[HNSW Vector Index]
+    PIndex[Payload Index]
+    IDMap[ID Mapper]
+end
+</code></pre>
+<p>存储层级</p>
+<p>Collection
+  └── Shard
+      └── Segment
+          ├── Vector Storage
+          ├── Payload Storage
+          ├── Vector Index (HNSW)
+          ├── Payload Index
+          └── ID Mapper</p>
+<p>关键点：</p>
+<p>Collection 可以分成多个 shard。</p>
+<p>每个 shard 内部由多个 segment 组成。</p>
+<p>Segment 是 Qdrant 的实际存储与索引单元。</p>
+<p>Segment 会在后台被 optimizer 合并、重建索引、压缩。</p>
+<p>Segment 的意义</p>
+<p>Qdrant 不会把所有数据都塞进一个巨大索引，而是分成多个 segment。</p>
+<p>Segment 多</p>
+<p>Segment 少</p>
+<p>写入和索引构建更快</p>
+<p>查询吞吐更好</p>
+<p>查询时要扫更多 segment</p>
+<p>重建和优化更慢</p>
+<p>适合写入频繁阶段</p>
+<p>适合稳定查询阶段</p>
+<p>后台 optimizer 会在写入和查询之间做平衡。</p>
+<ol start="5">
+<li>检索原理</li>
+</ol>
+<p>距离度量</p>
+<p>距离</p>
+<p>含义</p>
+<p>常见场景</p>
+<p>Cosine</p>
+<p>余弦相似度，关注方向</p>
+<p>文本 embedding 最常见</p>
+<p>Dot</p>
+<p>点积，适合已归一化或模型要求</p>
+<p>推荐、部分 embedding 模型</p>
+<p>Euclid</p>
+<p>欧氏距离，关注几何距离</p>
+<p>特定向量空间</p>
+<p>选择原则：跟 embedding 模型训练时推荐的距离保持一致。</p>
+<p>HNSW 索引</p>
+<p>Qdrant 主要使用 HNSW（Hierarchical Navigable Small World）做近似最近邻搜索。</p>
+<p>直觉：</p>
+<p>把向量组织成一张多层小世界图。</p>
+<p>高层负责快速跳到目标附近。</p>
+<p>低层做局部精细搜索。</p>
+<p>不必全量扫描所有向量。</p>
+<p>flowchart TB
+    Q[Query Vector] --&gt; L3[高层图：快速跳转]
+    L3 --&gt; L2[中层图：缩小范围]
+    L2 --&gt; L1[底层图：局部搜索]
+    L1 --&gt; TopK[Top-K 最近点]</p>
+<p>常见参数：</p>
+<p>参数</p>
+<p>影响</p>
+<p>m</p>
+<p>每个节点连接数，越大召回越高、内存越大</p>
+<p>ef_construct</p>
+<p>建索引质量，越大索引越好、构建越慢</p>
+<p>hnsw_ef / query ef</p>
+<p>查询时搜索范围，越大召回越高、延迟越高</p>
+<p>Filterable HNSW</p>
+<p>普通向量检索 + 过滤有两种低效做法：</p>
+<p>先向量检索再过滤：可能 top-k 都被过滤掉。</p>
+<p>先过滤再向量检索：候选集太大时慢。</p>
+<p>Qdrant 的 payload index 会扩展 HNSW 图，让过滤条件能参与图遍历，适合：</p>
+<p>多租户：tenant_id</p>
+<p>权限过滤：user_id</p>
+<p>类型过滤：category</p>
+<p>因此，经常过滤的字段要建 payload index。</p>
+<ol start="6">
+<li>性能与容量设计</li>
+</ol>
+<p>Payload Index</p>
+<p>为常用过滤字段建索引：</p>
+<p>from qdrant_client.models import PayloadSchemaType</p>
+<p>client.create_payload_index(
+    collection_name=&quot;knowledge_base&quot;,
+    field_name=&quot;tenant_id&quot;,
+    field_schema=PayloadSchemaType.KEYWORD,
+)</p>
+<p>建议建索引的字段：</p>
+<p>tenant_id</p>
+<p>doc_id</p>
+<p>category</p>
+<p>tags</p>
+<p>created_at</p>
+<p>权限相关字段</p>
+<p>On-disk Storage</p>
+<p>数据规模变大时，可以把向量或 payload 放到磁盘，降低内存压力。</p>
+<p>{
+  &quot;vectors&quot;: {
+    &quot;size&quot;: 768,
+    &quot;distance&quot;: &quot;Cosine&quot;,
+    &quot;on_disk&quot;: true
+  },
+  &quot;hnsw_config&quot;: {
+    &quot;on_disk&quot;: true
+  },
+  &quot;on_disk_payload&quot;: true
+}</p>
+<p>取舍：</p>
+<p>方案</p>
+<p>优点</p>
+<p>缺点</p>
+<p>In-memory</p>
+<p>查询快</p>
+<p>RAM 成本高</p>
+<p>On-disk vector</p>
+<p>RAM 压力小</p>
+<p>依赖 SSD，延迟更高</p>
+<p>On-disk payload</p>
+<p>适合大 payload</p>
+<p>过滤字段必须建索引</p>
+<p>Quantization</p>
+<p>量化是把 float 向量压缩成更小的数据类型，降低内存和磁盘占用。</p>
+<p>类型</p>
+<p>说明</p>
+<p>Scalar Quantization</p>
+<p>常见 int8 压缩</p>
+<p>Binary Quantization</p>
+<p>1-bit 压缩，占用更小</p>
+<p>Product Quantization</p>
+<p>更高压缩比，适合超大规模</p>
+<p>典型用途：</p>
+<p>大规模向量集合</p>
+<p>内存成本敏感</p>
+<p>可接受少量召回下降</p>
+<p>写入建议</p>
+<p>使用 batch upsert，避免一条一条写。</p>
+<p>大规模导入时先批量导入，再让 optimizer 建索引。</p>
+<p>payload 大字段不要都塞进 Qdrant；原文可放对象存储，只存摘要/路径。</p>
+<p>point id 要稳定，方便重跑和幂等更新。</p>
+<ol start="7">
+<li>部署架构</li>
+</ol>
+<p>单机开发</p>
+<p>flowchart LR
+    App[App / RAG 服务] --&gt; Q[Qdrant Docker]
+    Q --&gt; Disk[(本地 volume)]</p>
+<p>适合：</p>
+<p>本地开发</p>
+<p>小型知识库</p>
+<p>POC / Demo</p>
+<p>Docker Compose 示例：</p>
+<p>services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - &quot;6333:6333&quot;
+      - &quot;6334:6334&quot;
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    restart: unless-stopped</p>
+<p>生产单机</p>
+<p>flowchart TB
+    LB[应用服务] --&gt; Q[Qdrant]
+    Q --&gt; SSD[(SSD / NVMe)]
+    Q --&gt; Backup[Snapshot / Backup]
+    Monitor[Prometheus / Grafana] --&gt; Q</p>
+<p>注意：</p>
+<p>使用独立 SSD/NVMe。</p>
+<p>挂载持久化 volume。</p>
+<p>调高 file descriptor limit。</p>
+<p>定期做 snapshot。</p>
+<p>对关键 filter 字段建 payload index。</p>
+<p>集群部署</p>
+<p>flowchart TB
+    App[App / API] --&gt; LB[Load Balancer]
+    LB --&gt; N1[Qdrant Node 1]
+    LB --&gt; N2[Qdrant Node 2]
+    LB --&gt; N3[Qdrant Node 3]</p>
+<pre><code>N1 &lt;--&gt; N2
+N2 &lt;--&gt; N3
+N1 &lt;--&gt; N3
+
+subgraph Collection
+    S1[Shard 1 + Replica]
+    S2[Shard 2 + Replica]
+    S3[Shard 3 + Replica]
+end
+</code></pre>
+<p>核心概念：</p>
+<p>概念</p>
+<p>说明</p>
+<p>Shard</p>
+<p>水平切分数据，提高容量和吞吐</p>
+<p>Replica</p>
+<p>副本，提高可用性</p>
+<p>Replication Factor</p>
+<p>每个 shard 有几份副本</p>
+<p>Consensus</p>
+<p>集群元数据一致性</p>
+<p>生产建议：</p>
+<p>关键业务副本数至少 2。</p>
+<p>根据数据量和节点数规划 shard 数。</p>
+<p>小集群不要盲目开太多 shard，否则每个节点管理过多 shard 会影响吞吐。</p>
+<p>读多写少场景适合更多副本。</p>
+<p>写入高峰要关注 optimizer 和 segment merge 压力。</p>
+<p>Kubernetes 部署</p>
+<p>flowchart TB
+    Ingress --&gt; Service
+    Service --&gt; Pod1[Qdrant Pod 1]
+    Service --&gt; Pod2[Qdrant Pod 2]
+    Service --&gt; Pod3[Qdrant Pod 3]
+    Pod1 --&gt; PVC1[(PVC)]
+    Pod2 --&gt; PVC2[(PVC)]
+    Pod3 --&gt; PVC3[(PVC)]</p>
+<p>关注点：</p>
+<p>StatefulSet 而不是 Deployment。</p>
+<p>每个 Pod 独立 PVC。</p>
+<p>存储类型优先 SSD。</p>
+<p>配置 readiness/liveness probe。</p>
+<p>配置资源 requests/limits。</p>
+<p>单独规划 snapshot/backup。</p>
+<ol start="8">
+<li>RAG 中怎么建模</li>
+</ol>
+<p>推荐 payload 结构</p>
+<p>{
+  &quot;tenant_id&quot;: &quot;team-a&quot;,
+  &quot;doc_id&quot;: &quot;handbook-001&quot;,
+  &quot;chunk_id&quot;: &quot;handbook-001-0003&quot;,
+  &quot;source&quot;: &quot;handbook.md&quot;,
+  &quot;title&quot;: &quot;员工手册&quot;,
+  &quot;section&quot;: &quot;报销流程&quot;,
+  &quot;chunk_index&quot;: 3,
+  &quot;text&quot;: &quot;报销需要提交发票、审批单...&quot;,
+  &quot;created_at&quot;: &quot;2026-08-04T00:00:00Z&quot;
+}</p>
+<p>Collection 设计</p>
+<p>方案</p>
+<p>适合场景</p>
+<p>一个业务一个 collection</p>
+<p>向量模型、距离、生命周期差异很大</p>
+<p>一个 collection + tenant_id</p>
+<p>多租户共享同一模型和维度</p>
+<p>Named vectors</p>
+<p>同一 point 需要多种向量空间</p>
+<p>多租户过滤</p>
+<p>query_filter=Filter(
+    must=[
+        FieldCondition(key=&quot;tenant_id&quot;, match=MatchValue(value=&quot;team-a&quot;)),
+        FieldCondition(key=&quot;visibility&quot;, match=MatchValue(value=&quot;internal&quot;)),
+    ]
+)</p>
+<p>建议：</p>
+<p>tenant_id 必须建 payload index。</p>
+<p>权限字段也要建 index。</p>
+<p>不要只靠应用层过滤，否则可能召回不稳定且有越权风险。</p>
+<ol start="9">
+<li>常见坑</li>
+</ol>
+<p>问题</p>
+<p>原因</p>
+<p>建议</p>
+<p>搜不到相似内容</p>
+<p>embedding 模型不合适 / chunk 太大或太小</p>
+<p>先调 chunk 和 embedding，再调 Qdrant</p>
+<p>过滤后召回很差</p>
+<p>先搜后过滤导致候选不足</p>
+<p>建 payload index，调大 limit / ef</p>
+<p>内存占用过高</p>
+<p>向量全在 RAM，payload 太大</p>
+<p>on-disk + quantization + payload 外置</p>
+<p>写入慢</p>
+<p>单条写入、optimizer 压力大</p>
+<p>batch upsert，错峰建索引</p>
+<p>多租户混数据</p>
+<p>没加 tenant_id filter</p>
+<p>查询层强制注入 filter</p>
+<p>分 collection 太多</p>
+<p>每租户一 collection 管理成本高</p>
+<p>优先一个 collection + payload 多租户</p>
+<p>距离度量不对</p>
+<p>与 embedding 模型不匹配</p>
+<p>按模型文档选择 Cosine/Dot/Euclid</p>
+<ol start="10">
+<li>一句话总结</li>
+</ol>
+<p>Qdrant 的核心模型是：</p>
+<p>Collection → Shard → Segment → Point(id + vector + payload)</p>
+<p>它的核心能力是：</p>
+<p>HNSW 近似向量搜索 + Payload Filter + Payload Index + 分片副本 + On-disk/Quantization</p>
+<p>用于 RAG 时，最重要的工程原则是：</p>
+<p>稳定 point id
+合理 chunk
+payload 设计好 tenant/doc/权限字段
+常用过滤字段建 index
+向量模型、维度、距离度量保持一致</p>
+<p>参考</p>
+<p>Qdrant Overview</p>
+<p>Qdrant Points</p>
+<p>Qdrant Storage</p>
+<p>Qdrant 1.16: Tiered Multitenancy &amp; Disk-Efficient Vector Search</p>
+<p>第1层：Collection（集合）—— 逻辑数据库表</p>
+<p>这是你与应用交互的最高层级，相当于关系型数据库中的**“数据表”**。</p>
+<p>作用：定义全局规则。同一个 Collection 内的所有向量必须具有相同的维度（Dimension）和使用相同的距离度量（Distance Metric）（如余弦相似度）。</p>
+<p>特性：它本身不存储数据，仅作为逻辑容器，管理其下所有分片的拓扑结构和配置。</p>
+<p>🗄️ 第2层：Shard（分片）—— 分布式物理单元</p>
+<p>当 Collection 数据量巨大或需要高吞吐量时，Qdrant 会将 Collection 水平切分为多个 Shard（分片）。这是实现分布式扩展的核心机制。</p>
+<p>作用：承载实际的数据读写。每个 Shard 都是一个完全独立的、自包含的物理存储单元（类似于 Elasticsearch 的分片）。</p>
+<p>分布：Qdrant 通过一致性哈希，将不同的 Shard 分配到集群的不同节点（Node）上。</p>
+<p>高可用：你可以为 Shard 设置副本（Replica），即把同一个 Shard 复制到多个节点上。当主节点宕机时，副本可立即接管（主从架构）。</p>
+<p>注意：一个 Shard 只能归属于一个节点，但它内部的 Segment 都是在本地磁盘上管理的。</p>
+<p>📦 第3层：Segment（段）—— 不可变的索引与数据文件</p>
+<p>这是 Qdrant 存储引擎最核心的设计。每个 Shard 在物理磁盘上并不是一个巨大的单文件，而是由多个 Segment（段） 组成的。</p>
+<p>本质：Segment 是磁盘/内存中的物理文件集合（包含向量数据、Payload 数据、HNSW 索引结构等）。</p>
+<p>不可变性（Immutable）：一旦 Segment 被写入并封存（Sealed），它就永远不再修改。这是 Qdrant 高性能的基石（避免并发锁竞争）。</p>
+<p>写入流程（LSM Tree 思想）：</p>
+<p>新加入的 Point 会先写入内存中的一个 &quot;Active&quot; Segment（可变的，用于缓冲）。</p>
+<p>当这个 Segment 的大小或向量数量达到阈值（如 max_segment_size），它会被“封存”并刷写到磁盘。</p>
+<p>后台的 Optimizer（优化器） 会定期将多个小的、旧的 Segment 合并（Merge） 成一个大的 Segment，并删除已被逻辑删除的 Point，从而回收磁盘空间并减少查询时的文件句柄数。</p>
+<p>索引粒度：每个 Segment 内部都包含独立的 HNSW 向量索引 和 Payload 索引。查询时，Qdrant 会并行搜索所有 Segment，然后合并结果。</p>
+<p>📄 第4层：Point（点）—— 最小数据原子</p>
+<p>这就是你代码中实际插入和查询的最小单元，对应档案柜里的一张具体档案页。</p>
+<p>结构：严格由三部分组成：</p>
+<p>ID（唯一标识符）：int64 或 UUID，用于精确增删改查。</p>
+<p>Vector（向量）：浮点数列表，是相似度计算的数学依据。</p>
+<p>Payload（负载）：JSON 格式的元数据（如 {&quot;price&quot;: 100, &quot;brand&quot;: &quot;Nike&quot;}），用于预过滤（在向量搜索前先根据条件筛选出一部分 Point）或返回展示。</p>
+<p>存储位置：一个 Point 在物理上被“肢解”存储在不同的文件中——向量数据存储在向量文件里，Payload 存储在 Payload 文件中，但它们通过内部指针关联，逻辑上组成一个完整的 Point。</p>
+<p>⚙️ 数据流动（写入与查询）全链路</p>
+<p>为了加深理解，看看数据是如何流转的：</p>
+<p>写入（Upsert）：</p>
+<p>API 接收 Point → 路由到对应的 Shard → 追加到该 Shard 的 Active Segment（内存） → 后台异步刷盘并生成不可变 Segment。
+2. 查询（Search）：
+API 接收带过滤条件的查询向量 → 路由到 Shard → 并行遍历该 Shard 下所有 Segment（利用各 Segment 内部的 HNSW 索引快速找到 Top K，并结合 Payload 索引过滤） → 各 Segment 返回局部结果 → 合并排序 → 返回最终 Top K 给客户端。</p>
+<p>📌 总结：为何要这样设计？</p>
+<p>层级</p>
+<p>设计目的</p>
+<p>关键特性</p>
+<p>Collection</p>
+<p>业务逻辑隔离</p>
+<p>统一维度与度量，屏蔽底层物理细节</p>
+<p>Shard</p>
+<p>横向扩展与高可用</p>
+<p>分布式路由，副本容灾</p>
+<p>Segment</p>
+<p>极致的写入/查询性能</p>
+<p>不可变性（无锁读）、后台合并（消除碎片）、独立索引</p>
+<p>Point</p>
+<p>精确的数据操作</p>
+<p>向量(语义) + Payload(元数据) 分离，支持过滤</p>
+<p>一句话理解：Collection 是逻辑“大表”，按Shard分布在服务器上；每个Shard内部由无数个只读的Segment文件组成；每个Segment 内部存放着无数个包含 id + vector + payload 的 Point。理解 Segment 的不可变性，是理解 Qdrant 读写性能优越性的钥匙。</p>
+<p>HNSW：近似向量搜索的引擎</p>
+</div> </div> <p class="note-crosslink muted" data-astro-cid-5eggoaxc>
+经审核的对外副本见 <a href="/knowledge/" data-astro-cid-5eggoaxc>知识库</a>（<code data-astro-cid-5eggoaxc>publish/</code>，路径与 wiki 主题对应）。
+</p> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。<span class="footer-dot"> ● </span> Built with Astro</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','联系我':'Contact','了解我':'About me','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','构建 AI Agent、数据系统和机器学习的技术实践者。':'An engineer building AI agents, data systems, and machine learning applications.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品开发和落地交付的端到端能力。':'A data scientist combining algorithm R&D, engineering practice, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software development and production rollout.',
+    '从 0 到 1 构建算法平台、数据平台与 DevOps 平台的端到端能力，打通算法研发、数据治理、知识工程到云原生部署的完整链路。在生物药 CMC 领域，擅长将工艺与质量业务转化为可计算、可推理的领域知识，并构建具备任务分解、工具调用与可追溯引用能力的 Agent 系统，推动 AI 技术从算法研发走向工程化落地与产品交付。':'End-to-end capability building algorithm, data, and DevOps platforms from zero to one—linking algorithm R&D, data governance, knowledge engineering, and cloud-native deployment. In biopharma CMC, I turn process and quality into computable, reasoning-ready domain knowledge and build Agent systems with task decomposition, tool use, and traceable citations—moving AI from research to engineered delivery and products.',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。':'Covers Harness Engineering, data platforms, modeling, full-stack delivery, and cloud-native operations—focused on scalable, auditable, production-grade practice.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '基于公开履历整理，企业细节已做概括性表述。':'Summarized from a public résumé; employer details are generalized.',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.'
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','项目作品集 · Boyang Wang':'Selected projects · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> 

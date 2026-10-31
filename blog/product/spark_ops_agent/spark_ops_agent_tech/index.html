@@ -1,0 +1,2036 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Go 模块化单体控制面 + Next.js BFF 展示面：分层、限界上下文、插件、部署与 C4 组件视图"><meta name="theme-color" content="#f7f8fc"><title>SparkOps Agent · 技术架构 · Boyang Wang</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.Opzu-1vT.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CCGprkE3.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link active" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/projects/" data-astro-cid-3ef6ksr2>项目作品</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),o=document.querySelector("#theme-toggle"),c=document.querySelector("#menu-toggle");o?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light")});localStorage.getItem("theme")==="dark"&&document.documentElement.classList.add("dark");const n=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),n()});n();c?.addEventListener("click",()=>document.querySelector(".site-header")?.classList.toggle("menu-open"));</script>  <main> <article class="wrap post-page" data-astro-cid-7jjqptxk> <header class="post-top" data-astro-cid-7jjqptxk> <a class="text-link post-back" href="/blog/" data-astro-cid-7jjqptxk>← 返回技术博客</a> <div class="post-banner" data-astro-cid-7jjqptxk> <span class="post-banner-icon" aria-hidden="true" data-astro-cid-7jjqptxk>⌁</span> </div> <div class="post-head" data-astro-cid-7jjqptxk> <div class="eyebrow" data-astro-cid-7jjqptxk>个人开源产品</div> <h1 data-astro-cid-7jjqptxk>SparkOps Agent · 技术架构</h1> <p class="post-lead" data-astro-cid-7jjqptxk>Go 模块化单体控制面 + Next.js BFF 展示面：分层、限界上下文、插件、部署与 C4 组件视图</p> <p class="post-meta muted" data-astro-cid-7jjqptxk> <span data-astro-cid-7jjqptxk>Boyang Wang</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>2026-10-28</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>阅读 35 分钟</span> </p> </div> </header> <div class="post-layout" data-astro-cid-7jjqptxk> <aside class="post-toc" aria-label="本文目录" data-astro-cid-7jjqptxk> <p class="post-toc-title" data-astro-cid-7jjqptxk>本文目录</p> <nav class="post-toc-nav" data-astro-cid-7jjqptxk> <a href="#修订记录" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 修订记录 </a><a href="#摘要" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 摘要 </a><a href="#1-文档目的" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 1. 文档目的 </a><a href="#11-阅读路径按角色" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 1.1 阅读路径（按角色） </a><a href="#2-架构原则" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 2. 架构原则 </a><a href="#3-系统上下文C4--Context" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 3. 系统上下文（C4 · Context） </a><a href="#31-容器视图C4--Container" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 3.1 容器视图（C4 · Container） </a><a href="#32-组件视图C4--Component" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 3.2 组件视图（C4 · Component） </a><a href="#321-展示进程Nextjs-3000组件" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 3.2.1 展示进程（Next.js :3000）组件 </a><a href="#322-控制进程Go-API-8080组件" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 3.2.2 控制进程（Go API :8080）组件 </a><a href="#323-组件与章节的对应关系" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 3.2.3 组件与章节的对应关系 </a><a href="#4-逻辑架构控制面与数据面" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 4. 逻辑架构：控制面与数据面 </a><a href="#5-应用架构总览" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 5. 应用架构总览 </a><a href="#51-三层协作浏览器路径" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.1 三层协作（浏览器路径） </a><a href="#52-后端模块化单体" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.2 后端模块化单体 </a><a href="#53-单-BC-内部分层DDD-四层" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.3 单 BC 内部分层（DDD 四层） </a><a href="#54-统一-API-契约Envelope" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.4 统一 API 契约（Envelope） </a><a href="#55-后端启动与依赖注入" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.5 后端启动与依赖注入 </a><a href="#56-模块注册与-HTTP-路由约定" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.6 模块注册与 HTTP 路由约定 </a><a href="#57-跨-BC-协作模式" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.7 跨 BC 协作模式 </a><a href="#58-前端应用结构Nextjs-App-Router" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.8 前端应用结构（Next.js App Router） </a><a href="#59-BFF-设计模式" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.9 BFF 设计模式 </a><a href="#510-展示层与数据获取" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.10 展示层与数据获取 </a><a href="#6-典型请求链路" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 6. 典型请求链路 </a><a href="#61-已认证业务-API工作空间-scoped" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 6.1 已认证业务 API（工作空间 scoped） </a><a href="#62-Gin-中间件链摘要" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 6.2 Gin 中间件链（摘要） </a><a href="#63-流式场景Agent-Chat--部署日志--K8s-插件" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 6.3 流式场景（Agent Chat / 部署日志 / K8s 插件） </a><a href="#7-数据架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 7. 数据架构 </a><a href="#71-PostgreSQL按-BC-分-schema" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 7.1 PostgreSQL：按 BC 分 schema </a><a href="#72-Redis" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 7.2 Redis </a><a href="#73-事务与一致性" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 7.3 事务与一致性 </a><a href="#8-消息与事件架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 8. 消息与事件架构 </a><a href="#9-集成架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 9. 集成架构 </a><a href="#10-插件架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 10. 插件架构 </a><a href="#101-定位插件-vs-runtime-BC" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.1 定位：插件 vs runtime BC </a><a href="#102-后端模块结构" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.2 后端模块结构 </a><a href="#103-路由与-BFF" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.3 路由与 BFF </a><a href="#104-Apiserver-Proxy-行为" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.4 Apiserver Proxy 行为 </a><a href="#105-鉴权链插件-API" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.5 鉴权链（插件 API） </a><a href="#106-数据模型plugin_kubernetes-schema" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.6 数据模型（plugin_kubernetes schema） </a><a href="#107-实时与外部集成" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.7 实时与外部集成 </a><a href="#108-请求序列资源列表" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.8 请求序列（资源列表） </a><a href="#109-交付形态与测试" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.9 交付形态与测试 </a><a href="#11-安全架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 11. 安全架构 </a><a href="#12-部署架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 12. 部署架构 </a><a href="#121-组件拓扑生产参考" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 12.1 组件拓扑（生产参考） </a><a href="#122-交付物" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 12.2 交付物 </a><a href="#13-可观测性" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 13. 可观测性 </a><a href="#14-前端-Monorepo-与工程约束" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 14. 前端 Monorepo 与工程约束 </a><a href="#15-仓库目录技术视角" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 15. 仓库目录（技术视角） </a><a href="#16-本地开发与质量门禁" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 16. 本地开发与质量门禁 </a><a href="#17-演进方向技术" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 17. 演进方向（技术） </a><a href="#18-术语表" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 18. 术语表 </a><a href="#19-附录BC-依赖关系简图" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 19. 附录：BC 依赖关系（简图） </a> </nav> </aside> <div class="post-main" data-astro-cid-7jjqptxk> <div class="post-prose prose" data-astro-cid-7jjqptxk><blockquote>
+<p><strong>系列</strong>：产品定位与用户旅程见 <a href="/blog/product/spark_ops_agent/spark_ops_agent_product/">SparkOps Agent · 产品说明</a>。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>产品名称</strong></td>
+<td>SparkOps Agent</td>
+</tr>
+<tr>
+<td><strong>源码仓库</strong></td>
+<td><a href="https://github.com/boyang167/SparkOpsAgent">github.com/boyang167/SparkOpsAgent</a></td>
+</tr>
+<tr>
+<td><strong>许可证</strong></td>
+<td>Apache License 2.0</td>
+</tr>
+<tr>
+<td><strong>文档版本</strong></td>
+<td>v1.3</td>
+</tr>
+<tr>
+<td><strong>发布日期</strong></td>
+<td>2026-10-28</td>
+</tr>
+<tr>
+<td><strong>文档类型</strong></td>
+<td>技术架构说明书（架构评审 / 投标 / 研发 onboarding）</td>
+</tr>
+<tr>
+<td><strong>适用读者</strong></td>
+<td>架构师、后端/前端负责人、SRE、安全与集成工程师</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="修订记录">修订记录</h2>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v1.0</td>
+<td>2026-10-27</td>
+<td>首版：对齐当前 Go + Next.js 实现与 spec 规范</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="摘要">摘要</h2>
+<p>SparkOps Agent 采用 <strong>Go 模块化单体控制面 + Next.js BFF 展示面</strong> 的双进程架构：控制面承载多租户、权限与各领域用例；展示面以 <strong>BFF 按屏幕聚合 Upstream</strong>，浏览器 <strong>仅访问 <code>/api/bff/v1</code></strong>，不直连 Go API（MCP / OpenAPI 集成客户端除外）。</p>
+<p><strong>后端</strong>：按限界上下文（BC）划分 <code>internal/modules/*</code>，单 BC 内 <strong>interface → application → domain ← infrastructure</strong> 四层；跨 BC 经 <strong>Port、ACL、领域事件</strong> 协作。对外 REST 统一 <strong>Envelope</strong> 与 <code>/api/v1/{bc}/...</code> 路由约定。</p>
+<p><strong>前端</strong>：Next.js App Router 分 <code>(auth)</code> / <code>(platform)</code> 路由组；<strong>Route Handler</strong> 薄封装 + <strong><code>packages/bff-modules</code></strong> 用例编排 + <strong><code>@sparkops/web-sdk</code></strong> 浏览器 SDK；契约由 <strong><code>@sparkops/contracts</code>（Zod/TS）</strong> 贯穿 BFF 与 UI。</p>
+<p>持久化以 <strong>PostgreSQL（按 BC 分 schema）</strong> 为主，<strong>Redis</strong> 用于缓存与会话类能力；异步路径支持 <strong>内存 EventBus（开发）</strong> 与 <strong>RabbitMQ + 事务 Outbox（生产）</strong>。设计强调租户上下文显式传递（<code>X-Workspace-Id</code>、JWT claim）、可替换基础设施（mock/真实 Jenkins、K8s）与插件化扩展。</p>
+<hr>
+<h2 id="1-文档目的">1. 文档目的</h2>
+<ul>
+<li>说明 <strong>技术分层、模块边界、关键链路与部署拓扑</strong>，支撑架构评审与二次开发。</li>
+<li>与产品设计文档分工：产品文档回答「做什么」；本文回答「怎么搭、怎么跑、怎么扩展」。</li>
+<li>详细规范以仓库 <code>spec/</code> 为准；本文是 <strong>对外可读的浓缩版</strong>。</li>
+</ul>
+<h3 id="11-阅读路径按角色">1.1 阅读路径（按角色）</h3>
+<table>
+<thead>
+<tr>
+<th>读者</th>
+<th>建议章节</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>架构师 / 评审</td>
+<td>§2 原则 · §3 Context/Container/Component · §4–5 · §7 数据 · §11 安全</td>
+</tr>
+<tr>
+<td>后端研发</td>
+<td>§5.3–5.7 · §6 请求链 · §7–8 · §10 插件 · <a href="../spec/greenfield-go-ddd.md">greenfield-go-ddd.md</a></td>
+</tr>
+<tr>
+<td>前端研发</td>
+<td>§5.1 · §5.8–5.10 · §14 · <a href="../spec/frontend-architecture.md">frontend-architecture.md</a></td>
+</tr>
+<tr>
+<td>SRE / 集成</td>
+<td>§9 集成 · §12 部署 · §13 可观测</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>§11 · <a href="./privilege_design.md">privilege_design.md</a> · <a href="./privilege_k8s.md">privilege_k8s.md</a></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>深度参考</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Go DDD 与 BC 划分</td>
+<td><a href="../spec/greenfield-go-ddd.md">spec/greenfield-go-ddd.md</a></td>
+</tr>
+<tr>
+<td>前端与 BFF</td>
+<td><a href="../spec/frontend-architecture.md">spec/frontend-architecture.md</a></td>
+</tr>
+<tr>
+<td>插件契约</td>
+<td><a href="../spec/plugin-sdk.md">spec/plugin-sdk.md</a></td>
+</tr>
+<tr>
+<td>Kubernetes 插件详设</td>
+<td><a href="./superpowers/specs/2026-08-30-kubernetes-plugin-design.md">superpowers/specs/2026-08-30-kubernetes-plugin-design.md</a></td>
+</tr>
+<tr>
+<td>K8s 授权与角色</td>
+<td><a href="./privilege_k8s.md">privilege_k8s.md</a></td>
+</tr>
+<tr>
+<td>交付中心演进</td>
+<td><a href="../spec/delivery-center-design.md">spec/delivery-center-design.md</a></td>
+</tr>
+<tr>
+<td>OpenAPI</td>
+<td><a href="../backend/api/openapi/openapi.yaml">backend/api/openapi/openapi.yaml</a></td>
+</tr>
+<tr>
+<td>数据 ER</td>
+<td><a href="./diagrams/sparkops-er-diagram.drawio">diagrams/sparkops-er-diagram.drawio</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-架构原则">2. 架构原则</h2>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>模块化单体</strong></td>
+<td>单进程部署，按限界上下文（BC）划分 <code>internal/modules/*</code>，降低运维复杂度</td>
+</tr>
+<tr>
+<td><strong>实用 DDD</strong></td>
+<td>聚合 + 仓储接口 + 领域事件；不默认引入 CQRS / Event Sourcing</td>
+</tr>
+<tr>
+<td><strong>BC 隔离</strong></td>
+<td><code>domain</code> 不依赖 <code>infrastructure</code>；跨 BC 通过 <strong>Port / ACL / 领域事件</strong> 协作</td>
+</tr>
+<tr>
+<td><strong>API 单一版本</strong></td>
+<td>对外 REST 以 <code>/api/v1/{bc}/...</code> 为主；OpenAPI 为集成契约</td>
+</tr>
+<tr>
+<td><strong>租户内建</strong></td>
+<td>Organization → Workspace → Project/Product 写入模型与鉴权链，非 Cookie 补丁</td>
+</tr>
+<tr>
+<td><strong>BFF 聚合</strong></td>
+<td>页面用例导向的 API 由 Next.js BFF 编排，避免前端瀑布请求 BC</td>
+</tr>
+<tr>
+<td><strong>可替换基础设施</strong></td>
+<td>消息驱动、K8s 客户端、LLM 网关等通过配置与接口切换（mock / 真实）</td>
+</tr>
+<tr>
+<td><strong>演进式复杂化</strong></td>
+<td>模块过大再拆；Delivery Center 等新 BC 与现有 <code>DeploymentRun</code> 并存过渡</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-系统上下文C4--Context">3. 系统上下文（C4 · Context）</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+  User[用户浏览器]
+  AI[AI 客户端 Cursor 等]
+  Biz[业务系统]
+  IdP[OIDC / LDAP IdP]
+  CI[Jenkins / GitLab]
+  Reg[Harbor 等镜像库]
+  K8s[Kubernetes 集群]
+
+  subgraph SparkOps[&quot;SparkOps Agent（客户环境）&quot;]
+    Web[Next.js Web + BFF :3000]
+    API[Go API :8080]
+    Web --&gt; API
+  end
+
+  User --&gt; Web
+  AI --&gt;|MCP| API
+  Biz --&gt;|REST OpenAPI Webhook| API
+  API --&gt; IdP
+  API --&gt; CI
+  API --&gt; Reg
+  API --&gt; K8s
+  API --&gt; PG[(PostgreSQL)]
+  API --&gt; Redis[(Redis)]
+  API --&gt; MQ[消息队列]</pre></div>
+<p><strong>边界说明</strong>：SparkOps 不替代 CI 引擎与 K8s 控制面，而是 <strong>编排、授权、审计与 UI</strong> 层。</p>
+<h3 id="31-容器视图C4--Container">3.1 容器视图（C4 · Container）</h3>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+  subgraph Presentation[&quot;展示进程 · :3000&quot;]
+    Pages[&quot;App Router 页面&lt;br/&gt;(platform/auth)&quot;]
+    BFF[&quot;Route Handlers&lt;br/&gt;/api/bff/v1/*&quot;]
+    SDK[&quot;@sparkops/web-sdk&quot;]
+    Pages --&gt; SDK --&gt; BFF
+  end
+
+  subgraph Control[&quot;控制进程 · :8080&quot;]
+    Gin[&quot;Gin Engine + 中间件链&quot;]
+    Mods[&quot;BC Modules&lt;br/&gt;identity…plugin&quot;]
+    Plugins[&quot;内置插件&lt;br/&gt;kubernetes…&quot;]
+    Gin --&gt; Mods
+    Gin --&gt; Plugins
+  end
+
+  BFF --&gt;|&quot;服务端 upstream&lt;br/&gt;Cookie→Authorization&quot;| Gin
+  AI[MCP 客户端] --&gt; Gin
+  Biz[OpenAPI 客户端] --&gt; Gin
+
+  Mods --&gt; PG[(PostgreSQL)]
+  Mods --&gt; Redis[(Redis)]
+  Mods --&gt; MQ[消息队列]
+  Mods --&gt; Ext[Jenkins · K8s API · LLM]</pre></div>
+<p>同一 Helm Release 通常部署 <strong>Web Pod</strong> 与 <strong>API Pod</strong> 各一或多副本；BFF 与 Go API 之间走集群内 Service，不对浏览器暴露 <code>:8080</code>（推荐）。</p>
+<h3 id="32-组件视图C4--Component">3.2 组件视图（C4 · Component）</h3>
+<p><strong>Component（组件）</strong> 是 C4 的第三层：在 <strong>某个 Container 内部</strong>，把系统拆成若干 <strong>职责清晰、可单独说明的主要部件</strong>。它既不是 React 里的 UI 组件，也不是 Docker Container。</p>
+<table>
+<thead>
+<tr>
+<th>C4 层级</th>
+<th>SparkOps 文档对应</th>
+<th>粒度示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Context</td>
+<td>§3</td>
+<td>「SparkOps」与 Jenkins、K8s、用户的关系</td>
+</tr>
+<tr>
+<td>Container</td>
+<td>§3.1</td>
+<td>Next.js 进程 vs Go API 进程</td>
+</tr>
+<tr>
+<td><strong>Component</strong></td>
+<td><strong>§3.2</strong></td>
+<td>BFF、web-sdk、identity BC、platform/authn</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>§5.3、§5.6、<a href="../spec/greenfield-go-ddd.md">greenfield-go-ddd.md</a></td>
+<td>Handler、聚合、仓储实现</td>
+</tr>
+</tbody></table>
+<p>下文两个 Container 各一张组件图；<strong>BC 级组件</strong>与 §5.2 模块表一一对应；<strong>BC 内部的 interface/application/domain/infrastructure</strong> 属于 Code 层，不在 C4 图里逐块展开。</p>
+<h4 id="321-展示进程Nextjs-3000组件">3.2.1 展示进程（Next.js :3000）组件</h4>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+  subgraph WebContainer[&quot;Container · 展示进程&quot;]
+    UI[&quot;UI 壳层&lt;br/&gt;layout · menu-tree · providers&quot;]
+    Pages[&quot;页面与领域 UI&lt;br/&gt;app/(platform)/* · src/modules/*&quot;]
+    SDK[&quot;@sparkops/web-sdk&lt;br/&gt;bffFetch · 错误映射&quot;]
+    Routes[&quot;BFF Route Handlers&lt;br/&gt;app/api/bff/v1/**&quot;]
+    BffMod[&quot;bff-modules&lt;br/&gt;屏幕用例编排&quot;]
+    BffCore[&quot;bff-core&lt;br/&gt;BffContext · Entitlement · 流代理&quot;]
+    Up[&quot;@sparkops/upstream&lt;br/&gt;Go API 客户端&quot;]
+    Con[&quot;@sparkops/contracts&lt;br/&gt;Zod / TS 契约&quot;]
+
+    UI --&gt; Pages
+    Pages --&gt; SDK
+    SDK --&gt; Routes
+    Routes --&gt; BffMod
+    Routes --&gt; BffCore
+    BffMod --&gt; Up
+    BffMod --&gt; Con
+    BffCore --&gt; Up
+    Pages --&gt; Con
+  end</pre></div>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>职责</th>
+<th>主要代码位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>UI 壳层</strong></td>
+<td>登录态、工作空间切换、侧栏菜单（含插件菜单）、Entitlement 门控</td>
+<td><code>app/(platform)/layout.tsx</code>、<code>src/components/layout/</code></td>
+</tr>
+<tr>
+<td><strong>页面与领域 UI</strong></td>
+<td>按 BC/功能划分的页面、表格、表单、hooks</td>
+<td><code>app/(platform)/**</code>、<code>src/modules/{bc}/</code></td>
+</tr>
+<tr>
+<td><strong>web-sdk</strong></td>
+<td>浏览器唯一 HTTP 出口；Cookie 会话；<code>X-Workspace-Id</code></td>
+<td><code>packages/web-sdk/</code></td>
+</tr>
+<tr>
+<td><strong>BFF Route</strong></td>
+<td>HTTP 入口、薄适配、流式/SSE 转发</td>
+<td><code>app/api/bff/v1/**/route.ts</code></td>
+</tr>
+<tr>
+<td><strong>bff-modules</strong></td>
+<td>多 upstream 聚合、DTO→ViewModel</td>
+<td><code>packages/bff-modules/src/</code></td>
+</tr>
+<tr>
+<td><strong>bff-core</strong></td>
+<td>创建上下文、模块开关缓存、Kubernetes 插件代理等</td>
+<td><code>packages/bff-core/</code></td>
+</tr>
+<tr>
+<td><strong>upstream</strong></td>
+<td>服务端调用 Go <code>/api/v1</code>（禁止被 Client 引用）</td>
+<td><code>packages/upstream/</code></td>
+</tr>
+<tr>
+<td><strong>contracts</strong></td>
+<td>BFF 与 UI 共享的类型与校验</td>
+<td><code>packages/contracts/</code></td>
+</tr>
+</tbody></table>
+<p><strong>依赖规则（组件级）</strong>：<code>Pages → web-sdk → BFF Route → (bff-modules | bff-core) → upstream → Go API</code>；<code>contracts</code> 为横切契约，不参与运行时调用链。</p>
+<h4 id="322-控制进程Go-API-8080组件">3.2.2 控制进程（Go API :8080）组件</h4>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+  subgraph APIContainer[&quot;Container · 控制进程&quot;]
+    HTTP[&quot;Gin Engine&lt;br/&gt;中间件链&quot;]
+    Plat[&quot;平台横切&lt;br/&gt;authn · authz · httpx · entitlements · observability&quot;]
+    Boot[&quot;bootstrap&lt;br/&gt;Container 装配 · Module 注册&quot;]
+    subgraph BCControl[&quot;BC · 控制面&quot;]
+      ID[identity]
+      TN[tenant]
+      GV[governance]
+      WA[workspace_app]
+      PA[platform_admin]
+      AG[agent]
+      KN[knowledge]
+      WF[workflow]
+      PD[product]
+      PL[plugin 模块]
+    end
+    subgraph BCData[&quot;BC · 数据面 / 执行&quot;]
+      AR[agent_runtime]
+      DL[delivery · deployrun]
+      RT[runtime]
+      PW[product_workflow]
+    end
+    subgraph BCInt[&quot;BC · 集成与暴露&quot;]
+      IN[integration]
+      MC[mcp]
+      NT[notification]
+    end
+    PHost[&quot;plugin 宿主&lt;br/&gt;InstallAllWithContext&quot;]
+    PK8s[&quot;kubernetes 插件&lt;br/&gt;proxy · stream · …&quot;]
+
+    Boot --&gt; HTTP
+    HTTP --&gt; Plat
+    Plat --&gt; BCControl
+    Plat --&gt; BCData
+    Plat --&gt; BCInt
+    HTTP --&gt; PHost
+    PHost --&gt; PK8s
+    BCControl --&gt; PG[(PostgreSQL)]
+    BCData --&gt; PG
+    BCInt --&gt; PG
+    Plat --&gt; Redis[(Redis)]
+    BCData --&gt; MQ[EventBus / MQ]
+    DL --&gt; ExtCI[Jenkins 等]
+    RT --&gt; ExtK8s[K8s API]
+    PK8s --&gt; ExtK8s
+  end</pre></div>
+<table>
+<thead>
+<tr>
+<th>组件分组</th>
+<th>包含 BC / 部件</th>
+<th>职责摘要</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>bootstrap</strong></td>
+<td><code>internal/bootstrap</code></td>
+<td>配置、DB/Redis、消息、K8s 工厂、模块与插件注册顺序</td>
+</tr>
+<tr>
+<td><strong>平台横切</strong></td>
+<td><code>internal/platform/*</code></td>
+<td>认证鉴权、Envelope、租户头、Entitlement 中间件、日志指标、Postgres/Redis 封装</td>
+</tr>
+<tr>
+<td><strong>租户与权限</strong></td>
+<td>identity, tenant, governance</td>
+<td>成员与会话、组织/工作空间、角色/菜单/Casbin</td>
+</tr>
+<tr>
+<td><strong>应用与交付定义</strong></td>
+<td>workspace_app, product, agent, knowledge, workflow</td>
+<td>项目/密钥、产品/环境/发布、Agent/知识库/项目工作流</td>
+</tr>
+<tr>
+<td><strong>平台资产</strong></td>
+<td>platform_admin, plugin（模块）</td>
+<td>集群目录、工作区集群绑定、插件安装与 workspace_bindings</td>
+</tr>
+<tr>
+<td><strong>执行与运行时</strong></td>
+<td>delivery, deployrun, runtime, agent_runtime, product_workflow</td>
+<td>构建/部署 Run、K8s 运行、对话 SSE、产品工作流引擎</td>
+</tr>
+<tr>
+<td><strong>对外集成</strong></td>
+<td>integration, mcp, notification</td>
+<td>LLM 网关、MCP 工具、站内通知</td>
+</tr>
+<tr>
+<td><strong>plugin 宿主 + 内置插件</strong></td>
+<td><code>platform/plugin</code>、<code>internal/plugins/*</code></td>
+<td>manifest 路由、PluginContext 注入；kubernetes 等为独立组件</td>
+</tr>
+</tbody></table>
+<p>各 <strong>BC 组件</strong>在代码上对应 <code>internal/modules/{bc}/</code>，内部再按 <strong>interface / application / domain / infrastructure</strong> 四层组织（见 §5.3、§5.6），该四层属于 <strong>C4 Code</strong>，用于研发实现而非对外容器图。</p>
+<h4 id="323-组件与章节的对应关系">3.2.3 组件与章节的对应关系</h4>
+<table>
+<thead>
+<tr>
+<th>想了解…</th>
+<th>建议阅读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>两个部署进程如何分工</td>
+<td>§3.1 Container</td>
+</tr>
+<tr>
+<td>前端包与 BFF 如何拆分</td>
+<td>§3.2.1 · §5.8–5.10 · §14</td>
+</tr>
+<tr>
+<td>Go 模块列表与 DDD 分层</td>
+<td>§3.2.2 · §5.2 · §5.5–5.7</td>
+</tr>
+<tr>
+<td>请求在中间件与 BC 间如何流动</td>
+<td>§6</td>
+</tr>
+<tr>
+<td>Kubernetes 插件内部子组件</td>
+<td>§10</td>
+</tr>
+<tr>
+<td>BC 间依赖（协作方向）</td>
+<td>§19 附录</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="4-逻辑架构控制面与数据面">4. 逻辑架构：控制面与数据面</h2>
+<pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│ Control Plane（定义、配置、治理）                              │
+│  identity · tenant · governance · workspace_app · product   │
+│  agent · workflow · knowledge · plugin · platform_admin     │
+└────────────────────────────┬────────────────────────────────┘
+                             │ 命令 / 事件
+┌────────────────────────────▼────────────────────────────────┐
+│ Data Plane（执行、运行时）                                     │
+│  agent_runtime（对话/SSE）· delivery/deployrun · runtime(K8s) │
+│  product_workflow engine · Jenkins executor                  │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>平面</th>
+<th>职责</th>
+<th>代表模块</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>控制面</strong></td>
+<td>元数据、权限、编排定义、集群注册</td>
+<td>governance, product, agent</td>
+</tr>
+<tr>
+<td><strong>数据面</strong></td>
+<td>运行实例、构建/部署状态机、流式输出</td>
+<td>agent_runtime, delivery/deployrun, runtime</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-应用架构总览">5. 应用架构总览</h2>
+<h3 id="51-三层协作浏览器路径">5.1 三层协作（浏览器路径）</h3>
+<pre><code class="language-text">┌──────────────────────────────────────────────────────────────┐
+│ Layer 1 · Presentation                                      │
+│  fronted/apps/web/app/(platform)/*  ·  src/modules/*        │
+│  仅调用 @sparkops/web-sdk → /api/bff/v1/*                    │
+└────────────────────────────┬─────────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────────┐
+│ Layer 2 · BFF（Next.js Route Handlers）                       │
+│  app/api/bff/v1/*  ·  packages/bff-modules/*                 │
+│  编排 upstream · DTO→ViewModel · SSE/WS 代理                  │
+└────────────────────────────┬─────────────────────────────────┘
+                             │ 服务端 only
+┌────────────────────────────▼─────────────────────────────────┐
+│ Layer 3 · Upstream API（Go Gin）                              │
+│  /api/v1/*  ·  OpenAPI  ·  MCP HTTP                           │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>硬性约束</strong>（见 <a href="../spec/frontend-architecture.md">frontend-architecture.md</a>）：</p>
+<ul>
+<li>浏览器 <strong>禁止</strong> 直连 Go API URL。</li>
+<li>BFF <strong>禁止</strong> 写业务规则与直连 DB；归属判定在 Go <code>domain</code>。</li>
+<li>JWT 建议 <strong>httpOnly Cookie</strong>，由 BFF 转发 <code>Authorization</code> / 工作空间头。</li>
+</ul>
+<h3 id="52-后端模块化单体">5.2 后端模块化单体</h3>
+<p>入口：<code>backend/cmd/server</code> → <code>internal/bootstrap/app.go</code> 组装容器并注册模块。</p>
+<p><strong>已注册业务模块</strong>（需 PostgreSQL 可用）：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>BC 职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>identity</code></td>
+<td>成员、登录、SSO 配置、API Token</td>
+</tr>
+<tr>
+<td><code>tenant</code></td>
+<td>组织、工作空间、成员关系</td>
+</tr>
+<tr>
+<td><code>governance</code></td>
+<td>角色、绑定、菜单、API 策略（Casbin）</td>
+</tr>
+<tr>
+<td><code>workspace_app</code></td>
+<td>项目、模板、密钥、项目成员</td>
+</tr>
+<tr>
+<td><code>platform_admin</code></td>
+<td>集群信息、工作空间集群绑定、系统配置</td>
+</tr>
+<tr>
+<td><code>runtime</code></td>
+<td>K8s 部署、工作负载、终端等</td>
+</tr>
+<tr>
+<td><code>delivery</code></td>
+<td>构建、CronJob、Webhook</td>
+</tr>
+<tr>
+<td><code>delivery/deployrun</code></td>
+<td>部署 Run 状态机、环境同步快照</td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>产品、环境、发布计划、迭代工作项</td>
+</tr>
+<tr>
+<td><code>product_workflow</code></td>
+<td>产品工作流模板与运行引擎</td>
+</tr>
+<tr>
+<td><code>sprint_process</code></td>
+<td>迭代流程模板</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>Agent 与版本</td>
+</tr>
+<tr>
+<td><code>workflow</code></td>
+<td>项目级工作流</td>
+</tr>
+<tr>
+<td><code>knowledge</code></td>
+<td>知识库与文档</td>
+</tr>
+<tr>
+<td><code>notification</code></td>
+<td>站内通知</td>
+</tr>
+<tr>
+<td><code>integration</code></td>
+<td>模型/集成网关</td>
+</tr>
+<tr>
+<td><code>agent_runtime</code></td>
+<td>对话、消息、Run、SSE</td>
+</tr>
+<tr>
+<td><code>mcp</code></td>
+<td>MCP 工具暴露</td>
+</tr>
+<tr>
+<td><code>plugin</code></td>
+<td>插件安装、工作空间绑定、manifest</td>
+</tr>
+</tbody></table>
+<p><strong>平台横切能力</strong>（<code>internal/platform/*</code>）：<code>config</code>、<code>authn</code>、<code>authz</code>、<code>httpx</code>、<code>postgres</code>、<code>redis</code>、<code>messaging</code>、<code>observability</code>、<code>entitlements</code>、<code>operationlog</code>、<code>plugin</code> 宿主等。</p>
+<h3 id="53-单-BC-内部分层DDD-四层">5.3 单 BC 内部分层（DDD 四层）</h3>
+<pre><code class="language-text">interface/http     →  解析 HTTP，调用 application
+application        →  command / query / subscriber（用例）
+domain             →  model · event · repository 接口 · 领域错误
+infrastructure     →  persistence(GORM) · acl · 外部 adapter
+</code></pre>
+<p>依赖方向：<code>interface → application → domain ← infrastructure</code>；<strong>禁止</strong> domain 引用 infrastructure 或其他 BC 的 domain。</p>
+<h3 id="54-统一-API-契约Envelope">5.4 统一 API 契约（Envelope）</h3>
+<p>Go 与 BFF 对外 JSON 采用统一 <strong>Envelope</strong>，实现见 <code>platform/httpx/response.go</code> 与 <code>@sparkops/contracts</code>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>成功</th>
+<th>失败</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>code</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>&quot;ok&quot;</code></td>
+<td>人类可读说明</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>业务 DTO / 列表</td>
+<td>常含 <code>error_code</code>（机器可读，如 <code>TENANT_WORKSPACE_REQUIRED</code>）</td>
+</tr>
+<tr>
+<td><code>trace_id</code></td>
+<td>全链路追踪 ID</td>
+<td>同左</td>
+</tr>
+</tbody></table>
+<p><strong>约定</strong>：</p>
+<ul>
+<li>HTTP 状态码表达传输语义（401/403/404/502）；业务成败以 <code>code</code> 与 <code>data.error_code</code> 为准。</li>
+<li>领域错误在 <code>application</code> 映射为 <code>httpx.HandleError</code> / 带码 <code>Fail</code>；BFF 将 upstream Envelope 转为 <code>@sparkops/BffError</code> 供 UI 统一 toast/边界组件处理。</li>
+<li>OpenAPI 文档与集成客户端以 <strong>Go <code>/api/v1</code></strong> 为契约源；浏览器页面 <strong>不依赖</strong> OpenAPI 生成客户端直连 Go。</li>
+</ul>
+<h3 id="55-后端启动与依赖注入">5.5 后端启动与依赖注入</h3>
+<p>入口 <code>cmd/server</code> → <code>bootstrap.Run</code> → 组装 <code>appctx.Container</code> 并注册模块（<code>bootstrap/app.go</code>）。</p>
+<pre><code class="language-text">loadConfig → PostgreSQL / Redis → AutoMigrate
+    → messaging.NewFromConfig（EventBus + 可选 Outbox/Operations）
+    → K8sFactory（runtime/插件共用凭证源）
+    → Container{ DB, Redis, Logger, Engine, Transactor, EventBus, … }
+    → 各 Module.Register(c)   # 挂载路由、注入 Checker、订阅事件
+    → 全局中间件（Auth / Casbin / Entitlement / PluginMember）
+    → sparkplugin.InstallAllWithContext(PluginContext)
+    → msgFactory.Start → HTTP Listen
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Container 字段</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DB</code> + <code>Transactor</code></td>
+<td>GORM 与显式事务边界（单 BC 写路径）</td>
+</tr>
+<tr>
+<td><code>EventBus</code> / <code>EventRegistry</code></td>
+<td>领域内发布 + 跨 BC 订阅</td>
+</tr>
+<tr>
+<td><code>PermissionChecker</code> / <code>PolicyEngine</code></td>
+<td>功能码与 Casbin API 策略</td>
+</tr>
+<tr>
+<td><code>WorkspaceMemberChecker</code></td>
+<td>工作区成员关系（插件 API 复用）</td>
+</tr>
+<tr>
+<td><code>K8sFactory</code></td>
+<td>按 cluster_info 构建 client-go（runtime + 插件 Port）</td>
+</tr>
+</tbody></table>
+<p>无数据库时仅启动健康检查骨架；<strong>业务模块全部跳过</strong>，便于纯前端或探活场景。</p>
+<h3 id="56-模块注册与-HTTP-路由约定">5.6 模块注册与 HTTP 路由约定</h3>
+<p>每个 BC 实现 <code>appctx.Module</code>：<code>Name()</code> + <code>Register(*Container) error</code>。典型步骤：</p>
+<ol>
+<li>在 <code>Register</code> 内构造 <strong>infrastructure 仓储</strong> 与 <strong>application command/query</strong>。</li>
+<li><code>interface/http</code> 注册 Gin 路由组，前缀与 OpenAPI 一致，例如：<ul>
+<li><code>/api/v1/workspaces/:wsId/projects</code></li>
+<li><code>/api/v1/workspaces/:wsId/products/:productId/...</code></li>
+<li><code>/api/v1/admin/...</code>（平台超管）</li>
+</ul>
+</li>
+<li>Handler 解析 path/query/body → 调用 application → <code>httpx.OK</code> / <code>httpx.Fail</code>。</li>
+<li>需要工作空间作用域的路由组挂载 <code>httpx.RequireWorkspace()</code>，并读取 <strong><code>X-Workspace-Id</code></strong>（与 JWT 成员 ID 联合判定）。</li>
+</ol>
+<p><strong>标准目录</strong>（单 BC，见 <a href="../spec/greenfield-go-ddd.md">greenfield-go-ddd.md</a> §六）：</p>
+<pre><code class="language-text">internal/modules/{bc}/
+├── module.go
+├── interface/http/          # routes · handlers · dto
+├── application/command|query|subscriber/
+├── domain/model|event|repository/
+└── infrastructure/persistence|acl|{external}/
+</code></pre>
+<h3 id="57-跨-BC-协作模式">5.7 跨 BC 协作模式</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>适用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Port（接口）</strong></td>
+<td>同步读/校验，需稳定契约</td>
+<td>workspace_app 通过 governance Port 校验权限</td>
+</tr>
+<tr>
+<td><strong>ACL</strong></td>
+<td>翻译外部 BC 模型，防泄漏</td>
+<td><code>platform_admin/infrastructure/acl</code> → 插件 ClusterCredentialSource</td>
+</tr>
+<tr>
+<td><strong>领域事件</strong></td>
+<td>异步、最终一致</td>
+<td>构建完成 → notification；部署完成 → product 回写</td>
+</tr>
+<tr>
+<td><strong>共享 kernel</strong></td>
+<td>仅 ID、枚举等值类型</td>
+<td><code>internal/shared/kernel</code> 中的 WorkspaceID、ProjectID</td>
+</tr>
+</tbody></table>
+<p><strong>禁止</strong>：BC-A 的 <code>application</code> import BC-B 的 <code>infrastructure</code> 或 <code>domain/model</code> 具体类型。集成 Jenkins/Git/K8s 仅出现在 <strong>本 BC 的 infrastructure</strong> 或 <strong>platform</strong> 适配层。</p>
+<h3 id="58-前端应用结构Nextjs-App-Router">5.8 前端应用结构（Next.js App Router）</h3>
+<p>主应用 <code>fronted/apps/web</code>：</p>
+<pre><code class="language-text">app/
+├── (auth)/                    # 登录、注册、SSO 回调
+├── (platform)/                # 业务 / 管理 / 平台运营壳层
+│   ├── layout.tsx             # 侧栏、工作空间上下文、Entitlement 门控
+│   ├── admin/                 # 管理控制台 /admin/*
+│   ├── platform/              # 平台运营 /platform/*
+│   ├── plugins/{id}/          # 插件页面（如 kubernetes）
+│   └── …                      # 项目、产品、Agent 等业务路由
+└── api/bff/v1/                # ★ 仅服务端：BFF Route Handlers
+
+src/
+├── modules/{bc}/              # 展示层：组件、hooks、领域 UI 模块
+├── components/                # 跨模块布局、设计系统封装
+└── server/                    # RSC loaders / Server Actions（可选直调 bff-modules）
+</code></pre>
+<p><strong>路由组策略</strong>：</p>
+<ul>
+<li><strong><code>(platform)</code></strong> 承载需登录的工作台；布局层注入当前工作空间、菜单树（含插件动态菜单）、权限按钮。</li>
+<li><strong>菜单与 Entitlement</strong>：侧栏由治理菜单 + 模块开关 + 插件 manifest 合并；后端为鉴权主闸，前端仅做体验层隐藏。</li>
+<li><strong>插件页面</strong> 与核心 BC 页面相同约束：数据经 BFF，不引入 <code>@sparkops/upstream</code> 到 Client Component。</li>
+</ul>
+<h3 id="59-BFF-设计模式">5.9 BFF 设计模式</h3>
+<p>BFF 分 <strong>薄 Route</strong> 与 <strong>厚用例</strong> 两层：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>位置</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Route Handler</td>
+<td><code>app/api/bff/v1/**/route.ts</code></td>
+<td>解析 <code>NextRequest</code>、创建 <code>BffContext</code>、调用 bff-modules、返回 <code>NextResponse</code></td>
+</tr>
+<tr>
+<td>用例模块</td>
+<td><code>packages/bff-modules/src/{bc}/</code></td>
+<td>编排多个 upstream 调用、字段裁剪、合并列表、屏幕级 ViewModel</td>
+</tr>
+<tr>
+<td>Upstream 客户端</td>
+<td><code>packages/upstream/</code></td>
+<td>仅 Node 侧 HTTP；带 <code>Authorization</code>、<code>X-Workspace-Id</code>、超时与 Envelope 解析</td>
+</tr>
+<tr>
+<td>核心</td>
+<td><code>packages/bff-core/</code></td>
+<td><code>createBffContext</code>、Entitlement 缓存、流式 <code>upstreamRawFetch</code>、Kubernetes 插件代理</td>
+</tr>
+</tbody></table>
+<p><strong><code>createBffContext</code>（摘要）</strong>：</p>
+<ul>
+<li>从 Cookie 读取 <code>sparkops_token</code> → 转发为 upstream <code>Authorization</code>。</li>
+<li>从 Cookie/Header 解析 <code>sparkops_workspace_id</code> → <code>X-Workspace-Id</code>。</li>
+<li>构造分 BC 的 typed upstream（identity、workspace、delivery、runtime、product、governance、kubernetesPlugin 等）。</li>
+<li>可选：BFF 路径映射到 Entitlement 模块（<code>bffPathToApiPath</code>），在到达 Go 前拒绝未开通模块。</li>
+</ul>
+<p><strong>Route 形态</strong>：</p>
+<ul>
+<li><strong>资源型</strong>：<code>workspaces/[wsId]/projects/[projectId]/route.ts</code> — REST 一一对应 upstream，便于缓存与权限边界清晰。</li>
+<li><strong>聚合型</strong>：单 route 内调用 bff-modules 组合函数（如项目详情 = project + governance + delivery 摘要）。</li>
+<li><strong>Catch-all 代理</strong>：<code>plugins/kubernetes/[...path]</code> — 原样转发 query/body/stream，避免为每个 GVK 手写 BFF。</li>
+<li><strong>流式</strong>：<code>stream/chat</code>、<code>stream/terminal</code> 等 — SSE/WebSocket 升级前解析 Envelope 错误，再 pipe upstream 字节流。</li>
+</ul>
+<p>BFF <strong>不得</strong>连接 PostgreSQL 或实现归属/审批等领域规则；若需多步写操作，应调用 Go 已封装的事务性 command API。</p>
+<h3 id="510-展示层与数据获取">5.10 展示层与数据获取</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>场景</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Client + web-sdk</strong></td>
+<td>交互密集列表、表单、轮询</td>
+<td><code>bffFetch(&#39;/workspaces/...&#39;)</code>，<code>credentials: &#39;include&#39;</code>，自动带工作空间头</td>
+</tr>
+<tr>
+<td><strong>RSC + loader</strong></td>
+<td>首屏 SEO/少闪烁、只读聚合</td>
+<td>Server Component 内 import bff-modules 或 internal fetch BFF（同进程，避免浏览器环）</td>
+</tr>
+<tr>
+<td><strong>Server Actions</strong></td>
+<td>表单提交、简单 mutation</td>
+<td>仍应委托 bff-modules → upstream command</td>
+</tr>
+<tr>
+<td><strong>SSE / 流</strong></td>
+<td>Agent Chat、构建日志、Pod 日志</td>
+<td>专用 BFF stream route；Client 使用 <code>EventSource</code> 或封装 hook</td>
+</tr>
+</tbody></table>
+<p><strong>状态与缓存</strong>：</p>
+<ul>
+<li>服务端 Entitlement 可在 bff-core 短 TTL 缓存，减少每请求 governance 读取。</li>
+<li>UI 层推荐 React Query（或等价）管理 BFF 资源 key；mutation 后 invalidate 工作空间/项目维度 key。</li>
+<li>契约类型从 <code>@sparkops/contracts</code> 导入，避免手写与 Go DTO 漂移。</li>
+</ul>
+<p><strong>错误与空态</strong>：统一消费 <code>BffError</code>（含 <code>errorCode</code>、HTTP status）；网络中断映射为 <code>BFF_NETWORK_ERROR</code>，与 Go upstream 502 区分展示。</p>
+<hr>
+<h2 id="6-典型请求链路">6. 典型请求链路</h2>
+<h3 id="61-已认证业务-API工作空间-scoped">6.1 已认证业务 API（工作空间 scoped）</h3>
+<div class="mermaid-wrap"><pre class="mermaid">sequenceDiagram
+  participant B as Browser
+  participant BFF as Next.js BFF
+  participant API as Go Gin
+  participant Auth as authn/authz
+  participant App as application
+  participant DB as PostgreSQL
+
+  B-&gt;&gt;BFF: GET /api/bff/v1/...
+  BFF-&gt;&gt;BFF: createBffContext · 可选 Entitlement
+  BFF-&gt;&gt;API: GET /api/v1/... + Authorization + X-Workspace-Id
+  API-&gt;&gt;Auth: OptionalAuth → APIAccess(Casbin) → Entitlement
+  Auth-&gt;&gt;App: RequirePermission(功能码)
+  App-&gt;&gt;DB: 仓储读写
+  DB--&gt;&gt;App: rows
+  App--&gt;&gt;API: DTO
+  API--&gt;&gt;BFF: Envelope JSON
+  BFF--&gt;&gt;B: ViewModel</pre></div>
+<h3 id="62-Gin-中间件链摘要">6.2 Gin 中间件链（摘要）</h3>
+<p>启动顺序见 <code>bootstrap/app.go</code>：</p>
+<ol>
+<li><strong>RequestLog / Metrics</strong>（可观测）</li>
+<li>各 <strong>Module.Register</strong> 挂载路由与模块级中间件</li>
+<li><strong>OptionalAuth</strong>（JWT）</li>
+<li><strong>APIAccessMiddleware</strong>（Casbin，工作区 API 策略已配置时）</li>
+<li><strong>Entitlements</strong>（模块开关，如 <code>delivery</code>、<code>k8s</code>、<code>plugin:kubernetes</code>）</li>
+<li><strong>RequireMemberForPluginAPIs</strong></li>
+<li><strong>插件路由</strong> <code>sparkplugin.InstallAllWithContext</code>（Kubernetes 插件在路由组内再校验工作区成员与写权限）</li>
+</ol>
+<p>工作空间 API 通常要求 <strong><code>X-Workspace-Id</code></strong> 且当前用户为 <code>workspace_members</code> 成员；平台路由 <code>/api/v1/admin/*</code> 走 Super Admin。</p>
+<h3 id="63-流式场景Agent-Chat--部署日志--K8s-插件">6.3 流式场景（Agent Chat / 部署日志 / K8s 插件）</h3>
+<ul>
+<li>浏览器 → BFF <strong>SSE 代理</strong>（如 <code>/api/bff/v1/.../stream</code>）。</li>
+<li>BFF → Go <strong>SSE</strong> 端点，保持鉴权头与工作空间上下文。</li>
+<li>BFF 侧对错误 Envelope 先解析，再进入流模式（见前端架构规范）。</li>
+<li><strong>Kubernetes 插件</strong>：Pod 日志、Exec、诊断 WebSocket、Chat 查询等经 <code>app/api/bff/v1/plugins/kubernetes/[...path]/route.ts</code> 透传 upstream（<code>proxyKubernetesPluginRequest</code>），与平台 runtime 终端路径并列，不绕过 BFF。</li>
+</ul>
+<hr>
+<h2 id="7-数据架构">7. 数据架构</h2>
+<h3 id="71-PostgreSQL按-BC-分-schema">7.1 PostgreSQL：按 BC 分 schema</h3>
+<p>表不在 <code>public</code> 默认 schema，而分散在例如：</p>
+<table>
+<thead>
+<tr>
+<th>Schema</th>
+<th>示例表</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>identity</code></td>
+<td>members, api_tokens, sso_configs</td>
+</tr>
+<tr>
+<td><code>tenant</code></td>
+<td>organizations, workspaces, workspace_members</td>
+</tr>
+<tr>
+<td><code>governance</code></td>
+<td>roles, role_bindings, menus, casbin_rule</td>
+</tr>
+<tr>
+<td><code>workspace_app</code></td>
+<td>projects, templates, secrets</td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>products, release_plans, environments, sprints</td>
+</tr>
+<tr>
+<td><code>delivery</code></td>
+<td>builds, deployment_runs, cronjobs</td>
+</tr>
+<tr>
+<td><code>agent</code> / <code>agent_runtime</code></td>
+<td>agents, conversations, runs</td>
+</tr>
+<tr>
+<td><code>plugin</code></td>
+<td>plugins, workspace_bindings</td>
+</tr>
+<tr>
+<td><code>plugin_kubernetes</code></td>
+<td>cluster_settings, records, diagnosis, cluster_user_grants</td>
+</tr>
+<tr>
+<td><code>platform_admin</code></td>
+<td>cluster_info, workspace_clusters（插件只读消费，不复制 kubeconfig）</td>
+</tr>
+</tbody></table>
+<p><strong>演进方式</strong>：</p>
+<ul>
+<li>顺序 SQL：<code>backend/migrations/*.up.sql</code>（生产推荐 <code>go run ./cmd/migrate</code>）。</li>
+<li>开发/空库：<code>AutoMigrate</code>（<code>bootstrap/migrate.go</code>）补充 GORM 模型表。</li>
+<li>ER 全览：<a href="./diagrams/sparkops-er-diagram.drawio">sparkops-er-diagram.drawio</a>。</li>
+</ul>
+<h3 id="72-Redis">7.2 Redis</h3>
+<ul>
+<li>会话、缓存、限流等（具体 key 策略见各模块实现）。</li>
+<li>健康检查：<code>httpx.RegisterReadiness</code> 探测 DB + Redis。</li>
+</ul>
+<h3 id="73-事务与一致性">7.3 事务与一致性</h3>
+<ul>
+<li>单 BC 内写路径：<strong>GORM + 显式 Transactor</strong>（<code>platform/postgres</code>）。</li>
+<li>跨 BC：<strong>领域事件 + 消息总线</strong>；生产环境 <strong>Transactional Outbox / Inbox</strong>（<code>platform.event_outbox</code> 等，见迁移 <code>000070</code>）。</li>
+<li><code>messaging.Driver=amqp</code> 时启动校验 Outbox schema（<code>validateMessagingBootstrap</code>）。</li>
+</ul>
+<hr>
+<h2 id="8-消息与事件架构">8. 消息与事件架构</h2>
+<pre><code class="language-text">┌─────────────┐     publish      ┌──────────────┐
+│ application │ ───────────────► │ EventBus     │
+└─────────────┘                  │ (memory/amqp)│
+                                 └──────┬───────┘
+                                        │ dispatch
+                                 ┌──────▼───────┐
+                                 │ subscribers  │
+                                 │ (各 BC)      │
+                                 └──────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>配置</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内存驱动</td>
+<td>默认/local mock</td>
+<td>开发、Compose 演示</td>
+</tr>
+<tr>
+<td>AMQP</td>
+<td><code>messaging.driver: amqp</code></td>
+<td>生产、多实例 API</td>
+</tr>
+</tbody></table>
+<p><strong>典型订阅</strong>：构建完成 → 更新需求/工作项；项目审核 → 通知；部署完成 → 产品域回写等（<code>application/subscriber</code>）。</p>
+<p><strong>Operation Outbox</strong>：长耗时运维操作（如卸载、流水线禁用）异步执行与审计（<code>operationlog</code>）。</p>
+<hr>
+<h2 id="9-集成架构">9. 集成架构</h2>
+<table>
+<thead>
+<tr>
+<th>集成对象</th>
+<th>接入方式</th>
+<th>代码锚点（示例）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Jenkins</strong></td>
+<td>REST + Pipeline 渲染</td>
+<td><code>delivery/infrastructure/jenkins</code></td>
+</tr>
+<tr>
+<td><strong>GitLab</strong></td>
+<td>API + 仓库树</td>
+<td><code>workspace_app/infrastructure/git</code></td>
+</tr>
+<tr>
+<td><strong>Kubernetes（项目运行）</strong></td>
+<td>client-go；按项目/部署 Run 观测</td>
+<td><code>runtime/infrastructure/k8s</code></td>
+</tr>
+<tr>
+<td><strong>Kubernetes（插件控制台）</strong></td>
+<td>apiserver 安全 Proxy + 专项 HTTP</td>
+<td><code>internal/plugins/kubernetes/*</code></td>
+</tr>
+<tr>
+<td><strong>Harbor / 镜像</strong></td>
+<td>项目凭据 + 构建参数</td>
+<td>delivery + workspace secrets</td>
+</tr>
+<tr>
+<td><strong>LLM</strong></td>
+<td>integration 模块配置</td>
+<td><code>modules/integration</code></td>
+</tr>
+<tr>
+<td><strong>OIDC / LDAP</strong></td>
+<td>identity 认证链</td>
+<td><code>identity/infrastructure/auth</code></td>
+</tr>
+<tr>
+<td><strong>OpenAPI 消费者</strong></td>
+<td><code>/api/v1</code> + Token</td>
+<td><code>backend/api/openapi</code></td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>HTTP 工具注册</td>
+<td><code>modules/mcp</code></td>
+</tr>
+<tr>
+<td><strong>Webhook</strong></td>
+<td>项目级 outbound / inbound</td>
+<td><code>delivery/project_webhooks</code></td>
+</tr>
+</tbody></table>
+<p><strong>驱动抽象</strong>：</p>
+<ul>
+<li><code>DELIVERY_DRIVER=mock</code>：本地无 Jenkins 演示构建/部署状态机。</li>
+<li><code>RUNTIME_DRIVER=mock</code>：无真实集群演示运行态。</li>
+</ul>
+<hr>
+<h2 id="10-插件架构">10. 插件架构</h2>
+<p>插件采用 <strong>SparkOps 契约</strong>（非 GVA 五件套），见 <a href="../spec/plugin-sdk.md">plugin-sdk.md</a>。</p>
+<pre><code class="language-text">plugin.yaml（菜单/API/entitlement）
+    │
+    ├── backend/plugin.go  → sparkplugin.Register · RegisterWithContext
+    ├── frontend/pages     → app/(platform)/plugins/{id}/*
+    └── BFF catch-all      → app/api/bff/v1/plugins/{id}/[...path]
+</code></pre>
+<p><strong>安装与治理</strong>：</p>
+<ul>
+<li>表：<code>plugin.plugins</code>、<code>plugin.workspace_bindings</code>。</li>
+<li>路由前缀：<code>/api/v1/plugins/{id}</code>；菜单 <code>/plugins/{id}</code>。</li>
+<li>鉴权链：JWT → 工作空间成员 → Entitlement <code>plugin:{id}</code> → Casbin（manifest 可声明 <code>ANY</code> 前缀规则）→ 插件内写权限（如 <code>governance:admin</code>）。</li>
+<li>内置插件通过 <code>internal/plugins</code> blank import 注册；<code>kubernetes</code> 同时作为 <strong>Bundled</strong> 种子（<code>plugin.yaml</code> embed + <code>RegisterBundled</code>）。</li>
+</ul>
+<p>产品能力与边界见 <a href="./SparkOps%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3.md">SparkOps产品设计文档</a> 第 8 章；下文聚焦 <strong>Kubernetes 插件</strong> 实现架构。</p>
+<h3 id="101-定位插件-vs-runtime-BC">10.1 定位：插件 vs <code>runtime</code> BC</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th><code>modules/runtime</code></th>
+<th><code>internal/plugins/kubernetes</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>触发场景</td>
+<td>项目部署 Run、运行实例、按项目看 Pod</td>
+<td>工作空间已授权集群上的全量资源运维</td>
+</tr>
+<tr>
+<td>API 前缀</td>
+<td><code>/api/v1/.../runtime</code>、工作空间 k8s 项目 API</td>
+<td><code>/api/v1/plugins/kubernetes</code></td>
+</tr>
+<tr>
+<td>Entitlement</td>
+<td><code>k8s</code></td>
+<td><code>plugin:kubernetes</code>（<code>plugin.workspace_bindings</code>）</td>
+</tr>
+<tr>
+<td>集群凭证</td>
+<td>读 <code>platform_admin.cluster_info</code> + <code>workspace_clusters</code></td>
+<td>同上，经 <code>PluginContext.ClusterClientFactory.ForWorkspace</code></td>
+</tr>
+<tr>
+<td>数据落库</td>
+<td>delivery/runtime 相关表</td>
+<td><code>plugin_kubernetes.*</code>（设置、审计、诊断、成员 kubeconfig 元数据）</td>
+</tr>
+</tbody></table>
+<p>二者 <strong>不互相 import domain</strong>；插件禁止直接引用 <code>modules/runtime</code> 内部包，仅通过平台注入的 Port（client 工厂、成员校验、DB、审计）工作。</p>
+<h3 id="102-后端模块结构">10.2 后端模块结构</h3>
+<p>代码根：<code>backend/internal/plugins/kubernetes/</code>。</p>
+<pre><code class="language-text">plugin.go / plugin.yaml          # manifest、Bundled 描述
+http/                            # Gin 路由、集群 CRUD、write_guard
+proxy/                           # apiserver 反向代理（分页/多 NS/脱敏）
+stream/ · terminal/ · files/     # 日志、Exec、容器文件
+tty/ · diagnosis/ · velaux/ · chat/ · metrics/
+records/                         # 终端会话录像
+schema/                          # GORM 模型与 AutoMigrate
+rbac/                            # 成员 SA / ClusterRole 绑定（签发 kubeconfig）
+</code></pre>
+<p>实现 <code>ContextPlugin</code>：<code>RegisterWithContext(engine, PluginContext)</code> 注入 Logger、DB、Audit、<strong>ClusterClientFactory</strong>、<strong>WorkspaceMemberAuthorizer</strong>。旧式 <code>Register(engine)</code> 仍保留用于无 Context 的降级注册。</p>
+<p><strong>ClusterClientFactory</strong> 契约（见插件详设）：仅当 <code>workspace_clusters</code> 存在授权时返回 <code>kubernetes.Interface</code> / <code>dynamic.Interface</code> / <code>rest.Config</code>；否则 403，不泄漏其它工作区集群 ID。</p>
+<h3 id="103-路由与-BFF">10.3 路由与 BFF</h3>
+<p><strong>Upstream 固定前缀</strong>：<code>/api/v1/plugins/kubernetes</code>（<code>http/router.go</code>）。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>示例路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>就绪</td>
+<td><code>GET /ready</code></td>
+<td>健康探测</td>
+</tr>
+<tr>
+<td>集群</td>
+<td><code>GET /clusters</code>、<code>PUT .../settings</code></td>
+<td>列表（已授权）、Prometheus/Velaux/LLM 覆盖</td>
+</tr>
+<tr>
+<td>成员凭证</td>
+<td><code>.../users</code>、<code>.../kubeconfig</code></td>
+<td><code>cluster_user_grants</code> + 集群内 SA</td>
+</tr>
+<tr>
+<td>Proxy</td>
+<td><code>ANY .../proxy/*path</code></td>
+<td>转发 kube-apiserver（资源 CRUD 主路径）</td>
+</tr>
+<tr>
+<td>指标</td>
+<td><code>POST .../metrics</code></td>
+<td>Prometheus 查询（manifest 标记 <code>read_only</code>）</td>
+</tr>
+<tr>
+<td>运行时</td>
+<td><code>.../pods/.../logs</code>、<code>.../exec</code>、<code>.../files</code></td>
+<td>流式；写文件/Exec 走 write guard</td>
+</tr>
+<tr>
+<td>审计</td>
+<td>`GET</td>
+<td>DELETE /records`</td>
+</tr>
+<tr>
+<td>扩展</td>
+<td><code>.../cloudtty</code>、<code>.../nodetty</code>、<code>.../diagnosis/*</code>、<code>.../velaux/*</code>、<code>.../chat/query</code></td>
+<td>专项适配器</td>
+</tr>
+</tbody></table>
+<p><strong>BFF</strong>：<code>fronted/apps/web/app/api/bff/v1/plugins/kubernetes/[...path]/route.ts</code> 将所有 HTTP 方法代理至 Go API，复用 <code>createBffContext</code> 与会话 Cookie。<strong>浏览器 SDK</strong> 应走 <code>/api/bff/v1/plugins/kubernetes/...</code>，禁止配置直连 <code>:8080</code>。</p>
+<p><strong>前端</strong>：</p>
+<ul>
+<li>页面：<code>app/(platform)/plugins/kubernetes/**</code></li>
+<li>资源目录：<code>src/modules/plugins/kubernetes/catalog.ts</code>（GVK、列定义、是否 namespaced）</li>
+<li>通用列表/YAML + 专项页（集群、终端、Velaux、备份等）</li>
+</ul>
+<h3 id="104-Apiserver-Proxy-行为">10.4 Apiserver Proxy 行为</h3>
+<p><code>proxy/handler.go</code> 在授权 client 之上实现与历史 GVA 控制台对齐的行为要点：</p>
+<ul>
+<li>将 <code>*path</code> 映射到 apiserver REST；支持 discovery 缓存、多 Namespace 聚合列表。</li>
+<li>对敏感响应字段 <strong>redaction</strong>；错误体规范化，502 时不回显证书或 token。</li>
+<li>写方法（POST/PUT/PATCH/DELETE）与非只读专项接口在 Gin 层经 <strong>write_guard</strong> 要求 <code>governance:admin</code>（或超管）；GET/HEAD 代理对工作区成员开放（仍需集群授权）。</li>
+</ul>
+<p>Casbin：enable 插件时把 <code>plugin.yaml</code> 中 <code>method: ANY</code> 且以 <code>/*</code> 结尾的前缀策略写入 governance，避免为每个 GVK 手工维护上百条 API 规则。</p>
+<h3 id="105-鉴权链插件-API">10.5 鉴权链（插件 API）</h3>
+<p>在全局中间件（§6.2）之后，Kubernetes 路由组额外执行：</p>
+<ol>
+<li><code>httpx.RequireWorkspace()</code> + <code>X-Workspace-Id</code></li>
+<li><code>requireWorkspaceMember</code>（PluginContext 注入的 Authorizer）</li>
+<li>写操作 / Exec / 文件 / 诊断 / settings / 用户签发 → <code>requireGovernanceAdmin</code>（功能码 <code>governance:admin</code>）</li>
+<li><code>ClusterClientFactory.ForWorkspace(wsID, clusterID)</code> — <strong>硬门禁</strong></li>
+</ol>
+<p>Entitlement：<code>plugin:kubernetes</code> 未启用时返回 <code>ENTITLEMENT_MODULE_DISABLED</code>（403）。</p>
+<p>角色与菜单对照见 <a href="./privilege_k8s.md">privilege_k8s.md</a>。</p>
+<h3 id="106-数据模型plugin_kubernetes-schema">10.6 数据模型（<code>plugin_kubernetes</code> schema）</h3>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cluster_settings</code></td>
+<td>每工作区+集群：Prometheus、Velaux、LLM 连接信息（<strong>不含</strong> kubeconfig）</td>
+</tr>
+<tr>
+<td><code>cluster_user_grants</code></td>
+<td>成员 ↔ 集群 SA / Role 绑定，用于签发个人 kubeconfig</td>
+</tr>
+<tr>
+<td><code>records</code></td>
+<td>终端会话元数据与录像 blob / 对象路径</td>
+</tr>
+<tr>
+<td><code>diagnosis</code></td>
+<td>Arthas 等诊断会话状态与过期时间</td>
+</tr>
+</tbody></table>
+<p>迁移：插件 <code>schema/migrate.go</code> 随平台 AutoMigrate 注册；<strong>卸载插件不 DROP</strong> 业务表（与详设一致）。</p>
+<p>平台侧 <strong><code>platform_admin.cluster_info</code></strong> 存集群连接凭证；<strong><code>workspace_clusters</code></strong> 存工作空间授权。插件 UI 不以「粘贴 kubeconfig」为主路径，缺失凭证时在 API 层返回可行动错误，引导至平台/工作空间集群管理页。</p>
+<h3 id="107-实时与外部集成">10.7 实时与外部集成</h3>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>实现要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pod 日志 / Exec</td>
+<td><code>stream/</code> + BFF 流式代理；终端 ticket 可选（<code>terminal/</code>）</td>
+</tr>
+<tr>
+<td>容器文件</td>
+<td>multipart 上传/下载；审计日志对 multipart 记 <code>[multipart omitted]</code></td>
+</tr>
+<tr>
+<td>CloudTTY / NodeTTY</td>
+<td><code>tty/</code>；NodeTTY 创建特权 Pod，失败路径清理临时资源</td>
+</tr>
+<tr>
+<td>Arthas</td>
+<td>内置 <code>resource/arthas-bin.tar</code>；<code>diagnosis/</code> 管理安装与 WS 代理</td>
+</tr>
+<tr>
+<td>Velaux</td>
+<td>HTTP 反向代理至集群 settings 中的 Velaux 基址</td>
+</tr>
+<tr>
+<td>AI Chat</td>
+<td><code>chat/query</code> SSE；模型地址来自 <code>cluster_settings</code> 或平台 LLM 配置</td>
+</tr>
+</tbody></table>
+<p>缺 CRD 时 Proxy 返回上游 404/错误，前端按 Envelope 展示；菜单仍由 manifest 注册，便于「集群未装组件」与「平台无功能」区分。</p>
+<h3 id="108-请求序列资源列表">10.8 请求序列（资源列表）</h3>
+<div class="mermaid-wrap"><pre class="mermaid">sequenceDiagram
+  participant UI as Next.js 插件页
+  participant BFF as BFF /plugins/kubernetes
+  participant API as plugins/kubernetes/http
+  participant Factory as ClusterClientFactory
+  participant APIServer as kube-apiserver
+
+  UI-&gt;&gt;BFF: GET .../proxy/api/v1/namespaces/.../pods
+  BFF-&gt;&gt;API: 转发 JWT + X-Workspace-Id
+  API-&gt;&gt;API: 成员 + Entitlement + 集群授权
+  API-&gt;&gt;Factory: ForWorkspace(ws, clusterId)
+  Factory--&gt;&gt;API: client-go rest.Config
+  API-&gt;&gt;APIServer: Proxy GET
+  APIServer--&gt;&gt;API: JSON
+  API--&gt;&gt;BFF: Envelope
+  BFF--&gt;&gt;UI: ViewModel / 原始列表 JSON</pre></div>
+<h3 id="109-交付形态与测试">10.9 交付形态与测试</h3>
+<ul>
+<li><strong>Bundled</strong>：仓库内置即可用；<code>go test ./internal/plugins/kubernetes/...</code> 覆盖 manifest、Proxy 契约、授权矩阵。</li>
+<li><strong>ZIP 通道</strong>：manifest 与 <code>InspectZip</code> 规则见 plugin-sdk；kubernetes 包体积含 <code>arthas-bin.tar</code>，安装器放宽条目上限（详设约定）。</li>
+<li><strong>CI</strong>：默认不依赖真实集群；fake client / httptest 验证 Proxy 与 write_guard。</li>
+</ul>
+<hr>
+<h2 id="11-安全架构">11. 安全架构</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>认证</strong></td>
+<td>JWT（本地/OIDC/LDAP）；API Token；插件 API 成员校验</td>
+</tr>
+<tr>
+<td><strong>平台</strong></td>
+<td><code>system_role_bindings.super_admin</code> → <code>/api/v1/admin/*</code></td>
+</tr>
+<tr>
+<td><strong>组织</strong></td>
+<td><code>organization_members</code> 角色 owner/admin/member</td>
+</tr>
+<tr>
+<td><strong>工作空间</strong></td>
+<td>RBAC 功能码 + 可选 Casbin API 策略 + Entitlement</td>
+</tr>
+<tr>
+<td><strong>项目</strong></td>
+<td><code>project_members</code> ACL</td>
+</tr>
+<tr>
+<td><strong>审计</strong></td>
+<td><code>platform.audit_logs</code>、<code>platform.operation_records</code>；敏感字段中间件脱敏</td>
+</tr>
+<tr>
+<td><strong>K8s 插件终端</strong></td>
+<td><code>plugin_kubernetes.records</code> 会话回放；与平台操作日志互补（见 <a href="./privilege_k8s.md">privilege_k8s.md</a>）</td>
+</tr>
+<tr>
+<td><strong>密钥</strong></td>
+<td><code>workspace_app.secrets</code>；禁止将 kubeconfig/Token 提交仓库</td>
+</tr>
+</tbody></table>
+<p>详细权限模型见 <a href="./privilege_design.md">privilege_design.md</a>。</p>
+<hr>
+<h2 id="12-部署架构">12. 部署架构</h2>
+<h3 id="121-组件拓扑生产参考">12.1 组件拓扑（生产参考）</h3>
+<pre><code class="language-text">                    ┌─────────────┐
+  Ingress ─────────►│  Web Pod    │  Next.js standalone
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │  API Pod    │  Go server（可水平扩展）
+                    └──┬───┬───┬──┘
+                       │   │   │
+              PostgreSQL Redis RabbitMQ
+                       │
+              Jenkins / K8s API（集群外）
+</code></pre>
+<h3 id="122-交付物">12.2 交付物</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Docker Compose</td>
+<td>仓库根 <code>make docker-up</code></td>
+<td>含 PG/Redis/RabbitMQ，mock 驱动</td>
+</tr>
+<tr>
+<td>镜像构建</td>
+<td><code>backend/deployments/docker</code>、<code>fronted/deployments/docker</code></td>
+<td>API / Web 镜像</td>
+</tr>
+<tr>
+<td>Helm</td>
+<td><code>deployments/helm/sparkops/</code></td>
+<td>K8s 安装与配置</td>
+</tr>
+</tbody></table>
+<p><strong>生产检查项</strong>：</p>
+<ul>
+<li><code>APP_ENV=production</code>，修改默认 JWT/DB 口令。</li>
+<li><code>messaging.driver: amqp</code>，配置 RabbitMQ。</li>
+<li>配置真实 Jenkins、集群凭据；关闭 mock 驱动。</li>
+<li>Ingress TLS、网络策略限制 API 仅 BFF 可达（推荐）。</li>
+</ul>
+<hr>
+<h2 id="13-可观测性">13. 可观测性</h2>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求日志</td>
+<td>zap + <code>RequestLogMiddleware</code></td>
+</tr>
+<tr>
+<td>HTTP 指标</td>
+<td><code>MetricsMiddleware</code>（Prometheus 友好）</td>
+</tr>
+<tr>
+<td>应用日志</td>
+<td><code>platform.app_logs</code>（可选入库）</td>
+</tr>
+<tr>
+<td>健康检查</td>
+<td>readiness：DB、Redis</td>
+</tr>
+<tr>
+<td>分布式追踪</td>
+<td>架构预留；深度对接见 <a href="../spec/architecture.md">architecture.md</a> 路线图</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="14-前端-Monorepo-与工程约束">14. 前端 Monorepo 与工程约束</h2>
+<p>Monorepo 根目录 <code>fronted/</code>（pnpm workspace）。分层细节见 <strong>§5.8–§5.10</strong>；此处给出包职责与依赖方向。</p>
+<pre><code class="language-text">fronted/
+├── apps/web/                      # Next.js 主应用（页面 + BFF Route）
+├── packages/
+│   ├── contracts/                 # Zod schema + TS 类型（BFF 响应 / 表单）
+│   ├── bff-core/                  # BffContext、Entitlement、流式代理、fail() 辅助
+│   ├── bff-modules/               # 按 BC 的屏幕用例（identity…product…plugins）
+│   ├── upstream/                  # Go /api/v1  typed client（禁止浏览器 import）
+│   └── web-sdk/                   # bffFetch、仅 /api/bff/v1 前缀
+└── pnpm-workspace.yaml
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>包</th>
+<th>可依赖</th>
+<th>禁止</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>web-sdk</code></td>
+<td><code>contracts</code></td>
+<td><code>upstream</code>、<code>bff-modules</code>、Go URL</td>
+</tr>
+<tr>
+<td><code>bff-modules</code></td>
+<td><code>upstream</code>、<code>bff-core</code>、<code>contracts</code></td>
+<td>React、浏览器 API</td>
+</tr>
+<tr>
+<td><code>apps/web</code> 展示层</td>
+<td><code>web-sdk</code>、<code>contracts</code>、UI 库</td>
+<td><code>upstream</code> 进入 Client Component</td>
+</tr>
+<tr>
+<td><code>apps/web</code> Route</td>
+<td><code>bff-modules</code>、<code>bff-core</code></td>
+<td>直连 DB</td>
+</tr>
+</tbody></table>
+<p><strong>BFF 模块与 BC 对齐</strong>（<code>bff-modules/src/</code>）：<code>identity</code>、<code>tenant</code>、<code>workspace</code>、<code>governance</code>、<code>delivery</code>、<code>runtime</code>、<code>product</code>、<code>agent</code>、<code>knowledge</code>、<code>workflow</code>、<code>cluster</code>、<code>platform</code>、<code>mcp</code>、<code>plugins</code> 等；新增屏幕用例时优先扩展对应 BC 包，再在 <code>app/api/bff/v1</code> 增加薄 route。</p>
+<p><strong>质量门禁</strong>：<code>pnpm lint</code> / <code>pnpm test</code>；Route 与 bff-modules 单元测试；禁止在 <code>eslint</code> 边界外从 Client 引用 upstream（可通过 eslint import 规则或 CI grep 守护）。</p>
+<hr>
+<h2 id="15-仓库目录技术视角">15. 仓库目录（技术视角）</h2>
+<p>源码见 <a href="https://github.com/boyang167/SparkOpsAgent">github.com/boyang167/SparkOpsAgent</a>。下文路径均相对该仓库根目录。</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>backend/cmd/server</code></td>
+<td>API 进程入口</td>
+</tr>
+<tr>
+<td><code>backend/cmd/migrate</code> · <code>seed</code></td>
+<td>顺序迁移与演示数据</td>
+</tr>
+<tr>
+<td><code>backend/internal/bootstrap/</code></td>
+<td>启动、AutoMigrate、模块注册顺序</td>
+</tr>
+<tr>
+<td><code>backend/internal/modules/</code></td>
+<td>各 BC 实现（§5.6）</td>
+</tr>
+<tr>
+<td><code>backend/internal/platform/</code></td>
+<td>authn/authz、httpx、postgres、redis、messaging、plugin 宿主</td>
+</tr>
+<tr>
+<td><code>backend/internal/plugins/</code></td>
+<td>内置插件（如 kubernetes）</td>
+</tr>
+<tr>
+<td><code>backend/migrations/</code></td>
+<td>生产推荐 SQL 迁移</td>
+</tr>
+<tr>
+<td><code>backend/api/openapi/</code></td>
+<td>集成契约</td>
+</tr>
+<tr>
+<td><code>fronted/</code></td>
+<td>Next.js monorepo（§14）</td>
+</tr>
+<tr>
+<td><code>spec/</code></td>
+<td>架构与设计规范（权威细则）</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td>产品/用户/架构说明</td>
+</tr>
+<tr>
+<td><code>deployments/helm/sparkops/</code></td>
+<td>Helm Chart</td>
+</tr>
+<tr>
+<td><code>plugins/</code></td>
+<td>插件 ZIP 示例与历史资产</td>
+</tr>
+</tbody></table>
+<p><strong>后端与前端物理分离、逻辑对齐</strong>：同一 BC 名在 <code>internal/modules/{bc}</code> 与 <code>bff-modules/src/{bc}</code> 间一一对应，便于 onboarding 时按领域纵向阅读代码。</p>
+<hr>
+<h2 id="16-本地开发与质量门禁">16. 本地开发与质量门禁</h2>
+<pre><code class="language-bash"># 后端
+cd backend &amp;&amp; go run ./cmd/migrate &amp;&amp; go run ./cmd/seed &amp;&amp; go run ./cmd/server
+
+# 前端
+cd fronted &amp;&amp; pnpm install &amp;&amp; pnpm dev
+
+# 测试
+make test / make backend-test / make frontend-test
+</code></pre>
+<ul>
+<li>OpenAPI UI：<code>http://localhost:8080/api/docs</code></li>
+<li>Web：<code>http://localhost:3000</code> · BFF：<code>/api/bff/v1/*</code></li>
+</ul>
+<hr>
+<h2 id="17-演进方向技术">17. 演进方向（技术）</h2>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>说明</th>
+<th>参考</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Delivery Center</strong></td>
+<td>Pipeline DAG、Fleet、分波发布；与 <code>DeploymentRun</code> 映射共存</td>
+<td><a href="../spec/delivery-center-design.md">delivery-center-design.md</a></td>
+</tr>
+<tr>
+<td><strong>数据权限强制</strong></td>
+<td>行/列策略注入查询链</td>
+<td>privilege_design</td>
+</tr>
+<tr>
+<td><strong>插件市场</strong></td>
+<td>安装包校验、版本与回滚增强</td>
+<td>plugin-sdk</td>
+</tr>
+<tr>
+<td><strong>多实例 API</strong></td>
+<td>依赖 AMQP Outbox、无 sticky session 的 SSE 策略</td>
+<td>messaging persistence</td>
+</tr>
+</tbody></table>
+<p>宣讲或评审时，应区分 <strong>已上线代码路径</strong> 与 <strong>spec 中的目标架构</strong>。</p>
+<hr>
+<h2 id="18-术语表">18. 术语表</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BC</td>
+<td>Bounded Context，限界上下文</td>
+</tr>
+<tr>
+<td>BFF</td>
+<td>Backend for Frontend</td>
+</tr>
+<tr>
+<td>ACL</td>
+<td>Anti-Corruption Layer，防腐层</td>
+</tr>
+<tr>
+<td>Outbox</td>
+<td>事务 Outbox，保证 DB 与消息一致</td>
+</tr>
+<tr>
+<td>Entitlement</td>
+<td>工作空间模块开关</td>
+</tr>
+<tr>
+<td>deployrun</td>
+<td>部署 Run 子域，状态机与事件流</td>
+</tr>
+<tr>
+<td>plugin:kubernetes</td>
+<td>Kubernetes 插件模块开关；与工作区 <code>plugin.workspace_bindings</code> 绑定</td>
+</tr>
+<tr>
+<td>ClusterClientFactory</td>
+<td>插件注入端口：按工作区授权构建 client-go 客户端</td>
+</tr>
+<tr>
+<td>Envelope</td>
+<td>统一 JSON 响应包装（<code>code</code> / <code>message</code> / <code>data</code> / <code>trace_id</code>）</td>
+</tr>
+<tr>
+<td>ViewModel</td>
+<td>BFF 面向屏幕裁剪后的 DTO，可与 Go 领域 DTO 字段不同</td>
+</tr>
+<tr>
+<td>C4 Component</td>
+<td>容器内部的主要结构部件（如 bff-modules、identity BC）；不同于 Docker 容器或 React 组件</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="19-附录BC-依赖关系简图">19. 附录：BC 依赖关系（简图）</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart LR
+  identity --&gt; tenant
+  tenant --&gt; governance
+  governance --&gt; workspace_app
+  workspace_app --&gt; agent
+  workspace_app --&gt; delivery
+  workspace_app --&gt; product
+  product --&gt; product_workflow
+  agent --&gt; agent_runtime
+  knowledge --&gt; agent_runtime
+  delivery --&gt; runtime
+  platform_admin --&gt; runtime
+  platform_admin --&gt; plugin
+  plugin --&gt; governance</pre></div>
+<p>箭头表示 <strong>常见读依赖 / 事件协作方向</strong>，非 Go import 图；跨 BC 调用应经 <strong>port 或 ACL</strong>。其中 <code>platform_admin</code> → <strong>Kubernetes 插件</strong> 为只读集群目录与 <code>workspace_clusters</code>；插件 → <strong>governance</strong> 为菜单/API 策略绑定。</p>
+<hr>
+</div> <footer class="post-end" data-astro-cid-7jjqptxk> <span class="muted" data-astro-cid-7jjqptxk>如果这篇文章对你有帮助，欢迎分享或交流。</span> <a class="text-link" href="/about/#contact" data-astro-cid-7jjqptxk>与我交流 ↗</a> </footer> </div> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。<span class="footer-dot"> ● </span> Built with Astro</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','联系我':'Contact','了解我':'About me','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','构建 AI Agent、数据系统和机器学习的技术实践者。':'An engineer building AI agents, data systems, and machine learning applications.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品开发和落地交付的端到端能力。':'A data scientist combining algorithm R&D, engineering practice, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software development and production rollout.',
+    '从 0 到 1 构建算法平台、数据平台与 DevOps 平台的端到端能力，打通算法研发、数据治理、知识工程到云原生部署的完整链路。在生物药 CMC 领域，擅长将工艺与质量业务转化为可计算、可推理的领域知识，并构建具备任务分解、工具调用与可追溯引用能力的 Agent 系统，推动 AI 技术从算法研发走向工程化落地与产品交付。':'End-to-end capability building algorithm, data, and DevOps platforms from zero to one—linking algorithm R&D, data governance, knowledge engineering, and cloud-native deployment. In biopharma CMC, I turn process and quality into computable, reasoning-ready domain knowledge and build Agent systems with task decomposition, tool use, and traceable citations—moving AI from research to engineered delivery and products.',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。':'Covers Harness Engineering, data platforms, modeling, full-stack delivery, and cloud-native operations—focused on scalable, auditable, production-grade practice.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '基于公开履历整理，企业细节已做概括性表述。':'Summarized from a public résumé; employer details are generalized.',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.'
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','项目作品集 · Boyang Wang':'Selected projects · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> 

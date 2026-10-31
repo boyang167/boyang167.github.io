@@ -1,0 +1,1539 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="- Local"><meta name="theme-color" content="#f7f8fc"><title>示例：处理数据倾斜 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.Opzu-1vT.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<style>.article-page[data-astro-cid-5eggoaxc]{padding-top:28px}.back-link[data-astro-cid-5eggoaxc]{font-size:12px;color:var(--muted)}.article-header[data-astro-cid-5eggoaxc]{max-width:820px;margin:48px auto 32px}.article-header[data-astro-cid-5eggoaxc] h1[data-astro-cid-5eggoaxc]{font-size:clamp(28px,4vw,42px);margin:18px 0}.article-intro[data-astro-cid-5eggoaxc]{font-size:17px;color:var(--muted);max-width:760px}.tag-muted[data-astro-cid-5eggoaxc]{margin-left:6px;opacity:.85}.byline[data-astro-cid-5eggoaxc]{display:flex;align-items:center;gap:10px;margin-top:25px}.byline-avatar[data-astro-cid-5eggoaxc]{width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800}.byline[data-astro-cid-5eggoaxc]>span[data-astro-cid-5eggoaxc]:last-child{display:grid}.byline[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{font-size:12px}.byline[data-astro-cid-5eggoaxc] small[data-astro-cid-5eggoaxc]{font-size:10px;color:var(--muted)}.article-layout[data-astro-cid-5eggoaxc]{display:grid;grid-template-columns:200px minmax(0,720px);gap:48px;justify-content:center;margin:0 auto 24px;max-width:980px}.article-layout--no-toc[data-astro-cid-5eggoaxc]{grid-template-columns:minmax(0,720px);max-width:720px}.toc[data-astro-cid-5eggoaxc]{position:sticky;top:24px;align-self:start;font-size:11px;color:var(--muted);max-height:calc(100vh - 48px);overflow-y:auto;padding-right:8px}.toc[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{display:block;color:var(--text);font-size:12px;margin-bottom:10px}.toc-nav[data-astro-cid-5eggoaxc]{display:grid;gap:8px}.toc-link[data-astro-cid-5eggoaxc]{color:var(--muted);line-height:1.45;text-decoration:none;border-left:2px solid transparent;padding-left:0;transition:color .15s,border-color .15s}.toc-link[data-astro-cid-5eggoaxc]:hover{color:var(--blue)}.toc-link[data-astro-cid-5eggoaxc].depth-2{padding-left:0}.toc-link[data-astro-cid-5eggoaxc].depth-3{padding-left:12px;font-size:10px}.toc-link[data-astro-cid-5eggoaxc].depth-4{padding-left:22px;font-size:10px;opacity:.92}.toc-link[data-astro-cid-5eggoaxc].depth-5{padding-left:32px;font-size:10px;opacity:.85}@media(max-width:860px){.article-layout[data-astro-cid-5eggoaxc]{display:block;max-width:720px;padding:0}.toc[data-astro-cid-5eggoaxc]{position:static;max-height:none;margin-bottom:28px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}}.knowledge-md[data-astro-cid-5eggoaxc] h2,.knowledge-md[data-astro-cid-5eggoaxc] h3,.knowledge-md[data-astro-cid-5eggoaxc] h4,.knowledge-md[data-astro-cid-5eggoaxc] h5{scroll-margin-top:28px}.knowledge-md[data-astro-cid-5eggoaxc] h2{font-size:22px;margin:28px 0 12px}.knowledge-md[data-astro-cid-5eggoaxc] h3{font-size:18px;margin:22px 0 10px}.knowledge-md[data-astro-cid-5eggoaxc] p{color:var(--muted);line-height:1.85;font-size:15px}.knowledge-md[data-astro-cid-5eggoaxc] ul{color:var(--muted);padding-left:1.2em;line-height:1.75}.knowledge-md[data-astro-cid-5eggoaxc] a{color:var(--blue)}.knowledge-md[data-astro-cid-5eggoaxc] img{max-width:100%;height:auto;display:block;margin:16px 0;border-radius:8px;border:1px solid var(--line)}.knowledge-md[data-astro-cid-5eggoaxc] .math-display{margin:20px 0;overflow-x:auto;padding:4px 0}.knowledge-md[data-astro-cid-5eggoaxc] .math-inline{display:inline}.knowledge-md[data-astro-cid-5eggoaxc] .math-fallback{font-size:13px;white-space:pre-wrap}.knowledge-md[data-astro-cid-5eggoaxc] table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}.knowledge-md[data-astro-cid-5eggoaxc] th,.knowledge-md[data-astro-cid-5eggoaxc] td{border:1px solid var(--line);padding:8px 10px;text-align:left}.note-crosslink[data-astro-cid-5eggoaxc]{max-width:720px;margin:0 auto 55px;font-size:12px}.note-crosslink[data-astro-cid-5eggoaxc] a[data-astro-cid-5eggoaxc]{color:var(--blue);font-weight:700}
+</style></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/projects/" data-astro-cid-3ef6ksr2>项目作品</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),o=document.querySelector("#theme-toggle"),c=document.querySelector("#menu-toggle");o?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light")});localStorage.getItem("theme")==="dark"&&document.documentElement.classList.add("dark");const n=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),n()});n();c?.addEventListener("click",()=>document.querySelector(".site-header")?.classList.toggle("menu-open"));</script>  <main> <article class="wrap article-page" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <header class="article-header" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>4 · Data Engineering</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> <h1 data-astro-cid-5eggoaxc>示例：处理数据倾斜</h1> <p class="article-intro" data-astro-cid-5eggoaxc>- Local</p> <div class="byline" data-astro-cid-5eggoaxc> <span class="byline-avatar" data-astro-cid-5eggoaxc>NT</span> <span data-astro-cid-5eggoaxc> <b data-astro-cid-5eggoaxc>raw/1-Note</b>  </span> </div> </header> <div class="article-layout" data-astro-cid-5eggoaxc> <aside class="toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <b data-astro-cid-5eggoaxc>本文目录</b> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#spark-运行模式" class="toc-link depth-2" data-astro-cid-5eggoaxc> #spark 运行模式 </a><a href="#Create-RDD-2-way" class="toc-link depth-2" data-astro-cid-5eggoaxc> Create RDD (2 way) </a><a href="#-spark" class="toc-link depth-2" data-astro-cid-5eggoaxc> # spark </a><a href="#RDD-类型" class="toc-link depth-2" data-astro-cid-5eggoaxc> RDD 类型 </a><a href="#1普通类型" class="toc-link depth-3" data-astro-cid-5eggoaxc> 1.普通类型： </a><a href="#2-键值对-RDDPair-RDD" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2. 键值对 RDD（Pair RDD） </a><a href="#共享变量" class="toc-link depth-3" data-astro-cid-5eggoaxc> 共享变量 </a><a href="#3广播变量-broadcast-variable" class="toc-link depth-3" data-astro-cid-5eggoaxc> 3.广播变量： broadcast variable </a><a href="#4累加器-accumulator" class="toc-link depth-3" data-astro-cid-5eggoaxc> 4.累加器： accumulator </a><a href="#5-自定义-RDD" class="toc-link depth-3" data-astro-cid-5eggoaxc> 5. 自定义 RDD </a><a href="#分片" class="toc-link depth-2" data-astro-cid-5eggoaxc> 分片 </a><a href="#httpswwwbilibilicomvideoBV1Jq4y1z7VPspm_id_from333788playerswitc" class="toc-link depth-2" data-astro-cid-5eggoaxc> https://www.bilibili.com/video/BV1Jq4y1z7VP?spm_id_from=333.788.player.switch&amp;amp;vd_source=ae11379595599a1cedeb268c109fc9bb&amp;amp;p=9 </a><a href="#Spark提供了6大组件" class="toc-link depth-2" data-astro-cid-5eggoaxc> Spark提供了6大组件： </a><a href="#Master-amp-worker-" class="toc-link depth-2" data-astro-cid-5eggoaxc> Master &amp;amp; worker : </a><a href="#Executor-" class="toc-link depth-2" data-astro-cid-5eggoaxc> Executor : </a><a href="#Job" class="toc-link depth-2" data-astro-cid-5eggoaxc> Job </a><a href="#Task" class="toc-link depth-2" data-astro-cid-5eggoaxc> Task </a><a href="#Stage" class="toc-link depth-2" data-astro-cid-5eggoaxc> Stage </a><a href="#Shuffle" class="toc-link depth-2" data-astro-cid-5eggoaxc> Shuffle </a><a href="#DAG" class="toc-link depth-2" data-astro-cid-5eggoaxc> DAG </a><a href="#基本算子" class="toc-link depth-2" data-astro-cid-5eggoaxc> 基本算子 </a><a href="#RDD的高级应用" class="toc-link depth-2" data-astro-cid-5eggoaxc> RDD的高级应用 </a><a href="#spark-的序列化" class="toc-link depth-2" data-astro-cid-5eggoaxc> spark 的序列化 </a><a href="#UDF自定义函数" class="toc-link depth-2" data-astro-cid-5eggoaxc> UDF自定义函数 </a><a href="#基本使用" class="toc-link depth-2" data-astro-cid-5eggoaxc> 基本使用 </a><a href="#RDD" class="toc-link depth-3" data-astro-cid-5eggoaxc> RDD: </a><a href="#基本算子-2" class="toc-link depth-3" data-astro-cid-5eggoaxc> 基本算子 </a><a href="#RDD的高级应用-2" class="toc-link depth-3" data-astro-cid-5eggoaxc> RDD的高级应用 </a><a href="#UDF-自定义函数" class="toc-link depth-3" data-astro-cid-5eggoaxc> UDF 自定义函数 </a><a href="#spark-sql" class="toc-link depth-3" data-astro-cid-5eggoaxc> spark sql </a><a href="#dataframe" class="toc-link depth-3" data-astro-cid-5eggoaxc> dataframe: </a><a href="#数据分类" class="toc-link depth-2" data-astro-cid-5eggoaxc> 数据分类 </a> </nav> </aside> <div class="article-body-content knowledge-md" data-astro-cid-5eggoaxc><h2 id="spark-运行模式">#spark 运行模式</h2>
+<ul>
+<li>Local</li>
+<li>Cluster<ul>
+<li>Standalone</li>
+<li>Yarn</li>
+<li>Mesos</li>
+<li>K8s</li>
+</ul>
+</li>
+</ul>
+<p>在分布式集群模式下，任何1个 spark 程序都由1个driver 和多个executor 进程构成</p>
+<p>Driver:  驱动进程， 负责申请资源，解析代码,构建Job/Task, 分配调度Task,监控Task 运行，构建有向无环图DAG </p>
+<p>Executor: 执行进程，分布式启动在多台节点上，专门负责运行Driver 分配的Task 任务执行</p>
+<p>--deploy-mode :  client | cluster </p>
+<p><img src="image/1-spark/1750562433152.png" alt="1750562433152"></p>
+<p>spark on yarn </p>
+<p>spark standalone</p>
+<p>spark-submit :</p>
+<p>spark web-ui 日志：</p>
+<p>总的集群日志：</p>
+<ul>
+<li>localhost:8080  集群信息</li>
+<li>localhose:4040 任务日志信息</li>
+</ul>
+<p><img src="image/1-spark/1750583112417.png" alt="1750583112417"></p>
+<p>架构层面：ClustermManager ,worker </p>
+<p>程序层面： Application , Driver ,Executor </p>
+<p>运行层面：  Job , Stage , Task </p>
+<p>Cluster Manager : 统称，分布式资源管理的主节点</p>
+<ul>
+<li><p>Standalone : Master</p>
+</li>
+<li><p>Yarn : ResouceManager</p>
+</li>
+</ul>
+<p>Work : 统称： </p>
+<ul>
+<li>standalone : worker</li>
+<li>Yarn : NodeManger</li>
+</ul>
+<p><img src="image/1-spark/1750583308488.png" alt="1750583308488"></p>
+<p><img src="image/1-spark/1750583452098.png" alt="1750583452098"></p>
+<p><img src="image/1-spark/1750583086456.png" alt="1750583086456"></p>
+<p>Job : </p>
+<p>Application -&gt; 多个Job （DAG）-&gt;多个Stage (宽窄依赖切分)</p>
+<p>每个job ： 都有个1个DAG ，一个Action 算子</p>
+<p>RDD  5 个特征：</p>
+<ol>
+<li>RDD 是逻辑， 每个RDD 在物理上都可以对应多个分区数据，每个分区的数据可以存储在不同的节点上</li>
+<li>RDD  的Transformation 本质上是对RDD 所有的分区并行转换</li>
+<li>RDD Lineage 血缘机制<ol>
+<li><img src="image/1-spark/1750563473468.png" alt="1750563473468"></li>
+</ol>
+</li>
+<li>（k,v） RADD ,  在shuffle 过程中可以自定义分区</li>
+<li></li>
+</ol>
+<p><img src="image/1-spark/1750563614637.png" alt="1750563614637"></p>
+<h2 id="Create-RDD-2-way">Create RDD (2 way)</h2>
+<ol>
+<li><p>从1集合中创建</p>
+<pre><code class="language-python">from pyspark.sql import SparkSession 
+spark = SparkSession.builder.appName(&quot;template&quot;).getOrCreate()
+data = [1,2,3]
+rdd = spark.parallelize(data,numSlices=2)
+rdd.foreach(lambda: x: print(x)))
+</code></pre>
+</li>
+<li><p>从外部系统： textFile, HDFS</p>
+</li>
+</ol>
+<p>RDD :</p>
+<p>容错机制：</p>
+<p>persist</p>
+<p>checkpoint </p>
+<p><img src="image/1-spark/1750580216128.png" alt="1750580216128"></p>
+<p><img src="image/1-spark/1750580357066.png" alt="1750580357066"></p>
+<p>默认分区数：</p>
+<p><img src="image/1-spark/1750564369937.png" alt="1750564369937"></p>
+<h2 id="-spark"># spark</h2>
+<p>RDD(Resilient Distributed Dataset)叫做弹性分布式数据集，是 Spark 中最基本的数据抽象，代表一个不可变、可分区、里面的元素可并行计算的集合。</p>
+<p>RDD单词拆解：</p>
+<pre><code>Resilient ：它是弹性的，RDD 里面的中的数据可以保存在内存中或者磁盘里面；
+Distributed ： 它里面的元素是分布式存储的，可以用于分布式计算；
+Dataset: 它是一个集合，可以存放很多元素。
+</code></pre>
+<p> <strong>RDD 是一个数据集的表示，不仅表示了数据集，还表示了这个数据集从哪来，如何计算</strong> ，主要属性包括：</p>
+<ul>
+<li>分区列表</li>
+<li>计算函数</li>
+<li>依赖关系</li>
+<li>分区函数(默认是 <code>hash</code>)</li>
+<li>最佳位置</li>
+</ul>
+<p>spark 可以计算，结构化，半结构化，非结构化</p>
+<p><img src="image/1-spark/1749999725437.png" alt="1749999725437"></p>
+<p><img src="image/1-spark/1749999911574.png" alt="1749999911574"></p>
+<p>Application: Spark应用程序</p>
+<p>指的是用户编写的Spark应用程序，包含了Driver功能代码和分布在集群中多个节点上运行的Executor代码。</p>
+<p><img src="image/1-spark/1750082501315.png" alt="1750082501315"></p>
+<p>Driver :</p>
+<p>Spark中的Driver即运行上述Application的Main()函数并且创建SparkContext</p>
+<p>其中创建SparkContext的目的是为了准备Spark应用程序的运行环境。</p>
+<p><img src="image/1-spark/1750082545297.png" alt="1750082545297"></p>
+<p>Cluster Manager : 资源管理器</p>
+<p>指的是在集群上获取资源的外部服务，常用的有：Standalone，Spark原生的资源管理器，由Master负责资源的分配；Haddop
+Yarn，由Yarn中的ResearchManager负责资源的分配；Messos，由Messos中的Messos Master负责资源管理。</p>
+<p>Executor: 执行器</p>
+<p>Application运行在Worker节点上的一个进程，该进程负责运行Task，并且负责将数据存在内存或者磁盘上，每个Application都有各自独立的一批Executor，如下图所示。</p>
+<p><img src="image/1-spark/1750082647941.png" alt="1750082647941"></p>
+<p>Worker：计算节点</p>
+<p>集群中任何可以运行Application代码的节点，类似于Yarn中的NodeManager节点。在Standalone模式中指的就是通过Slave文件配置的Worker节点，在Spark
+ on Yarn模式中指的就是NodeManager节点，在Spark on Messos模式中指的就是Messos
+Slave节点，如下图所示。
+<img src="image/1-spark/1750082736876.png" alt="1750082736876"></p>
+<p>DAGScheduler :</p>
+<p>基于DAG划分Stage
+并以TaskSet的形势提交Stage给TaskScheduler；负责将作业拆分成不同阶段的具有依赖关系的多批任务；最重要的任务之一就是：计算作业和任务的依赖关系，制定调度逻辑。在SparkContext初始化的过程中被实例化，一个SparkContext对应创建一个DAGScheduler。</p>
+<p><img src="image/1-spark/1750082822447.png" alt="1750082822447"></p>
+<p>TaskScheduler:</p>
+<p><img src="image/1-spark/1750082859520.png" alt="1750082859520"></p>
+<p>job :</p>
+<p>由一个或多个调度阶段所组成的一次计算作业；包含多个Task组成的并行计算，往往由<strong>Spark Action</strong>催生，一个JOB包含多个RDD及作用于相应RDD上的各种Operation。如图所示。</p>
+<p><img src="image/1-spark/1750082900580.png" alt="1750082900580"></p>
+<h2 id="RDD-类型">RDD 类型</h2>
+<h3 id="1普通类型">1.普通类型：</h3>
+<p> <strong>特点</strong> ：</p>
+<ul>
+<li>每个元素是单一值（如 <code>int</code>、<code>str</code>）。</li>
+<li>支持基本转换操作（如 <code>map</code>、<code>filter</code>、<code>flatMap</code>）</li>
+</ul>
+<h3 id="2-键值对-RDDPair-RDD"><strong>2. 键值对 RDD（Pair RDD）</strong></h3>
+<p>存储二元组 <code>(key, value)</code> 的 RDD，支持键值对特有的操作（如 <code>reduceByKey</code>、<code>join</code>）</p>
+<h3 id="共享变量">共享变量</h3>
+<p>在默认情况下，当 Spark在集群的多个不同节点的多个任务上并行运行一个函数时，它会把函数中涉及到的每个变量，在每个任务上都生成一个副本。但是，有时候需要在多个任务之间共享变量，或者在任务(Task)和任务控制节点(DriverProgram)之间共享变量。</p>
+<h3 id="3广播变量-broadcast-variable">3.广播变量： broadcast variable</h3>
+<h3 id="4累加器-accumulator">4.累加器： accumulator</h3>
+<p>一旦变量在driver 被创建，整个数据集就会在集群广播</p>
+<p>让所有正在运行的计算任务以只读方式访问</p>
+<p><img src="image/1-spark/1750581188042.png" alt="1750581188042"></p>
+<h3 id="5-自定义-RDD">5. 自定义 RDD</h3>
+<p><strong>选择合适的 RDD 类型</strong></p>
+<ul>
+<li><strong>普通 RDD</strong> ：简单数据处理，无键值对操作。</li>
+<li><strong>Pair RDD</strong> ：需要分组、聚合、连接等操作。</li>
+<li><strong>累加器</strong> ：并行计数或求和。</li>
+<li><strong>广播变量</strong> ：高效分发大对象到各节点。</li>
+<li><strong>自定义 RDD</strong> ：特殊分区或计算需求。</li>
+</ul>
+<h2 id="分片">分片</h2>
+<p>RDD（弹性分布式数据集）的分片（Partitioning）机制是实现分布式计算的核心，它决定了数据如何在集群中分布和并行处理</p>
+<p>分片是 RDD 的逻辑分区，每个分片包含一部分数据，可在集群的不同节点上独立处理。分片是并行计算的基本单位。</p>
+<ol>
+<li><strong>作用</strong><ul>
+<li><strong>数据分割</strong> ：将大数据集拆分为小片段，便于分布式存储和处理。</li>
+<li><strong>并行计算</strong> ：每个分片可由不同的 Executor 并行处理，提升计算效率。</li>
+<li><strong>故障恢复</strong> ：RDD 的 Lineage 依赖允许在分片丢失时重新计算。</li>
+</ul>
+</li>
+</ol>
+<p>分片/分区的创建与控制：</p>
+<ul>
+<li>从集合创建，从文件创建</li>
+<li><strong>转换操作中的分片</strong><ul>
+<li><strong>窄依赖操作</strong> （如 <code>map</code>、<code>filter</code>）：保留原分片数和分区方式</li>
+<li><strong>宽依赖操作</strong> （如 <code>groupByKey</code>、<code>join</code>）：默认使用 <code>spark.sql.shuffle.partitions</code>（默认 200）</li>
+</ul>
+</li>
+</ul>
+<p><strong>手动调整分片数</strong></p>
+<ul>
+<li><strong>增加分片</strong> ：<code>repartition(n)</code>（触发全量 Shuffle，开销大）。</li>
+<li><strong>减少分片</strong> ：<code>coalesce(n)</code>（避免全量 Shuffle，优先使用）</li>
+</ul>
+<p>分区policy：</p>
+<p>1：<strong>哈希分区（Hash Partitioning）</strong></p>
+<ul>
+<li><strong>适用场景</strong> ：键值对 RDD（Pair RDD）的默认分区方式。</li>
+<li><strong>原理</strong> ：根据键的哈希值将数据分配到不同分片</li>
+</ul>
+<p><strong>范围分区（Range Partitioning）</strong></p>
+<ul>
+<li><strong>适用场景</strong> ：需要按键的范围排序的数据（如数值范围）。</li>
+</ul>
+<p><strong>自定义分区</strong></p>
+<ul>
+<li><strong>方式</strong> ：继承 <code>Partitioner</code> 类，重写 <code>numPartitions</code> 和 <code>getPartition</code> 方法</li>
+</ul>
+<p><strong>分片与性能优化</strong></p>
+<ol>
+<li><strong>分片数与集群资源匹配</strong><ul>
+<li>理想分片数为集群 CPU 核心数的 2~3 倍，避免分片过少（并行度不足）或过多（调度开销大）。</li>
+</ul>
+</li>
+</ol>
+<p><strong>减少 Shuffle 开销</strong></p>
+<ul>
+<li><p>宽依赖操作（如 <code>groupByKey</code>）会触发 Shuffle，可通过 <code>reduceByKey</code> 预聚合减少数据传输。</p>
+<pre><code># 优化前：groupByKey + mapValues
+rdd.groupByKey().mapValues(sum)  # 先分组后聚合
+
+# 优化后：reduceByKey（本地预聚合）
+rdd.reduceByKey(lambda x, y: x + y)  # 减少 Shuffle 数据量
+</code></pre>
+</li>
+</ul>
+<p><strong>数据倾斜处理</strong></p>
+<ul>
+<li>对倾斜的键添加随机前缀，分散到多个分片，再聚合。</li>
+</ul>
+<pre><code class="language-pyspark"># 示例：处理数据倾斜
+skewed_rdd = rdd.map(lambda x: (f&quot;{random.randint(0, 10)}_{x[0]}&quot;, x[1]))
+aggregated_rdd = skewed_rdd.reduceByKey(lambda x, y: x + y)
+final_rdd = aggregated_rdd.map(lambda x: (x[0].split(&quot;_&quot;)[1], x[1]))
+</code></pre>
+<p><strong>分片的底层实现</strong></p>
+<ul>
+<li><strong>分区器（Partitioner）</strong> ：决定键值对 RDD 的分片方式，支持 <code>HashPartitioner</code>、<code>RangePartitioner</code> 和自定义分区器。</li>
+<li><strong>依赖关系（Dependencies）</strong> ：窄依赖（如 <code>map</code>）的子 RDD 分片与父 RDD 分片一一对应；宽依赖（如 <code>shuffle</code>）会创建新的分片。</li>
+<li><strong>任务调度</strong> ：Spark 为每个分片创建一个任务（Task），分发到集群节点执行。</li>
+</ul>
+<p>分片机制是 Spark 高效处理大数据的基础，通过合理设置分片数和选择分区策略，可显著提升并行计算效率。关键原则：</p>
+<ul>
+<li><strong>数据本地化</strong> ：尽量让计算靠近数据存储位置。</li>
+<li><strong>避免过度 Shuffle</strong> ：优先使用窄依赖操作。</li>
+<li><strong>匹配资源</strong> ：分片数与集群资源成正比。</li>
+</ul>
+<p><img src="image/1-spark/1750080826479.png" alt="1750080826479"></p>
+<p><img src="image/1-spark/1750080985679.png" alt="1750080985679"></p>
+<p>RDD lineage</p>
+<p>窄依赖： 所有计算都在分区所在节点完成</p>
+<p>宽依赖： 还叫shuffle 依赖</p>
+<p>当RDD 中的某个分区出现故障，只需要按照依赖重新计算即可</p>
+<p>RDD 的血统机制就是RDD 的容错机制 ，适当调用RDD 的checkpoint</p>
+<p>Spark shuffle 实现方式有2种：</p>
+<ul>
+<li>Hash Shuffle</li>
+<li>sort-based shuffle</li>
+</ul>
+<p><strong>核心算法：回溯算法</strong></p>
+<p><strong>从后往前回溯/反向解析，遇到窄依赖加入本Stage，遇见宽依赖进行Stage切分。</strong></p>
+<h2 id="httpswwwbilibilicomvideoBV1Jq4y1z7VPspm_id_from333788playerswitc"><a href="https://www.bilibili.com/video/BV1Jq4y1z7VP?spm_id_from=333.788.player.switch&vd_source=ae11379595599a1cedeb268c109fc9bb&p=9">https://www.bilibili.com/video/BV1Jq4y1z7VP?spm_id_from=333.788.player.switch&amp;vd_source=ae11379595599a1cedeb268c109fc9bb&amp;p=9</a></h2>
+<h2 id="Spark提供了6大组件">Spark提供了6大组件：</h2>
+<ul>
+<li>Spark Core</li>
+<li>Spark SQL</li>
+<li>Spark Streaming</li>
+<li><a href="https://zhida.zhihu.com/search?content_id=228788816&content_type=Article&match_order=1&q=Spark+MLlib&zhida_source=entity">Spark MLlib</a></li>
+<li><a href="https://zhida.zhihu.com/search?content_id=228788816&content_type=Article&match_order=1&q=Spark+GraphX&zhida_source=entity">Spark GraphX</a></li>
+</ul>
+<p><img src="image/1-spark/1749998302198.png" alt="1749998302198"></p>
+<p>Spark有完善的生态圈，如下：</p>
+<pre><code>Spark Core：实现了 Spark 的基本功能，包含 RDD、任务调度、内存管理、错误恢复、与存储系统交互等模块。
+Spark SQL：Spark 用来操作结构化数据的程序包。通过 Spark SQL，我们可以使用 SQL 操作数据。
+Spark Streaming：Spark 提供的对实时数据进行流式计算的组件。提供了用来操作数据流的 API。
+Spark MLlib：提供常见的机器学习(ML)功能的程序库。包括分类、回归、聚类、协同过滤等，还提供了模型评估、数据导入等额外的支持功能。
+GraphX(图计算)：Spark 中用于图计算的 API，性能良好，拥有丰富的功能和运算符，能在海量数据上自如地运行复杂的图算法。
+集群管理器：Spark 设计为可以高效地在一个计算节点到数千个计算节点之间伸缩计算。
+Structured Streaming：处理结构化流,统一了离线和实时的 API。
+</code></pre>
+<h2 id="Master-amp-worker-">Master &amp; worker :</h2>
+<p>在Spark中，Master是独立集群的控制者，而Worker是工作者。一个Spark独立集群需要启动一个Master和多个Worker。Worker就是物理节点，可以在上面启动Executor进程</p>
+<h2 id="Executor-">Executor :</h2>
+<p>Executor是一个执行Task的容器。实际上它是一组计算资源(cpu核心、memory)的集合。</p>
+<p><strong>一个Worker节点可以有多个Executor。一个Executor可以运行多个Task</strong></p>
+<p>executor创建成功后，在日志文件会显示如下信息： <code>INFO Executor: Starting executor ID [executorId] on host [executorHostname]</code></p>
+<h2 id="Job">Job</h2>
+<p>一个Job包含多个RDD及作用于相应RDD上的各种操作， <strong>每个Action的触发就会生成一个job</strong> 。用户提交的Job会提交给DAGScheduler，Job会被分解成Stage，Stage会被细化成Task。</p>
+<h2 id="Task"><strong>Task</strong></h2>
+<p>被发送到executor上的工作单元。每个Task负责计算一个分区的数据。</p>
+<h2 id="Stage"><strong>Stage</strong></h2>
+<p>在 Spark 中，一个作业（job）会被划分为多个阶段（stage）。 <strong>同一个 Stage 可以有多个 Task 并行执行(task 数=分区数）</strong> 。</p>
+<p>阶段之间的划分是根据数据的依赖关系来确定的。当一个 RDD 的分区依赖于另一个 RDD 的分区时，这两个 RDD 就属于同一个阶段。当一个 RDD 的分区依赖于多个 RDD 的分区时，这些 RDD 就属于不同的阶段。</p>
+<p><img src="image/1-spark/1750253608538.png" alt="1750253608538"></p>
+<ul>
+<li>一个 Spark 程序可以有多个 DAG(有几个 Action，就有几个 DAG，上图最后只有一个 Action（图中未表现）,那么就是一个 DAG);</li>
+<li>一个 DAG 可以有多个 Stage(根据宽依赖/shuffle 进行划分)；</li>
+</ul>
+<p>Spark 会根据 shuffle/宽依赖使用回溯算法来对 DAG 进行 Stage 划分，从后往前，遇到宽依赖就断开，遇到窄依赖就把当前的 RDD 加入到当前的 stage/阶段中</p>
+<h2 id="Shuffle"><strong>Shuffle</strong></h2>
+<p>在 Spark 中，shuffle 是指在不同阶段之间重新分配数据的过程。它通常发生在需要对数据进行聚合或分组操作的时候，例如 reduceByKey 或 groupByKey 等操作。</p>
+<p>在 shuffle 过程中，Spark 会将数据按照键值进行分区，并将属于同一分区的数据发送到同一个计算节点上。这样，每个计算节点就可以独立地处理属于它自己分区的数据。</p>
+<p>在 MapReduce 框架中，Shuffle 阶段是连接 Map 与 Reduce 之间的桥梁， Map 阶段通过 Shuffle 过程将数据输出到 Reduce 阶段中。由于 Shuffle 涉及磁盘的读写和网络 I/O，因此 Shuffle 性能的高低直接影响整个程序的性能。Spark 也有 Map 阶段和 Reduce 阶段，因此也会出现Shuffle。</p>
+<blockquote>
+<p>Shuffle的本质就是数据重组分发的过程。</p>
+</blockquote>
+<p><strong>Spark Shuffle 分为两种：</strong></p>
+<ul>
+<li>一种是基于 Hash 的 Shuffle；</li>
+<li>另一种是基于 Sort 的 Shuffle。</li>
+</ul>
+<p>Shuffle也是Spark中最昂贵的操作之一，它不仅会带来网络IO，还会引发磁盘IO、数据序列化/反序列化、JVM垃圾回收等操作，因此其性能往往决定着Spark作业的整体性能</p>
+<p><img src="image/1-spark/1750583569807.png" alt="1750583569807"></p>
+<p>RDD是“Resilient Distributed Dataset”的缩写，从全称就可以了解到RDD的一些典型特性：</p>
+<ul>
+<li><strong>Resilient（弹性）</strong> ：RDD之间会形成有向无环图（DAG），如果RDD丢失了或者失效了，可以从父RDD重新计算得到。即容错性。</li>
+<li><strong>Distributed（分布式）</strong> ：RDD的数据是以逻辑分区的形式分布在集群的不同节点的。</li>
+<li><strong>Dataset（数据集）</strong> ：即RDD存储的数据记录，可以从外部数据生成RDD，例如Json文件，CSV文件，文本文件，数据库等。</li>
+</ul>
+<p>RDD 的算子分为两类:</p>
+<ul>
+<li><strong>Transformation转换操作</strong> :返回一个新的 RDD</li>
+<li><strong>Action动作操作</strong> :返回值不是 RDD(无返回值或返回其他的)</li>
+</ul>
+<p>注意:</p>
+<pre><code>RDD 不实际存储真正要计算的数据，而是记录了数据的位置在哪里，数据的转换关系(调用了什么方法，传入什么函数)。
+RDD 中的所有转换都是惰性求值/延迟执行的，也就是说并不会直接计算。只有当发生一个要求返回结果给 Driver 的 Action动作时，这些转换才会真正运行。
+之所以使用惰性求值/延迟执行，是因为这样可以在 Action 时对 RDD 操作形成 DAG有向无环图进行 Stage 的划分和并行优化，这种设计让 Spark 更加有效率地运行。
+</code></pre>
+<h2 id="DAG">DAG</h2>
+<p>有向无环图，其实说白了就是RDD之间的依赖关系图。</p>
+<ul>
+<li><strong>开始</strong> ：通过 SparkContext 创建的 RDD；</li>
+<li><strong>结束</strong> ：触发 Action，一旦触发 Action 就形成了一个完整的 DAG（ <strong>有几个 Action，就有几个 DAG</strong> ）。</li>
+</ul>
+<h2 id="基本算子">基本算子</h2>
+<pre><code class="language-bash">map :  一一映射  对每一条数据执行
+mapValues :
+mapPartitions: 一一映射,对每个分区 
+mapPatitionWithIndex
+
+zip  分区数量必须一致，每个分区的元素也必须一致   a ,b -&gt;（a, b）
+zipWithIndex 
+
+groupByKey 
+默认的分区器 ：  key hashcode % 分区数
+数据重新分发 ： shuffle 
+reduceByKey
+分区类聚合  
+能使用reduceByKey 就不用groupByKey  
+
+foreach  一一映射 ， 没有返回值 ， 常见的打印  每次迭代一个元素  
+foreachPartition 
+
+sortByKey   产生 job
+zipWithIndex  产生 job
+take 产生 job
+reduct 元素并归 ， 没有顺序
+coutByKey    某个元素的key 的个数
+collectAsMAp  ： 用于[k,v] rdd , 以map 集合返回
+take()
+first()
+top()  返回前n 个
+takeOrdered(n) 
+</code></pre>
+<h2 id="RDD的高级应用">RDD的高级应用</h2>
+<pre><code>1：RDD 的缓存和持久化 
+默认情况下， 每一个action 操作 ， 都会重新计算上面的转换RDD （重新计算）
+如果能把该RDD的结果缓存下来， 那么基于该RDD的操作，就不需要从头计算 
+cache() (StoregeLevel )  缓存
+persisit(StoregeLevel.MeMORY_AND_DISK) 持久化
+执行完业务逻辑，可以手动释放
+unpersisit()
+
+2：RDD 的checkpoint 容错方案 
+把rdd 中的数据 ，写到分布式文件系统中
+sc.setCheckpointDir(&#39;hdfs://ip:port/dir&#39;)
+rdd.checkpoint   
+1:是lazy 算子  ，当触发action算子的时候， 才执行，产生2个job,第一个job
+是 执行业务逻辑， 第二个job 执行写入到数据到hdfs
+2: 当对某一个rdd 执行checkpoint 之后， 该RDD原有的父依赖关系被删除 ，取而代之是checkpointRDD
+3: 以后对该RDD所有的操作，依赖关系从CheckpointRDD开始，真正的数据从hdfs 读取
+
+在特别复杂的业务逻辑中，才会用 
+
+3： RDD 中的共享变量（广播变量 ， 累计器） 广播大变量  在driver端一个副本 
+
+RDD的内存管理方法：
+spark1.x 静态内存管理 （各个模块的占比是固定的 ，容易造成不均衡 淘汰）
+spark2.x 统一的内存管理  
+
+内存的组成部分：
+总的内存 = 系统预留内存（300M） + 可用内存
+可用内存  = 统一内存（0.6） + 其他（0.4）
+统一内存 = 存储内存(storege)（0.5） + 执行内存 (executiom)（0.5）
+
+Storege 存储内存 ：
+缓存RDD ,展开partition ,存放Direct task result ，存放广播变量 ，在spark Streaming reciver 模式中， 存放每个batch 的blocks
+execution 执行内存：
+用于shuffle , join , sort ,aggregation(聚合) ，buffer等操作
+其他：
+spark : 内部的元数据 ， OOM错误 ， 
+
+默认配置参数， spark.memory.fraction = 0.6
+ spark.memory.storageFraction=0.5
+ 
+
+Torrent 比特洪流技术
+广播变量实现类 ： TorrentBroadcast 
+利用广播变量， 能保证一个executor的所有task 共用一份反序列化的数据
+减少数据的反序列化和GC
+使用：
+    diver 端广播  blockManagerMaster 
+    executor 使用  blockManager 
+注意使用： 
+1除了RDD 不能被广播， 其他的类 、集合。对象都可以被广播
+2： 被广播数据， 可以在任意的executor 中通过value调用
+3： 广播变量是只读的，不能被修改 
+4： 最大的功能是，就是保证一个executor中所有的task共用一份数据 ，提升效率 
+
+
+4： 累加器
+在driver端定义一个类加器
+全局的 可以通过Web 监控界面查看 
+acc = sc.LongAccumulator(&#39;variable_acc&#39;)
+
+总结：
+1在driver端定义累加器
+2在任意的函数中，executor中通过add方法调用
+3累加器是全局(application为单位)的累加 
+4在driver端 ，通过value 方法获取值
+5在程序的监控界面，通过累加器的名称来获取值
+</code></pre>
+<p><strong>Action 动作算子</strong> ：</p>
+<p><img src="image/1-spark/1749998728856.png" alt="1749998728856"></p>
+<p><strong>统计操作</strong> ：</p>
+<p><img src="image/1-spark/1749998754560.png" alt="1749998754560"></p>
+<ul>
+<li><strong>窄依赖</strong> ：父 RDD 的一个分区只会被子 RDD 的一个分区依赖；</li>
+<li><strong>宽依赖</strong> ：父 RDD 的一个分区会被子 RDD 的多个分区依赖(涉及到 shuffle)。</li>
+</ul>
+<h2 id="spark-的序列化">spark 的序列化</h2>
+<pre><code>spark 中使用的序列化机制 默认是java 序列化 javaSerializer
+内存中对象  序列化 二进制文件  网络传输 反序列化
+
+KryoSerializer  : 占用内存少，速度快， 需要注册
+
+1： spark standalone HA  （high avaliable ） 高可用  7 * 24  (集群) 
+ 单点故障  核心节点
+ standlone master worker
+ master alive  master standby(热备)
+zookeeper 管理节点 高可用 
+2： spark on yarn  standalone 两套不同的集群
+
+yarn 集群  
+客服端提交任务  1台（满足条件  ，spark 安装包 ， hadoop 的配置 （hdfs  +yarn）） 连接到hadoop集群 
+
+yarn 集群：
+ResourceManager 
+NodeManager
+1: 修改 ${hadoop}/etc/hadoop/capacity-scheduler.xml 中的资源调度
+
+2： yarn.site.xml
+
+
+spark 的客服端配置 
+1：jdk
+vim ${spark_home}/conf/spark-env.sh
+2: hadoop_conf_dir  /yarn_conf_dir # hadoop的配置文件路径 
+
+spark-submit --master yarn --deploy-model client/cluster 
+
+两种部署模式区别 ：
+cluster : Driver 运行在集群中的某一个节点 ， Driver 可以容错 ，提交任务，就可以退出
+client :  Driver 运行在客服端 
+</code></pre>
+<h2 id="UDF自定义函数">UDF自定义函数</h2>
+<pre><code>第1种方式
+# 定义自定义函数
+ def fun_name():
+ pass
+# 注册自定义函数
+udf1 = functions.udf(fun_name, FloatType()
+# 使用自定义函数
+dataframe = dataframe.withColumn(col, udf1(col))
+第2种方式
+注册udf，在sql中使用
+spark.udf.register(&quot;udf1&quot;, fun_name,StringType()) 
+dataframe = dataframe.withColumn(col, udf1(col))
+第3种方式 注解形式更方便
+@udf(returnType=StringType()) 
+def fun_name():
+ pass
+df.withColumn(&quot;Cureated Name&quot;, convertCase(col(&quot;Name&quot;))).show(truncate=False)
+
+pandas_udf函数支持定义三种类型的函数，分别为SCALAR、GROUP_MAP、GROUP_AGG，在pyspark.sql.function.PandasUDFType 中做了定义
+
+from pyspark.sql.functions import pandas_udf, PandasUDFType
+由于数据中某些字段包含 json 数据，因此直接使用 DataFrame 进行读取会出现分割错误，所以如果要创建 DataFrame，需要先直接读取文件生成 RDD，再将 RDD 转为 DataFrame。过程中，使用 python3 中的 csv 模块对数据进行解析和转换。
+
+https://zhuanlan.zhihu.com/p/349664650
+RDD：代表一个不可变的，可分区的，可被并行操作的数据元素集合
+在进行spark 运算时，spark会创建一个DAG（有向无环图）来优化计算效率，并且在执行actions动作之前，spark绝不会开始实际的任务执行
+transformation操作
+action: 操作：
+最起码有三种方式可以用于创建rdd：
+可以从文本文件中读取从collections对象中创建（比如一串数字，字符，pairs），通过SparkContext.parallelize()从其他rdd中通过map,filter等函数创建
+map()
+mapValues() # 作用于键值对
+reduceByKey( lambda x, y: x+y)
+
+reduceByKey()
+combineBykey()
+groupBykey()
+aggregateByKey()
+sortByKey() 
+</code></pre>
+<pre><code>cp ./conf/spark-env.sh.template ./conf/spark-env.sh
+export SPARK_DIST_CLASSPATH=$(/home/hadoop/softs/hadoop/bin/hadoop classpath)
+
+export SPARK_HOME=/home/hadoop/softs/spark
+export PATH=&lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6833em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0813em;&quot;&gt;H&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;SPARK_HOME/bin:$SPARK_HOME
+
+
+# 安装pyspark
+pip install -U -i https://pypi.tuna.tsinghua.edu.cn/simple pyspark
+pip install pyspark -i https://pypi.doubanio.com/simple/
+
+export SPARK_HOME=/home/hadoop/softs/spark
+export PATH=&lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6833em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0813em;&quot;&gt;H&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;SPARK_HOME/bin:$SPARK_HOME
+
+export PYSPARK_PYTHON=/root/anaconda3/bin/python
+export PYSPARK_DRIVER_PYTHON=/root/anaconda3/bin/python
+
+https://www.bilibili.com/video/BV1j4411u7hT?p=6&amp;spm_id_from=pageDriver
+
+spark core 
+spark sql
+spark streaming 
+spark MLlib
+图计算 GraphX 
+
+spark + yarm + hdfs  
+spark + mysql redis kafka zookeeper 
+
+部署模式：
+
+local 
+至少2台
+standalone 自带集群模式
+yarm   集群模式
+mesos  集群模式 
+
+master  worker 
+1：配置主节点 到从节点免登录 
+2： 关闭防火墙  （大数据都是内网集群）
+service iptables status
+serverice iptables stop
+chkconfig iptables off
+3: IP 和hostname 映射关系
+ip hostname
+
+spark 目录：
+bin   可执行的脚步
+conf   配置文件
+jars   依赖jar 包
+sbin   集群管理命令
+
+修改配置文件：
+spark-env.sh
+export JAVA_HOME=
+export SPARK_MASTER_HoST=hdp-01
+export SPARK_MASTER_PORT=7077
+7077: 是spark 内部通信端口  worker向master 连接端口
+8088： web 访问master 的端口  
+slaves.sh
+hdp-02/ip  所有的从节点 
+# 分发安装包
+for i in 2 3 4;
+do scp -r spark(安装包)/ hdp-0&lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6595em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;PWD ; done 
+# 启动
+start-master.sh
+start-slavers.sh
+start-all.sh
+# 日志问题
+spark-home/logs
+master 启动命令 
+java -cp *** **.class 参数列表
+netstat -natpl | grep 1608
+在spark  hadoop  都有start-all.sh 
+ /etc/profile  谁先加载 ，谁生效 ，  或者改名 
+
+ 启动后 : 
+ master 地址：  spark://hdp-01:7077 
+work 占用资源： 
+cores  : 当前机器
+memory  ： 当前机器 内存-1g
+
+# spark 提交任务
+客服端：
+1必须安装spark 安装包 spark-submit
+2必须连接到master
+spark 提交给maset ,在集群执行
+
+spark-shell : 交互式命令行
+spark-submit : 标准的提交命令
+spark-submit 选项 jar包 参数列表
+--master   yarm spark://host:port local  默认local   local[*] 可以指定核
+--class  主方法所在类
+--deploy-model  driver 位置  driver的位置
+clinet  : driver 运行在客服端
+cluster : driver 在集群中的某一台 
+jar 架包
+在写spark 程序的时候必须有sparkContext
+在集群模式下， 不能读取本地的文件 一般读取hdfs 文件 
+1: master 先启动 ，检查超时的worker
+2： worker 启动 向 master 注册 ， 资源信息 （memory ,core）
+3: master 保存worker的相关信息
+4： master 向worker 发送注册成功的消息
+5： worker 启动定时任务， 报活  ，发送心跳
+5: master 修改worker的最后一次心跳时间
+
+1:客户端请求application 
+2:master 进行资源分配
+   打散策略
+  每一个空闲的worker 来参与运行任务，向worker 发送指令 ，启动executor
+3: driver :
+解析业务逻辑功能
+切分阶段 stage
+创建task ,条件task  （task 执行的最小单位）
+4: excutor 向driver 注册 ，并通信
+
+</code></pre>
+<pre><code>常驻进程：
+master ： 集群的管理者， 管理worker , 负责客服端的任务请求调度
+worker : 向master 通信 ，管理自己的executor
+任务执行时：
+在哪里提交，在哪里产生 sparksubmit 进程
+coarseGrainedExecutorBackend 提供干活的资源 简称executor 所有的task
+driver程序： 主控程序 ， 解析业务逻辑代码， 切分阶段stage 创建task 提交task 到executor执行
+
+可以指定资源分配：
+--executor-cores  每一个executors（work） 占用的cores
+--executor-memory    每一个executors 占用的memory
+--total-executor-cores  application 能使用的最多cores数
+
+work  : 启动
+    
+在提交spark 任务，反射执行自定义main方法
+1： 客服端提交 spark-submit 选项 jar包 参数列表
+2: 调用spark-class 脚本 通过exec 执行启动一个main方法
+3： SparkSubmit.main 反射执行一个类 wordCount.main 
+4: new SparkContext 
+    创建3个核心的对象 TaskScheduler , DAGScheduler ,SchedulerBackend
+SchedulerBackend : coarseGrainedExecutorBackend , StandaloneSchedulerBackend
+</code></pre>
+<h2 id="基本使用">基本使用</h2>
+<h3 id="RDD">RDD:</h3>
+<pre><code>分为两类算法：
+Transfomer : 转换算子 lazy  产生一个新的rdd
+map fliter flatMap goupBykey reduceBykey aggregateByKey ,union ,join ,coalesce
+action :    执行 (写文件 ， ) 返回结果给驱动程序 ，或写入文件系统
+reduce ,collect ,count  ,first ,take ,countByKey , foreach 
+
+产生job 
+
+Application -&gt;job（DAG）-&gt;Stage -&gt; task 
+RDD: 弹性分布式数据集合  resillebt distributed dataset（不可变得 ，只读的）
+弹性： 容错能力 
+分布式： 以分区为单位 ，运行在不同的节点上
+
+1: rdd 的创建：
+集合并行化
+读取外部系统文件  sc.textFilxt(path)
+转换算子
+2:  rdd 的分区  默认分区数量 = application 使用的cores 数量
+ 每一个rdd 都有分区 。 rdd.size 分区的数量
+partition :  
+hdfs :   分区数量 = 读取hdfs 文件的block 快的数量
+
+
+RDD依赖关系  父到子
+宽依赖  有shuffle操作
+窄依赖 
+划分阶段
+从计算过程：
+ont-to-one  所有作业可以流水线  pipeline 速度快 窄依赖
+宽依赖必须拿到所有分区的数据才能计算，速度慢
+容错： 窄依赖 好 宽依赖差
+
+基于以上2点， 用dependency , 用于封装两种不同的依赖关系  ，然后搞出stage阶段
+把所有的窄依赖放在一个阶段中 
+
+窄依赖算子：
+map flatMap filter 不会改变分区数量
+union coalesce   增加  减少分区数量
+所有的窄依赖算子rdd 都在一个阶段中 stage
+（一旦遇到宽依赖 ，就切分stage）
+宽依赖算子: shuffle 一对多的关系  : 有几个算子 就切分多个阶段
+groupByKey  reduceByKey distinct 
+
+Stage ： spark 中对所有的窄依赖的封装 ，提供的一个抽象类
+Stage： ResultStage ： 只有一个 ， 就是最后一个stage
+ShuffleMapStage :  0 到多个
+
+Stage 是有起始边界：
+ShuffleMapStage： 起点  job 中的第一个RDD
+终点： shuffle Write
+ResultStage:  起点: Shffle Read 
+终点： job 中最后一个RDD 
+job的起始位置：
+当触发action 算法的时候，产生job  ， job终止位置 ,就是action算子对应的RDD
+
+DAG ： 有向五环图
+有向： 数据的流向， RDD的依赖方向
+无环 ： 不是闭环
+图：  点 RDD  线 rdd 之间的依赖关系 
+
+1Driver 
+在解析业务逻辑代码的时候 ，完成DAG的构建，当触发action 算子的时候，DAG构建完成
+2DAGSchedule
+基于DAG,切分stage ，创建task ，提交stage
+3Taskschedule
+调度Task ，提交task 给executor 执行 
+</code></pre>
+<h3 id="基本算子-2">基本算子</h3>
+<pre><code>map :  一一映射  对每一条数据执行
+mapValues :
+mapPartitions: 一一映射,对每个分区 
+mapPatitionWithIndex
+
+zip  分区数量必须一致，每个分区的元素也必须一致   a ,b -&gt;（a, b）
+zipWithIndex 
+
+groupByKey 
+默认的分区器 ：  key hashcode % 分区数
+数据重新分发 ： shuffle 
+reduceByKey
+分区类聚合 
+能使用reduceByKey 就不用groupByKey 
+
+foreach  一一映射 ， 没有返回值 ， 常见的打印  每次迭代一个元素 
+foreachPartition 
+
+sortByKey   产生 job
+zipWithIndex  产生 job
+take 产生 job
+reduct 元素并归 ， 没有顺序
+coutByKey    某个元素的key 的个数
+collectAsMAp  ： 用于[k,v] rdd , 以map 集合返回
+take()
+first()
+top()  返回前n 个
+takeOrdered(n) 
+</code></pre>
+<h3 id="RDD的高级应用-2">RDD的高级应用</h3>
+<pre><code>1：RDD 的缓存和持久化 
+默认情况下， 每一个action 操作 ， 都会重新计算上面的转换RDD （重新计算）
+如果能把该RDD的结果缓存下来， 那么基于该RDD的操作，就不需要从头计算 
+cache() (StoregeLevel )  缓存
+persisit(StoregeLevel.MeMORY_AND_DISK) 持久化
+执行完业务逻辑，可以手动释放
+unpersisit()
+
+2：RDD 的checkpoint 容错方案 
+把rdd 中的数据 ，写到分布式文件系统中
+sc.setCheckpointDir(&#39;hdfs://ip:port/dir&#39;)
+rdd.checkpoint   
+1:是lazy 算子  ，当触发action算子的时候， 才执行，产生2个job,第一个job
+是 执行业务逻辑， 第二个job 执行写入到数据到hdfs
+2: 当对某一个rdd 执行checkpoint 之后， 该RDD原有的父依赖关系被删除 ，取而代之是checkpointRDD
+3: 以后对该RDD所有的操作，依赖关系从CheckpointRDD开始，真正的数据从hdfs 读取
+
+在特别复杂的业务逻辑中，才会用 
+
+3： RDD 中的共享变量（广播变量 ， 累计器） 广播大变量  在driver端一个副本 
+
+RDD的内存管理方法：
+spark1.x 静态内存管理 （各个模块的占比是固定的 ，容易造成不均衡 淘汰）
+spark2.x 统一的内存管理  
+
+内存的组成部分：
+总的内存 = 系统预留内存（300M） + 可用内存
+可用内存  = 统一内存（0.6） + 其他（0.4）
+统一内存 = 存储内存(storege)（0.5） + 执行内存 (executiom)（0.5）
+
+Storege 存储内存 ：
+缓存RDD ,展开partition ,存放Direct task result ，存放广播变量 ，在spark Streaming reciver 模式中， 存放每个batch 的blocks
+execution 执行内存：
+用于shuffle , join , sort ,aggregation(聚合) ，buffer等操作
+其他：
+spark : 内部的元数据 ， OOM错误 ， 
+
+默认配置参数， spark.memory.fraction = 0.6
+ spark.memory.storageFraction=0.5
+ 
+
+Torrent 比特洪流技术
+广播变量实现类 ： TorrentBroadcast 
+利用广播变量， 能保证一个executor的所有task 共用一份反序列化的数据
+减少数据的反序列化和GC
+使用：
+    diver 端广播  blockManagerMaster 
+    executor 使用  blockManager 
+注意使用： 
+1除了RDD 不能被广播， 其他的类 、集合。对象都可以被广播
+2： 被广播数据， 可以在任意的executor 中通过value调用
+3： 广播变量是只读的，不能被修改 
+4： 最大的功能是，就是保证一个executor中所有的task共用一份数据 ，提升效率 
+
+
+4： 累加器
+在driver端定义一个类加器
+全局的 可以通过Web 监控界面查看 
+acc = sc.LongAccumulator(&#39;variable_acc&#39;)
+
+总结：
+1在driver端定义累加器
+2在任意的函数中，executor中通过add方法调用
+3累加器是全局(application为单位)的累加 
+4在driver端 ，通过value 方法获取值
+5在程序的监控界面，通过累加器的名称来获取值
+</code></pre>
+<p><strong>spark 序列化</strong></p>
+<pre><code>spark 中使用的序列化机制 默认是java 序列化 javaSerializer
+内存中对象  序列化 二进制文件  网络传输 反序列化
+
+KryoSerializer  : 占用内存少，速度快， 需要注册
+
+1： spark standalone HA  （high avaliable ） 高可用  7 * 24  (集群) 
+ 单点故障  核心节点
+ standlone master worker
+ master alive  master standby(热备)
+zookeeper 管理节点 高可用 
+2： spark on yarn  standalone 两套不同的集群
+
+yarn 集群  
+客服端提交任务  1台（满足条件  ，spark 安装包 ， hadoop 的配置 （hdfs  +yarn）） 连接到hadoop集群 
+
+yarn 集群：
+ResourceManager 
+NodeManager
+1: 修改 ${hadoop}/etc/hadoop/capacity-scheduler.xml 中的资源调度
+
+2： yarn.site.xml
+
+
+spark 的客服端配置 
+1：jdk
+vim ${spark_home}/conf/spark-env.sh
+2: hadoop_conf_dir  /yarn_conf_dir # hadoop的配置文件路径 
+
+spark-submit --master yarn --deploy-model client/cluster 
+
+两种部署模式区别 ：
+cluster : Driver 运行在集群中的某一个节点 ， Driver 可以容错 ，提交任务，就可以退出
+client :  Driver 运行在客服端 
+</code></pre>
+<h3 id="UDF-自定义函数">UDF 自定义函数</h3>
+<pre><code>第1种方式
+# 定义自定义函数
+ def fun_name():
+ pass
+# 注册自定义函数
+udf1 = functions.udf(fun_name, FloatType()
+# 使用自定义函数
+dataframe = dataframe.withColumn(col, udf1(col))
+第2种方式
+注册udf，在sql中使用
+spark.udf.register(&quot;udf1&quot;, fun_name,StringType()) 
+dataframe = dataframe.withColumn(col, udf1(col))
+第3种方式 注解形式更方便
+@udf(returnType=StringType()) 
+def fun_name():
+ pass
+df.withColumn(&quot;Cureated Name&quot;, convertCase(col(&quot;Name&quot;))).show(truncate=False)
+
+pandas_udf函数支持定义三种类型的函数，分别为SCALAR、GROUP_MAP、GROUP_AGG，在pyspark.sql.function.PandasUDFType 中做了定义
+
+from pyspark.sql.functions import pandas_udf, PandasUDFType
+</code></pre>
+<p><strong>由于数据中某些字段包含 json 数据，因此直接使用 DataFrame 进行读取会出现分割错误，所以如果要创建 DataFrame，需要先直接读取文件生成 RDD，再将 RDD 转为 DataFrame。过程中，使用 python3 中的 csv 模块对数据进行解析和转换。</strong></p>
+<pre><code>df.printSchema()
+df.withColumn()
+df.withColumnRenamed()
+df.sort(col_name1.asc() , col_name.desc())
+df.gropuby().agg(sum(), ave(),..).where( col(&#39;name&#39;)&gt; 100)  # agg 可以同时使用多个聚合函数
+df.filter() # 选择 select
+df.filter(&quot;city == &#39;beijing&#39; and ctr &gt; 0.2&quot;).show() 支持字符串 
+dropna() 删除空行
+explode（col_name） # 该行拆成多行
+
+DataFrame 的函数
+Action 操作
+1、 collect() ,返回值是一个数组，返回dataframe集合所有的行
+2、 collectAsList() 返回值是一个java类型的数组，返回dataframe集合所有的行
+3、 count() 返回一个number类型的，返回dataframe集合的行数
+4、 describe(cols: String*) 返回一个通过数学计算的类表值(count, mean, stddev, min, and max)，这个可以传多个参数，中间用逗号分隔，如果有字段为空，那么不参与运算，只这对数值类型的字段。例如df.describe(&quot;age&quot;, &quot;height&quot;).show()
+5、 first() 返回第一行 ，类型是row类型
+6、 head() 返回第一行 ，类型是row类型
+7、 head(n:Int)返回n行  ，类型是row 类型
+8、 show()返回dataframe集合的值 默认是20行，返回类型是unit
+9、 show(n:Int)返回n行，，返回值类型是unit
+10、 table(n:Int) 返回n行  ，类型是row 类型
+
+dataframe的基本操作
+1、 cache()同步数据的内存
+2、 columns 返回一个string类型的数组，返回值是所有列的名字
+3、 dtypes返回一个string类型的二维数组，返回值是所有列的名字以及类型
+4、 explan()打印执行计划  物理的
+5、 explain(n:Boolean) 输入值为 false 或者true ，返回值是unit  默认是false ，如果输入true 将会打印 逻辑的和物理的
+6、 isLocal 返回值是Boolean类型，如果允许模式是local返回true 否则返回false
+7、 persist(newlevel:StorageLevel) 返回一个dataframe.this.type 输入存储模型类型
+8、 printSchema() 打印出字段名称和类型 按照树状结构来打印
+9、 registerTempTable(tablename:String) 返回Unit ，将df的对象只放在一张表里面，这个表随着对象的删除而删除了
+10、 schema 返回structType 类型，将字段名称和类型按照结构体类型返回
+11、 toDF()返回一个新的dataframe类型的
+12、 toDF(colnames：String*)将参数中的几个字段返回一个新的dataframe类型的，
+13、 unpersist() 返回dataframe.this.type 类型，去除模式中的数据
+14、 unpersist(blocking:Boolean)返回dataframe.this.type类型 true 和unpersist是一样的作用false 是去除RDD
+
+集成查询：
+1、 agg(expers:column*) 返回dataframe类型 ，同数学计算求值
+df.agg(max(&quot;age&quot;), avg(&quot;salary&quot;))
+df.groupBy().agg(max(&quot;age&quot;), avg(&quot;salary&quot;))
+2、 agg(exprs: Map[String, String])  返回dataframe类型 ，同数学计算求值 map类型的
+df.agg(Map(&quot;age&quot; -&gt; &quot;max&quot;, &quot;salary&quot; -&gt; &quot;avg&quot;))
+df.groupBy().agg(Map(&quot;age&quot; -&gt; &quot;max&quot;, &quot;salary&quot; -&gt; &quot;avg&quot;))
+3、 agg(aggExpr: (String, String), aggExprs: (String, String)*)  返回dataframe类型 ，同数学计算求值
+df.agg(Map(&quot;age&quot; -&gt; &quot;max&quot;, &quot;salary&quot; -&gt; &quot;avg&quot;))
+df.groupBy().agg(Map(&quot;age&quot; -&gt; &quot;max&quot;, &quot;salary&quot; -&gt; &quot;avg&quot;))
+4、 apply(colName: String) 返回column类型，捕获输入进去列的对象
+5、 as(alias: String) 返回一个新的dataframe类型，就是原来的一个别名
+6、 col(colName: String)  返回column类型，捕获输入进去列的对象
+7、 cube(col1: String, cols: String*) 返回一个GroupedData类型，根据某些字段来汇总
+8、 distinct 去重 返回一个dataframe类型
+9、 drop(col: Column) 删除某列 返回dataframe类型
+10、 dropDuplicates(colNames: Array[String]) 删除相同的列 返回一个dataframe
+11、 except(other: DataFrame) 返回一个dataframe，返回在当前集合存在的在其他集合不存在的
+12、 explode[A, B](inputColumn: String, outputColumn: String)(f: (A) ⇒ TraversableOnce[B])(implicit arg0: scala.reflect.api.JavaUniverse.TypeTag[B]) 返回值是dataframe类型，这个 将一个字段进行更多行的拆分
+df.explode(&quot;name&quot;,&quot;names&quot;) {name :String=&gt; name.split(&quot; &quot;)}.show();
+将name字段根据空格来拆分，拆分的字段放在names里面
+13、 filter(conditionExpr: String): 刷选部分数据，返回dataframe类型 df.filter(&quot;age&gt;10&quot;).show();  df.filter(df(&quot;age&quot;)&gt;10).show();   df.where(df(&quot;age&quot;)&gt;10).show(); 都可以
+14、 groupBy(col1: String, cols: String*) 根据某写字段来汇总返回groupedate类型   df.groupBy(&quot;age&quot;).agg(Map(&quot;age&quot; -&gt;&quot;count&quot;)).show();df.groupBy(&quot;age&quot;).avg().show();都可以
+15、 intersect(other: DataFrame) 返回一个dataframe，在2个dataframe都存在的元素
+16、 join(right: DataFrame, joinExprs: Column, joinType: String)
+一个是关联的dataframe，第二个关联的条件，第三个关联的类型：inner, outer, left_outer, right_outer, leftsemi
+df.join(ds,df(&quot;name&quot;)===ds(&quot;name&quot;) and  df(&quot;age&quot;)===ds(&quot;age&quot;),&quot;outer&quot;).show();
+17、 limit(n: Int) 返回dataframe类型  去n 条数据出来
+18、 na: DataFrameNaFunctions ，可以调用dataframenafunctions的功能区做过滤 df.na.drop().show(); 删除为空的行
+19、 orderBy(sortExprs: Column*) 做alise排序
+20、 select(cols:string*) dataframe 做字段的刷选 df.select(&lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;co&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0197em;&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&quot;colB&quot; + 1)
+21、 selectExpr(exprs: String*) 做字段的刷选 df.selectExpr(&quot;name&quot;,&quot;name as names&quot;,&quot;upper(name)&quot;,&quot;age+1&quot;).show();
+22、 sort(sortExprs: Column*) 排序 df.sort(df(&quot;age&quot;).desc).show(); 默认是asc
+23、 unionAll(other:Dataframe) 合并 df.unionAll(ds).show();
+24、 withColumnRenamed(existingName: String, newName: String) 修改列表 df.withColumnRenamed(&quot;name&quot;,&quot;names&quot;).show();
+25、 withColumn(colName: String, col: Column) 增加一列 df.withColumn(&quot;aa&quot;,df(&quot;name&quot;)).show();
+pyspark.sql.functions里有许多常用的函数，可以满足日常绝大多数的数据处理需求
+df.show()  df.count()  df.printSchema() df.columns df.dtypes
+df.select()
+df.age.alias(&#39;new_name&#39;,&#39;name&#39;)
+df.filter() #筛选
+F.lit() 增加常数列
+df.drop_duplicates()
+df.distinct()
+df.drop(&#39;id&#39;) # 删除列
+df.dropna(subset=[&#39;age&#39;, &#39;name&#39;])  # 传入一个list，删除指定字段中存在缺失的记录
+df.fillna({&#39;age&#39;:10,&#39;name&#39;:&#39;abc&#39;})  # 传一个dict进去，对指定的字段填充
+df.groupby(&#39;name&#39;).agg(F.max(df[&#39;age&#39;]))
+df.select(F.max(df.age))
+df.select(F.min(df.age))
+df.select(F.avg(df.age)) # 也可以用mean，一样的效果
+df.select(F.countDistinct(df.age)) # 去重后统计
+df.select(F.count(df.age)) # 直接统计，经试验，这个函数会去掉缺失值会再统计
+
+from pyspark.sql import Window
+df.withColumn(&quot;row_number&quot;, F.row_number().over(Window.partitionBy(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;).orderBy(&quot;time&quot;))).show() # row_number()函数
+</code></pre>
+<pre><code>key  v 
+rdd2 =rdd1.map(lambda v: (v.genre, int(v.num_of_sales))).reduceByKey(lambda x, y: x + y).collect()  # collect 返回的是 []
+json.dumps(rdd2)
+# 注意reducebykey  x,y : x+y    都是 value 
+
+# 两个列求和 
+ keyv-&gt; []
+rdd.map(lambda v: (int(v.year_of_pub),  [ int(v.num_of_tracks), 1] ))\
+.reduceByKey(lambda x, y: [x[0] + y[0], x[1] + y[1]]).sortByKey()
+ = res = [k ,v]
+list(map(lambda v: v[0], result))
+list(map(lambda v: v[1][0], result))
+list(map(lambda v: v[1][1], result))
+
+ key ()  元组v 
+rdd.map(lambda v: ( (v.genre, int(v.year_of_pub)), int(v.num_of_sales)))\
+.reduceByKey(lambda x, y: x + y).sortByKey().collect()
+
+#多列 聚合操作  
+rdd.map(lambda v: (v.genre, (float(v.rolling_stone_critic), float(v.mtv_critic), float(v.music_maniac_critic), 1)))\
+.reduceByKey(lambda x, y : (x[0] + y[0], x[1] + y[1], x[2] + y[2], x[3] + y[3]))\
+.map(lambda v: (v[0], v[1][0]/v[1][3], v[1][1]/v[1][3], v[1][2]/v[1][3])).collect()
+</code></pre>
+<h3 id="spark-sql">spark sql</h3>
+<pre><code>import pyspark.sql.functions as f
+f.split(df[&#39;categories&#39;], &#39;,&#39;) # f
+1: withColumn()
+使用带有列的PySpark更改列DataType df.withColumn(x, df[x].cast(&#39;int&#39;))
+更新现有列的值  df.withColumn( &quot;newDate&quot;,split(df[&#39;Date&#39;], &quot; &quot;)[0] ).drop(&quot;Date&quot;)
+从现有的创建新列
+2:重命名列名
+df.withColumnRenamed()  df = df.withColumnRenamed(&#39;old_name&#39;,&#39;new_name&#39;)
+df.drop()
+# 创建临时表
+3df.createOrReplaceTempView(&#39;table_name&#39;)
+
+4:explode 将列数据展开
+[a,b,[1,2]]
+[a,b,1]
+[a,b,2]
+
+5：from pyspark.sql.functions import regexp_replace
+df.withColumn(&#39;address&#39;, regexp_replace(&#39;address&#39;, &#39;Rd&#39;, &#39;Road&#39;)) \
+  .show(truncate=False)
+6： 写在本地
+df.write.parquet(&quot;file:///home/hadoop/wangyingmin/yelp-etl/business_etl&quot;, mode=&quot;overwrite&quot;)
+df.write.json(path, model)
+df = spark.read.parquet(data_path).cache()
+
+def read_json(file_path):
+    json_path_names = os.listdir(file_path)
+    data = []
+    for idx in range(len(json_path_names)):
+        json_path = file_path + &#39;/&#39; + json_path_names[idx]
+        if json_path.endswith(&#39;.json&#39;):
+            with open(json_path) as f:
+                for line in f:
+                    data.append(json.loads(line))
+    return data
+df = read_json(path)
+
+# 读取json 文件 dataframe
+spark.read.csv(&quot;input/earthquake_cleaned.csv&quot;,  header=True, inferSchema=True)
+df.toPandas().to_csv(&quot;earthquakeC.csv&quot;, encoding=&#39;utf-8&#39;, index=False)
+df.groupBy(&quot;Year&quot;).count().orderBy(&quot;Year&quot;)
+# 过滤
+df.filter(&quot;Area is not null&quot;)
+#排序
+df.sort(df[&quot;Magnitude&quot;].desc(), df[&quot;Year&quot;].desc()).take(500)
+#当震源深度相同时，将震级更高的地震排在前面。
+df.sort( df[&quot;Depth&quot;].desc(), df[&quot;Magnitude&quot;].desc() ).take(500)
+# 取别名 alias
+rawData.agg(*[count(c).alias(c) for c in rawData.columns]).show()
+
+df[&#39;y&#39;] # 取值 [0,1]
+df_age = df.select(df[&#39;age&#39;],df[&#39;y&#39;])
+bin = [0,30,45,60,75,100]
+# 统计各个年龄段 0的人数
+df_age.filter(df[&#39;age&#39;].between(bin[i],bin[i+1])).filter(df[&#39;y&#39;]==&#39;0&#39;).count()
+
+
+# 月收入分析
+df_income = df.select(df[&#39;MonthlyIncome&#39;],df[&#39;y&#39;])
+# 获取平均值，其中先返回Row对象，再获取其中均值
+mean_income = df_income.agg(functions.avg(df_income[&#39;MonthlyIncome&#39;])).head()[0]
+# 收入分布，105854人没超过均值6670，44146人超过均值6670
+df_income.filter(df[&#39;MonthlyIncome&#39;] &lt; mean_income).count()
+
+df.select(&quot;Job&quot;).distinct().show(truncate=False)
+df.dropDuplicates(([&#39;Job&#39;])).select(&quot;Job&quot;).show(truncate=False)
+</code></pre>
+<h3 id="dataframe">dataframe:</h3>
+<pre><code>fields = [ StructField(&quot;date&quot;, DateType(),False),StructField(&quot;county&quot;, StringType(),False),StructField(&quot;deaths&quot;, IntegerType(),False),]  # false 不能为空
+schema = StructType(fields)
+
+# flagMap  对集合中每个元素操作  ，在扁平化  [ [a,b],[a,d]] -&gt; [a ,b,a,d]
+# map    对集合中每个元素操作  [ [a,b],[a,d]] -&gt; [[a,b],[a,d]]
+df.select(field).filter(mdf[field] != &#39;&#39;).rdd.flatMap(lambda g: [(v, 1) for v in map(lambda x: x[&#39;name&#39;], json.loads(g[field]))])
+
+df = df.filter(df.price != &#39;面议&#39;).withColumn(&quot;price&quot;,df.price.cast(IntegerType()))
+
+# 对多列进行不同的聚合操作, 并修改相应的列名
+df.groupBy(&#39;job&#39;).agg(
+    F.sum(&quot;salary&quot;).alias(&quot;sum_salary&quot;),
+    F.avg(&quot;salary&quot;).alias(&quot;avg_salary&quot;),
+    F.min(&quot;salary&quot;).alias(&quot;min_salary&quot;),
+    F.max(&quot;salary&quot;).alias(&quot;max_salary&quot;),
+    F.mean(&quot;salary&quot;).alias(&quot;mean_salary&quot;)
+).show(truncate=False)      # truncate=False：左对齐
+
+df.agg(F.sum(&quot;rain1h&quot;).alias(&quot;rain24h&quot;)).sort(F.desc(&quot;rain24h&quot;)
+
+df_rain_sum.coalesce(1).write.csv(&quot;file:///home/analyse.csv&quot;)
+df = spark.read.csv(filename,header = True)
+
+F.date_format(df[&#39;time&#39;],&quot;yyyy-MM-dd&quot;).alias(&quot;date&quot;)
+F.hour(df[&#39;time&#39;]).alias(&quot;hour&quot;)
+
+                                              
+df.filter(df[&#39;hour&#39;].isin([2,8,12,20]))
+                                              
+F.format_number(&#39;avg_temperature&#39;,1)                                            
+</code></pre>
+<pre><code>key  v 
+rdd2 =rdd1.map(lambda v: (v.genre, int(v.num_of_sales))).reduceByKey(lambda x, y: x + y).collect()  # collect 返回的是 []
+json.dumps(rdd2)
+# 注意reducebykey  x,y : x+y    都是 value 
+
+# 两个列求和 
+ keyv-&gt; []
+rdd.map(lambda v: (int(v.year_of_pub),  [ int(v.num_of_tracks), 1] ))\
+.reduceByKey(lambda x, y: [x[0] + y[0], x[1] + y[1]]).sortByKey()
+ = res = [k ,v]
+list(map(lambda v: v[0], result))
+list(map(lambda v: v[1][0], result))
+list(map(lambda v: v[1][1], result))
+
+ key ()  元组v 
+rdd.map(lambda v: ( (v.genre, int(v.year_of_pub)), int(v.num_of_sales)))\
+.reduceByKey(lambda x, y: x + y).sortByKey().collect()
+
+#多列 聚合操作  
+rdd.map(lambda v: (v.genre, (float(v.rolling_stone_critic), float(v.mtv_critic), float(v.music_maniac_critic), 1)))\
+.reduceByKey(lambda x, y : (x[0] + y[0], x[1] + y[1], x[2] + y[2], x[3] + y[3]))\
+.map(lambda v: (v[0], v[1][0]/v[1][3], v[1][1]/v[1][3], v[1][2]/v[1][3])).collect()
+</code></pre>
+<p><img src="image/1-spark/1750253900372.png" alt="1750253900372"></p>
+<h2 id="数据分类">数据分类</h2>
+<p><img src="image/1-spark/1750253935735.png" alt="1750253935735"></p>
+<p><strong>总结：</strong></p>
+<ul>
+<li><strong>RDD</strong> 主要用于处理非结构化数据 、半结构化数据、结构化；</li>
+<li><strong>SparkSQL</strong> 是一个既支持 SQL 又支持命令式数据处理的工具；</li>
+<li><strong>SparkSQL</strong> 主要用于处理结构化数据(较为规范的半结构化数据也可以处理)。</li>
+</ul>
+<p>Spark SQL数据抽象可以分为两类：</p>
+<p>① DataFrame：DataFrame 是一种以 RDD 为基础的分布式数据集，类似于传统数据库的二维表格，带有 Schema 元信息(可以理解为数据库的列名和类型)。DataFrame = RDD ＋ 泛型 + SQL 的操作 + 优化</p>
+<p>② DataSet：DataSet是DataFrame的进一步发展，它比RDD保存了更多的描述信息，概念上等同于关系型数据库中的二维表，它保存了类型信息，是强类型的，提供了编译时类型检查。调用 Dataset 的方法先会生成逻辑计划，然后被 spark 的优化器进行优化，最终生成物理计划，然后提交到集群中运行！DataFrame = Dateset[Row]</p>
+<p><img src="image/1-spark/1750253992466.png" alt="1750253992466"></p>
+<ul>
+<li>DataFrame = RDD - 泛型 + Schema + SQL + 优化</li>
+<li>DataSet = DataFrame + 泛型</li>
+<li>DataSet = RDD + Schema + SQL + 优化</li>
+</ul>
+<ul>
+<li>DataFrame 和 DataSet 都可以通过RDD来进行创建；</li>
+<li>也可以通过读取普通文本创建–注意:直接读取没有完整的约束，需要通过 RDD+Schema；</li>
+<li>通过 josn/parquet 会有完整的约束；</li>
+<li>不管是 DataFrame 还是 DataSet 都可以注册成表，之后就可以使用 SQL 进行查询了! 也可以使用 DSL</li>
+</ul>
+<p><img src="image/1-spark/1750584043035.png" alt="1750584043035"></p>
+<p><img src="image/1-spark/1750584677837.png" alt="1750584677837"></p>
+<p><img src="image/1-spark/1750584699501.png" alt="1750584699501"></p>
+<p>Job :  每1个行动算子，产生1个 Job</p>
+<p>1个application-&gt; n job-&gt; n-stage-&gt;task</p>
+<p><a href="https://tech.meituan.com/2016/05/12/spark-tuning-pro.html">https://tech.meituan.com/2016/05/12/spark-tuning-pro.html</a></p>
+<p><a href="https://blog.csdn.net/Javachichi/article/details/131871627">https://blog.csdn.net/Javachichi/article/details/131871627</a></p>
+<p><a href="https://www.cnblogs.com/skaarl/p/13960639.html">https://www.cnblogs.com/skaarl/p/13960639.html</a></p>
+<p><a href="https://blog.csdn.net/Javachichi/article/details/131871627">https://blog.csdn.net/Javachichi/article/details/131871627</a></p>
+</div> </div> <p class="note-crosslink muted" data-astro-cid-5eggoaxc>
+经审核的对外副本见 <a href="/knowledge/" data-astro-cid-5eggoaxc>知识库</a>（<code data-astro-cid-5eggoaxc>publish/</code>，路径与 wiki 主题对应）。
+</p> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。<span class="footer-dot"> ● </span> Built with Astro</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','联系我':'Contact','了解我':'About me','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','构建 AI Agent、数据系统和机器学习的技术实践者。':'An engineer building AI agents, data systems, and machine learning applications.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品开发和落地交付的端到端能力。':'A data scientist combining algorithm R&D, engineering practice, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software development and production rollout.',
+    '从 0 到 1 构建算法平台、数据平台与 DevOps 平台的端到端能力，打通算法研发、数据治理、知识工程到云原生部署的完整链路。在生物药 CMC 领域，擅长将工艺与质量业务转化为可计算、可推理的领域知识，并构建具备任务分解、工具调用与可追溯引用能力的 Agent 系统，推动 AI 技术从算法研发走向工程化落地与产品交付。':'End-to-end capability building algorithm, data, and DevOps platforms from zero to one—linking algorithm R&D, data governance, knowledge engineering, and cloud-native deployment. In biopharma CMC, I turn process and quality into computable, reasoning-ready domain knowledge and build Agent systems with task decomposition, tool use, and traceable citations—moving AI from research to engineered delivery and products.',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。':'Covers Harness Engineering, data platforms, modeling, full-stack delivery, and cloud-native operations—focused on scalable, auditable, production-grade practice.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '基于公开履历整理，企业细节已做概括性表述。':'Summarized from a public résumé; employer details are generalized.',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.'
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','项目作品集 · Boyang Wang':'Selected projects · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> 

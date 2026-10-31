@@ -1,0 +1,848 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="> 自 [`3-KG.md`](./3-KG.md) 拆出的图嵌入、图卷积与动态图笔记。图片路径为 `../img/`。"><meta name="theme-color" content="#f7f8fc"><title>图神经网络（GNN） · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.Opzu-1vT.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<style>.article-page[data-astro-cid-5eggoaxc]{padding-top:28px}.back-link[data-astro-cid-5eggoaxc]{font-size:12px;color:var(--muted)}.article-header[data-astro-cid-5eggoaxc]{max-width:820px;margin:48px auto 32px}.article-header[data-astro-cid-5eggoaxc] h1[data-astro-cid-5eggoaxc]{font-size:clamp(28px,4vw,42px);margin:18px 0}.article-intro[data-astro-cid-5eggoaxc]{font-size:17px;color:var(--muted);max-width:760px}.tag-muted[data-astro-cid-5eggoaxc]{margin-left:6px;opacity:.85}.byline[data-astro-cid-5eggoaxc]{display:flex;align-items:center;gap:10px;margin-top:25px}.byline-avatar[data-astro-cid-5eggoaxc]{width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800}.byline[data-astro-cid-5eggoaxc]>span[data-astro-cid-5eggoaxc]:last-child{display:grid}.byline[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{font-size:12px}.byline[data-astro-cid-5eggoaxc] small[data-astro-cid-5eggoaxc]{font-size:10px;color:var(--muted)}.article-layout[data-astro-cid-5eggoaxc]{display:grid;grid-template-columns:200px minmax(0,720px);gap:48px;justify-content:center;margin:0 auto 24px;max-width:980px}.article-layout--no-toc[data-astro-cid-5eggoaxc]{grid-template-columns:minmax(0,720px);max-width:720px}.toc[data-astro-cid-5eggoaxc]{position:sticky;top:24px;align-self:start;font-size:11px;color:var(--muted);max-height:calc(100vh - 48px);overflow-y:auto;padding-right:8px}.toc[data-astro-cid-5eggoaxc] b[data-astro-cid-5eggoaxc]{display:block;color:var(--text);font-size:12px;margin-bottom:10px}.toc-nav[data-astro-cid-5eggoaxc]{display:grid;gap:8px}.toc-link[data-astro-cid-5eggoaxc]{color:var(--muted);line-height:1.45;text-decoration:none;border-left:2px solid transparent;padding-left:0;transition:color .15s,border-color .15s}.toc-link[data-astro-cid-5eggoaxc]:hover{color:var(--blue)}.toc-link[data-astro-cid-5eggoaxc].depth-2{padding-left:0}.toc-link[data-astro-cid-5eggoaxc].depth-3{padding-left:12px;font-size:10px}.toc-link[data-astro-cid-5eggoaxc].depth-4{padding-left:22px;font-size:10px;opacity:.92}.toc-link[data-astro-cid-5eggoaxc].depth-5{padding-left:32px;font-size:10px;opacity:.85}@media(max-width:860px){.article-layout[data-astro-cid-5eggoaxc]{display:block;max-width:720px;padding:0}.toc[data-astro-cid-5eggoaxc]{position:static;max-height:none;margin-bottom:28px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);border-radius:14px}}.knowledge-md[data-astro-cid-5eggoaxc] h2,.knowledge-md[data-astro-cid-5eggoaxc] h3,.knowledge-md[data-astro-cid-5eggoaxc] h4,.knowledge-md[data-astro-cid-5eggoaxc] h5{scroll-margin-top:28px}.knowledge-md[data-astro-cid-5eggoaxc] h2{font-size:22px;margin:28px 0 12px}.knowledge-md[data-astro-cid-5eggoaxc] h3{font-size:18px;margin:22px 0 10px}.knowledge-md[data-astro-cid-5eggoaxc] p{color:var(--muted);line-height:1.85;font-size:15px}.knowledge-md[data-astro-cid-5eggoaxc] ul{color:var(--muted);padding-left:1.2em;line-height:1.75}.knowledge-md[data-astro-cid-5eggoaxc] a{color:var(--blue)}.knowledge-md[data-astro-cid-5eggoaxc] img{max-width:100%;height:auto;display:block;margin:16px 0;border-radius:8px;border:1px solid var(--line)}.knowledge-md[data-astro-cid-5eggoaxc] .math-display{margin:20px 0;overflow-x:auto;padding:4px 0}.knowledge-md[data-astro-cid-5eggoaxc] .math-inline{display:inline}.knowledge-md[data-astro-cid-5eggoaxc] .math-fallback{font-size:13px;white-space:pre-wrap}.knowledge-md[data-astro-cid-5eggoaxc] table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}.knowledge-md[data-astro-cid-5eggoaxc] th,.knowledge-md[data-astro-cid-5eggoaxc] td{border:1px solid var(--line);padding:8px 10px;text-align:left}.note-crosslink[data-astro-cid-5eggoaxc]{max-width:720px;margin:0 auto 55px;font-size:12px}.note-crosslink[data-astro-cid-5eggoaxc] a[data-astro-cid-5eggoaxc]{color:var(--blue);font-weight:700}
+</style></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/projects/" data-astro-cid-3ef6ksr2>项目作品</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),o=document.querySelector("#theme-toggle"),c=document.querySelector("#menu-toggle");o?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light")});localStorage.getItem("theme")==="dark"&&document.documentElement.classList.add("dark");const n=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),n()});n();c?.addEventListener("click",()=>document.querySelector(".site-header")?.classList.toggle("menu-open"));</script>  <main> <article class="wrap article-page" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <header class="article-header" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>3 · Deep Learning</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> <h1 data-astro-cid-5eggoaxc>图神经网络（GNN）</h1> <p class="article-intro" data-astro-cid-5eggoaxc>&gt; 自 [`3-KG.md`](./3-KG.md) 拆出的图嵌入、图卷积与动态图笔记。图片路径为 `../img/`。</p> <div class="byline" data-astro-cid-5eggoaxc> <span class="byline-avatar" data-astro-cid-5eggoaxc>NT</span> <span data-astro-cid-5eggoaxc> <b data-astro-cid-5eggoaxc>raw/1-Note</b>  </span> </div> </header> <div class="article-layout" data-astro-cid-5eggoaxc> <aside class="toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <b data-astro-cid-5eggoaxc>本文目录</b> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#图基础" class="toc-link depth-3" data-astro-cid-5eggoaxc> 图基础 </a><a href="#图嵌入Graph-Embedding" class="toc-link depth-3" data-astro-cid-5eggoaxc> 图嵌入（Graph Embedding） </a><a href="#DeepWalk" class="toc-link depth-4" data-astro-cid-5eggoaxc> DeepWalk </a><a href="#Line-" class="toc-link depth-3" data-astro-cid-5eggoaxc> Line : </a><a href="#node2Vec" class="toc-link depth-3" data-astro-cid-5eggoaxc> node2Vec: </a><a href="#SDNE" class="toc-link depth-3" data-astro-cid-5eggoaxc> SDNE </a><a href="#struc2vec" class="toc-link depth-3" data-astro-cid-5eggoaxc> struc2vec </a><a href="#EGES" class="toc-link depth-3" data-astro-cid-5eggoaxc> EGES </a><a href="#图神经网络GNN-族" class="toc-link depth-3" data-astro-cid-5eggoaxc> 图神经网络（GNN 族） </a><a href="#图卷积" class="toc-link depth-3" data-astro-cid-5eggoaxc> 图卷积 </a><a href="#谱域图卷积" class="toc-link depth-4" data-astro-cid-5eggoaxc> 谱域图卷积 </a><a href="#空域图卷积" class="toc-link depth-4" data-astro-cid-5eggoaxc> 空域图卷积： </a><a href="#PGC" class="toc-link depth-5" data-astro-cid-5eggoaxc> PGC： </a><a href="#GNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> GNN </a><a href="#GCN" class="toc-link depth-3" data-astro-cid-5eggoaxc> GCN </a><a href="#GAT" class="toc-link depth-3" data-astro-cid-5eggoaxc> GAT </a><a href="#GraphSAGE" class="toc-link depth-3" data-astro-cid-5eggoaxc> GraphSAGE </a><a href="#GraphSAGE-Mini-batch" class="toc-link depth-3" data-astro-cid-5eggoaxc> GraphSAGE Mini-batch </a><a href="#GraphSAGE-Embedding" class="toc-link depth-3" data-astro-cid-5eggoaxc> GraphSAGE Embedding </a><a href="#HAN" class="toc-link depth-3" data-astro-cid-5eggoaxc> HAN </a><a href="#GTN" class="toc-link depth-3" data-astro-cid-5eggoaxc> GTN </a><a href="#metapath2vec" class="toc-link depth-3" data-astro-cid-5eggoaxc> metapath2vec: </a><a href="#GATNE" class="toc-link depth-3" data-astro-cid-5eggoaxc> GATNE </a><a href="#BiNE" class="toc-link depth-3" data-astro-cid-5eggoaxc> BiNE </a><a href="#SGCN" class="toc-link depth-3" data-astro-cid-5eggoaxc> SGCN </a><a href="#SiGAT" class="toc-link depth-3" data-astro-cid-5eggoaxc> SiGAT </a><a href="#SDGNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> SDGNN </a><a href="#动态图表示" class="toc-link depth-3" data-astro-cid-5eggoaxc> 动态图表示 </a><a href="#DySAT" class="toc-link depth-3" data-astro-cid-5eggoaxc> DySAT </a><a href="#EvolveGCN" class="toc-link depth-3" data-astro-cid-5eggoaxc> EvolveGCN: </a><a href="#Streaming-GNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> Streaming GNN </a><a href="#DGNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> DGNN </a><a href="#TGAT" class="toc-link depth-3" data-astro-cid-5eggoaxc> TGAT </a><a href="#参考资料" class="toc-link depth-2" data-astro-cid-5eggoaxc> 参考资料 </a> </nav> </aside> <div class="article-body-content knowledge-md" data-astro-cid-5eggoaxc><h1 id="图神经网络GNN">图神经网络（GNN）</h1>
+<blockquote>
+<p>自 <a href="./3-KG.md"><code>3-KG.md</code></a> 拆出的图嵌入、图卷积与动态图笔记。图片路径为 <code>../img/</code>。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#%E5%9B%BE%E5%9F%BA%E7%A1%80">图基础</a></li>
+<li><a href="#%E5%9B%BE%E5%B5%8C%E5%85%A5graph-embedding">图嵌入</a></li>
+<li><a href="#%E5%9B%BE%E5%8D%B7%E7%A7%AF">图卷积与 GNN 模型</a></li>
+<li><a href="#han">异构图与符号图</a></li>
+<li><a href="#%E5%8A%A8%E6%80%81%E5%9B%BE%E8%A1%A8%E7%A4%BA">动态图表示</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+</ul>
+<hr>
+<h3 id="图基础">图基础</h3>
+<p>Graph ：</p>
+<p>​	有向图</p>
+<p>​	无向图</p>
+<p>图的表示：</p>
+<p>​	邻接矩阵 Adjacency</p>
+<p>图的性质： 度 degree</p>
+<p>有向图： 出度 入度</p>
+<p>子图： subgraph</p>
+<p>连通图：</p>
+<p>连通分量： 无向图G的一个极大连通子图称为G的一个连通分量</p>
+<p>强连通图： 任意两个节点可达</p>
+<p>弱连通图： </p>
+<p>最短路径：</p>
+<p>度的中心性：  </p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord cjk_fallback">度的中心性：</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">g</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight">ee</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span></div>
+
+
+<p>特征向量中心性：</p>
+<p>不仅考虑自己的度，还考虑连接节点的度</p>
+<p><img src="/notes-media/img/image-20231024214515944-1716729410138.png" alt="image-20231024214515944"></p>
+<p>邻接矩阵， 求特征值，特征向量</p>
+<p>中介中心性： </p>
+<p>连接中心性：</p>
+<p>PageRank 算法：</p>
+<p>HITS 算法</p>
+<h3 id="图嵌入Graph-Embedding">图嵌入（Graph Embedding）</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>思想</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DeepWalk</td>
+<td>随机游走 + Word2Vec</td>
+</tr>
+<tr>
+<td>LINE</td>
+<td>一阶 / 二阶邻近</td>
+</tr>
+<tr>
+<td>node2vec</td>
+<td>有偏游走，平衡 BFS/DFS</td>
+</tr>
+<tr>
+<td>SDNE</td>
+<td>深度网络保结构</td>
+</tr>
+<tr>
+<td>struc2vec</td>
+<td>结构相似性</td>
+</tr>
+<tr>
+<td>EGES</td>
+<td>异质图 / 电商场景</td>
+</tr>
+</tbody></table>
+<h4 id="DeepWalk">DeepWalk</h4>
+<p>假设： 相邻节点应该相似</p>
+<p>随机游走</p>
+<p>DeepWalk仅能用于无权图</p>
+<p>DeepWalk 的思想类似 word2vec，使用图中节点与节点的<strong>共现关系</strong>来学习节点的向量表示。那么关键的问题就是如何来描述节点与节点的共现关系，DeepWalk 给出的方法是使用随机游走 (RandomWalk) 的方式在图中进行节点采样。</p>
+<p>RandomWalk 是一种可重复访问已访问节点的深度优先遍历算法。给定当前访问起始节点，从其邻居中随机采样节点作为下一个访问节点，重复此过程，直到访问序列长度满足预设条件。</p>
+<p>DeepWalk使用DFS随机游走在图中进行节点采样，使用word2vec在采样的序列学习图中节点的向量表示</p>
+<p>步骤：</p>
+<ol>
+<li>input graph</li>
+<li>random walk (生成序列， 可重复的深度优先遍历)</li>
+<li>representation mapping</li>
+<li>Hierarchical softmax</li>
+<li>output representation</li>
+</ol>
+<p><img src="/notes-media/img/image-20231113211112510-1716729453931.png" alt="image-20231113211112510"></p>
+<p><a href="https://blog.csdn.net/submarineas/article/details/129112679">https://blog.csdn.net/submarineas/article/details/129112679</a></p>
+<p>deepwalk的缺点：</p>
+<p>用完全随机游走，训练节点嵌入向量</p>
+<p>仅能反映相邻节点的社群相似信息</p>
+<p>无法反映节点的功能角色相似信息</p>
+<h3 id="Line-">Line :</h3>
+<p>Large-scale information Network Embedding </p>
+<p>INE也是一种基于邻域相似假设的方法</p>
+<p>LINE可以看作是一种使用BFS构造邻域的算法</p>
+<p>一阶相识度：</p>
+<p>网络中一阶相似性是两个顶点之间的局部点对的邻近度。对于每对顶点()，该边的权重表示和之间的一阶相似性，如果在和之间没有观察到边缘，它们的一阶相似性为0。比如上图中的6和7，它们之间有较强的边连接关系。</p>
+<p><img src="/notes-media/img/image-20231113214408059-1716729453931.png" alt="image-20231113214408059"></p>
+<p><img src="/notes-media/img/image-20231113213017919-1716729453932.png" alt="image-20231113213017919"></p>
+<p><img src="/notes-media/img/image-20231113214445229-1716729453932.png" alt="image-20231113214445229"></p>
+<p>二阶相似度：</p>
+<p>二阶近似假设共享多个相同邻域顶点的两个顶点相似，</p>
+<p>对向量引入两个向量表征，一个是顶点本身的 embedding，另一个是作为其他顶点上下文即邻域的表征</p>
+<p><img src="/notes-media/img/image-20231113213559533-1699882660153-1716729453932.png" alt="image-20231113213559533">对向量引入两个向量表征，一个是顶点本身的 embedding，另一个是作为其他顶点上下文即邻域的表征</p>
+<p><img src="/notes-media/img/image-20231113214513394-1716729453932.png" alt="image-20231113214513394"></p>
+<p>Line : 技巧：</p>
+<p>负采样</p>
+<h3 id="node2Vec">node2Vec:</h3>
+<p>homophily : 同质性</p>
+<p>structural equivalence: 结构等价性</p>
+<p><img src="/notes-media/img/image-20231109203540369-1716729453932.png" alt="image-20231109203540369"></p>
+<p><img src="/notes-media/img/image-20231109203714395-1716729453932.png" alt="image-20231109203714395"></p>
+<p><img src="/notes-media/img/image-20231109204153271-1716729453932.png" alt="image-20231109204153271"></p>
+<p><img src="/notes-media/img/image-20231109205420942-1716729453932.png" alt="image-20231109205420942"></p>
+<p><img src="/notes-media/img/image-20231109211323027-1716729453932.png" alt="image-20231109211323027"></p>
+<p><img src="/notes-media/img/image-20231113214146759-1716729453932.png" alt="image-20231113214146759"></p>
+<p><img src="/notes-media/img/image-20231113214618555-1716729453932.png" alt="image-20231113214618555"></p>
+<p><img src="/notes-media/img/image-20231113214635339-1716729453932.png" alt="image-20231113214635339"></p>
+<h3 id="SDNE">SDNE</h3>
+<p>Structural Deep Network Embedding，是第一个将深度学习应用于网络学习中的方法。</p>
+<p><img src="/notes-media/img/image-20231113215315211-1716729453933.png" alt="image-20231113215315211"></p>
+<p>自动编码器的输入和输出分别是邻接矩阵和经过神经网络重构后的邻接矩阵，中间绿色部分为压缩后的向量，最后就用这个向量来表示节点。</p>
+<p>一阶相似性优化：让图中相邻的两个顶点对应的embedding vector（绿色部分）在隐藏空间接近。它的优化目标是对中间向量y进行优化：</p>
+<p>因为输入的是邻接矩阵，所以包含了该点的邻居结构信息。这样的重构过程能够使得结构相似的顶点具有相似的embedding表示向量。它的优化目标是对输出向量x进行优化：</p>
+<h3 id="struc2vec">struc2vec</h3>
+<p>之前node embedding 都是基于近邻关系，但是有些节点没有近邻，但也有相似的结构</p>
+<p><img src="/notes-media/img/image-20231113220856992-1716729453933.png" alt="image-20231113220856992"></p>
+<p>Struc2Vec是从空间结构相似性的角度定义顶点相似度的。</p>
+<p><strong>顶点对</strong>距离定义：</p>
+<p><img src="/notes-media/img/image-20231114213630833-1716729453933.png" alt="image-20231114213630833"></p>
+<p><img src="/notes-media/img/image-20231114213708461-1716729453933.png" alt="image-20231114213708461"></p>
+<p>表中是根据 d(a,b) 公式算出来的</p>
+<p><img src="/notes-media/img/image-20231114213805350-1716729453933.png" alt="image-20231114213805350"></p>
+<p><img src="/notes-media/img/image-20231114213902608-1716729453933.png" alt="image-20231114213902608"></p>
+<p><img src="/notes-media/img/image-20231114213922439-1716729453933.png" alt="image-20231114213922439"></p>
+<p>Struct2Vec 适用于节点分类，其结构标识比邻居更重要。</p>
+<h3 id="EGES">EGES</h3>
+<p>Enhanced Graph Embedding with Side Information，</p>
+<p>其基本思想是在DeepWalk生成的graph embedding基础上引入补充信息。</p>
+<p><img src="/notes-media/img/image-20231025213422238-1716729453933.png" alt="image-20231025213422238"></p>
+<ol>
+<li>DeepWalk: 采用随机游走，形成序列，采用skip-gram方式生成节点embedding</li>
+<li>node2vec: 不同的随机游走策略，形成序列，类似skip-gram方式生成节点embedding</li>
+<li>LINE: 捕获节点的一阶和二阶相似度，分别求解，再将一阶二阶拼接在一起，作为节点的embedding</li>
+<li>struc2vec: 对图的结构信息进行捕获，在其结构重要性大于邻居重要性时，有较好的效果</li>
+<li>SDNE: 采用了多个非线性层的方式捕获一阶二阶的相似性</li>
+<li>EGES：将一个商品的embedding分为多个维度的embedding，这样对于新的item来说，会先对该item的已有属性进行向量的加权求和，就可以生成新的embedding了。</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA4ODc5NzE1OA==&mid=2653607932&idx=1&sn=a4e47d7b019496bd395e7ad8a1226635&vid=1688851238003775&deviceid=af79c586-976d-4277-8133-21ce9651aa8f&version=4.1.2.6017&platform=win">https://mp.weixin.qq.com/s?__biz=MzA4ODc5NzE1OA==&amp;mid=2653607932&amp;idx=1&amp;sn=a4e47d7b019496bd395e7ad8a1226635&amp;vid=1688851238003775&amp;deviceid=af79c586-976d-4277-8133-21ce9651aa8f&amp;version=4.1.2.6017&amp;platform=win</a></p>
+<p><a href="https://github.com/shenweichen/GraphEmbedding">https://github.com/shenweichen/GraphEmbedding</a></p>
+<h3 id="图神经网络GNN-族">图神经网络（GNN 族）</h3>
+<p>CNN卷积具有顺序  ，全连接 输入没有顺序性</p>
+<p>卷积参数共享</p>
+<p>卷积的定义：</p>
+<p>卷积核  ： kernel size </p>
+<p>步长 : stride</p>
+<p>填充： padding </p>
+<p>通道： channels </p>
+<p>池化：降维，减少数据计算量，减缓过拟合，特征不变形 </p>
+<p>空洞卷积 </p>
+<p>局部输入不变</p>
+<p>感受野变大</p>
+<h3 id="图卷积">图卷积</h3>
+<p><img src="/notes-media/img/image-20231027214638212-1716729705623.png" alt="image-20231027214638212"></p>
+<p>在经典卷积网络中，对于输入数据有如下要求：</p>
+<ul>
+<li>只能处理固定输入维度的数据</li>
+<li>局部输入数据必须有序</li>
+<li><img src="/notes-media/img/image-20231027214818043-1716729705624.png" alt="image-20231027214818043"></li>
+</ul>
+<p>任何的连续周期信息，可以由一组适当的正弦曲线组合而成</p>
+<ol>
+<li>频域：指将信号转换为频率的域，通过对频率的分析来研究信号的频率特性。常用的转换方法是使用傅里叶变换。在频域中，信号可以表示为各个频率分量的相对强度。</li>
+<li>谱域：指将信号转换为能量或功率的域，通过对能量或功率的分析来研究信号的能量或功率分布。常用的转换方法是使用功率谱密度函数。在谱域中，信号可以表示为各个频率分量的能量或功率。</li>
+<li>空域：指将信号转换为空间坐标的域，通过对空间坐标的分析来研究信号的空间特性。在空域中，信号可以表示为在不同空间位置上的强度。</li>
+<li>时域：指将信号转换为时间坐标的域，通过对时间坐标的分析来研究信号的时间特性。在时域中，信号可以表示为在不同时间上的变化。</li>
+</ol>
+<p>傅里叶变化是可逆的</p>
+<p>拉普拉斯矩阵： 度矩阵- 邻接矩阵</p>
+<p><img src="/notes-media/img/image-20231026230428643-1716729705624.png" alt="image-20231026230428643"></p>
+<p><a href="https://zhuanlan.zhihu.com/p/19763358">https://zhuanlan.zhihu.com/p/19763358</a></p>
+<h4 id="谱域图卷积">谱域图卷积</h4>
+<p>​	根据图谱理论和卷积定理，将数据由空域转换到谱域做处理</p>
+<p>谱域一切都是静止</p>
+<p>卷积定理： </p>
+<p><img src="/notes-media/img/image-20231027215014124-1716729705624.png" alt="image-20231027215014124"></p>
+<p><img src="/notes-media/img/image-20231027215053247-1716729705624.png" alt="image-20231027215053247"></p>
+<p><img src="/notes-media/img/image-20231027215151157-1716729705624.png" alt="image-20231027215151157"></p>
+<p><img src="/notes-media/img/image-20231027215331384-1716729705624.png" alt="image-20231027215331384"></p>
+<p><img src="/notes-media/img/image-20231027215403761-1716729705624.png" alt="image-20231027215403761"></p>
+<p><img src="/notes-media/img/image-20231027215540081-1716729705624.png" alt="image-20231027215540081"></p>
+<p><img src="/notes-media/img/image-20231027215625970-1716729705625.png" alt="image-20231027215625970"></p>
+<p><img src="/notes-media/img/image-20231027215807806-1716729705626.png" alt="image-20231027215807806"></p>
+<p><img src="/notes-media/img/image-20231027215909523-1716729705626.png" alt="image-20231027215909523"></p>
+<p><img src="/notes-media/img/image-20231027220022448-1716729705626.png" alt="image-20231027220022448"></p>
+<p><img src="/notes-media/img/image-20231027220253176-1716729705626.png" alt="image-20231027220253176"></p>
+<p><img src="/notes-media/img/image-20231027220316356-1716729705626.png" alt="image-20231027220316356"></p>
+<p><img src="/notes-media/img/image-20231027220439237-1716729705627.png" alt="image-20231027220439237"></p>
+<p><img src="/notes-media/img/image-20231027220604860-1716729705627.png" alt="image-20231027220604860"></p>
+<p><img src="/notes-media/img/image-20231027220634130-1716729705627.png" alt="image-20231027220634130"></p>
+<p><img src="/notes-media/img/image-20231027220741826-1716729705627.png" alt="image-20231027220741826"></p>
+<p><img src="/notes-media/img/image-20231027221109498-1716729705627.png" alt="image-20231027221109498"></p>
+<p><img src="/notes-media/img/image-20231027221350367-1716729705627.png" alt="image-20231027221350367"></p>
+<p><img src="/notes-media/img/image-20231027221426442-1716729705627.png" alt="image-20231027221426442"></p>
+<p><img src="/notes-media/img/image-20231027221640105-1716729705627.png" alt="image-20231027221640105"></p>
+<p><img src="/notes-media/img/image-20231027221943391-1716729705627.png" alt="image-20231027221943391"></p>
+<p><img src="/notes-media/img/image-20231027222015351-1716729705627.png" alt="image-20231027222015351"></p>
+<p><img src="/notes-media/img/image-20231027222052748-1716729705627.png" alt="image-20231027222052748"></p>
+<p><img src="/notes-media/img/image-20231027222151352-1716729705627.png" alt="image-20231027222151352"></p>
+<p><img src="/notes-media/img/image-20231027222325432-1716729705627.png" alt="image-20231027222325432"></p>
+<p><img src="/notes-media/img/image-20231027222404791-1716729705627.png" alt="image-20231027222404791"></p>
+<p><img src="/notes-media/img/image-20231027222604012-1716729705627.png" alt="image-20231027222604012"></p>
+<p><img src="/notes-media/img/image-20231027222705436-1716729705628.png" alt="image-20231027222705436"></p>
+<p><img src="/notes-media/img/image-20231027222813853-1716729705628.png" alt="image-20231027222813853"></p>
+<p><img src="/notes-media/img/image-20231027222837358-1716729705628.png" alt="image-20231027222837358"></p>
+<p><img src="/notes-media/img/image-20231027222911918-1716729705628.png" alt="image-20231027222911918"></p>
+<p><img src="/notes-media/img/image-20231027222953604-1716729705628.png" alt="image-20231027222953604"></p>
+<p><img src="/notes-media/img/image-20231027223019296-1716729705628.png" alt="image-20231027223019296"></p>
+<p><img src="/notes-media/img/image-20231027223120685-1716729705628.png" alt="image-20231027223120685"></p>
+<p><img src="/notes-media/img/image-20231027223142873-1716729705628.png" alt="image-20231027223142873"></p>
+<h4 id="空域图卷积">空域图卷积：</h4>
+<p>直接在空间上定义卷积操作</p>
+<img src="../Note_v1/imgs/image-20231026222130765.png" alt="image-20231026222130765" style="zoom: 33%;" />
+
+<p><img src="/notes-media/img/image-20231027215248862-1716729705628.png" alt="image-20231027215248862"></p>
+<p><img src="/notes-media/img/image-20231029212124902-1716729705629.png" alt="image-20231029212124902"></p>
+<p><img src="/notes-media/img/image-20231029212139564-1716729705629.png" alt="image-20231029212139564"></p>
+<p><img src="/notes-media/img/image-20231029212256611-1716729705629.png" alt="image-20231029212256611"></p>
+<p><img src="/notes-media/img/image-20231029212336893-1716729705629.png" alt="image-20231029212336893"></p>
+<p><img src="/notes-media/img/image-20231029212357863-1716729705629.png" alt="image-20231029212357863"></p>
+<p><img src="/notes-media/img/image-20231029212447252-1716729705629.png" alt="image-20231029212447252"></p>
+<p><img src="/notes-media/img/image-20231029212555839-1716729705629.png" alt="image-20231029212555839"></p>
+<p><img src="/notes-media/img/image-20231029212744028-1716729705629.png" alt="image-20231029212744028"></p>
+<p><img src="/notes-media/img/image-20231029212838108-1716729705629.png" alt="image-20231029212838108"></p>
+<p><img src="/notes-media/img/image-20231029212907134-1716729705629.png" alt="image-20231029212907134"></p>
+<p><img src="/notes-media/img/image-20231029213048510-1716729705629.png" alt="image-20231029213048510"></p>
+<p><img src="/notes-media/img/image-20231029213313682-1716729705629.png" alt="image-20231029213313682"></p>
+<p><img src="/notes-media/img/image-20231029214937633-1716729705630.png" alt="image-20231029214937633"></p>
+<p><img src="/notes-media/img/image-20231029215011179-1716729705630.png" alt="image-20231029215011179"></p>
+<p><img src="/notes-media/img/image-20231029215032135-1716729705630.png" alt="image-20231029215032135"></p>
+<p><img src="/notes-media/img/image-20231029215204288-1716729705630.png" alt="image-20231029215204288"></p>
+<p><img src="/notes-media/img/image-20231029215308421-1716729705630.png" alt="image-20231029215308421"></p>
+<p><img src="/notes-media/img/image-20231029215630550-1716729705630.png" alt="image-20231029215630550"></p>
+<p><img src="/notes-media/img/image-20231029215839590-1716729705630.png" alt="image-20231029215839590"></p>
+<p><img src="/notes-media/img/image-20231029215905027-1716729705631.png" alt="image-20231029215905027"></p>
+<p><img src="/notes-media/img/image-20231029215951172-1716729705631.png" alt="image-20231029215951172"></p>
+<p><img src="/notes-media/img/image-20231029220015043-1716729705631.png" alt="image-20231029220015043"></p>
+<p><img src="/notes-media/img/image-20231029220051281-1716729705631.png" alt="image-20231029220051281"></p>
+<p><img src="/notes-media/img/image-20231029220113516-1716729705631.png" alt="image-20231029220113516"></p>
+<p><img src="/notes-media/img/image-20231029220129726-1716729705631.png" alt="image-20231029220129726"></p>
+<p><img src="/notes-media/img/image-20231029220222750-1716729705631.png" alt="image-20231029220222750"></p>
+<p><img src="/notes-media/img/image-20231029220248575-1716729705631.png" alt="image-20231029220248575"></p>
+<p><img src="/notes-media/img/image-20231029220413015-1716729705631.png" alt="image-20231029220413015"></p>
+<p><img src="/notes-media/img/image-20231029221009017-1716729705631.png" alt="image-20231029221009017"></p>
+<p><img src="/notes-media/img/image-20231029221028569-1716729705632.png" alt="image-20231029221028569"></p>
+<h5 id="PGC">PGC：</h5>
+<p><img src="/notes-media/img/image-20231029221133816-1716729705632.png" alt="image-20231029221133816"></p>
+<p><img src="/notes-media/img/image-20231029221200198-1716729705632.png" alt="image-20231029221200198"></p>
+<p><img src="/notes-media/img/image-20231029221324472-1716729705632.png" alt="image-20231029221324472"></p>
+<p><img src="/notes-media/img/image-20231029221518074-1716729705632.png" alt="image-20231029221518074"></p>
+<p><img src="/notes-media/img/image-20231029221622031-1716729705632.png" alt="image-20231029221622031"></p>
+<p><img src="/notes-media/img/image-20231029221649530-1716729705632.png" alt="image-20231029221649530"></p>
+<p><img src="/notes-media/img/image-20231029221736188-1716729705633.png" alt="image-20231029221736188"></p>
+<p><img src="/notes-media/img/image-20231029221754148-1716729705633.png" alt="image-20231029221754148"></p>
+<p><img src="/notes-media/img/image-20231029221811213-1716729705633.png" alt="image-20231029221811213"></p>
+<p><img src="/notes-media/img/image-20231029221901085-1716729705633.png" alt="image-20231029221901085"></p>
+<p><img src="/notes-media/img/image-20231029221925449-1716729705633.png" alt="image-20231029221925449"></p>
+<p><img src="/notes-media/img/image-20231029222012221-1716729705633.png" alt="image-20231029222012221"></p>
+<p><img src="/notes-media/img/image-20231030210558522-1716729705633.png" alt="image-20231030210558522"></p>
+<p><img src="/notes-media/img/image-20231030210813877-1716729705633.png" alt="image-20231030210813877"></p>
+<p><img src="/notes-media/img/image-20231030210857118-1716729705633.png" alt="image-20231030210857118"></p>
+<p><img src="/notes-media/img/image-20231030210940893-1716729705633.png" alt="image-20231030210940893"></p>
+<p><img src="/notes-media/img/image-20231030211122235-1716729705633.png" alt="image-20231030211122235"></p>
+<p><img src="/notes-media/img/image-20231030212523697-1716729705633.png" alt="image-20231030212523697"></p>
+<h3 id="GNN">GNN</h3>
+<h3 id="GCN">GCN</h3>
+<h3 id="GAT">GAT</h3>
+<h3 id="GraphSAGE">GraphSAGE</h3>
+<p>sample and aggre</p>
+<p><img src="/notes-media/img/image-20231115201134650-1716729566664.png" alt="image-20231115201134650"></p>
+<p><img src="/notes-media/img/image-20231115201509695-1716729566665.png" alt="image-20231115201509695"></p>
+<p><img src="/notes-media/img/image-20231115201526872-1716729566665.png" alt="image-20231115201526872"></p>
+<p><img src="/notes-media/img/image-20231115201551603-1716729566665.png" alt="image-20231115201551603"></p>
+<h3 id="GraphSAGE-Mini-batch">GraphSAGE Mini-batch</h3>
+<p><img src="/notes-media/img/image-20231115202321251-1716729566665.png" alt="image-20231115202321251"></p>
+<p>K 是聚合的深度，</p>
+<p><img src="/notes-media/img/image-20231115202451755-1716729566665.png" alt="image-20231115202451755"></p>
+<p><img src="/notes-media/img/image-20231115202512583-1716729566665.png" alt="image-20231115202512583"></p>
+<h3 id="GraphSAGE-Embedding">GraphSAGE Embedding</h3>
+<h3 id="HAN">HAN</h3>
+<p>Heterogeneous Graph Attention network  经典的异构图模型</p>
+<ul>
+<li>同构图：节点类型 + 边类型 = 2</li>
+<li>异构图：节点类型 + 边类型 &gt; 2</li>
+</ul>
+<p>不同类型的边应该有不同的权值，而在同一个类型的边中，不同的邻居节点又应该有不同的权值，因此它使用了节点级别的注意力（node level attention）和语义级别的注意力（semantic level attention）</p>
+<p>定义了meta-path:</p>
+<p>即用来表示连接两个实体的一条特定的路径</p>
+<p><img src="/notes-media/img/image-20231121214222388-1716729566666.png" alt="image-20231121214222388"><img src="/notes-media/img/image-20231121214245440-1716729566666.png" alt="image-20231121214245440"></p>
+<p><a href="https://zhuanlan.zhihu.com/p/583055027">https://zhuanlan.zhihu.com/p/583055027</a></p>
+<h3 id="GTN">GTN</h3>
+<p>Graph Transformer Network</p>
+<p>因此GTNs的出现：</p>
+<ol>
+<li>提出了一种新的图变换网络，识别有用的元路径和多跳连接来学习图上的有效节点表示。</li>
+<li>图的生成是可解释的，提供有效路径连接的解释。</li>
+<li>证明了图变换网络学习的节点表示的有效性，从而获得了最佳的性能，而现有的方法在异质图的所有三种基准节点分类中都使用了领域知识</li>
+</ol>
+<p><img src="/notes-media/img/image-20231123212818989-1716729566666.png" alt="image-20231123212818989"></p>
+<p>1: meta-path generation  元路径的产生</p>
+<p><img src="/notes-media/img/image-20231123212842388-1716729566666.png" alt="image-20231123212842388"></p>
+<p>2： graph Transformer Networks </p>
+<p><img src="/notes-media/img/image-20231123212920383-1716729566666.png" alt="image-20231123212920383"></p>
+<h3 id="metapath2vec">metapath2vec:</h3>
+<p>以图结构分类可以分为同构与异构图两大类。其中</p>
+<p>1.同构图: 点类型 + 边类型=2(也就是不区分点与边类型)</p>
+<p>2.异构图：点类型 + 边类型&gt;2 </p>
+<p>metapath2vec与之前的图嵌入方法不同，metapath2vec是专门处理异质图的，利用metapath2vec我们可以得到异质图中多种不同类型节点的潜在向量表示。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/541894996">https://zhuanlan.zhihu.com/p/541894996</a></p>
+<p><img src="/notes-media/img/image-20231127213644499-1716729566666.png" alt="image-20231127213644499"></p>
+<p>其中P(u)是负采样中样本的预定义分布，这个更新公式与带负采样的skip-gram公式基本一致。</p>
+<p>元路径随机游走：</p>
+<p>一个meta-path的scheme被定义为：</p>
+<p><img src="/notes-media/img/image-20231127213809079-1716729566666.png" alt="image-20231127213809079"></p>
+<p>元路径中相邻节点的类型是不一样的，即vi和vi+1属于不同类型的节点，表示两个节点间的关系。</p>
+<p><img src="/notes-media/img/image-20231127213911878-1716729566666.png" alt="image-20231127213911878"></p>
+<p><img src="/notes-media/img/image-20231127213945082-1716729566666.png" alt="image-20231127213945082"></p>
+<p>作者提出了Heterogeneous negative sampling的概念:</p>
+<p>当前点，下一个点，与定义的meta-path 中有相同的，则概率为 1/ 节点个数</p>
+<p>GCN，GAT，GraphSAGE都是以同构图进行研究，沿着这个同构图模型的思想出发，大胆假设一下，将异构图分成多个含单一关系的同构图，那么会发现，其实只需要解决不同关系之间的交互，就可以套用同构图的思想解决异构图的问题。</p>
+<h3 id="GATNE">GATNE</h3>
+<p>General Attributed Multiplex Herogeneous Network Eebedding </p>
+<p>直推学习 Transductive </p>
+<p>归纳式学习 inductive</p>
+<p>Transductive Model:  GATNE-T</p>
+<p><img src="/notes-media/img/image-20231128210737121-1716729566667.png" alt="image-20231128210737121"></p>
+<h3 id="BiNE">BiNE</h3>
+<p>1: 显示关系的建模， 点的直连</p>
+<p>2： 隐式关系建模 ，间接连接</p>
+<p><img src="/notes-media/img/image-20231128211152029-1716729566667.png" alt="image-20231128211152029"></p>
+<p><img src="/notes-media/img/image-20231128211343768-1716729566667.png" alt="image-20231128211343768"></p>
+<p>wij 是权重， u，v 是vector </p>
+<p><img src="/notes-media/img/image-20231128212200445-1716729566667.png" alt="image-20231128212200445"></p>
+<p><img src="/notes-media/img/image-20231128212442908-1716729566667.png" alt="image-20231128212442908"></p>
+<p><img src="/notes-media/img/image-20231128212519454-1716729566667.png" alt="image-20231128212519454"></p>
+<h3 id="SGCN">SGCN</h3>
+<p>Singed Graph Convolutional Network </p>
+<p><img src="/notes-media/img/image-20231128212716915-1716729566667.png" alt="image-20231128212716915"></p>
+<p><img src="/notes-media/img/image-20231128213106879-1716729566667.png" alt="image-20231128213106879"></p>
+<p><img src="/notes-media/img/image-20231128213302679-1716729566667.png" alt="image-20231128213302679"></p>
+<p><img src="/notes-media/img/image-20231128213147379-1716729566667.png" alt="image-20231128213147379"></p>
+<h3 id="SiGAT">SiGAT</h3>
+<p><img src="/notes-media/img/image-20231128213447608-1716729566668.png" alt="image-20231128213447608"></p>
+<h3 id="SDGNN">SDGNN</h3>
+<p>Sgned Directed Grap neural Networks </p>
+<p><img src="/notes-media/img/image-20231129211238479-1716729566668.png" alt="image-20231129211238479"></p>
+<p>![`](/notes-media/img/image-20231129211330358-1716729566668.png)</p>
+<h3 id="动态图表示">动态图表示</h3>
+<p><img src="/notes-media/img/image-20231130213846134-1716729566668.png" alt="image-20231130213846134"></p>
+<p><img src="/notes-media/img/image-20231130214142188-1716729566668.png" alt="image-20231130214142188"></p>
+<p><img src="/notes-media/img/image-20231130213956928-1716729566668.png" alt="image-20231130213956928"></p>
+<p><img src="/notes-media/img/image-20231130214108240-1716729566668.png" alt="image-20231130214108240"></p>
+<p><img src="/notes-media/img/image-20231130214307751-1716729566668.png" alt="image-20231130214307751"></p>
+<p><img src="/notes-media/img/image-20231130214338664-1716729566668.png" alt="image-20231130214338664"></p>
+<h3 id="DySAT">DySAT</h3>
+<p><img src="/notes-media/img/image-20231130214512016-1716729566668.png" alt="image-20231130214512016"></p>
+<p><img src="/notes-media/img/image-20231130214748822-1716729566669.png" alt="image-20231130214748822"></p>
+<p><img src="/notes-media/img/image-20231130214810404-1716729566669.png" alt="image-20231130214810404"></p>
+<p><img src="/notes-media/img/image-20231130215031813-1716729566669.png" alt="image-20231130215031813"></p>
+<p>v 节点， T 时刻</p>
+<p>只能看到j 时刻之前的值</p>
+<p><img src="/notes-media/img/image-20231130215532112-1716729566669.png" alt="image-20231130215532112"></p>
+<h3 id="EvolveGCN">EvolveGCN:</h3>
+<p>W 不是通过GCN学习，而是通过RNN 学习</p>
+<p><img src="/notes-media/img/image-20231204204918962-1716729566669.png" alt="image-20231204204918962"></p>
+<p><img src="/notes-media/img/image-20231204205055389-1716729566669.png" alt="image-20231204205055389"></p>
+<h3 id="Streaming-GNN">Streaming GNN</h3>
+<p><img src="/notes-media/img/image-20231204205146316-1716729566669.png" alt="image-20231204205146316"></p>
+<p><img src="/notes-media/img/image-20231204205235059-1716729566669.png" alt="image-20231204205235059"></p>
+<p><img src="/notes-media/img/image-20231204205323317-1716729566669.png" alt="image-20231204205323317"></p>
+<h3 id="DGNN">DGNN</h3>
+<h3 id="TGAT">TGAT</h3>
+<p>pytorch-gemeric</p>
+<p>V : vertex </p>
+<p>E:  edge </p>
+<p>U : Global attributes </p>
+<p>A： 邻接矩阵 ：</p>
+<p>非结构化处理数据的难点：</p>
+<ol>
+<li>图的大小是任意的，拓扑结构复杂</li>
+<li>没有固定的节点顺序</li>
+<li>图是动态的，包含多模态特征</li>
+</ol>
+<p>message passing nural network :</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mclose">)</span></span></span></span></span></div>
+
+
+<p>与基本的神经网络，增加了一个邻居矩阵，</p>
+<img src="../Note_v1/imgs/image-20231015212310503.png" alt="image-20231015212310503" style="zoom:50%;" />
+
+<p><img src="../Note_v1/imgs/image-20231015215551974.png" alt="GNN 示意"></p>
+<p><strong>GNN 族速查</strong>：GCN（谱域卷积）、GAT（注意力邻居）、GraphSAGE（采样聚合）、HAN/GTN（异质元路径）、DySAT / EvolveGCN / TGAT（动态图）。</p>
+<p>输入是节点特征；邻接矩阵结构通常固定，多层 GNN 扩大感受野。</p>
+<p>感受野：</p>
+<p>多层GNN ， 就是提高感受野</p>
+<p>GCN：</p>
+<p>各个节点输入特征， 网络结构图</p>
+<p>A： 邻接矩阵 + 对角都设置为1 ， 就是把自己加上</p>
+<p>D： 度矩阵</p>
+<p>F: 特征矩阵</p>
+<p>I： 单位矩阵 ， 对角线都是1</p>
+<p>都是对称矩阵</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1/2</span></span></span></span></span></span></span></span></span><span class="mord mathnormal">A</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1/2</span></span></span></span></span></span></span></span></span></span><span class="mspace katex-newline"></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1/2</span></span></span></span></span></span></span></span></span><span class="mord mathnormal">A</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1/2</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord cjk_fallback">拉普拉斯矩阵</span><span class="mclose">)</span></span><span class="mspace katex-newline"></span></span></span></span></div>
+
+
+<p><img src="/notes-media/img/image-20231015214853027-1697380164785-1716729566669.png" alt="image-20231015214853027"></p>
+<p><img src="/notes-media/img/image-20231015215730555-1716729566669.png" alt="image-20231015215730555"></p>
+<img src="../Note_v1/imgs/image-20231015222608447.png" alt="image-20231015222608447" style="zoom:50%;" />
+
+
+
+<p><img src="/notes-media/img/image-20231015222819485-1716729566669.png" alt="image-20231015222819485"></p>
+<p><img src="/notes-media/img/image-20231015223454546-1716729566669.png" alt="image-20231015223454546"></p>
+<p><img src="/notes-media/img/image-20231015223734761-1716729566669.png" alt="image-20231015223734761"></p>
+<p><img src="/notes-media/img/image-20231015224024231-1716729566669.png" alt="image-20231015224024231"></p>
+<p><img src="/notes-media/img/image-20231015224051681-1716729566670.png" alt="image-20231015224051681"></p>
+<p><img src="/notes-media/img/image-20231015224829347-1716729566670.png" alt="image-20231015224829347"></p>
+<p><img src="/notes-media/img/image-20231015224856685-1716729566670.png" alt="image-20231015224856685"></p>
+<p><img src="/notes-media/img/image-20231015225008883-1716729566670.png" alt="image-20231015225008883"></p>
+<p><img src="/notes-media/img/image-20231015225049899-1716729566670.png" alt="image-20231015225049899"></p>
+<p>Graph Embedding：</p>
+<ol>
+<li>矩阵分解</li>
+<li>随机游走</li>
+<li>深度学习</li>
+</ol>
+<p>GAT</p>
+<p><strong>GVP</strong>（Geometric Vector Perceptrons）：几何向量感知机，用于 3D 结构等。</p>
+<hr>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://github.com/shenweichen/GraphEmbedding">GraphEmbedding 实现</a></li>
+<li>相关 KG 笔记：<a href="./3-KG.md">3-KG.md</a></li>
+</ul>
+</div> </div> <p class="note-crosslink muted" data-astro-cid-5eggoaxc>
+经审核的对外副本见 <a href="/knowledge/" data-astro-cid-5eggoaxc>知识库</a>（<code data-astro-cid-5eggoaxc>publish/</code>，路径与 wiki 主题对应）。
+</p> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。<span class="footer-dot"> ● </span> Built with Astro</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','联系我':'Contact','了解我':'About me','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','构建 AI Agent、数据系统和机器学习的技术实践者。':'An engineer building AI agents, data systems, and machine learning applications.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品开发和落地交付的端到端能力。':'A data scientist combining algorithm R&D, engineering practice, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software development and production rollout.',
+    '从 0 到 1 构建算法平台、数据平台与 DevOps 平台的端到端能力，打通算法研发、数据治理、知识工程到云原生部署的完整链路。在生物药 CMC 领域，擅长将工艺与质量业务转化为可计算、可推理的领域知识，并构建具备任务分解、工具调用与可追溯引用能力的 Agent 系统，推动 AI 技术从算法研发走向工程化落地与产品交付。':'End-to-end capability building algorithm, data, and DevOps platforms from zero to one—linking algorithm R&D, data governance, knowledge engineering, and cloud-native deployment. In biopharma CMC, I turn process and quality into computable, reasoning-ready domain knowledge and build Agent systems with task decomposition, tool use, and traceable citations—moving AI from research to engineered delivery and products.',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。':'Covers Harness Engineering, data platforms, modeling, full-stack delivery, and cloud-native operations—focused on scalable, auditable, production-grade practice.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '基于公开履历整理，企业细节已做概括性表述。':'Summarized from a public résumé; employer details are generalized.',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.'
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','项目作品集 · Boyang Wang':'Selected projects · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> 
