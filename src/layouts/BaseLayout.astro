@@ -428,10 +428,10 @@ body{background:linear-gradient(180deg,#fbfcff 0%,var(--bg) 320px)}
 .grid-3{gap:22px}.grid-2{gap:24px}.card{border-radius:16px;box-shadow:var(--shadow)}.card-pad{padding:28px}.tag{padding:6px 10px}.button-primary,.button-secondary,.contact-pill{min-height:42px;padding:11px 18px}.text-link{display:inline-flex;align-items:center;gap:5px}
 .site-header,.site-footer{max-width:var(--content-max)}
 @media (min-width:1180px){
-  .home-hero{grid-template-columns:minmax(0,1.05fr) minmax(440px,.95fr);gap:clamp(56px,7vw,120px);padding:96px 0 48px}
-  .home-hero .hero-copy{max-width:680px}.hero-visual{padding:0}.portrait-placeholder{height:420px}.article-art{height:178px}.project-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.work-art{height:180px}.knowledge-layout{grid-template-columns:252px minmax(0,1fr);gap:34px}.knowledge-sidebar{position:sticky;top:24px}.blog-list{max-width:1080px}.about-hero{gap:clamp(64px,8vw,136px);padding:88px 0 48px}.about-portrait{height:420px}.impact-section{gap:clamp(60px,8vw,140px)}
+  .home-hero:not(.home-hero-compact){grid-template-columns:minmax(0,1.05fr) minmax(440px,.95fr);gap:clamp(56px,7vw,120px);padding:96px 0 48px}
+  .home-hero:not(.home-hero-compact) .hero-copy{max-width:680px}.home-hero:not(.home-hero-compact) .hero-visual{padding:0}.home-hero:not(.home-hero-compact) .portrait-placeholder{height:420px}.article-art{height:178px}.project-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.work-art{height:180px}.knowledge-layout{grid-template-columns:252px minmax(0,1fr);gap:34px}.knowledge-sidebar{position:sticky;top:24px}.blog-list{max-width:1080px}.about-hero{gap:clamp(64px,8vw,136px);padding:88px 0 48px}.about-portrait{height:420px}.impact-section{gap:clamp(60px,8vw,140px)}
 }
-@media (min-width:1540px){.home-hero{grid-template-columns:1fr 620px}.portrait-placeholder{height:450px}.page-hero{padding-top:96px}}
+@media (min-width:1540px){.home-hero:not(.home-hero-compact){grid-template-columns:1fr 620px}.home-hero:not(.home-hero-compact) .portrait-placeholder{height:450px}.page-hero{padding-top:96px}}
 @media (max-width:850px){.wrap{width:min(100% - 48px,var(--content-max))}.section{margin-top:72px}.page-hero{padding-top:64px}}
 @media (max-width:650px){.wrap{width:calc(100% - 32px)}.site-header{height:72px}.section{margin-top:52px}.page-hero{padding:48px 0 24px}.card-pad{padding:22px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}

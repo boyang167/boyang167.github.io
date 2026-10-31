@@ -24,26 +24,481 @@ const projects = [
 ];
 ---
 <BaseLayout title="Boyang Wang · AI & Data Engineering" description="个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。">
-  <div class="wrap home-hero" id="top">
-    <div class="hero-copy">
-      <div class="eyebrow">AI ENGINEERING · DATA SYSTEMS · MACHINE LEARNING</div>
-      <div class="hero-actions">
-        <a class="button-primary" href="/about/">了解我 <span>↗</span></a>
-        <a class="button-secondary" href="/projects/">探索项目</a>
+  <section class="wrap home-intro" id="top">
+    <div class="home-hero home-hero-compact">
+      <div class="hero-copy">
+        <div class="eyebrow">AI ENGINEERING · DATA SYSTEMS · MACHINE LEARNING</div>
+        <h1 class="hero-title">
+          <span class="hero-title-lead">你好，我是</span>
+          Boyang Wang
+        </h1>
+        <p class="hero-lead muted">
+          构建 AI Agent、数据系统和机器学习的技术实践者。
+        </p>
+        <div class="hero-actions">
+          <a class="button-primary" href="/about/">了解我 <span>↗</span></a>
+          <a class="button-secondary" href="/projects/">探索项目</a>
+        </div>
+        <div class="hero-proof">
+          <span><b>01</b> 工程实践</span>
+          <span><b>02</b> 持续研究</span>
+          <span><b>03</b> 开放分享</span>
+        </div>
+        <nav class="hero-quick" aria-label="快捷入口">
+          <a href="/blog/">技术博客</a>
+          <a href="/notes/">笔记</a>
+          <a href="/knowledge/">知识库</a>
+        </nav>
       </div>
-      <div class="hero-proof">
-        <span><b>01</b> 工程实践</span>
-        <span><b>02</b> 持续研究</span>
-        <span><b>03</b> 开放分享</span>
+      <div class="hero-visual">
+        <div class="portrait-placeholder">
+          <div class="portrait-orbit orbit-one"></div>
+          <div class="portrait-orbit orbit-two"></div>
+          <div class="avatar-monogram">BW</div>
+          <div class="floating-chip chip-top">✦ AI Systems</div>
+          <div class="floating-chip chip-bottom">⌘ Keep building</div>
+        </div>
+        <div class="visual-caption">Curiosity → Experiments → Systems</div>
       </div>
     </div>
-    <div class="hero-visual"><div class="portrait-placeholder"><div class="portrait-orbit orbit-one"></div><div class="portrait-orbit orbit-two"></div><div class="avatar-monogram">BW</div><div class="floating-chip chip-top">✦ AI Systems</div><div class="floating-chip chip-bottom">⌘ Keep building</div></div><div class="visual-caption">Curiosity → Experiments → Systems</div></div>
-  </div>
-  <section class="wrap section"><div class="section-head"><div><div class="eyebrow">SELECTED WRITING</div><h2>最近在思考什么</h2></div><a class="text-link" href="/blog/">全部文章 ↗</a></div><div class="grid-3">{featured.map((item) => <a class="card article-card" href={item.href}><div class="article-art art-blue"><span>{item.icon}</span><i></i><i></i><i></i></div><div class="article-body"><span class="eyebrow">{item.tag}</span><h3>{item.title}</h3><p class="muted">{item.desc}</p><div class="card-meta"><span>{item.date}</span><span>阅读 {item.readTime} ↗</span></div></div></a>)}</div></section>
-  <section class="wrap section"><div class="section-head"><div><div class="eyebrow">SELECTED PROJECTS</div><h2>从想法到可用的系统</h2></div><a class="text-link" href="/projects/">查看项目集 ↗</a></div><div class="grid-3">{projects.map((project) => <article class="card project-card"><div class="project-top"><div class="card-icon">{project.icon}</div><span class="status"><i></i>{project.status}</span></div><div class="eyebrow">{project.kind}</div><h3>{project.title}</h3><p class="muted">{project.desc}</p><a class="text-link" href="/projects/">了解项目 →</a></article>)}</div></section>
-  <section class="wrap section direction-section"><div><div class="eyebrow">WHAT I EXPLORE</div><h2>技术兴趣与研究方向</h2><p class="muted">连接 AI 能力、数据基础设施与真实业务问题。</p></div><div class="direction-grid"><div><span>01</span><b>AI Agent</b><small>Harness · Workflow · MCP</small></div><div><span>02</span><b>Data Engineering</b><small>Data Platform · SQL · Metadata</small></div><div><span>03</span><b>Machine Learning</b><small>Modeling · Validation · MLOps</small></div><div><span>04</span><b>System Design</b><small>Architecture · Reliability · Scale</small></div></div></section>
-  <section class="wrap about-callout"><div><div class="eyebrow">A LITTLE MORE ABOUT ME</div><h2>不只关注技术是什么，<br/>更关注它如何真正发挥作用。</h2><p class="muted">我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。</p><a class="button-primary" href="/about/">认识我 <span>↗</span></a></div><div class="quote-mark">“</div></section>
+
+    <div class="hero-writing">
+      <div class="section-head section-head-compact">
+        <div>
+          <div class="eyebrow">SELECTED WRITING</div>
+          <h2>最近在思考什么</h2>
+        </div>
+        <a class="text-link" href="/blog/">全部文章 ↗</a>
+      </div>
+      <div class="grid-3">
+        {featured.map((item) => (
+          <a class="card article-card" href={item.href}>
+            <div class="article-art art-blue">
+              <span>{item.icon}</span>
+              <i></i>
+              <i></i>
+              <i></i>
+            </div>
+            <div class="article-body">
+              <span class="eyebrow">{item.tag}</span>
+              <h3>{item.title}</h3>
+              <p class="muted">{item.desc}</p>
+              <div class="card-meta">
+                <span>{item.date}</span>
+                <span>阅读 {item.readTime} ↗</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section section-after-intro">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">SELECTED PROJECTS</div>
+        <h2>从想法到可用的系统</h2>
+      </div>
+      <a class="text-link" href="/projects/">查看项目集 ↗</a>
+    </div>
+    <div class="grid-3">
+      {projects.map((project) => (
+        <article class="card project-card">
+          <div class="project-top">
+            <div class="card-icon">{project.icon}</div>
+            <span class="status"><i></i>{project.status}</span>
+          </div>
+          <div class="eyebrow">{project.kind}</div>
+          <h3>{project.title}</h3>
+          <p class="muted">{project.desc}</p>
+          <a class="text-link" href="/projects/">了解项目 →</a>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="wrap section direction-section">
+    <div>
+      <div class="eyebrow">WHAT I EXPLORE</div>
+      <h2>技术兴趣与研究方向</h2>
+      <p class="muted">连接 AI 能力、数据基础设施与真实业务问题。</p>
+    </div>
+    <div class="direction-grid">
+      <div><span>01</span><b>AI Agent</b><small>Harness · Workflow · MCP</small></div>
+      <div><span>02</span><b>Data Engineering</b><small>Data Platform · SQL · Metadata</small></div>
+      <div><span>03</span><b>Machine Learning</b><small>Modeling · Validation · MLOps</small></div>
+      <div><span>04</span><b>System Design</b><small>Architecture · Reliability · Scale</small></div>
+    </div>
+  </section>
+  <section class="wrap about-callout">
+    <div>
+      <div class="eyebrow">A LITTLE MORE ABOUT ME</div>
+      <h2>不只关注技术是什么，<br />更关注它如何真正发挥作用。</h2>
+      <p class="muted">我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。</p>
+      <a class="button-primary" href="/about/">认识我 <span>↗</span></a>
+    </div>
+    <div class="quote-mark">“</div>
+  </section>
 </BaseLayout>
 <style>
-.home-hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:56px;padding:72px 0 24px}.hero-copy .eyebrow{margin-bottom:24px}.hero-actions{display:flex;gap:10px;margin-top:8px}.hero-proof{display:flex;gap:24px;margin-top:35px;color:var(--muted);font-size:11px}.hero-proof b{color:var(--text);margin-right:5px}.hero-visual{padding:20px;position:relative}.portrait-placeholder{height:350px;border-radius:30px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#cbd9ff 0%,#e7edff 32%,#d5e0f9 55%,#bcccf0 100%);display:grid;place-items:center}.portrait-placeholder:after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent 35%,#ffffff55)}.avatar-monogram{width:170px;height:170px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#f7f9ff,#aabdf5);color:#344d99;font-size:58px;font-weight:800;letter-spacing:-.1em;box-shadow:0 25px 70px #425da433;z-index:1}.portrait-orbit{position:absolute;border:1px solid #ffffffa0;border-radius:50%;width:270px;height:270px}.orbit-two{width:340px;height:340px}.floating-chip{position:absolute;z-index:2;background:#ffffffdf;border:1px solid #ffffff;border-radius:12px;padding:10px 14px;font-size:11px;font-weight:700;box-shadow:0 12px 30px #455b9c22}.chip-top{top:36px;left:16px}.chip-bottom{right:14px;bottom:38px}.visual-caption{text-align:right;font-size:10px;color:var(--muted);margin-top:12px;letter-spacing:.08em}.article-card{overflow:hidden;transition:transform .2s}.article-card:hover,.project-card:hover{transform:translateY(-4px)}.article-art{height:150px;position:relative;display:grid;place-items:center;overflow:hidden}.art-blue{background:linear-gradient(135deg,#111d38,#244a8d)}.article-art>span{font-size:52px;color:#a9c5ff;z-index:1}.article-art i{position:absolute;width:110px;height:110px;border:1px solid #82a9ff66;border-radius:25px;transform:rotate(35deg)}.article-art i:nth-of-type(2){width:170px;height:170px;transform:rotate(55deg)}.article-art i:nth-of-type(3){width:230px;height:230px;transform:rotate(20deg)}.article-body{padding:21px}.article-body h3{margin:10px 0;font-size:17px}.article-body p,.project-card p{font-size:12px;min-height:42px}.card-meta{display:flex;justify-content:space-between;gap:8px;padding-top:15px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}.project-card{padding:23px;transition:transform .2s}.project-top{display:flex;align-items:center;justify-content:space-between}.project-top .card-icon{margin:0 0 18px}.status{font-size:10px;color:var(--muted)}.status i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4dbb8b;margin-right:6px}.project-card h3{margin:9px 0}.project-card .text-link{display:inline-block;margin-top:6px}.direction-section{display:grid;grid-template-columns:.75fr 1.25fr;gap:50px;align-items:center;padding:35px 0}.direction-section h2{margin:10px 0}.direction-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.direction-grid>div{padding:18px;border:1px solid var(--line);background:var(--surface);border-radius:15px;display:grid;gap:5px}.direction-grid span{color:var(--blue);font-size:10px;font-weight:800}.direction-grid b{font-size:13px}.direction-grid small{font-size:10px;color:var(--muted)}.about-callout{position:relative;overflow:hidden;background:linear-gradient(115deg,#eaf0ff,#f9faff);border:1px solid #dce5ff;border-radius:24px;padding:38px 44px;margin-top:65px;display:flex;justify-content:space-between;align-items:center}.dark .about-callout{background:linear-gradient(115deg,#1c2944,#192133);border-color:var(--line)}.about-callout h2{margin:10px 0;font-size:27px}.about-callout p{max-width:580px;font-size:13px}.about-callout .button-primary{margin-top:5px}.quote-mark{font-size:190px;line-height:.7;color:#3767ed18;font-weight:800}@media(max-width:760px){.home-hero{grid-template-columns:1fr;gap:24px;padding-top:48px}.hero-visual{padding:0}.portrait-placeholder{height:270px}.avatar-monogram{width:135px;height:135px;font-size:45px}.portrait-orbit{width:220px;height:220px}.orbit-two{width:285px;height:285px}.hero-proof{gap:14px}.direction-section{grid-template-columns:1fr;gap:22px}.about-callout{padding:28px; margin-top:45px}.quote-mark{display:none}.article-art{height:125px}}
+  .home-intro {
+    padding: 28px 0 8px;
+  }
+  .home-hero-compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+    align-items: center;
+    gap: clamp(28px, 4vw, 48px);
+    padding: 0 0 32px;
+  }
+  .hero-copy .eyebrow {
+    margin-bottom: 14px;
+  }
+  .hero-title {
+    margin: 0 0 12px;
+    font-size: clamp(32px, 4.2vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.045em;
+  }
+  .hero-title-lead {
+    display: block;
+    margin-bottom: 4px;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--muted);
+  }
+  .hero-lead {
+    margin: 0 0 18px;
+    max-width: 34rem;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hero-proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .hero-proof b {
+    color: var(--text);
+    margin-right: 5px;
+  }
+  .hero-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .hero-quick a {
+    color: var(--blue);
+    padding: 4px 0;
+  }
+  .hero-quick a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .hero-visual {
+    padding: 0;
+    position: relative;
+    max-width: 380px;
+    justify-self: end;
+    width: 100%;
+  }
+  .home-hero-compact .portrait-placeholder {
+    height: clamp(220px, 28vw, 300px);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(
+      ellipse at 50% 35%,
+      #cbd9ff 0%,
+      #e7edff 32%,
+      #d5e0f9 55%,
+      #bcccf0 100%
+    );
+    display: grid;
+    place-items: center;
+  }
+  .home-hero-compact .portrait-placeholder:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, transparent 35%, #ffffff55);
+  }
+  .home-hero-compact .avatar-monogram {
+    width: clamp(108px, 14vw, 140px);
+    height: clamp(108px, 14vw, 140px);
+    font-size: clamp(38px, 5vw, 48px);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f7f9ff, #aabdf5);
+    color: #344d99;
+    font-weight: 800;
+    letter-spacing: -0.1em;
+    box-shadow: 0 25px 70px #425da433;
+    z-index: 1;
+  }
+  .home-hero-compact .portrait-orbit {
+    position: absolute;
+    border: 1px solid #ffffffa0;
+    border-radius: 50%;
+    width: clamp(190px, 22vw, 230px);
+    height: clamp(190px, 22vw, 230px);
+  }
+  .home-hero-compact .orbit-two {
+    width: clamp(240px, 28vw, 290px);
+    height: clamp(240px, 28vw, 290px);
+  }
+  .home-hero-compact .floating-chip {
+    position: absolute;
+    z-index: 2;
+    background: #ffffffdf;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px #455b9c22;
+  }
+  .home-hero-compact .chip-top {
+    top: 22px;
+    left: 12px;
+  }
+  .home-hero-compact .chip-bottom {
+    right: 10px;
+    bottom: 24px;
+  }
+  .visual-caption {
+    text-align: right;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+  }
+  .hero-writing {
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .section-head-compact {
+    margin-bottom: 18px;
+  }
+  .section-head-compact h2 {
+    margin: 6px 0 0;
+    font-size: clamp(22px, 2.5vw, 28px);
+  }
+  .section-after-intro {
+    margin-top: 64px;
+  }
+  .article-card {
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .article-card:hover,
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+  .article-art {
+    height: 132px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .art-blue {
+    background: linear-gradient(135deg, #111d38, #244a8d);
+  }
+  .article-art > span {
+    font-size: 46px;
+    color: #a9c5ff;
+    z-index: 1;
+  }
+  .article-art i {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border: 1px solid #82a9ff66;
+    border-radius: 25px;
+    transform: rotate(35deg);
+  }
+  .article-art i:nth-of-type(2) {
+    width: 170px;
+    height: 170px;
+    transform: rotate(55deg);
+  }
+  .article-art i:nth-of-type(3) {
+    width: 230px;
+    height: 230px;
+    transform: rotate(20deg);
+  }
+  .article-body {
+    padding: 21px;
+  }
+  .article-body h3 {
+    margin: 10px 0;
+    font-size: 17px;
+  }
+  .article-body p,
+  .project-card p {
+    font-size: 12px;
+    min-height: 42px;
+  }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 15px;
+    border-top: 1px solid var(--line);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .project-card {
+    padding: 23px;
+    transition: transform 0.2s;
+  }
+  .project-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .project-top .card-icon {
+    margin: 0 0 18px;
+  }
+  .status {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .status i {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4dbb8b;
+    margin-right: 6px;
+  }
+  .project-card h3 {
+    margin: 9px 0;
+  }
+  .project-card .text-link {
+    display: inline-block;
+    margin-top: 6px;
+  }
+  .direction-section {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: 50px;
+    align-items: center;
+    padding: 35px 0;
+  }
+  .direction-section h2 {
+    margin: 10px 0;
+  }
+  .direction-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .direction-grid > div {
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 15px;
+    display: grid;
+    gap: 5px;
+  }
+  .direction-grid span {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .direction-grid b {
+    font-size: 13px;
+  }
+  .direction-grid small {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .about-callout {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(115deg, #eaf0ff, #f9faff);
+    border: 1px solid #dce5ff;
+    border-radius: 24px;
+    padding: 38px 44px;
+    margin-top: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  :global(.dark) .about-callout {
+    background: linear-gradient(115deg, #1c2944, #192133);
+    border-color: var(--line);
+  }
+  .about-callout h2 {
+    margin: 10px 0;
+    font-size: 27px;
+  }
+  .about-callout p {
+    max-width: 580px;
+    font-size: 13px;
+  }
+  .about-callout .button-primary {
+    margin-top: 5px;
+  }
+  .quote-mark {
+    font-size: 190px;
+    line-height: 0.7;
+    color: #3767ed18;
+    font-weight: 800;
+  }
+  @media (max-width: 900px) {
+    .home-hero-compact {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .hero-visual {
+      max-width: none;
+      justify-self: stretch;
+    }
+    .home-hero-compact .portrait-placeholder {
+      height: 240px;
+    }
+  }
+  @media (max-width: 760px) {
+    .home-intro {
+      padding-top: 20px;
+    }
+    .hero-proof {
+      gap: 14px;
+    }
+    .direction-section {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .about-callout {
+      padding: 28px;
+      margin-top: 45px;
+    }
+    .quote-mark {
+      display: none;
+    }
+    .article-art {
+      height: 125px;
+    }
+    .section-after-intro {
+      margin-top: 52px;
+    }
+  }
 </style>
