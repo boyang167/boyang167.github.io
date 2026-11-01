@@ -42,9 +42,11 @@ function listMarkdownFiles(dir) {
 function collectImageRefs(markdown) {
   const refs = new Set();
   const patterns = [
+    /\]\(\.\.\/\.\.\/img\/([^)]+)\)/g,
     /\]\(\.\.\/img\/([^)]+)\)/g,
     /\]\(\.\/img\/([^)]+)\)/g,
     /\]\(img\/([^)]+)\)/g,
+    /src="\.\.\/\.\.\/img\/([^"]+)"/g,
     /src="\.\.\/img\/([^"]+)"/g,
     /src="\.\/img\/([^"]+)"/g,
   ];
@@ -56,6 +58,14 @@ function collectImageRefs(markdown) {
     }
   }
   return refs;
+}
+
+function resolveDir(dir) {
+  try {
+    return fs.realpathSync.native(dir);
+  } catch {
+    return path.resolve(dir);
+  }
 }
 
 function emptyDir(dir) {
@@ -103,6 +113,18 @@ for (const file of mdFiles) {
 }
 
 fs.mkdirSync(destRoot, { recursive: true });
+
+const imgSrcReal = resolveDir(imgSrc);
+const destReal = resolveDir(destRoot);
+if (imgSrcReal === destReal) {
+  console.error(
+    '[prepare-note-assets] abort: public/notes-media/img 与笔记 img/ 指向同一目录（常见于 junction）。',
+  );
+  console.error('  请删除 junction 后重建为空目录，再重新 build。');
+  console.error(`  img: ${imgSrc}`);
+  console.error(`  dest: ${destRoot}`);
+  process.exit(1);
+}
 emptyDir(destRoot);
 
 let copied = 0;

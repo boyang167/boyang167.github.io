@@ -80,9 +80,11 @@ function summaryFromMarkdown(content: string): string {
 
 export function rewriteNoteMediaUrls(markdown: string): string {
   return markdown
+    .replace(/\]\(\.\.\/\.\.\/img\//g, '](/notes-media/img/')
     .replace(/\]\(\.\.\/img\//g, '](/notes-media/img/')
     .replace(/\]\(\.\/img\//g, '](/notes-media/img/')
     .replace(/\]\(img\//g, '](/notes-media/img/')
+    .replace(/src="\.\.\/\.\.\/img\//g, 'src="/notes-media/img/')
     .replace(/src="\.\.\/img\//g, 'src="/notes-media/img/')
     .replace(/src="\.\/img\//g, 'src="/notes-media/img/');
 }

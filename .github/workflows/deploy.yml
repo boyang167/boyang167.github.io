@@ -60,7 +60,9 @@ jobs:
         run: npm run build
 
       - name: Verify build output
-        run: test -f dist/index.html
+        run: |
+          test -f dist/index.html
+          test -f dist/notes-media/img/1749351573496.png || (echo "::error::Missing notes-media images — check prepare-note-assets and wiki raw/1-Note/img" && exit 1)
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
