@@ -2,13 +2,37 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 
-/** Submodule path: personal-knowledge-wiki → publish/ */
-export const WIKI_PUBLISH_ROOT = path.join(
-  process.cwd(),
-  'external',
-  'personal-knowledge-wiki',
-  'publish',
-);
+function countPublishMarkdown(root: string): number {
+  if (!fs.existsSync(root)) return 0;
+  let n = 0;
+  const walk = (dir: string) => {
+    for (const name of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, name.name);
+      if (name.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (name.name.endsWith('.md') && name.name.toLowerCase() !== 'readme.md') n += 1;
+    }
+  };
+  walk(root);
+  return n;
+}
+
+/** 优先 sibling wiki（本地开发），再 fallback submodule；按 publish 页数量取更全的一侧 */
+export function resolvePublishRoot(): string {
+  const cwd = process.cwd();
+  const fallback = path.join(cwd, 'external', 'personal-knowledge-wiki', 'publish');
+  const candidates = [
+    path.join(cwd, '..', 'personal-knowledge-wiki', 'publish'),
+    fallback,
+  ].filter((p) => fs.existsSync(p));
+  if (candidates.length === 0) return fallback;
+  candidates.sort((a, b) => countPublishMarkdown(b) - countPublishMarkdown(a));
+  return candidates[0];
+}
+
+export const WIKI_PUBLISH_ROOT = resolvePublishRoot();
 
 export type KnowledgeEntry = {
   slug: string;
