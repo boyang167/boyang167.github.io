@@ -17,48 +17,50 @@ const featured = featuredPosts.map((post) => ({
   href: blogPostHref(post),
   readTime: post.data.readTime,
 }));
-const projects = [
-  { title:'Personal LLM Wiki', kind:'知识管理', desc:'基于 Markdown、Git 与 Agent Skills 的个人知识系统。', icon:'▤', status:'持续迭代' },
-  { title:'Data Agent Research', kind:'AI / 数据', desc:'研究自然语言到 SQL、语义层与企业数据问答的工程实践。', icon:'◉', status:'研究中' },
-  { title:'Bioprocess ML', kind:'机器学习', desc:'围绕生物工艺数据，探索配对数据建模与可靠验证流程。', icon:'⌁', status:'实践项目' },
-];
+const latestPostHref = featured[0]?.href ?? '/blog/';
 ---
 <BaseLayout title="Boyang Wang · AI & Data Engineering" description="个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。">
-  <section class="wrap home-intro" id="top">
+  <section class="wrap home-intro home-one-screen" id="top">
     <div class="home-hero home-hero-compact">
       <div class="hero-copy">
         <div class="eyebrow">AI ENGINEERING · DATA SYSTEMS · MACHINE LEARNING</div>
-        <h1 class="hero-title">
-          <span class="hero-title-lead">你好，我是</span>
-          Boyang Wang
-        </h1>
         <p class="hero-lead muted">
           构建 AI Agent、数据系统和机器学习的技术实践者。
         </p>
         <div class="hero-actions">
-          <a class="button-primary" href="/about/">了解我 <span>↗</span></a>
-          <a class="button-secondary" href="/projects/">探索项目</a>
+          <a class="button-primary" href={latestPostHref}>阅读最新文章 <span>↗</span></a>
+          <a class="button-secondary" href="/blog/">全部文章</a>
         </div>
-        <div class="hero-proof">
-          <span><b>01</b> 工程实践</span>
-          <span><b>02</b> 持续研究</span>
-          <span><b>03</b> 开放分享</span>
+        <p class="hero-note">工程实践 · 持续研究 · 开放分享</p>
+        <div class="project-overview">
+          <div class="project-overview-head">
+            <span class="eyebrow">PERSONAL KNOWLEDGE SYSTEM</span>
+            <p>连接学习记录、审核知识、技术写作与 Agent Skill，构建可持续迭代的个人知识系统。</p>
+          </div>
+          <div class="project-links">
+            <a href="/notes/"><span><b>笔记</b><small>原始学习记录</small></span><i>↗</i></a>
+            <a href="/knowledge/"><span><b>知识库</b><small>审核后的专题知识</small></span><i>↗</i></a>
+            <a href="/blog/"><span><b>技术博客</b><small>实践、思考与取舍</small></span><i>↗</i></a>
+            <a href="/skills/"><span><b>Skill</b><small>可复用的 Agent 工作流</small></span><i>↗</i></a>
+          </div>
         </div>
-        <nav class="hero-quick" aria-label="快捷入口">
-          <a href="/blog/">技术博客</a>
-          <a href="/notes/">笔记</a>
-          <a href="/knowledge/">知识库</a>
-        </nav>
       </div>
       <div class="hero-visual">
         <div class="portrait-placeholder">
+          <div class="portrait-grid"></div>
           <div class="portrait-orbit orbit-one"></div>
           <div class="portrait-orbit orbit-two"></div>
+          <div class="visual-meta">
+            <span>KNOWLEDGE SYSTEM</span>
+            <b>04 MODULES</b>
+          </div>
           <div class="avatar-monogram">BW</div>
-          <div class="floating-chip chip-top">✦ AI Systems</div>
-          <div class="floating-chip chip-bottom">⌘ Keep building</div>
+          <div class="visual-chip">
+            <i></i>
+            <span><small>CURRENT FOCUS</small>AI · DATA · ML</span>
+          </div>
         </div>
-        <div class="visual-caption">Curiosity → Experiments → Systems</div>
+        <div class="visual-caption">Curiosity → Experiments → Reliable Systems</div>
       </div>
     </div>
 
@@ -71,11 +73,11 @@ const projects = [
         <a class="text-link" href="/blog/">全部文章 ↗</a>
       </div>
       <div class="grid-3">
-        {featured.map((item) => (
+        {featured.map((item, index) => (
           <a class="card article-card" href={item.href}>
-            <div class="article-art art-blue">
-              <span>{item.icon}</span>
-              <i></i>
+            <div class:list={['article-art', `article-art-${index + 1}`]}>
+              <span class="article-index">0{index + 1}</span>
+              <span class="article-icon">{item.icon}</span>
               <i></i>
               <i></i>
             </div>
@@ -93,375 +95,343 @@ const projects = [
       </div>
     </div>
   </section>
-
-  <section class="wrap section section-after-intro">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">SELECTED PROJECTS</div>
-        <h2>从想法到可用的系统</h2>
-      </div>
-      <a class="text-link" href="/projects/">查看项目集 ↗</a>
-    </div>
-    <div class="grid-3">
-      {projects.map((project) => (
-        <article class="card project-card">
-          <div class="project-top">
-            <div class="card-icon">{project.icon}</div>
-            <span class="status"><i></i>{project.status}</span>
-          </div>
-          <div class="eyebrow">{project.kind}</div>
-          <h3>{project.title}</h3>
-          <p class="muted">{project.desc}</p>
-          <a class="text-link" href="/projects/">了解项目 →</a>
-        </article>
-      ))}
-    </div>
-  </section>
-  <section class="wrap section direction-section">
-    <div>
-      <div class="eyebrow">WHAT I EXPLORE</div>
-      <h2>技术兴趣与研究方向</h2>
-      <p class="muted">连接 AI 能力、数据基础设施与真实业务问题。</p>
-    </div>
-    <div class="direction-grid">
-      <div><span>01</span><b>AI Agent</b><small>Harness · Workflow · MCP</small></div>
-      <div><span>02</span><b>Data Engineering</b><small>Data Platform · SQL · Metadata</small></div>
-      <div><span>03</span><b>Machine Learning</b><small>Modeling · Validation · MLOps</small></div>
-      <div><span>04</span><b>System Design</b><small>Architecture · Reliability · Scale</small></div>
-    </div>
-  </section>
-  <section class="wrap about-callout">
-    <div>
-      <div class="eyebrow">A LITTLE MORE ABOUT ME</div>
-      <h2>不只关注技术是什么，<br />更关注它如何真正发挥作用。</h2>
-      <p class="muted">我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。</p>
-      <a class="button-primary" href="/about/">认识我 <span>↗</span></a>
-    </div>
-    <div class="quote-mark">“</div>
-  </section>
 </BaseLayout>
 <style>
   .home-intro {
-    padding: 28px 0 8px;
+    padding: clamp(20px, 3vh, 32px) 0 0;
   }
   .home-hero-compact {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
     align-items: center;
-    gap: clamp(28px, 4vw, 48px);
-    padding: 0 0 32px;
+    gap: clamp(36px, 5vw, 72px);
+    padding: 0 0 clamp(18px, 2.5vh, 26px);
   }
   .hero-copy .eyebrow {
     margin-bottom: 14px;
   }
-  .hero-title {
-    margin: 0 0 12px;
-    font-size: clamp(32px, 4.2vw, 46px);
-    line-height: 1.12;
-    letter-spacing: -0.045em;
-  }
-  .hero-title-lead {
-    display: block;
-    margin-bottom: 4px;
-    font-size: clamp(15px, 1.6vw, 18px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--muted);
-  }
   .hero-lead {
-    margin: 0 0 18px;
-    max-width: 34rem;
-    font-size: 14px;
-    line-height: 1.65;
+    margin: 12px 0 16px;
+    max-width: 38rem;
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.7;
   }
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
-  .hero-proof {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    margin-top: 18px;
+  .hero-note {
+    margin: 14px 0 0;
     color: var(--muted);
     font-size: 11px;
+    letter-spacing: 0.08em;
   }
-  .hero-proof b {
-    color: var(--text);
-    margin-right: 5px;
-  }
-  .hero-quick {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 14px;
-    margin-top: 16px;
-    padding-top: 16px;
+  .project-overview {
+    margin-top: 18px;
+    padding-top: 15px;
     border-top: 1px solid var(--line);
-    font-size: 12px;
-    font-weight: 700;
   }
-  .hero-quick a {
+  .project-overview-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: baseline;
+    margin-bottom: 9px;
+  }
+  .project-overview-head p {
+    max-width: 28rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.65;
+  }
+  .project-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .project-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 11px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  }
+  .project-links a:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--blue) 32%, var(--line));
+    background: var(--surface);
+  }
+  .project-links span {
+    display: grid;
+    gap: 1px;
+  }
+  .project-links b {
+    font-size: 11px;
+  }
+  .project-links small {
+    color: var(--muted);
+    font-size: 9px;
+  }
+  .project-links i {
     color: var(--blue);
-    padding: 4px 0;
-  }
-  .hero-quick a:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: 10px;
+    font-style: normal;
   }
   .hero-visual {
     padding: 0;
     position: relative;
-    max-width: 380px;
+    max-width: 360px;
     justify-self: end;
     width: 100%;
   }
-  .home-hero-compact .portrait-placeholder {
-    height: clamp(220px, 28vw, 300px);
-    border-radius: 24px;
+  .portrait-placeholder {
     position: relative;
+    height: clamp(240px, 26vw, 300px);
     overflow: hidden;
-    background: radial-gradient(
-      ellipse at 50% 35%,
-      #cbd9ff 0%,
-      #e7edff 32%,
-      #d5e0f9 55%,
-      #bcccf0 100%
-    );
     display: grid;
     place-items: center;
+    border: 1px solid rgba(91, 122, 205, 0.16);
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at 52% 42%, rgba(255, 255, 255, 0.96) 0 11%, transparent 36%),
+      linear-gradient(145deg, #edf2ff 0%, #dbe5ff 50%, #cbd8f5 100%);
+    box-shadow: 0 28px 80px rgba(55, 80, 145, 0.14);
   }
-  .home-hero-compact .portrait-placeholder:after {
-    content: '';
+  :global(.dark) .portrait-placeholder {
+    border-color: var(--line);
+    background:
+      radial-gradient(circle at 52% 42%, rgba(68, 84, 124, 0.72) 0 11%, transparent 36%),
+      linear-gradient(145deg, #202d48, #18243a);
+  }
+  .portrait-grid {
     position: absolute;
     inset: 0;
-    background: linear-gradient(145deg, transparent 35%, #ffffff55);
+    opacity: 0.23;
+    background-image:
+      linear-gradient(rgba(55, 103, 237, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(55, 103, 237, 0.16) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom right, transparent, #000 45%, transparent);
   }
-  .home-hero-compact .avatar-monogram {
-    width: clamp(108px, 14vw, 140px);
-    height: clamp(108px, 14vw, 140px);
-    font-size: clamp(38px, 5vw, 48px);
+  .visual-meta {
+    position: absolute;
+    z-index: 3;
+    top: 22px;
+    left: 22px;
+    display: grid;
+    gap: 2px;
+    color: #45609d;
+  }
+  :global(.dark) .visual-meta {
+    color: #aebfff;
+  }
+  .visual-meta span {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  .visual-meta b {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .avatar-monogram {
+    position: relative;
+    z-index: 2;
+    width: clamp(96px, 11vw, 124px);
+    height: clamp(96px, 11vw, 124px);
     display: grid;
     place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.85);
     border-radius: 50%;
-    background: linear-gradient(135deg, #f7f9ff, #aabdf5);
-    color: #344d99;
+    background: rgba(255, 255, 255, 0.46);
+    color: #3551a0;
+    font-size: clamp(32px, 3.5vw, 44px);
     font-weight: 800;
-    letter-spacing: -0.1em;
-    box-shadow: 0 25px 70px #425da433;
-    z-index: 1;
+    letter-spacing: -0.09em;
+    box-shadow: 0 22px 60px rgba(44, 72, 141, 0.16);
+    backdrop-filter: blur(12px);
   }
-  .home-hero-compact .portrait-orbit {
+  :global(.dark) .avatar-monogram {
+    background: rgba(32, 47, 80, 0.68);
+    color: #b9c9ff;
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .portrait-orbit {
     position: absolute;
-    border: 1px solid #ffffffa0;
+    border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 50%;
-    width: clamp(190px, 22vw, 230px);
-    height: clamp(190px, 22vw, 230px);
   }
-  .home-hero-compact .orbit-two {
-    width: clamp(240px, 28vw, 290px);
-    height: clamp(240px, 28vw, 290px);
+  .orbit-one {
+    width: clamp(180px, 20vw, 230px);
+    height: clamp(180px, 20vw, 230px);
   }
-  .home-hero-compact .floating-chip {
+  .orbit-two {
+    width: clamp(250px, 28vw, 320px);
+    height: clamp(250px, 28vw, 320px);
+    border-color: rgba(255, 255, 255, 0.42);
+  }
+  .visual-chip {
     position: absolute;
-    z-index: 2;
-    background: #ffffffdf;
-    border: 1px solid #ffffff;
-    border-radius: 12px;
-    padding: 8px 12px;
-    font-size: 10px;
+    z-index: 3;
+    left: 20px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #26395f;
+    font-size: 11px;
     font-weight: 700;
-    box-shadow: 0 12px 30px #455b9c22;
+    box-shadow: 0 12px 35px rgba(44, 72, 141, 0.12);
+    backdrop-filter: blur(14px);
   }
-  .home-hero-compact .chip-top {
-    top: 22px;
-    left: 12px;
+  :global(.dark) .visual-chip {
+    background: rgba(24, 36, 58, 0.78);
+    color: var(--text);
+    border-color: rgba(255, 255, 255, 0.12);
   }
-  .home-hero-compact .chip-bottom {
-    right: 10px;
-    bottom: 24px;
+  .visual-chip i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4aaf82;
+    box-shadow: 0 0 0 4px rgba(74, 175, 130, 0.12);
+  }
+  .visual-chip span {
+    display: grid;
+  }
+  .visual-chip small {
+    margin-bottom: 1px;
+    color: var(--muted);
+    font-size: 7px;
+    letter-spacing: 0.12em;
   }
   .visual-caption {
-    text-align: right;
+    text-align: left;
     font-size: 10px;
     color: var(--muted);
-    margin-top: 10px;
+    margin-top: 12px;
     letter-spacing: 0.08em;
   }
   .hero-writing {
-    padding-top: 28px;
+    padding-top: clamp(18px, 2.5vh, 26px);
     border-top: 1px solid var(--line);
   }
   .section-head-compact {
-    margin-bottom: 18px;
+    margin-bottom: 12px;
   }
   .section-head-compact h2 {
     margin: 6px 0 0;
-    font-size: clamp(22px, 2.5vw, 28px);
-  }
-  .section-after-intro {
-    margin-top: 64px;
+    font-size: clamp(20px, 2vw, 25px);
   }
   .article-card {
     overflow: hidden;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
-  .article-card:hover,
-  .project-card:hover {
-    transform: translateY(-4px);
+  .article-card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--blue) 26%, var(--line));
+    box-shadow: 0 18px 45px rgba(24, 36, 59, 0.09);
   }
   .article-art {
-    height: 132px;
     position: relative;
+    min-height: 74px;
+    overflow: hidden;
+    padding: 13px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+  }
+  .article-art-1 {
+    background: linear-gradient(145deg, #192848, #294d90);
+  }
+  .article-art-2 {
+    background: linear-gradient(145deg, #24345f, #526cb2);
+  }
+  .article-art-3 {
+    background: linear-gradient(145deg, #173d58, #287a91);
+  }
+  .article-index {
+    position: relative;
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .article-icon {
+    position: relative;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
     display: grid;
     place-items: center;
-    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #d8e3ff;
+    font-size: 15px;
+    backdrop-filter: blur(10px);
   }
-  .art-blue {
-    background: linear-gradient(135deg, #111d38, #244a8d);
-  }
-  .article-art > span {
-    font-size: 46px;
-    color: #a9c5ff;
-    z-index: 1;
-  }
-  .article-art i {
+  .article-art > i {
     position: absolute;
-    width: 110px;
-    height: 110px;
-    border: 1px solid #82a9ff66;
-    border-radius: 25px;
+    width: 150px;
+    height: 150px;
+    right: 15%;
+    top: -70%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 44px;
     transform: rotate(35deg);
   }
-  .article-art i:nth-of-type(2) {
-    width: 170px;
-    height: 170px;
-    transform: rotate(55deg);
-  }
-  .article-art i:nth-of-type(3) {
-    width: 230px;
-    height: 230px;
-    transform: rotate(20deg);
+  .article-art > i:last-child {
+    width: 220px;
+    height: 220px;
+    right: 32%;
+    top: -105%;
+    transform: rotate(58deg);
   }
   .article-body {
-    padding: 21px;
+    padding: 14px 16px;
   }
   .article-body h3 {
-    margin: 10px 0;
-    font-size: 17px;
+    margin: 7px 0 5px;
+    font-size: 15px;
+    line-height: 1.3;
   }
-  .article-body p,
-  .project-card p {
-    font-size: 12px;
-    min-height: 42px;
+  .article-body p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-bottom: 9px;
+    font-size: 10px;
+    line-height: 1.6;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 32px;
   }
   .card-meta {
     display: flex;
     justify-content: space-between;
     gap: 8px;
-    padding-top: 15px;
+    padding-top: 9px;
     border-top: 1px solid var(--line);
     font-size: 10px;
     color: var(--muted);
   }
-  .project-card {
-    padding: 23px;
-    transition: transform 0.2s;
-  }
-  .project-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .project-top .card-icon {
-    margin: 0 0 18px;
-  }
-  .status {
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .status i {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #4dbb8b;
-    margin-right: 6px;
-  }
-  .project-card h3 {
-    margin: 9px 0;
-  }
-  .project-card .text-link {
-    display: inline-block;
-    margin-top: 6px;
-  }
-  .direction-section {
-    display: grid;
-    grid-template-columns: 0.75fr 1.25fr;
-    gap: 50px;
-    align-items: center;
-    padding: 35px 0;
-  }
-  .direction-section h2 {
-    margin: 10px 0;
-  }
-  .direction-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .direction-grid > div {
-    padding: 18px;
-    border: 1px solid var(--line);
-    background: var(--surface);
-    border-radius: 15px;
-    display: grid;
-    gap: 5px;
-  }
-  .direction-grid span {
-    color: var(--blue);
-    font-size: 10px;
-    font-weight: 800;
-  }
-  .direction-grid b {
-    font-size: 13px;
-  }
-  .direction-grid small {
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .about-callout {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(115deg, #eaf0ff, #f9faff);
-    border: 1px solid #dce5ff;
-    border-radius: 24px;
-    padding: 38px 44px;
-    margin-top: 65px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  :global(.dark) .about-callout {
-    background: linear-gradient(115deg, #1c2944, #192133);
-    border-color: var(--line);
-  }
-  .about-callout h2 {
-    margin: 10px 0;
-    font-size: 27px;
-  }
-  .about-callout p {
-    max-width: 580px;
-    font-size: 13px;
-  }
-  .about-callout .button-primary {
-    margin-top: 5px;
-  }
-  .quote-mark {
-    font-size: 190px;
-    line-height: 0.7;
-    color: #3767ed18;
-    font-weight: 800;
+  @media (min-width: 901px) {
+    :global(body:has(.home-one-screen) .site-footer) {
+      margin-top: 24px;
+      padding: 14px 0 18px;
+    }
   }
   @media (max-width: 900px) {
     .home-hero-compact {
@@ -469,11 +439,11 @@ const projects = [
       gap: 24px;
     }
     .hero-visual {
-      max-width: none;
+      max-width: 560px;
       justify-self: stretch;
     }
-    .home-hero-compact .portrait-placeholder {
-      height: 240px;
+    .portrait-placeholder {
+      height: 300px;
     }
   }
   @media (max-width: 760px) {
@@ -483,22 +453,21 @@ const projects = [
     .hero-proof {
       gap: 14px;
     }
-    .direction-section {
+    .home-intro {
+      padding-top: 36px;
+    }
+    .project-overview-head {
+      display: grid;
+      gap: 7px;
+    }
+    .portrait-placeholder {
+      height: 260px;
+      border-radius: 24px;
+    }
+  }
+  @media (max-width: 480px) {
+    .project-links {
       grid-template-columns: 1fr;
-      gap: 22px;
-    }
-    .about-callout {
-      padding: 28px;
-      margin-top: 45px;
-    }
-    .quote-mark {
-      display: none;
-    }
-    .article-art {
-      height: 125px;
-    }
-    .section-after-intro {
-      margin-top: 52px;
     }
   }
 </style>

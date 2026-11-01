@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  listSkillCategories,
+  loadWikiSkills,
+  skillCategoryLabel,
+  wikiSkillsAvailable,
+} from '../../lib/wiki-skills';
+
+const entries = loadWikiSkills();
+const categories = listSkillCategories();
+const skillsReady = wikiSkillsAvailable();
+
+const catAnchor = (id: string) => `cat-${id.replace(/[^a-zA-Z0-9-]/g, '-')}`;
+
+const byCategory = new Map<string, typeof entries>();
+for (const entry of entries) {
+  const list = byCategory.get(entry.category) ?? [];
+  list.push(entry);
+  byCategory.set(entry.category, list);
+}
+
+const displayCategories = categories.length > 0 ? categories : [];
+---
+
+<BaseLayout
+  title="Agent Skill · Boyang Wang"
+  description="收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。"
+>
+  <section class="wrap page-hero">
+    <div class="eyebrow">AGENT SKILLS</div>
+    <h1>Skill</h1>
+    <p class="muted hero-desc">
+      个人 Agent Skill 库：每个技能一个目录，内含 <code>SKILL.md</code>（name / description 写在 YAML 头）。
+    </p>
+  </section>
+  <section class="wrap knowledge-layout">
+    <aside class="knowledge-sidebar card">
+      <div class="search-fake">⌕ <span>按目录浏览</span></div>
+      <b>Skill 目录</b>
+      <a class="selected" href="#articles">⌂　总览</a>
+      {displayCategories.map((cat) => (
+        <a href={`#${catAnchor(cat)}`}>✦　{skillCategoryLabel(cat)}</a>
+      ))}
+      <div class="sidebar-note">
+        <span>⌘</span>
+        <b>{skillsReady ? 'raw/4-Skill' : '未找到 Skill 目录'}</b>
+        <small>
+          {skillsReady
+            ? `${entries.length} 个 Skill`
+            : '初始化 wiki 或放置 sibling 仓库'}
+        </small>
+      </div>
+    </aside>
+    <div class="knowledge-main" id="articles">
+      <div class="knowledge-heading">
+        <div>
+          <h2>全部 Skill</h2>
+          <p class="muted">与笔记、知识库并列的第三层：可复用的 Agent 工作流与规范。</p>
+        </div>
+        <span class="tag">SKILL.md</span>
+      </div>
+      {entries.length === 0 ? (
+        <div class="card empty-card">
+          <p class="muted">
+            暂无 Skill。在 wiki 仓库
+            <code>raw/4-Skill/&lt;skill-name&gt;/SKILL.md</code> 下添加文件，保存后重新构建站点即可出现在此。
+          </p>
+        </div>
+      ) : (
+        displayCategories.map((cat) => {
+          const list = byCategory.get(cat) ?? [];
+          if (list.length === 0) return null;
+          return (
+            <div class="category-block" id={catAnchor(cat)}>
+              <h3>{skillCategoryLabel(cat)}</h3>
+              <div class="grid-2">
+                {list.map((item) => (
+                  <a class="card knowledge-card" href={`/skills/${item.slug}/`}>
+                    <div class="card-icon">✦</div>
+                    <h3>{item.title}</h3>
+                    <p class="muted">{item.summary || item.name}</p>
+                    <div class="knowledge-bottom">
+                      <span>{item.name}</span>
+                      <span>→</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          );
+        })
+      )}
+      <div class="knowledge-banner">
+        <div class="card-icon">▤</div>
+        <div>
+          <b>文件约定</b>
+          <p class="muted">
+            遵循 Cursor Skill 格式：frontmatter 含 <code>name</code>、<code>description</code>；正文为 Agent
+            执行说明。可选子目录 <code>references/</code> 等不会被当作独立 Skill。
+          </p>
+        </div>
+        <a href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">Wiki 仓库 ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .hero-desc {
+    max-width: 42rem;
+    font-size: 13px;
+    margin: 10px 0 0;
+  }
+  .knowledge-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+  }
+  .knowledge-sidebar {
+    padding: 16px;
+    height: max-content;
+    display: grid;
+    gap: 6px;
+  }
+  .search-fake {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .knowledge-sidebar > b {
+    font-size: 11px;
+    padding: 0 8px 6px;
+  }
+  .knowledge-sidebar > a {
+    padding: 9px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .knowledge-sidebar > a.selected,
+  .knowledge-sidebar > a:hover {
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
+  .sidebar-note {
+    margin-top: 20px;
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    display: grid;
+    gap: 4px;
+  }
+  .sidebar-note span {
+    color: var(--blue);
+  }
+  .sidebar-note b {
+    font-size: 11px;
+  }
+  .sidebar-note small {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .knowledge-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .knowledge-heading h2 {
+    font-size: 22px;
+    margin: 0 0 5px;
+  }
+  .knowledge-heading p {
+    font-size: 11px;
+    margin: 0;
+  }
+  .category-block {
+    margin-bottom: 28px;
+  }
+  .category-block h3 {
+    font-size: 14px;
+    margin: 0 0 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .knowledge-card {
+    padding: 22px;
+    transition: transform 0.2s;
+  }
+  .knowledge-card:hover {
+    transform: translateY(-3px);
+  }
+  .knowledge-card .card-icon {
+    margin-bottom: 15px;
+  }
+  .knowledge-card h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+  }
+  .knowledge-card p {
+    font-size: 11px;
+    min-height: 40px;
+  }
+  .knowledge-bottom {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .knowledge-bottom span:last-child {
+    color: var(--blue);
+  }
+  .empty-card {
+    padding: 24px;
+  }
+  .knowledge-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: var(--surface);
+  }
+  .knowledge-banner .card-icon {
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .knowledge-banner > div:nth-child(2) {
+    flex: 1;
+  }
+  .knowledge-banner b {
+    font-size: 12px;
+  }
+  .knowledge-banner p {
+    font-size: 10px;
+    margin: 4px 0 0;
+  }
+  .knowledge-banner > a {
+    font-size: 10px;
+    color: var(--blue);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .page-hero code {
+    font-size: 0.9em;
+  }
+  @media (max-width: 760px) {
+    .knowledge-layout {
+      grid-template-columns: 1fr;
+    }
+    .knowledge-sidebar {
+      display: none;
+    }
+    .knowledge-banner {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .knowledge-banner > a {
+      margin-left: 55px;
+    }
+  }
+</style>
