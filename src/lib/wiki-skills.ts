@@ -84,6 +84,39 @@ export function skillCategoryLabel(id: string): string {
   return id.replace(/-/g, ' ');
 }
 
+function firstMarkdownHeading(body: string): string | undefined {
+  const match = body.match(/^#\s+(.+)$/m);
+  return match?.[1]?.trim();
+}
+
+/** 列表与页头展示用标题（避免 frontmatter name 全是 kebab-case） */
+export function skillDisplayTitle(entry: Pick<WikiSkillEntry, 'name' | 'title' | 'body' | 'slug'>): string {
+  const fromBody = entry.body ? firstMarkdownHeading(entry.body) : undefined;
+  if (fromBody) return fromBody.replace(/\s*[（(].*[)）]\s*$/, '').trim() || fromBody;
+
+  const name = entry.name.trim();
+  if (name && /^[a-z0-9]+(-[a-z0-9]+)+$/i.test(name)) {
+    return name
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join(' ');
+  }
+  if (name.toLowerCase() === 'bmad') return 'BMAD Method';
+  return entry.title || name;
+}
+
+const SKILL_ICON_BY_SLUG: Record<string, string> = {
+  'apple-design-philosophy': '◆',
+  superpowers: '⚡',
+  bmad: '▣',
+  'andrej-karpathy-skills': '◈',
+};
+
+export function skillIcon(slug: string): string {
+  const leaf = slug.split('/').pop() ?? slug;
+  return SKILL_ICON_BY_SLUG[leaf] ?? '✦';
+}
+
 let skillsCache: WikiSkillEntry[] | undefined;
 let skillsCacheRoot: string | undefined;
 

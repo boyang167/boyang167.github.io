@@ -2,7 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MermaidInit from '../../components/MermaidInit.astro';
 import { renderMarkdownDocument } from '../../lib/render-markdown';
-import { blogPostSlug, formatBlogDate, getPublishedBlogPosts } from '../../lib/blog';
+import {
+  blogPostMediaDir,
+  blogPostSlug,
+  formatBlogDate,
+  getPublishedBlogPosts,
+  rewriteBlogMediaUrls,
+} from '../../lib/blog';
 import type { BlogEntry } from '../../lib/blog';
 import 'katex/dist/katex.min.css';
 
@@ -20,7 +26,9 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, category, date, readTime, icon } = post.data;
-const { html, toc } = renderMarkdownDocument(post.body ?? '');
+const mediaDir = blogPostMediaDir(post);
+const preprocess = (md: string) => rewriteBlogMediaUrls(md, mediaDir);
+const { html, toc } = renderMarkdownDocument(post.body ?? '', preprocess);
 const dateLabel = formatBlogDate(date);
 ---
 <BaseLayout title={`${title} · Boyang Wang`} description={description}>

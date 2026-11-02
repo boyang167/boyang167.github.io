@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MermaidInit from '../../components/MermaidInit.astro';
 import { renderMarkdownDocument } from '../../lib/render-markdown';
-import { loadWikiSkills, skillCategoryLabel } from '../../lib/wiki-skills';
+import { loadWikiSkills, skillCategoryLabel, skillDisplayTitle } from '../../lib/wiki-skills';
 import 'katex/dist/katex.min.css';
 
 export function getStaticPaths() {
@@ -16,13 +16,13 @@ const { entry } = Astro.props;
 const { html, toc } = renderMarkdownDocument(entry.body);
 ---
 
-<BaseLayout title={`${entry.title} · Skill`} description={entry.summary || entry.title}>
+<BaseLayout title={`${skillDisplayTitle(entry)} · Skill`} description={entry.summary || entry.title}>
   <article class="wrap article-page">
     <a class="back-link" href="/skills/">← 返回 Skill</a>
     <header class="article-header">
       <span class="tag">{skillCategoryLabel(entry.category)}</span>
       <span class="tag tag-muted">{entry.name}</span>
-      <h1>{entry.title}</h1>
+      <h1>{skillDisplayTitle(entry)}</h1>
       {entry.summary && <p class="article-intro">{entry.summary}</p>}
       <div class="byline">
         <span class="byline-avatar">SK</span>

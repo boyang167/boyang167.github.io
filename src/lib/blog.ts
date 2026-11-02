@@ -64,6 +64,25 @@ export function blogPostSlug(entry: BlogEntry): string {
   return entry.id.replace(/\.md$/i, '');
 }
 
+/** 博客 Markdown 所在目录（相对 raw/3-blog），如 `data/AliCloudy.md` → `data` */
+export function blogPostMediaDir(entry: BlogEntry): string {
+  const id = entry.id.replace(/\\/g, '/');
+  const withoutExt = id.replace(/\.md$/i, '');
+  const slash = withoutExt.lastIndexOf('/');
+  if (slash === -1) return '';
+  return withoutExt.slice(0, slash);
+}
+
+/** 将博客 Markdown 图片改为 public/blog-media 下的绝对 URL（与 prepare-blog-assets 一致） */
+export function rewriteBlogMediaUrls(markdown: string, mediaDir: string): string {
+  const base = mediaDir ? `/blog-media/${mediaDir}` : '/blog-media';
+  return markdown
+    .replace(/!\[([^\]]*)\]\(\.\.\/img\/([^)]+)\)/g, (_, alt, rel) => `![${alt}](/blog-media/img/${rel})`)
+    .replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (_, alt, rel) => `![${alt}](${base}/${rel})`)
+    .replace(/src="\.\.\/img\//g, 'src="/blog-media/img/')
+    .replace(/src="\.\/([^"]+)"/g, `src="${base}/$1"`);
+}
+
 export function blogPostHref(entry: BlogEntry): string {
   return `/blog/${blogPostSlug(entry)}/`;
 }

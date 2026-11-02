@@ -350,12 +350,14 @@ const { title = 'Boyang Wang · Personal Tech Hub', description = 'AI Agent、�
     'Skill':'Skill',
     'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
     '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
-    '个人 Agent Skill 库：每个技能一个目录，内含':'Personal Agent Skill library: one folder per skill with a',
-    '（name / description 写在 YAML 头）。':' (name and description in YAML frontmatter).',
-    '按目录浏览':'Browse by folder',
-    'Skill 目录':'Skill directory',
-    '全部 Skill':'All skills',
-    '与笔记、知识库并列的第三层：可复用的 Agent 工作流与规范。':'A third layer alongside notes and the knowledge base: reusable Agent workflows and conventions.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
     '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
     '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
     '文件约定':'File conventions',
@@ -364,7 +366,6 @@ const { title = 'Boyang Wang · Personal Tech Hub', description = 'AI Agent、�
     '等不会被当作独立 Skill。':' are not treated as separate skills.',
     '← 返回 Skill':'← Back to skills',
     '未找到 Skill 目录':'Skill directory not found',
-    '个 Skill':' skills',
   });
   const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
   const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);

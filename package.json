@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "prepare:notes": "node scripts/prepare-note-assets.mjs",
-    "dev": "npm run prepare:notes && astro dev",
-    "build": "npm run prepare:notes && astro build",
+    "prepare:blog": "node scripts/prepare-blog-assets.mjs",
+    "dev": "npm run prepare:notes && npm run prepare:blog && astro dev",
+    "build": "npm run prepare:notes && npm run prepare:blog && astro build",
     "preview": "astro preview"
   },
   "dependencies": {
