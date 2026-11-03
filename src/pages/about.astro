@@ -2,10 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const highlights = [
-  { title: '端到端', desc: '算法设计、架构到产品交付' },
-  { title: '0 → 1', desc: '算法 / 数据 / DevOps 平台' },
-  { title: 'CMC × Agent', desc: '可计算领域知识与工具调用' },
-  { title: '工程化', desc: '云原生部署与 MLOps 治理' },
+  { n: '01', title: 'Agent Engineering', desc: 'Architecture · Harness · Runtime · Orchestration' },
+  { n: '02', title: 'Data Platform', desc: 'Governance · Knowledge Engineering · AI for BI' },
+  { n: '03', title: 'ML / DL', desc: 'Modeling · Validation · Production Lifecycle' },
+  { n: '04', title: 'CMC Digitalization', desc: 'Domain Knowledge · Process Intelligence · Delivery' },
 ];
 
 const principles = [
@@ -323,14 +323,11 @@ const splitSkillItems = (items: string) =>
       <p class="muted">
         深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。
       </p>
-      <div class="tag-row">
-        <span class="tag">Agent Harness</span>
+      <div class="tag-row" aria-label="核心技术方向">
+        <span class="tag">Agent Engineering</span>
         <span class="tag">Data Platform</span>
-        <span class="tag">CMC 数字化</span>
-        <span class="tag">MLOps</span>
-        <span class="tag">Deep Learning</span>
-        <span class="tag">DevOps</span>
-        <span class="tag">Full Stack</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">CMC Digitalization</span>
       </div>
       <div class="hero-actions">
         <a class="button-primary" href="#contact">与我交流 ↗</a>
@@ -355,12 +352,13 @@ const splitSkillItems = (items: string) =>
     </div>
   </section>
 
-  <section class="wrap stat-strip">
+  <section class="wrap focus-strip" aria-label="核心能力领域">
     {highlights.map((item) => (
-      <div>
+      <article class="focus-item">
+        <span class="focus-index">{item.n}</span>
         <strong>{item.title}</strong>
-        <span>{item.desc}</span>
-      </div>
+        <small>{item.desc}</small>
+      </article>
     ))}
   </section>
 
@@ -372,12 +370,13 @@ const splitSkillItems = (items: string) =>
         覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。
       </p>
     </div>
-    <div class="skills-grid">
-      {skillAreas.map((area) => (
+    <div class="capability-stack">
+      {skillAreas.map((area, index) => (
         <article
           class:list={[
-            'card',
-            'skill-area-card',
+            'capability-card',
+            index < 4 ? 'capability-card-primary' : 'capability-card-supporting',
+            area.layout === 'agent' && 'capability-card-featured',
             area.layout === 'agent' && 'skill-area-agent',
             area.layout === 'ml' && 'skill-area-ml',
           ]}
@@ -451,12 +450,14 @@ const splitSkillItems = (items: string) =>
         从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。
       </p>
     </div>
-    <div class="grid-3 principles">
-      {principles.map((item) => (
-        <article class="card card-pad">
-          <h3 class="principle-title"><span class="principle-index">{item.n}</span>{item.title}</h3>
+    <div class="principles-flow" aria-label="从领域知识到产品交付的方法">
+      {principles.map((item, index) => (
+        <article class="principle-step">
+          <span class="principle-index">{item.n}</span>
+          <h3>{item.title}</h3>
           <p class="principle-lead">{item.lead}</p>
           <p class="muted">{item.desc}</p>
+          {index < principles.length - 1 && <span class="principle-connector" aria-hidden="true">→</span>}
         </article>
       ))}
     </div>
@@ -470,13 +471,14 @@ const splitSkillItems = (items: string) =>
       </div>
       <span class="muted section-note">基于公开履历整理，企业细节已做概括性表述。</span>
     </div>
-    <div class="timeline">
+    <div class="experience-list">
       {timeline.map((item) => (
-        <article class="timeline-item">
-          <div class="timeline-date">{item.date}</div>
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <span class="tag">{item.tag}</span>
+        <article class="experience-item">
+          <div class="experience-meta">
+            <time>{item.date}</time>
+            <span>{item.tag}</span>
+          </div>
+          <div class="experience-content">
             <h3>{item.title}</h3>
             <p class="muted">{item.desc}</p>
           </div>
@@ -485,75 +487,84 @@ const splitSkillItems = (items: string) =>
     </div>
   </section>
 
-  <section class="wrap section impact-section">
-    <div>
-      <div class="eyebrow">OPEN KNOWLEDGE</div>
-      <h2>把过程公开，<br />让影响力持续积累。</h2>
+  <section class="wrap about-cta" id="contact">
+    <div class="about-cta-copy">
+      <div class="eyebrow">OPEN KNOWLEDGE · LET'S CONNECT</div>
+      <h2>把实践沉淀为知识，<br />把技术连接到真实问题。</h2>
       <p class="muted">
-        我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC
-        数字化等方向，希望帮助读者更快建立自己的判断框架。
+        持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。
       </p>
-      <a class="button-primary" href="/blog/">阅读技术文章 ↗</a>
     </div>
-    <div class="impact-list">
+    <nav class="about-cta-links" aria-label="内容与联系">
       <a href="/blog/">
-        <span class="impact-icon">✎</span>
-        <span><b>技术文章</b><small>系统化记录学习与工程实践</small></span>
-        <span>↗</span>
+        <span>技术博客</span>
+        <small>实践、架构与复盘</small>
+        <i>↗</i>
       </a>
       <a href="/knowledge/">
-        <span class="impact-icon">▤</span>
-        <span><b>知识库</b><small>把零散笔记组织成知识体系</small></span>
-        <span>↗</span>
+        <span>知识库</span>
+        <small>结构化领域知识</small>
+        <i>↗</i>
       </a>
-    </div>
-  </section>
-
-  <section class="wrap contact-section" id="contact">
-    <div class="eyebrow">LET'S CONNECT</div>
-    <h2>一起交流想法，探索新的可能。</h2>
-    <p class="muted">
-      如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。
-    </p>
-    <div class="contact-links">
-      <a href="https://github.com/boyang167" target="_blank" rel="noreferrer">⌘ GitHub <span>↗</span></a>
-      <a href="https://boyang167.github.io/" target="_blank" rel="noreferrer">⌂ 个人站点 <span>↗</span></a>
-    </div>
+      <a href="https://github.com/boyang167" target="_blank" rel="noreferrer">
+        <span>GitHub</span>
+        <small>代码与公开项目</small>
+        <i>↗</i>
+      </a>
+    </nav>
   </section>
 </BaseLayout>
 
 <style>
   .about-hero {
+    --about-radius-lg: 24px;
+    --about-radius-md: 16px;
+    --about-border: color-mix(in srgb, var(--line) 88%, transparent);
+    --about-accent-soft: color-mix(in srgb, var(--blue-soft) 82%, var(--surface));
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
     align-items: center;
-    gap: 70px;
-    padding: 65px 0 35px;
+    gap: clamp(42px, 6vw, 78px);
+    padding: clamp(48px, 7vh, 72px) 0 38px;
   }
   .about-intro h1 {
-    margin: 15px 0 20px;
+    margin: 14px 0 18px;
+    font-size: clamp(42px, 5.4vw, 72px);
+    line-height: 1.03;
+    letter-spacing: -0.055em;
   }
   .about-intro h1 span {
     color: var(--blue);
   }
   .about-lead {
-    font-size: 19px;
+    margin: 0 0 14px;
+    font-size: clamp(17px, 1.55vw, 20px);
     font-weight: 700;
-    max-width: 560px;
+    line-height: 1.58;
+    max-width: 650px;
   }
   .about-intro .muted {
     font-size: 13px;
-    max-width: 600px;
+    line-height: 1.82;
+    max-width: 680px;
   }
   .about-intro .tag-row {
-    margin: 23px 0;
+    margin: 22px 0;
+    gap: 7px;
+  }
+  .about-intro .tag {
+    background: transparent;
+    border-color: color-mix(in srgb, var(--blue) 18%, var(--line));
+    color: color-mix(in srgb, var(--blue) 76%, var(--text));
   }
   .about-portrait {
-    min-height: 365px;
-    border-radius: 28px;
-    background: linear-gradient(160deg, #eef2fc 0%, #e2e9f8 45%, #d5dff5 100%);
+    min-height: 390px;
+    border-radius: var(--about-radius-lg);
+    background:
+      radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.88), transparent 31%),
+      linear-gradient(155deg, #eef2fc 0%, #dce5f8 54%, #cfdaf2 100%);
     border: 1px solid rgba(255, 255, 255, 0.65);
-    box-shadow: 0 20px 50px rgba(44, 72, 141, 0.08);
+    box-shadow: 0 24px 60px rgba(44, 72, 141, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -564,7 +575,7 @@ const splitSkillItems = (items: string) =>
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 280px;
+    width: min(100%, 300px);
   }
   .portrait-icon {
     color: #4a6fd4;
@@ -609,6 +620,7 @@ const splitSkillItems = (items: string) =>
     font-weight: 700;
     line-height: 1.55;
     color: #30436f;
+    width: 100%;
   }
   :global(.dark) .about-portrait {
     background: linear-gradient(160deg, #1e2a42 0%, #243352 100%);
@@ -632,44 +644,74 @@ const splitSkillItems = (items: string) =>
     border-top-color: rgba(255, 255, 255, 0.1);
     color: #c5d0ea;
   }
-  .stat-strip {
+  .focus-strip {
+    --about-border: color-mix(in srgb, var(--line) 88%, transparent);
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 22px 10px;
+    border: 1px solid var(--about-border);
+    border-radius: 20px;
+    padding: 8px;
     box-shadow: var(--shadow);
   }
-  .stat-strip > div {
-    padding: 0 20px;
-    border-right: 1px solid var(--line);
+  .focus-item {
+    min-width: 0;
+    padding: 18px 20px;
+    border-right: 1px solid var(--about-border);
     display: grid;
-    gap: 4px;
+    grid-template-columns: auto 1fr;
+    gap: 4px 10px;
+    align-items: baseline;
   }
-  .stat-strip > div:last-child {
+  .focus-item:last-child {
     border: 0;
   }
-  .stat-strip strong {
-    font-size: 17px;
+  .focus-index {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+  .focus-item strong {
+    min-width: 0;
+    font-size: 15px;
     letter-spacing: -0.03em;
   }
-  .stat-strip span {
-    font-size: 11px;
+  .focus-item small {
+    grid-column: 2;
+    min-width: 0;
+    font-size: 9.5px;
+    line-height: 1.5;
     color: var(--muted);
   }
   .section-note {
     font-size: 12px;
   }
-  .principle-title {
-    font-size: 15px;
-    font-weight: 800;
-    margin: 0 0 12px;
-    letter-spacing: -0.02em;
-    line-height: 1.35;
-  }
   .principle-index {
+    display: block;
+    margin-bottom: 24px;
     color: var(--blue);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+  .principles-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .principle-step {
+    position: relative;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-top: 2px solid color-mix(in srgb, var(--blue) 72%, transparent);
+    border-radius: 0 0 16px 16px;
+    background: var(--surface);
+  }
+  .principle-step h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    letter-spacing: -0.025em;
   }
   .principle-lead {
     font-size: 13px;
@@ -677,10 +719,25 @@ const splitSkillItems = (items: string) =>
     margin: 0 0 10px;
     line-height: 1.5;
   }
-  .principles p.muted {
+  .principle-step p.muted {
     font-size: 12px;
     margin-bottom: 0;
     line-height: 1.65;
+  }
+  .principle-connector {
+    position: absolute;
+    z-index: 2;
+    top: 24px;
+    right: -13px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--blue);
+    font-size: 12px;
   }
   .capabilities-header {
     max-width: 720px;
@@ -694,18 +751,28 @@ const splitSkillItems = (items: string) =>
     font-size: 13px;
     line-height: 1.7;
   }
-  .skills-grid {
+  .capability-stack {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
     align-items: stretch;
   }
-  .skill-area-card {
+  .capability-card {
     padding: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: 0 8px 28px rgba(34, 55, 100, 0.035);
+  }
+  .capability-card-featured {
+    grid-column: 1 / -1;
+  }
+  .capability-card-supporting {
+    background: color-mix(in srgb, var(--surface) 76%, transparent);
   }
   .skill-area-agent {
     grid-column: 1 / -1;
@@ -989,10 +1056,10 @@ const splitSkillItems = (items: string) =>
     }
   }
   @media (max-width: 900px) {
-    .skills-grid {
+    .capability-stack {
       grid-template-columns: 1fr;
     }
-    .skill-area-agent {
+    .capability-card-featured {
       grid-column: auto;
     }
     .skill-area-agent .skill-project-list {
@@ -1014,179 +1081,173 @@ const splitSkillItems = (items: string) =>
       padding-top: 0;
     }
   }
-  .timeline {
-    max-width: 850px;
+  .experience-list {
+    border-top: 1px solid var(--line);
   }
-  .timeline-item {
+  .experience-item {
     display: grid;
-    grid-template-columns: 95px 20px 1fr;
-    gap: 15px;
-    min-height: 130px;
+    grid-template-columns: minmax(190px, 0.34fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
   }
-  .timeline-date {
-    font-size: 10px;
-    color: var(--muted);
+  .experience-meta {
+    display: grid;
+    align-content: start;
+    gap: 7px;
+  }
+  .experience-meta time {
+    color: var(--blue);
+    font-size: 11px;
     font-weight: 800;
-    padding-top: 5px;
+    letter-spacing: 0.04em;
   }
-  .timeline-dot {
-    position: relative;
-    width: 10px;
-    height: 10px;
-    background: var(--blue);
-    border: 3px solid var(--blue-soft);
-    border-radius: 50%;
-    margin-top: 6px;
+  .experience-meta span {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
   }
-  .timeline-dot:after {
-    content: '';
-    position: absolute;
-    width: 1px;
-    top: 9px;
-    bottom: -110px;
-    left: 1px;
-    background: var(--line);
+  .experience-content h3 {
+    margin: 0 0 9px;
+    font-size: 17px;
+    letter-spacing: -0.02em;
   }
-  .timeline-item:last-child .timeline-dot:after {
-    display: none;
-  }
-  .timeline-content {
-    padding-bottom: 27px;
-  }
-  .timeline-content h3 {
-    margin: 10px 0;
-    font-size: 16px;
-  }
-  .timeline-content p {
+  .experience-content p {
+    margin: 0;
     font-size: 12px;
-    max-width: 700px;
+    line-height: 1.75;
   }
-  .impact-section {
+  .about-cta {
+    --about-border: color-mix(in srgb, var(--line) 88%, transparent);
+    margin-top: 58px;
+    margin-bottom: 20px;
+    padding: clamp(30px, 5vw, 54px);
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 65px;
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+    gap: clamp(38px, 6vw, 80px);
     align-items: center;
-    padding: 30px 0;
+    border: 1px solid var(--about-border);
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--blue-soft) 90%, transparent), transparent 42%),
+      var(--surface);
+    box-shadow: var(--shadow);
   }
-  .impact-section h2 {
-    margin: 12px 0;
+  .about-cta h2 {
+    margin: 12px 0 14px;
+    font-size: clamp(25px, 3vw, 38px);
+    line-height: 1.18;
+    letter-spacing: -0.045em;
   }
-  .impact-section p {
+  .about-cta-copy p {
+    margin: 0;
     font-size: 13px;
-    max-width: 470px;
+    line-height: 1.75;
+    max-width: 500px;
   }
-  .impact-section .button-primary {
-    margin-top: 8px;
-  }
-  .impact-list {
+  .about-cta-links {
     display: grid;
-    gap: 10px;
+    border-top: 1px solid var(--about-border);
   }
-  .impact-list > a {
-    display: flex;
+  .about-cta-links a {
+    display: grid;
+    grid-template-columns: minmax(100px, 0.55fr) minmax(0, 1fr) auto;
     align-items: center;
-    gap: 14px;
-    padding: 17px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: var(--surface);
+    gap: 16px;
+    padding: 15px 4px;
+    border-bottom: 1px solid var(--about-border);
+    transition: color 160ms ease, padding 160ms ease;
   }
-  .impact-icon {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: var(--blue-soft);
+  .about-cta-links a:hover {
+    padding-left: 10px;
     color: var(--blue);
   }
-  .impact-list > a > span:nth-child(2) {
-    display: grid;
-    flex: 1;
-  }
-  .impact-list b {
+  .about-cta-links span {
     font-size: 13px;
+    font-weight: 800;
   }
-  .impact-list small {
+  .about-cta-links small {
     font-size: 10px;
     color: var(--muted);
+    line-height: 1.5;
   }
-  .contact-section {
-    text-align: center;
-    margin-top: 55px;
-    padding: 46px 24px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 24px;
-  }
-  .contact-section h2 {
-    margin: 12px 0;
-  }
-  .contact-section > p {
-    font-size: 12px;
-  }
-  .contact-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 22px;
-  }
-  .contact-links a {
-    display: flex;
-    gap: 22px;
-    align-items: center;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 12px;
-    font-weight: 700;
-  }
-  .contact-links a span {
+  .about-cta-links i {
+    font-style: normal;
     color: var(--blue);
+  }
+  @media (max-width: 960px) {
+    .about-hero,
+    .about-cta {
+      grid-template-columns: 1fr;
+    }
+    .about-portrait {
+      min-height: 340px;
+    }
+    .focus-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .focus-item:nth-child(2) {
+      border-right: 0;
+    }
+    .focus-item:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--about-border);
+    }
   }
   @media (max-width: 760px) {
     .about-hero {
-      grid-template-columns: 1fr;
       gap: 28px;
-      padding-top: 45px;
+      padding-top: 32px;
+    }
+    .about-intro h1 {
+      font-size: clamp(40px, 13vw, 58px);
     }
     .about-portrait {
-      min-height: 320px;
+      min-height: 300px;
       grid-row: 1;
       padding: 28px 20px;
     }
-    .stat-strip {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+    .focus-strip,
+    .capability-stack,
+    .principles-flow {
+      grid-template-columns: 1fr;
     }
-    .stat-strip > div:nth-child(2) {
-      border: 0;
+    .focus-item {
+      border-right: 0;
+      border-bottom: 1px solid var(--about-border);
     }
-    .stat-strip > div {
-      padding: 0 14px;
+    .focus-item:nth-child(3) {
+      border-bottom: 1px solid var(--about-border);
     }
     .section-head {
       align-items: flex-start;
       flex-direction: column;
       gap: 8px;
     }
-    .timeline-item {
-      grid-template-columns: 60px 14px 1fr;
-      gap: 10px;
+    .principle-connector {
+      top: auto;
+      right: auto;
+      bottom: -21px;
+      left: 24px;
+      transform: rotate(90deg);
     }
-    .impact-section {
+    .experience-item {
       grid-template-columns: 1fr;
-      gap: 25px;
+      gap: 12px;
+      padding: 22px 0;
     }
-    .contact-section {
-      padding: 32px 18px;
+    .about-cta {
+      padding: 30px 22px;
     }
-    .contact-links {
-      flex-direction: column;
+    .about-cta-links a {
+      grid-template-columns: 1fr auto;
     }
-    .contact-links a {
-      justify-content: space-between;
+    .about-cta-links small {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .about-cta-links i {
+      grid-column: 2;
+      grid-row: 1 / span 2;
     }
   }
 </style>
