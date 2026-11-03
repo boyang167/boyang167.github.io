@@ -34,6 +34,14 @@ jobs:
           git fetch origin "${{ github.event.client_payload.wiki_ref || 'main' }}"
           git checkout "${{ github.event.client_payload.wiki_sha }}"
 
+      # push 门户 main 时子模块指针可能滞后；构建前对齐 wiki main，避免线上仍用旧 raw/3-blog、4-Skill
+      - name: Sync wiki submodule to origin/main
+        if: github.event_name != 'repository_dispatch'
+        run: |
+          cd external/personal-knowledge-wiki
+          git fetch origin main
+          git checkout FETCH_HEAD
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

@@ -26,9 +26,10 @@ git submodule update --init --recursive
 
 1. 在 **wiki** 仓库 Settings → Secrets → Actions 新建 **`PORTAL_REPO_TOKEN`**  
    - 使用 Fine-grained PAT 或 Classic PAT（`repo` 或至少对 **boyang167.github.io** 有 **Contents: Read** + 能调用 `repository_dispatch` 的权限）。
-2. 向 **`publish/`** 提交并 push 到 **`main`**。  
-3. Wiki workflow [notify-portal.yml](https://github.com/boyang167/personal-knowledge-wiki/blob/main/.github/workflows/notify-portal.yml) 会向门户发送 `wiki-publish-updated`。  
-4. 门户 [deploy.yml](./workflows/deploy.yml) 拉取 submodule、checkout 对应 wiki SHA、构建并更新 **`gh-pages`**。
+2. 向 **`publish/`**、**`raw/1-Note/`**、**`raw/3-blog/`** 或 **`raw/4-Skill/`** 提交并 push 到 **`main`**。  
+3. Wiki workflow [notify-portal.yml](https://github.com/boyang167/personal-knowledge-wiki/blob/main/.github/workflows/notify-portal.yml) 会向门户发送 `wiki-publish-updated`（携带 wiki SHA）。  
+4. 门户 [deploy.yml](./workflows/deploy.yml) 构建时：dispatch 事件 checkout 该 SHA；**push 门户 `main`** 时会在构建前 **fetch wiki `origin/main`**（避免子模块指针滞后导致博客/Skill 与本地 sibling 不一致）。  
+5. 可选：在门户根目录运行 **`npm run bump:wiki`** 并 commit 子模块指针，方便他人 `git clone --recurse-submodules` 时不依赖 sibling 仓库。
 
 未配置 `PORTAL_REPO_TOKEN` 时，wiki 侧 workflow 会 **跳过 dispatch**（仅 warning），你仍可手动 push 门户 `main` 或 **workflow_dispatch** 部署。
 

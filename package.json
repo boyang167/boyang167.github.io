@@ -6,6 +6,7 @@
   "scripts": {
     "prepare:notes": "node scripts/prepare-note-assets.mjs",
     "prepare:blog": "node scripts/prepare-blog-assets.mjs",
+    "bump:wiki": "node scripts/bump-wiki-submodule.mjs",
     "dev": "npm run prepare:notes && npm run prepare:blog && astro dev",
     "build": "npm run prepare:notes && npm run prepare:blog && astro build",
     "preview": "astro preview"
