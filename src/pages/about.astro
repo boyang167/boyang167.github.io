@@ -347,7 +347,7 @@ const splitSkillItems = (items: string) =>
         <p class="portrait-title">AI × Data × CMC</p>
         <p class="portrait-subtitle">From Domain Knowledge to Intelligent Systems</p>
         <span class="portrait-badge">Engineering Intelligence</span>
-        <p class="portrait-motto">Curious by nature.<br />Engineer by practice.</p>
+        <p class="portrait-motto">Curious by nature. Engineer by practice.</p>
       </div>
     </div>
   </section>
@@ -469,7 +469,6 @@ const splitSkillItems = (items: string) =>
         <div class="eyebrow">EXPERIENCE</div>
         <h2>经历与教育</h2>
       </div>
-      <span class="muted section-note">基于公开履历整理，企业细节已做概括性表述。</span>
     </div>
     <div class="experience-list">
       {timeline.map((item) => (
@@ -621,6 +620,7 @@ const splitSkillItems = (items: string) =>
     line-height: 1.55;
     color: #30436f;
     width: 100%;
+    white-space: nowrap;
   }
   :global(.dark) .about-portrait {
     background: linear-gradient(160deg, #1e2a42 0%, #243352 100%);
