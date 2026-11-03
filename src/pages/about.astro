@@ -310,15 +310,18 @@ const splitSkillItems = (items: string) =>
 
 <BaseLayout
   title="关于我 · Boyang Wang"
-  description="Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。"
+  description="Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。"
 >
   <section class="wrap about-hero" id="top">
     <div class="about-intro">
       <div class="eyebrow">ABOUT ME · MY STORY</div>
       <h1>你好，我是<br /><span>Boyang Wang</span></h1>
-      <p class="about-lead">兼具算法研发、工程实践与产品交付能力的数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品开发和落地交付的端到端能力。</p>
+      <p class="about-lead">兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。</p>
       <p class="muted">
-        从 0 到 1 构建算法平台、数据平台与 DevOps 平台的端到端能力，打通算法研发、数据治理、知识工程到云原生部署的完整链路。在生物药 CMC 领域，擅长将工艺与质量业务转化为可计算、可推理的领域知识，并构建具备任务分解、工具调用与可追溯引用能力的 Agent 系统，推动 AI 技术从算法研发走向工程化落地与产品交付。
+        具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。
+      </p>
+      <p class="muted">
+        深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。
       </p>
       <div class="tag-row">
         <span class="tag">Agent Harness</span>
@@ -335,11 +338,20 @@ const splitSkillItems = (items: string) =>
       </div>
     </div>
     <div class="about-portrait">
-      <div class="portrait-glow"></div>
-      <div class="portrait-initials">BW</div>
-      <div class="portrait-label">Curious by nature.<br />Engineer by practice.</div>
-      <span class="sparkle sparkle-a">✳</span>
-      <span class="sparkle sparkle-b">✦</span>
+      <div class="portrait-card">
+        <div class="portrait-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="8" r="5" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="32" r="5" stroke="currentColor" stroke-width="2" />
+            <circle cx="36" cy="32" r="5" stroke="currentColor" stroke-width="2" />
+            <path d="M24 13v8M24 21l-12 8M24 21l12 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <p class="portrait-title">AI × Data × CMC</p>
+        <p class="portrait-subtitle">From Domain Knowledge to Intelligent Systems</p>
+        <span class="portrait-badge">Engineering Intelligence</span>
+        <p class="portrait-motto">Curious by nature.<br />Engineer by practice.</p>
+      </div>
     </div>
   </section>
 
@@ -537,55 +549,88 @@ const splitSkillItems = (items: string) =>
     margin: 23px 0;
   }
   .about-portrait {
-    height: 365px;
+    min-height: 365px;
     border-radius: 28px;
-    background: linear-gradient(145deg, #e8edff, #cbd8fa 65%, #aebff0);
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    place-items: center;
+    background: linear-gradient(160deg, #eef2fc 0%, #e2e9f8 45%, #d5dff5 100%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 20px 50px rgba(44, 72, 141, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 28px;
   }
-  .portrait-glow {
-    width: 260px;
-    height: 260px;
-    border: 1px solid #fff9;
-    border-radius: 50%;
-    box-shadow:
-      0 0 0 35px #ffffff20,
-      0 0 0 70px #ffffff14;
+  .portrait-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 280px;
   }
-  .portrait-initials {
-    position: absolute;
-    font-size: 90px;
+  .portrait-icon {
+    color: #4a6fd4;
+    margin-bottom: 18px;
+  }
+  .portrait-icon svg {
+    width: 52px;
+    height: auto;
+    display: block;
+  }
+  .portrait-title {
+    margin: 0 0 10px;
+    font-size: 22px;
     font-weight: 800;
-    letter-spacing: -0.12em;
-    color: #344d99;
-    text-shadow: 0 12px 40px #344d9920;
+    letter-spacing: -0.03em;
+    color: #1a3568;
+    line-height: 1.25;
   }
-  .portrait-label {
-    position: absolute;
-    bottom: 25px;
-    right: 25px;
-    background: #ffffffdd;
-    border-radius: 12px;
-    padding: 11px 15px;
-    color: #30436f;
+  .portrait-subtitle {
+    margin: 0 0 18px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: #5a6f9e;
+    max-width: 240px;
+  }
+  .portrait-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(74, 111, 212, 0.14);
+    color: #3d5fb8;
     font-size: 11px;
     font-weight: 700;
-    line-height: 1.5;
+    letter-spacing: 0.02em;
   }
-  .sparkle {
-    position: absolute;
-    color: #fff;
-    font-size: 25px;
+  .portrait-motto {
+    margin: 20px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(74, 111, 212, 0.18);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.55;
+    color: #30436f;
   }
-  .sparkle-a {
-    top: 48px;
-    right: 60px;
+  :global(.dark) .about-portrait {
+    background: linear-gradient(160deg, #1e2a42 0%, #243352 100%);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
   }
-  .sparkle-b {
-    left: 48px;
-    bottom: 70px;
+  :global(.dark) .portrait-icon {
+    color: #8ba8f0;
+  }
+  :global(.dark) .portrait-title {
+    color: #e8eeff;
+  }
+  :global(.dark) .portrait-subtitle {
+    color: #9aabd4;
+  }
+  :global(.dark) .portrait-badge {
+    background: rgba(123, 143, 245, 0.18);
+    color: #b8c8f5;
+  }
+  :global(.dark) .portrait-motto {
+    border-top-color: rgba(255, 255, 255, 0.1);
+    color: #c5d0ea;
   }
   .stat-strip {
     display: grid;
@@ -1107,8 +1152,9 @@ const splitSkillItems = (items: string) =>
       padding-top: 45px;
     }
     .about-portrait {
-      height: 280px;
+      min-height: 320px;
       grid-row: 1;
+      padding: 28px 20px;
     }
     .stat-strip {
       grid-template-columns: repeat(2, 1fr);

@@ -19,23 +19,21 @@ const featured = featuredPosts.map((post) => ({
 }));
 const latestPostHref = featured[0]?.href ?? '/blog/';
 ---
-<BaseLayout title="Boyang Wang · AI & Data Engineering" description="个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。">
+<BaseLayout title="Boyang Wang · Agent & Data Platform Engineering" description="个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。">
   <section class="wrap home-intro home-one-screen" id="top">
     <div class="home-hero home-hero-compact">
       <div class="hero-copy">
-        <div class="eyebrow">AI ENGINEERING · DATA SYSTEMS · MACHINE LEARNING</div>
+        <div class="eyebrow">AGENT · DATA PLATFORM · DEVOPS · ML · DEEP LEARNING · CMC</div>
         <p class="hero-lead muted">
-          构建 AI Agent、数据系统和机器学习的技术实践者。
+          具备 AI Agent &amp; Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。
         </p>
         <div class="hero-actions">
           <a class="button-primary" href={latestPostHref}>阅读最新文章 <span>↗</span></a>
           <a class="button-secondary" href="/blog/">全部文章</a>
         </div>
-        <p class="hero-note">工程实践 · 持续研究 · 开放分享</p>
         <div class="project-overview">
           <div class="project-overview-head">
             <span class="eyebrow">PERSONAL KNOWLEDGE SYSTEM</span>
-            <p>连接学习记录、审核知识、技术写作与 Agent Skill，构建可持续迭代的个人知识系统。</p>
           </div>
           <div class="project-links">
             <a href="/notes/"><span><b>笔记</b><small>原始学习记录</small></span><i>↗</i></a>
@@ -57,7 +55,7 @@ const latestPostHref = featured[0]?.href ?? '/blog/';
           <div class="avatar-monogram">BW</div>
           <div class="visual-chip">
             <i></i>
-            <span><small>CURRENT FOCUS</small>AI · DATA · ML</span>
+            <span><small>CURRENT FOCUS</small>AGENT · PLATFORM · DEVOPS · ML · DL · CMC</span>
           </div>
         </div>
         <div class="visual-caption">Curiosity → Experiments → Reliable Systems</div>
@@ -120,12 +118,6 @@ const latestPostHref = featured[0]?.href ?? '/blog/';
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-  }
-  .hero-note {
-    margin: 14px 0 0;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.08em;
   }
   .project-overview {
     margin-top: 18px;
