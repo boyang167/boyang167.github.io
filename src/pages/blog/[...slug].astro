@@ -69,10 +69,13 @@ const dateLabel = formatBlogDate(date);
       <div class="post-main">
         <div class="post-prose prose" set:html={html} />
         <footer class="post-end">
-          <p><strong>读到这里了？</strong><span>如果这篇文章对你有帮助，欢迎分享或交流。</span></p>
+          <p>
+            <strong data-page-zh="读到这里了？" data-page-en="Made it this far?">读到这里了？</strong>
+            <span data-page-zh="如果这篇文章对你有帮助，欢迎分享或交流。" data-page-en="If this article helped, feel free to share it or get in touch.">如果这篇文章对你有帮助，欢迎分享或交流。</span>
+          </p>
           <div class="post-end-links">
-            <a href="/blog/">返回博客</a>
-            <a href="/about/#contact">与我交流 ↗</a>
+            <a href="/blog/" data-page-zh="返回博客" data-page-en="Back to blog">返回博客</a>
+            <a href="/about/#contact" data-page-zh="与我交流 ↗" data-page-en="Get in touch ↗">与我交流 ↗</a>
           </div>
         </footer>
       </div>
@@ -80,6 +83,51 @@ const dateLabel = formatBlogDate(date);
   </article>
   <MermaidInit />
 </BaseLayout>
+<script>
+  const localizedText = [...document.querySelectorAll<HTMLElement>('[data-page-zh][data-page-en]')];
+  const syncPageLanguage = (lang: string) => {
+    localizedText.forEach((element) => {
+      element.textContent = lang === 'en' ? element.dataset.pageEn ?? '' : element.dataset.pageZh ?? '';
+    });
+  };
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => {
+    syncPageLanguage((event as CustomEvent<string>).detail);
+  });
+
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.post-toc-link')];
+  if (tocLinks.length > 0) {
+    const linkById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const setActiveToc = (id: string) => {
+      tocLinks.forEach((link) => {
+        const active = decodeURIComponent(link.hash.slice(1)) === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    const headings = [...document.querySelectorAll<HTMLElement>('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]')]
+      .filter((heading) => linkById.has(heading.id));
+    if (headings.length > 0) {
+      setActiveToc(headings[0].id);
+      const syncActiveFromScroll = () => {
+        const atPageEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+        const current = atPageEnd ? headings[headings.length - 1] : headings.reduce(
+          (active, heading) => heading.getBoundingClientRect().top <= 112 ? heading : active,
+          headings[0],
+        );
+        setActiveToc(current.id);
+      };
+      const observer = new IntersectionObserver(syncActiveFromScroll, {
+        rootMargin: '-96px 0px -65% 0px',
+        threshold: [0, 1],
+      });
+      headings.forEach((heading) => observer.observe(heading));
+      window.addEventListener('scroll', syncActiveFromScroll, { passive: true });
+      tocLinks.forEach((link) => link.addEventListener('click', () => setActiveToc(decodeURIComponent(link.hash.slice(1)))));
+    }
+  }
+</script>
 <style>
   .post-page {
     padding: 48px 0 80px;
@@ -183,7 +231,8 @@ const dateLabel = formatBlogDate(date);
     transition: color 0.15s ease;
   }
   .post-toc-link:hover,
-  .post-toc-link:focus-visible {
+  .post-toc-link:focus-visible,
+  .post-toc-link.is-active {
     color: var(--blue);
     border-left-color: var(--blue);
     background: var(--blue-soft);
@@ -382,7 +431,7 @@ const dateLabel = formatBlogDate(date);
     margin: 0 auto;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1160px) {
     .post-page {
       padding-top: 32px;
     }

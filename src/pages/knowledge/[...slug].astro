@@ -34,14 +34,62 @@ const categoryLabel = entry.category.replace(/-/g, ' ');
       <main class="detail-main">
         <div class="prose" set:html={html} />
         <footer class="detail-cta">
-          <p><strong>继续探索</strong><span>返回知识库浏览更多已发布主题。</span></p>
-          <a href="/knowledge/">返回知识库</a>
+          <p>
+            <strong data-page-zh="继续探索" data-page-en="Keep exploring">继续探索</strong>
+            <span data-page-zh="返回知识库浏览更多已发布主题。" data-page-en="Browse more published topics in the knowledge base.">返回知识库浏览更多已发布主题。</span>
+          </p>
+          <a href="/knowledge/" data-page-zh="返回知识库" data-page-en="Back to knowledge base">返回知识库</a>
         </footer>
       </main>
     </div>
   </article>
   <MermaidInit />
 </BaseLayout>
+<script>
+  const localizedText = [...document.querySelectorAll<HTMLElement>('[data-page-zh][data-page-en]')];
+  const syncPageLanguage = (lang: string) => {
+    localizedText.forEach((element) => {
+      element.textContent = lang === 'en' ? element.dataset.pageEn ?? '' : element.dataset.pageZh ?? '';
+    });
+  };
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => {
+    syncPageLanguage((event as CustomEvent<string>).detail);
+  });
+
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc-link')];
+  if (tocLinks.length > 0) {
+    const linkById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const setActiveToc = (id: string) => {
+      tocLinks.forEach((link) => {
+        const active = decodeURIComponent(link.hash.slice(1)) === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    const headings = [...document.querySelectorAll<HTMLElement>('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]')]
+      .filter((heading) => linkById.has(heading.id));
+    if (headings.length > 0) {
+      setActiveToc(headings[0].id);
+      const syncActiveFromScroll = () => {
+        const atPageEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+        const current = atPageEnd ? headings[headings.length - 1] : headings.reduce(
+          (active, heading) => heading.getBoundingClientRect().top <= 112 ? heading : active,
+          headings[0],
+        );
+        setActiveToc(current.id);
+      };
+      const observer = new IntersectionObserver(syncActiveFromScroll, {
+        rootMargin: '-96px 0px -65% 0px',
+        threshold: [0, 1],
+      });
+      headings.forEach((heading) => observer.observe(heading));
+      window.addEventListener('scroll', syncActiveFromScroll, { passive: true });
+      tocLinks.forEach((link) => link.addEventListener('click', () => setActiveToc(decodeURIComponent(link.hash.slice(1)))));
+    }
+  }
+</script>
 <style>
   .detail-page{padding:48px 0 80px;overflow-x:clip}
   .detail-hero{max-width:var(--reading-max);margin:0 auto 40px}
@@ -57,7 +105,7 @@ const categoryLabel = entry.category.replace(/-/g, ' ');
   .detail-main{min-width:0}.detail-toc{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow-y:auto}
   .toc-title{margin:0 0 10px;color:var(--text);font-size:11px;font-weight:800;letter-spacing:.04em}
   .toc-nav{display:grid;gap:2px}.toc-link{display:flex;align-items:center;min-height:40px;padding:6px 8px;border-left:2px solid transparent;color:var(--muted);font-size:12px;line-height:1.4}
-  .toc-link:hover,.toc-link:focus-visible{color:var(--blue);border-left-color:var(--blue);background:var(--blue-soft)}
+  .toc-link:hover,.toc-link:focus-visible,.toc-link.is-active{color:var(--blue);border-left-color:var(--blue);background:var(--blue-soft)}
   .toc-link.depth-3{padding-left:18px}.toc-link.depth-4,.toc-link.depth-5{padding-left:28px;font-size:11px}
   .prose{max-width:var(--reading-max);min-width:0;font-size:15px;line-height:1.82}
   .prose :global(h2),.prose :global(h3),.prose :global(h4){scroll-margin-top:96px;color:var(--text);line-height:1.3;letter-spacing:-.02em}
@@ -74,6 +122,6 @@ const categoryLabel = entry.category.replace(/-/g, ' ');
   .prose :global(img){display:block;max-width:100%;height:auto;margin:24px auto;border:1px solid var(--line);border-radius:14px}.prose :global(figure){margin:24px 0}.prose :global(figcaption){color:var(--muted);font-size:12px;text-align:center}
   .prose :global(.mermaid-wrap){margin:24px 0;padding:20px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-raised)}.prose :global(.mermaid-wrap pre.mermaid){min-width:max-content;margin:0;padding:0;border:0;background:transparent;font-size:0}.prose :global(.mermaid-wrap svg){display:block;max-width:none;height:auto;margin:auto}
   .detail-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:48px;padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--surface-raised)}.detail-cta p{display:grid;gap:4px;margin:0;font-size:13px}.detail-cta p span{color:var(--muted)}.detail-cta a{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:10px;color:var(--blue);font-size:12px;font-weight:700}
-  @media(max-width:900px){.detail-page{padding-top:32px}.detail-layout{grid-template-columns:minmax(0,1fr);gap:28px}.detail-toc{position:static;max-height:none;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-raised)}.toc-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.toc-link.depth-3,.toc-link.depth-4,.toc-link.depth-5{padding-left:12px}}
+  @media(max-width:1160px){.detail-page{padding-top:32px}.detail-layout{grid-template-columns:minmax(0,1fr);gap:28px}.detail-toc{position:static;max-height:none;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-raised)}.toc-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.toc-link.depth-3,.toc-link.depth-4,.toc-link.depth-5{padding-left:12px}}
   @media(max-width:600px){.hero-banner{height:108px}.toc-nav{grid-template-columns:1fr}.detail-cta{align-items:flex-start;flex-direction:column}}
 </style>

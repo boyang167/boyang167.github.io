@@ -48,10 +48,13 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
       <main class="detail-main">
         <div class="prose" set:html={html} />
         <footer class="detail-cta">
-          <p><strong>继续探索</strong><span>经审核的对外副本收录在知识库中。</span></p>
+          <p>
+            <strong data-page-zh="继续探索" data-page-en="Keep exploring">继续探索</strong>
+            <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base.">经审核的对外副本收录在知识库中。</span>
+          </p>
           <div class="cta-links">
-            <a href="/notes/">返回笔记</a>
-            <a href="/knowledge/">查看知识库 ↗</a>
+            <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes">返回笔记</a>
+            <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗">查看知识库 ↗</a>
           </div>
         </footer>
       </main>
@@ -59,6 +62,51 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
   </article>
   <MermaidInit />
 </BaseLayout>
+<script>
+  const localizedText = [...document.querySelectorAll<HTMLElement>('[data-page-zh][data-page-en]')];
+  const syncPageLanguage = (lang: string) => {
+    localizedText.forEach((element) => {
+      element.textContent = lang === 'en' ? element.dataset.pageEn ?? '' : element.dataset.pageZh ?? '';
+    });
+  };
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => {
+    syncPageLanguage((event as CustomEvent<string>).detail);
+  });
+
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc-link')];
+  if (tocLinks.length > 0) {
+    const linkById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const setActiveToc = (id: string) => {
+      tocLinks.forEach((link) => {
+        const active = decodeURIComponent(link.hash.slice(1)) === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    const headings = [...document.querySelectorAll<HTMLElement>('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]')]
+      .filter((heading) => linkById.has(heading.id));
+    if (headings.length > 0) {
+      setActiveToc(headings[0].id);
+      const syncActiveFromScroll = () => {
+        const atPageEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+        const current = atPageEnd ? headings[headings.length - 1] : headings.reduce(
+          (active, heading) => heading.getBoundingClientRect().top <= 112 ? heading : active,
+          headings[0],
+        );
+        setActiveToc(current.id);
+      };
+      const observer = new IntersectionObserver(syncActiveFromScroll, {
+        rootMargin: '-96px 0px -65% 0px',
+        threshold: [0, 1],
+      });
+      headings.forEach((heading) => observer.observe(heading));
+      window.addEventListener('scroll', syncActiveFromScroll, { passive: true });
+      tocLinks.forEach((link) => link.addEventListener('click', () => setActiveToc(decodeURIComponent(link.hash.slice(1)))));
+    }
+  }
+</script>
 <style>
   .detail-page {
     padding: 48px 0 80px;
@@ -154,7 +202,8 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
     transition: color .15s, border-color .15s, background .15s;
   }
   .toc-link:hover,
-  .toc-link:focus-visible {
+  .toc-link:focus-visible,
+  .toc-link.is-active {
     color: var(--blue);
     border-left-color: var(--blue);
     background: var(--blue-soft);
@@ -318,7 +367,7 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
     font-weight: 700;
   }
   .cta-links a:hover { border-color: var(--blue); background: var(--blue-soft); }
-  @media (max-width: 900px) {
+  @media (max-width: 1160px) {
     .detail-page { padding-top: 32px; }
     .detail-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
     .detail-toc {
