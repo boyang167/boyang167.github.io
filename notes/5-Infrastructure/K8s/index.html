@@ -1,0 +1,2699 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Kubernetes 集群原理、服务网格、Ingress/Traefik、kubeadm 搭建、client-go 等。实验机命令见 [`VMWare.md`](VMWare.md)。OpenStack / Ambari / Azure 见下方独立笔记。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>Kubernetes 笔记 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>5 · Infrastructure</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>Kubernetes 笔记</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>Kubernetes 集群原理、服务网格、Ingress/Traefik、kubeadm 搭建、client-go 等。实验机命令见 [`VMWare.md`](VMWare.md)。OpenStack / Ambari / Azure 见下方独立笔记。</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#Kubernetes-基础接口" class="toc-link depth-2" data-astro-cid-5eggoaxc> Kubernetes 基础接口 </a><a href="#Istio" class="toc-link depth-2" data-astro-cid-5eggoaxc> Istio </a><a href="#流量管理" class="toc-link depth-4" data-astro-cid-5eggoaxc> 流量管理 </a><a href="#Gateway-API" class="toc-link depth-2" data-astro-cid-5eggoaxc> Gateway API </a><a href="#21-crd" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2.1 crd </a><a href="#22-rbac" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2.2 rbac </a><a href="#Ingress-与-Traefik" class="toc-link depth-2" data-astro-cid-5eggoaxc> Ingress 与 Traefik </a><a href="#traefik" class="toc-link depth-3" data-astro-cid-5eggoaxc> traefik </a><a href="#Traefik-CRD-资源" class="toc-link depth-4" data-astro-cid-5eggoaxc> Traefik CRD 资源 </a><a href="#Middleware" class="toc-link depth-4" data-astro-cid-5eggoaxc> Middleware </a><a href="#11-重定向--redirectScheme" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.1 重定向 -redirectScheme </a><a href="#12-去除请求路径前缀--stripPrefix" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.2 去除请求路径前缀 -stripPrefix </a><a href="#13-白名单--IPWhiteList" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.3 白名单 -IPWhiteList </a><a href="#14-基础用户认证--basicAuth" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.4 基础用户认证 -basicAuth </a><a href="#15-修改请求响应头信息--headers" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.5 修改请求/响应头信息 -headers </a><a href="#16-限流--rateLimit" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.6 限流 -rateLimit </a><a href="#17-熔断--circuitBreaker" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.7 熔断 -circuitBreaker </a><a href="#18-自定义错误页--errorPages" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.8 自定义错误页 -errorPages </a><a href="#19-数据压缩--compress" class="toc-link depth-5" data-astro-cid-5eggoaxc> 1.9 数据压缩 -compress </a><a href="#2TraefikService" class="toc-link depth-4" data-astro-cid-5eggoaxc> 2:TraefikService </a><a href="#2-灰度发布-加权轮询" class="toc-link depth-5" data-astro-cid-5eggoaxc> 2: 灰度发布 (加权轮询) </a><a href="#3-会话保持-粘性会话" class="toc-link depth-5" data-astro-cid-5eggoaxc> 3 会话保持 (粘性会话) </a><a href="#4-流量复制" class="toc-link depth-5" data-astro-cid-5eggoaxc> 4 流量复制 </a><a href="#3Traefik-部署" class="toc-link depth-4" data-astro-cid-5eggoaxc> 3:Traefik 部署 </a><a href="#configmap" class="toc-link depth-4" data-astro-cid-5eggoaxc> configmap </a><a href="#252-日志切割" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2.5.2 日志切割 </a><a href="#26-多控制器" class="toc-link depth-2" data-astro-cid-5eggoaxc> 2.6 多控制器 </a><a href="#261-annotations-注解筛选" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2.6.1 annotations 注解筛选 </a><a href="#262-label-标签选择器筛选" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2.6.2 label 标签选择器筛选 </a><a href="#kubeadm-搭建-K8s-集群" class="toc-link depth-2" data-astro-cid-5eggoaxc> kubeadm 搭建 K8s 集群 </a><a href="#前期准备" class="toc-link depth-3" data-astro-cid-5eggoaxc> 前期准备 </a><a href="#docker" class="toc-link depth-3" data-astro-cid-5eggoaxc> docker </a><a href="#1kubeadmkubeletkubectl" class="toc-link depth-3" data-astro-cid-5eggoaxc> 1:kubeadm/kubelet/kubectl </a><a href="#2Kubernetes-Master" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2:Kubernetes Master </a><a href="#3-Kubernetes-Node" class="toc-link depth-3" data-astro-cid-5eggoaxc> 3: Kubernetes Node </a><a href="#4部署容器网络-cni" class="toc-link depth-3" data-astro-cid-5eggoaxc> 4:部署容器网络 (cni) </a><a href="#5metric-server" class="toc-link depth-3" data-astro-cid-5eggoaxc> 5:metric-server </a><a href="#6测试-kubernetes-集群" class="toc-link depth-3" data-astro-cid-5eggoaxc> 6：测试 kubernetes 集群 </a><a href="#7部署-Dashboard" class="toc-link depth-3" data-astro-cid-5eggoaxc> 7：部署 Dashboard </a><a href="#相关专题独立笔记" class="toc-link depth-2" data-astro-cid-5eggoaxc> 相关专题（独立笔记） </a><a href="#附录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 附录 </a><a href="#存储方案--Ceph" class="toc-link depth-3" data-astro-cid-5eggoaxc> 存储方案 · Ceph </a><a href="#Docker-镜像导入导出" class="toc-link depth-3" data-astro-cid-5eggoaxc> Docker 镜像导入导出 </a><a href="#Deployment-模板示例Helm-风格占位符" class="toc-link depth-3" data-astro-cid-5eggoaxc> Deployment 模板示例（Helm 风格占位符） </a><a href="#Go-生态client-go--Cobra" class="toc-link depth-2" data-astro-cid-5eggoaxc> Go 生态（client-go / Cobra） </a><a href="#client-go" class="toc-link depth-3" data-astro-cid-5eggoaxc> client-go </a><a href="#GVR-GVK" class="toc-link depth-3" data-astro-cid-5eggoaxc> GVR GVK </a><a href="#Informer" class="toc-link depth-3" data-astro-cid-5eggoaxc> Informer: </a><a href="#Reflector" class="toc-link depth-4" data-astro-cid-5eggoaxc> Reflector: </a><a href="#DeltaFIFO" class="toc-link depth-4" data-astro-cid-5eggoaxc> DeltaFIFO </a><a href="#Indexer" class="toc-link depth-4" data-astro-cid-5eggoaxc> Indexer </a><a href="#Cobra" class="toc-link depth-3" data-astro-cid-5eggoaxc> Cobra </a><a href="#Consul" class="toc-link depth-2" data-astro-cid-5eggoaxc> Consul </a><a href="#注册中心-cap定理" class="toc-link depth-2" data-astro-cid-5eggoaxc> 注册中心-cap定理 </a><a href="#参考资料" class="toc-link depth-2" data-astro-cid-5eggoaxc> 参考资料 </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><h1 id="Kubernetes-笔记">Kubernetes 笔记</h1>
+<p>Kubernetes 集群原理、服务网格、Ingress/Traefik、kubeadm 搭建、client-go 等。实验机命令见 <a href="VMWare.md"><code>VMWare.md</code></a>。OpenStack / Ambari / Azure 见下方独立笔记。</p>
+<h2 id="目录">目录</h2>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>跳转</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#kubernetes-%E5%9F%BA%E7%A1%80%E6%8E%A5%E5%8F%A3">基础接口</a></td>
+<td>CRI / CNI / CSI / CRD、Controller vs Operator</td>
+</tr>
+<tr>
+<td><a href="#istio">Istio</a></td>
+<td>安装、Bookinfo、流量管理</td>
+</tr>
+<tr>
+<td><a href="#gateway-api">Gateway API</a></td>
+<td>CRD、RBAC</td>
+</tr>
+<tr>
+<td><a href="#ingress-%E4%B8%8E-traefik">Ingress 与 Traefik</a></td>
+<td>Middleware、TraefikService、部署</td>
+</tr>
+<tr>
+<td><a href="#kubeadm-%E6%90%AD%E5%BB%BA-k8s-%E9%9B%86%E7%BE%A4">kubeadm 集群</a></td>
+<td>Master/Node、CNI、Dashboard</td>
+</tr>
+<tr>
+<td><a href="#%E7%9B%B8%E5%85%B3%E4%B8%93%E9%A2%98%E7%8B%AC%E7%AB%8B%E7%AC%94%E8%AE%B0">相关专题</a></td>
+<td>OpenStack、Ambari、Azure</td>
+</tr>
+<tr>
+<td><a href="#%E9%99%84%E5%BD%95">附录</a></td>
+<td>Docker 脚本、Deployment 模板</td>
+</tr>
+<tr>
+<td><a href="#go-%E7%94%9F%E6%80%81client-go--cobra">Go client-go</a></td>
+<td>Informer、GVR/GVK</td>
+</tr>
+<tr>
+<td><a href="#consul">Consul</a></td>
+<td>注册中心</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Kubernetes-基础接口">Kubernetes 基础接口</h2>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CRI</strong></td>
+<td>容器运行时 gRPC：<code>RuntimeService</code>、<code>ImageService</code>；kubelet 为 Client，运行时监听 Unix socket</td>
+</tr>
+<tr>
+<td><strong>CNI</strong></td>
+<td>容器网络：CNCF 规范与插件；负责创建/删除容器时的网络分配</td>
+</tr>
+<tr>
+<td><strong>CSI</strong></td>
+<td>容器存储接口</td>
+</tr>
+<tr>
+<td><strong>CRD</strong></td>
+<td><code>CustomResourceDefinition</code> 扩展 API</td>
+</tr>
+</tbody></table>
+<p><strong>Controller vs Operator</strong>：控制原生资源常称 Controller；控制 CRD 常称 Operator。脚手架：<strong>KubeBuilder</strong>。</p>
+<h2 id="Istio">Istio</h2>
+<p><img src="imgs/istio-mesh-arch.png" alt="Istio架构图"></p>
+<p>Pilot：为 Envoy 提供了服务发现，流量管理和智能路由（AB 测试、金丝雀发布等），以及错误处理（超时、重试、熔断）功能。</p>
+<p>Citadel：为服务之间提供认证和证书管理，可以让服务自动升级成 TLS 协议。</p>
+<p>Galley：Galley 是 Istio 的配置验证、提取、处理和分发组件。它负责将其余的 Istio 组件与从底层平台（例如 Kubernetes）获取用户配置的细节隔离开来。</p>
+<ul>
+<li>为 HTTP、gRPC、WebSocket 和 TCP 流量自动负载均衡。</li>
+<li>通过丰富的路由规则、重试、故障转移和故障注入对流量行为进行细粒度控制。</li>
+<li>可插拔的策略层和配置 API，支持访问控制、速率限制和配额。</li>
+<li>集群内（包括集群的入口和出口）所有流量的自动化度量、日志记录和追踪。</li>
+<li>在具有强大的基于身份验证和授权的集群中实现安全的服务间通信。</li>
+</ul>
+<h4 id="流量管理">流量管理</h4>
+<p>Istio 简单的规则配置和流量路由允许您控制服务之间的流量和 API 调用过程。</p>
+<p>Istio 简化了服务级属性（如熔断器、超时和重试）的配置，并且让它轻而易举的执行重要的任务（如 A/B 测试、金丝雀发布和按流量百分比划分的分阶段发布）</p>
+<p>Istio 目前支持：</p>
+<ul>
+<li>Kubernetes 上的服务部署</li>
+<li>基于 Consul 的服务注册</li>
+<li>服务运行在独立的虚拟机上</li>
+</ul>
+<pre><code class="language-bash">curl -L https://istio.io/downloadIstio | sh -
+export PATH=&quot;$PATH:/home/wang_boyang/istio/istio-1.21.2/bin&quot;
+curl -L https://github.com/istio/istio/releases/download/1.21.2/istio-1.21.2-linux-amd64.tar.gz -o istio-1.21.2-linux-amd64.tar.gzls
+
+wget https://storage.googleapis.com/istio-release/releases/1.17.8/istio-1.17.8-linux-amd64.tar.gz
+# 发布版本
+https://istio.io/latest/docs/releases/supported-releases/#support-status-of-istio-releases
+
+vim /etc/profile
+export PATH=&quot;/home/istio/istio-1.21.2/bin:$PATH&quot;
+
+
+# 安装
+istioctl manifest apply --set profile=demo
+# 打标签
+kubectl label namespace default istio-injection=enabled
+kubectl  apply -f &lt;(istioctl kube-inject -f bookinfo.yml )
+kubectl get services
+
+kubectl exec -it $(kubectl get pod -l app=ratings -o jsonpath=&#39;{.items[0].metadata.name}&#39;) -c ratings -- curl productpage:9080/productpage | grep -o &quot;&lt;title&gt;.*&lt;/title&gt;&quot;
+
+
+watch -n 1 curl -o /dev/null -s -w %{http_code} http://192.168.5.21:32109/productpage
+
+https://juejin.cn/post/7116400234711744525#heading-41docker
+</code></pre>
+<p><img src="imgs/image-20240512162736338.png" alt="image-20240512162736338"></p>
+<h2 id="Gateway-API">Gateway API</h2>
+<p>Gateway API（之前叫 Service API）是由 SIG-NETWORK 社区管理的开源项目，<a href="https://gateway-api.sigs.k8s.io/">项目地址</a></p>
+<p>Ingress 资源对象不能很好的满足网络需求，很多场景下 Ingress 控制器都需要通过定义 annotations 或者 crd  来进行功能扩展，这对于使用标准和支持是非常不利的，新推出的 Gateway API 旨在通过可扩展的面向角色的接口来增强服务网络。</p>
+<p><img src="imgs/image-20240414184850932.png" alt="image-20240414184850932"></p>
+<p>Gateway API 是 Kubernetes 中的一个 API 资源集合，包括 GatewayClass、Gateway、HTTPRoute、TCPRoute、Service 等，这些资源共同为各种网络用例构建模型。</p>
+<p>2 部署</p>
+<h3 id="21-crd">2.1 crd</h3>
+<p>内容较长，直接复制 <a href="https://doc.traefik.io/traefik/v2.5/reference/dynamic-configuration/kubernetes-gateway/#definitions">官网yaml</a></p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# kubectl apply -f  gateway-api-crd.yml
+customresourcedefinition.apiextensions.k8s.io/gatewayclasses.networking.x-k8s.io created
+customresourcedefinition.apiextensions.k8s.io/gateways.networking.x-k8s.io created
+customresourcedefinition.apiextensions.k8s.io/httproutes.networking.x-k8s.io created
+customresourcedefinition.apiextensions.k8s.io/tcproutes.networking.x-k8s.io created
+customresourcedefinition.apiextensions.k8s.io/tlsroutes.networking.x-k8s.io created
+</code></pre>
+<p>bash</p>
+<h3 id="22-rbac">2.2 rbac</h3>
+<pre><code class="language-yaml">---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gateway-role
+rules:
+  - apiGroups:
+      - &quot;&quot;
+    resources:
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - gatewayclasses
+      - gateways
+      - httproutes
+      - tcproutes
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - gatewayclasses/status
+      - gateways/status
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+    verbs:
+      - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-controller
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gateway-role
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: default
+</code></pre>
+<p>yaml</p>
+<p>应用 yaml</p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# kubectl apply -f gateway-api-rbac.yml
+clusterrole.rbac.authorization.k8s.io/gateway-role created
+clusterrolebinding.rbac.authorization.k8s.io/gateway-controller created
+</code></pre>
+<h2 id="Ingress-与-Traefik">Ingress 与 Traefik</h2>
+<pre><code class="language-bash">#查看pod ip:
+kubectl get pods -o wide | grep hello
+hello-d7cf556b-lb56v   1/1     Running   3 (11h ago)   7d18h   10.233.96.15   k8smaster   &lt;none&gt;           &lt;none&gt;
+
+curl 10.233.96.15:8080
+#查看service, 分配了一个cluster_ip
+kubectl get service -o wide | grep hello
+hello           ClusterIP   10.233.3.134    &lt;none&gt;        8080/TCP                                                                  7d18h   app=hello
+curl 10.233.3.134:8080
+
+</code></pre>
+<h3 id="traefik">traefik</h3>
+<p>Traefik 是一个为了让部署微服务更加便捷而诞生的现代 HTTP 反向代理、负载均衡工具。 它支持多种后台 (<a href="https://www.docker.com/">Docker</a>, <a href="https://docs.docker.com/swarm">Swarm</a>, <a href="http://kubernetes.io/">Kubernetes</a>, <a href="https://mesosphere.github.io/marathon/">Marathon</a>, <a href="https://github.com/apache/mesos">Mesos</a>, <a href="https://www.consul.io/">Consul</a>, <a href="https://coreos.com/etcd/">Etcd</a>, <a href="https://zookeeper.apache.org/">Zookeeper</a>, <a href="https://github.com/boltdb/bolt">BoltDB</a>, Rest API, file…) 来自动化、动态的应用它的配置文件设置。</p>
+<p>它是一个边缘路由器，它会拦截外部的请求并根据逻辑规则选择不同的操作方式，这些规则决定着这些请求到底该如何处理。Traefik 提供自动发现能力，会实时检测服务，并自动更新路由规则。</p>
+<p>请求首先会连接到<code>entrypoints</code>，然后分析这些请求是否与定义的<code>rules</code>匹配，如果匹配，则会通过一系列<code>middlewares</code>，再到对应的<code>services</code>:</p>
+<ul>
+<li>Providers</li>
+<li>Entrypoints</li>
+<li>Routers</li>
+<li>Services</li>
+<li>Middlewares</li>
+</ul>
+<p><code>Providers</code>是基础组件，Traefik的配置发现是通过它来实现的，它可以是协调器，容器引擎，云提供商或者键值存储</p>
+<p><code>Entrypoints</code>是<code>Traefik</code>的网络入口，它定义接收请求的接口，以及是否监听TCP或者UDP</p>
+<p><code>Routers</code>主要用于分析请求，并负责将这些请求连接到对应的服务上去，在这个过程中，Routers还可以使用Middlewares来更新请求，比如在把请求发到服务之前添加一些Headers</p>
+<p><code>Services</code>负责配置如何到达最终将处理传入请求的实际服务</p>
+<p><code>Middlewares</code>:用来修改请求或者根据请求来做出一些判断（authentication, rate limiting, headers, ...），中间件被附件到路由上，是一种在请求发送到你的<strong>服务</strong>之前（或者在服务的响应发送到<a href="https://www.zhihu.com/search?q=%E5%AE%A2%E6%88%B7%E7%AB%AF&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A%222244863446%22%7D">客户端</a>之前）调整请求的一种方法。</p>
+<h4 id="Traefik-CRD-资源">Traefik CRD 资源</h4>
+<p><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/">官方文档</a></p>
+<p>traefik 通过自定义资源实现了对 traefik 资源的创建和管理，支持的 crd 资源类型如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>kind</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroute">IngressRoute</a></td>
+<td>HTTP 路由配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-middleware">Middleware</a></td>
+<td>HTTP 中间件配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-traefikservice">TraefikService</a></td>
+<td>HTTP 负载均衡/流量复制配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroutetcp">IngressRouteTCP</a></td>
+<td>TCP 路由配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-middlewaretcp">MiddlewareTCP</a></td>
+<td>TCP 中间件配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressrouteudp">IngressRouteUDP</a></td>
+<td>UDP 路由配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-tlsoption">TLSOptions</a></td>
+<td>TLS 连接参数配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-tlsstore">TLSStores</a></td>
+<td>TLS 存储配置</td>
+</tr>
+<tr>
+<td><a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-serverstransport">ServersTransport</a></td>
+<td>traefik 与后端之间的传输配置</td>
+</tr>
+</tbody></table>
+<p>Traefik: <strong>创建路由规则</strong></p>
+<ol>
+<li>原生Ingress写法</li>
+<li>使用CRD IngressRoute方式</li>
+<li>使用GatewayAPI的方式</li>
+</ol>
+<h4 id="Middleware">Middleware</h4>
+<p>kubernetes 中使用 Traefik ingress 的 Middleware 实现重定向、白名单、用户认证、限流、熔断、压缩、自定义 error 页等操作            </p>
+<p><a href="https://doc.traefik.io/traefik/middlewares/overview/">官方文档</a></p>
+<p>Traefik Middlewares 是一个处于路由和后端服务之前的中间件，在外部流量进入  Traefik，且路由规则匹配成功后，将流量发送到对应的后端服务前，先将其发给中间件进行一系列处理（类似于过滤器链  Filter，进行一系列处理），例如，<strong>添加 Header 头信息、鉴权、流量转发、处理访问路径前缀、IP  白名单等等，经过一个或者多个中间件处理完成后，再发送给后端服务，这个就是中间件的作用</strong>。</p>
+<p>Traefik 内置了很多不同功能的 Middleware，主要是针对 HTTP 和 TCP，这里挑选几个比较常用的进行演示。</p>
+<h5 id="11-重定向--redirectScheme">1.1 重定向 -redirectScheme</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/redirectscheme/">官方文档</a></p>
+<p>定义一个 ingressroute，包含一个自动将 http 跳转到 https 的中间件</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp2
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp2.test.com`)
+    kind: Rule
+    services:
+    - name: myapp2
+      port: 80
+    middlewares:
+    - name: redirect-https-middleware   # 指定使用RedirectScheme中间件，完成http强制跳转至https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https-middleware
+spec:
+  redirectScheme:
+    scheme: https   # 自动跳转到 https
+</code></pre>
+<p>测试，可以看到访问 http 自动 307 重定向到了 https</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# curl -I http://myapp2.test.com
+HTTP/1.1 307 Temporary Redirect
+Location: https://myapp2.test.com/
+Date: Wed, 19 Apr 2023 07:58:34 GMT
+Content-Length: 18
+Content-Type: text/plain; charset=utf-8
+</code></pre>
+<h5 id="12-去除请求路径前缀--stripPrefix">1.2 去除请求路径前缀 -stripPrefix</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/stripprefix/">官方文档</a></p>
+<p>假设现在有这样一个需求，当访问 <code>http://myapp.test.com/v1</code> 时，流量调度至 myapp1。当访问 <code>http://myapp.test.com/v2</code> 时，流量调度至 myapp2。这种需求是非常常见的，在 NGINX 中，我们可以配置多个 Location 来定制规则，使用 Traefik  也可以这么做。但是定制不同的前缀后，由于应用本身并没有这些前缀，导致请求返回 404，这时候我们就需要对请求的 path 进行处理。</p>
+<p>创建一个 IngressRoute，并设置两条规则，根据不同的访问路径代理至相对应的 service</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp.test.com`) &amp;&amp; PathPrefix(`/v1`)
+    kind: Rule
+    services:
+    - name: myapp1
+      port: 80
+    middlewares:
+    - name: prefix-url-middleware
+  - match: Host(`myapp.test.com`) &amp;&amp; PathPrefix(`/v2`)
+    kind: Rule
+    services:
+    - name: myapp2
+      port: 80
+    middlewares:
+    - name: prefix-url-middleware
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: prefix-url-middleware
+spec:
+  stripPrefix: # 去除前缀的中间件 stripPrefix，指定将请求路径中的v1、v2去除。
+    prefixes: 
+      - /v1
+      - /v2
+</code></pre>
+<p>部署测试</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# curl http://myapp.test.com/v1
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+[root@k8s-node1 ~]# curl http://myapp.test.com/v2
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+
+[root@k8s-node1 ~]# kubectl logs -l app=myapp1 | tail -2
+# 未添加插件的访问路径为 /v1/ 
+10.244.36.64 - - [19/Apr/2023:08:02:03 +0000] &quot;GET /v1/ HTTP/1.1&quot; 404 169 &quot;-&quot; &quot;curl/7.29.0&quot; &quot;1.1.1.1&quot;
+# 添加插件后的访问路径为 /
+10.244.36.64 - - [19/Apr/2023:08:04:31 +0000] &quot;GET / HTTP/1.1&quot; 200 65 &quot;-&quot; &quot;curl/7.29.0&quot; &quot;1
+</code></pre>
+<h5 id="13-白名单--IPWhiteList">1.3 白名单 -IPWhiteList</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/ipwhitelist/">官方文档</a></p>
+<p>为提高安全性，通常情况下一些管理员界面会设置 ip 访问白名单，只希望个别用户可以访问。</p>
+<p>示例</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp1.test.com`) 
+    kind: Rule
+    services:
+    - name: myapp1
+      port: 80
+    middlewares:
+    - name: ip-white-list-middleware
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ip-white-list-middleware
+spec:
+  ipWhiteList:
+    sourceRange:
+      - 127.0.0.1/32
+      - 1.1.1.253
+</code></pre>
+<p>测试</p>
+<pre><code class="language-bash"># 白名单外主机
+[root@k8s-node1 ~]# curl -I http://myapp1.test.com
+HTTP/1.1 403 Forbidden
+
+# 白名单内主机
+Admin@BJLPT0152 MINGW64 ~
+$ ipconfig | grep 1.1.1.253
+   IPv4 地址 . . . . . . . . . . . . : 1.1.1.253
+
+Admin@BJLPT0152 MINGW64 ~
+$ curl -i  http://myapp1.test.com
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+</code></pre>
+<h5 id="14-基础用户认证--basicAuth">1.4 基础用户认证 -basicAuth</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/basicauth/">官方文档</a></p>
+<p>通常企业安全要求规范除了要对管理员页面限制访问 ip 外，还需要添加账号密码认证，而 traefik 默认没有提供账号密码认证功能，此时就可以通过 BasicAuth 中间件完成用户认证，只有认证通过的授权用户才可以访问页面。</p>
+<p>安装 htpasswd 工具生成密码文件</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# yum install -y httpd
+[root@k8s-node1 ~]# htpasswd -bc basic-auth-secret-lvbibir lvbibir 123
+Adding password for user lvbibir
+[root@k8s-node1 ~]# kubectl create secret generic basic-auth-lvbibir --from-file=basic-auth-secret-lvbibir
+secret/basic-auth-lvbibir created
+</code></pre>
+<p>bash</p>
+<p>创建 ingressroute，使用 basicAuth 中间件</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp1.test.com`) 
+    kind: Rule
+    services:
+    - name: myapp1
+      port: 80
+    middlewares:
+    - name: basic-auth-middleware
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: basic-auth-middleware
+spec:
+  basicAuth:
+    secret: basic-auth-lvbibir
+</code></pre>
+<p>yaml</p>
+<p>访问测试，可以看到弹出界面提示需要输入用户名和密码，输入后回车显示正常页面</p>
+<p><img src="imgs/image-20230419163142212.png" alt="image-20230419163142212"></p>
+<h5 id="15-修改请求响应头信息--headers">1.5 修改请求/响应头信息 -headers</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/headers/">官方文档</a></p>
+<p>为了提高业务的安全性，安全团队会定期进行漏洞扫描，其中有些 web 漏洞就需要通过修改响应头处理，traefik 的 Headers 中间件不仅可以修改返回客户端的响应头信息，还能修改反向代理后端 service 服务的请求头信息。</p>
+<p>例如对 <code>https://myapp2.test.com</code> 提高安全策略，强制启用 HSTS</p>
+<p>HSTS：即 HTTP 严格传输安全响应头，收到该响应头的浏览器会在 63072000s（约 2  年）的时间内，只要访问该网站，即使输入的是 http，浏览器会自动跳转到 https。（HSTS 是浏览器端的跳转，之前的 HTTP 重定向到  HTTPS 是服务器端的跳转）</p>
+<p>创建 ingressRoute 和 headers 中间件</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp2-tls
+spec:
+  entryPoints:
+  - web
+  - websecure
+  routes:
+  - match: Host(`myapp2.test.com`)
+    kind: Rule
+    services:
+    - name: myapp2
+      port: 80 
+    middlewares:
+      - name: hsts-header-middleware
+  tls:
+    secretName: myapp2-tls         # 指定tls证书名称
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: hsts-header-middleware
+spec:
+  headers:
+    customResponseHeaders:
+      Strict-Transport-Security: &#39;max-age=63072000&#39;
+</code></pre>
+<p>yaml</p>
+<p>访问测试</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# curl -kI https://myapp2.test.com
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 65
+Content-Type: text/html
+Date: Wed, 19 Apr 2023 08:37:07 GMT
+Etag: &quot;5a9251f0-41&quot;
+Last-Modified: Sun, 25 Feb 2018 06:04:32 GMT
+Server: nginx/1.12.2
+Strict-Transport-Security: max-age=63072000   # headers 插件添加的响应头
+</code></pre>
+<p>bash</p>
+<h5 id="16-限流--rateLimit">1.6 限流 -rateLimit</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/ratelimit/">官方文档</a></p>
+<p>在实际生产环境中，流量限制也是经常用到的，它可以用作安全目的，比如可以减慢暴力密码破解的速率。通过将传入请求的速率限制为真实用户的典型值，并标识目标 URL 地址 (通过日志)，还可以用来抵御 DDOS 攻击。更常见的情况，该功能被用来保护下游应用服务器不被同时太多用户请求所压垮。</p>
+<p>创建 ingressRoute 和 rateLimit 中间件</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp1
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp1.test.com`)
+    kind: Rule
+    services:
+    - name: myapp1  
+      port: 80   
+    middlewares:
+      - name: rate-limit-middleware
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: rate-limit-middleware
+spec: 
+  rateLimit:    # 指定 1s 内请求数平均值不大于 10 个，高峰最大值不大于 50 个。
+    burst: 10
+    average: 50
+</code></pre>
+<p>yaml</p>
+<p>压力测试，使用 ab 工具进行压力测试，一共请求 100 次，每次并发 10。测试结果失败的请求为 72 次，总耗时 0.409 秒</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# ab -n 100 -c 10 &quot;http://myapp1.test.com/&quot;
+
+Concurrency Level:      10
+Time taken for tests:   0.409 seconds
+Complete requests:      100
+Failed requests:        72
+   (Connect: 0, Receive: 0, Length: 72, Exceptions: 0)
+Non-2xx responses:      72
+</code></pre>
+<p>bash</p>
+<h5 id="17-熔断--circuitBreaker">1.7 熔断 -circuitBreaker</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/circuitbreaker/">官方文档</a></p>
+<p>服务熔断的作用类似于保险丝，当某服务出现不可用或响应超时的情况时，为了防止整个系统出现雪崩，暂时停止对该服务的调用。</p>
+<p>熔断器三种状态</p>
+<ul>
+<li>Closed：关闭状态，所有请求都正常访问。</li>
+<li>Open：打开状态，所有请求都会被降级。traefik 会对请求情况计数，当一定时间内失败请求百分比达到阈值，则触发熔断，断路器会完全打开。</li>
+<li>Recovering：半开恢复状态，open 状态不是永久的，打开后会进入休眠时间。随后断路器会自动进入半开状态。此时会释放部分请求通过，若这些请求都是健康的，则会完全关闭断路器，否则继续保持打开，再次进行休眠计时</li>
+</ul>
+<p>服务熔断原理 (断路器的原理)</p>
+<p>统计用户在指定的时间范围（默认 10s）之内的请求总数达到指定的数量之后，如果不健康的请求 (超时、异常)  占总请求数量的百分比（50%）达到了指定的阈值之后，就会触发熔断。触发熔断，断路器就会打开 (open),此时所有请求都不能通过。在 5s  之后，断路器会恢复到半开状态 (half open)，会允许少量请求通过，如果这些请求都是健康的，那么断路器会回到关闭状态  (close).如果这些请求还是失败的请求,断路器还是恢复到打开的状态 (open).</p>
+<p>traefik 支持的触发器</p>
+<ul>
+<li>NetworkErrorRatio：网络错误率</li>
+<li>ResponseCodeRatio：状态代码比率</li>
+<li>LatencyAtQuantileMS：分位数的延迟（以毫秒为单位）</li>
+</ul>
+<p>创建 ingressRoute ，添加 circuitBreaker 中间件，指定 50% 的请求比例响应时间大于 1MS 时熔断。</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp1
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`myapp1.test.com`)
+    kind: Rule
+    services:
+    - name: myapp1  
+      port: 80   
+    middlewares:
+      - name: circuit-breaker-middleware
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: circuit-breaker-middleware
+spec:
+  circuitBreaker:
+    expression: LatencyAtQuantileMS(50.0) &gt; 1
+</code></pre>
+<p>yaml</p>
+<p>压力测试，一共请求 1000 次，每次并发 100 次。触发熔断机制，测试结果失败的请求为 999 次，总耗时 1.742 秒。</p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# ab -n 1000 -c 100  &quot;http://myapp1.test.com/&quot;
+Concurrency Level:      100
+Time taken for tests:   1.742 seconds
+Complete requests:      1000
+Failed requests:        999
+   (Connect: 0, Receive: 0, Length: 2, Exceptions: 0)
+Write errors:           0
+Non-2xx responses:      999
+</code></pre>
+<p>bash</p>
+<h5 id="18-自定义错误页--errorPages">1.8 自定义错误页 -errorPages</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/errorpages/">官方文档</a></p>
+<p>在实际的业务中，肯定会存在 <code>4XX</code> <code>5XX</code> 相关的错误异常，如果每个应用都开发一个单独的错误页，无疑大大增加了开发成本，traefik 同样也支持自定义错误页，但是需要注意的是，错误页面不是由 traefik 存储处理，而是通过定义中间件，将错误的请求重定向到其他的页面。</p>
+<p>首先，我们先创建一个应用。这个 web 应用的功能是：</p>
+<ul>
+<li>当请求 / 时，返回状态码为 200</li>
+<li>当请求 /400 时，返回 400 状态码</li>
+<li>当请求 /500 时，返回 500 状态码</li>
+</ul>
+<p>创建 deployment svc</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask
+        image: cuiliang0302/request-code:v2.0
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: &quot;128Mi&quot;
+            cpu: &quot;500m&quot;
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask
+spec:
+  type: ClusterIP
+  selector:
+    app: flask
+  ports:
+  - port: 5000
+    targetPort: 5000
+</code></pre>
+<p>yaml</p>
+<p>创建 ingressRoute</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: flask
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`flask.test.com`)
+    kind: Rule
+    services:
+    - name: flask  
+      port: 5000 
+</code></pre>
+<p>yaml</p>
+<p>访问测试，模拟 400 500 错误</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# curl -I http://flask.test.com
+HTTP/1.1 200 OK
+
+[root@k8s-node1 ~]# curl -I http://flask.test.com/400
+HTTP/1.1 400 Bad Request
+
+[root@k8s-node1 ~]# curl -I http://flask.test.com/500
+HTTP/1.1 500 Internal Server Error
+
+[root@k8s-node1 ~]# curl -I http://flask.test.com/404
+HTTP/1.1 404 Not Found
+</code></pre>
+<p>bash</p>
+<p>现在提出一个新的需求，当我访问 flask 项目时，如果错误码为 400，返回 myapp1 的页面，如果错误码为 500，返回 myapp2 的页面 (前提是 myapp1 和 myapp2 服务已创建)。</p>
+<p>创建 errors 中间件</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: errors5
+spec:
+  errors:
+    status:
+      - &quot;500-599&quot;
+    # query: /{status}.html   # 可以为每个页面定义一个状态码，也可以指定5XX使用统一页面返回
+    query : /                 # 指定返回myapp2的请求路径
+    service:
+      name: myapp2
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: errors4
+spec:
+  errors:
+    status:
+      - &quot;400-499&quot;
+    # query: /{status}.html   # 可以为每个页面定义一个状态码，也可以指定5XX使用统一页面返回
+    query : /                 # 指定返回myapp1的请求路径
+    service:
+      name: myapp1
+      port: 80
+</code></pre>
+<p>yaml</p>
+<p>修改 ingressRoute</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: flask
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`flask.test.com`)
+    kind: Rule
+    services:
+    - name: flask  
+      port: 5000
+    middlewares:
+      - name: errors4
+      - name: errors5
+</code></pre>
+<p>yaml</p>
+<p>访问测试，可以看到 400 页面和 500 页面已经成功重定向了</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# curl http://flask.test.com/
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;flask&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;hello flask&lt;/h1&gt;
+&lt;img src=&quot;/static/photo.jpg&quot; alt=&quot;photo&quot;&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+[root@k8s-node1 ~]# curl http://flask.test.com/400
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+
+[root@k8s-node1 ~]# curl http://flask.test.com/500
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+</code></pre>
+<p>bash</p>
+<h5 id="19-数据压缩--compress">1.9 数据压缩 -compress</h5>
+<p><a href="https://doc.traefik.io/traefik/middlewares/http/compress/">官方文档</a></p>
+<p>有时候客户端和服务器之间会传输比较大的报文数据，这时候就占用较大的网络带宽和时长。为了节省带宽，加速报文的响应速速，可以将传输的报文数据先进行压缩，然后再进行传输，traefik 也同样支持数据压缩。</p>
+<p>traefik 默认只对大于 1024 字节，且请求标头包含 <code>Accept-Encoding gzip</code> 的资源进行压缩。可以指定排除特定类型不启用压缩或者根据内容大小来决定是否压缩。</p>
+<p>继续使用上面创建的 flask 应用，现在创建中间件并修改 ingressRoute，使用默认配置策略即可。</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: flask
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`flask.test.com`)
+    kind: Rule
+    services:
+    - name: flask  
+      port: 5000
+    middlewares:
+      - name: compress
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: compress
+spec:
+  compress: {}  
+</code></pre>
+<p>yaml</p>
+<p>访问测试</p>
+<p>html 文件小于 1024 字节，未开启压缩</p>
+<p><img src="imgs/image-20230419175108058.png" alt="image-20230419175108058"></p>
+<p>图片资源大于 1024 字节，开启了压缩</p>
+<p><img src="imgs/image-20230419175324586.png" alt="image-20230419175324586"></p>
+<p>以上</p>
+<h4 id="2TraefikService">2:TraefikService</h4>
+<p>kubernetes 中使用 Traefik ingress 的 TraefikService 实现加权轮询、灰度发布、流量复制、会话保持(粘性会话)等功能            </p>
+<p>traefik 的路由规则就可以实现 4 层和 7 层的基本负载均衡操作，使用 <a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroute">IngressRoute</a> <a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressroutetcp">IngressRouteTCP</a> <a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-ingressrouteudp">IngressRouteUDP</a> 资源即可。但是如果想要实现 <code>加权轮询、流量复制</code> 等高级操作，traefik 抽象出了一个 <a href="https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/#kind-traefikservice">TraefikService</a> 资源。此时整体流量走向为：外部流量先通过 entryPoints 端口进入 traefik，然后由 IngressRoute/IngressRouteTCP/IngressRouteUDP 匹配后进入 <code>TraefikService</code>，在 <code>TraefikService</code> 这一层实现加权轮循和流量复制，最后将请求转发至 kubernetes 的 service。</p>
+<p>除此之外 traefik 还支持 7 层的粘性会话、健康检查、传递请求头、响应转发、故障转移等操作。</p>
+<h5 id="2-灰度发布-加权轮询">2: 灰度发布 (加权轮询)</h5>
+<p><a href="https://doc.traefik.io/traefik/routing/services/#weighted-round-robin-service">官方文档</a></p>
+<p>灰度发布也称为金丝雀发布，让一部分即将上线的服务发布到线上，观察是否达到上线要求，主要通过加权轮询的方式实现。</p>
+<p>创建 traefikService 和 inressRoute 资源，实现 wrr 加权轮询</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroutewrr
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`myapp.test.com`) &amp;&amp; PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: wrr
+      namespace: default
+      kind: TraefikService
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TraefikService
+metadata:
+  name: wrr
+  namespace: default
+spec:
+  weighted:
+    services:
+      - name: myapp1    
+        port: 80
+        weight: 1          # 定义权重
+        kind: Service      # 可选，默认就是 Service 
+      - name: myapp2
+        port: 80     
+        weight: 2
+</code></pre>
+<p>yaml</p>
+<p>测试结果如下，可以看到每 3 次访问会有 1 次流量落到 v1 应用， 2 次流量落到 v2 应用</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# for i in {1..9}; do curl http://myapp.test.com &amp;&amp; sleep 1; done
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+</code></pre>
+<p>bash</p>
+<h5 id="3-会话保持-粘性会话">3 会话保持 (粘性会话)</h5>
+<p><a href="https://doc.traefik.io/traefik/routing/services/#servers">官方文档</a></p>
+<blockquote>
+<p>会话保持功能依赖加权轮询功能</p>
+</blockquote>
+<p>当我们使用 traefik 的负载均衡时，默认情况下轮循多个 k8s 的 service  服务，如果用户对同一内容的多次请求，可能被转发到了不同的后端服务器。假设用户发出请求被分配至服务器 A，保存了一些信息在 session  中，该用户再次发送请求被分配到服务器 B，要用之前保存的信息，若服务器 A 和 B 之间没有 session 粘滞，那么服务器 B  就拿不到之前的信息，这样会导致一些问题。traefik  同样也支持粘性会话，可以让用户在一次会话周期内的所有请求始终转发到一台特定的后端服务器上。</p>
+<p>创建 traefikervie 和 ingressRoute，实现基于 cookie 的会话保持</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-sticky
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`myapp.test.com`) &amp;&amp; PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: sticky
+      namespace: default
+      kind: TraefikService
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TraefikService
+metadata:
+  name: sticky
+  namespace: default
+spec:
+  weighted:
+    services:
+      - name: myapp1
+        port: 80
+        weight: 1          # 定义权重
+      - name: myapp2
+        port: 80
+        weight: 2
+    sticky:                 # 开启粘性会话
+      cookie:               # 基于cookie区分客户端      
+        name: test-cookie   # 指定客户端请求时，包含的cookie名称
+</code></pre>
+<p>yaml</p>
+<p>客户端访问测试，携带 cookie</p>
+<pre><code class="language-yaml">[root@k8s-node1 ~]# for i in {1..5}; do curl -b &quot;test-cookie=default-myapp2-80&quot; http://myapp.test.com; done
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+
+[root@k8s-node1 ~]# for i in {1..5}; do curl -b &quot;test-cookie=default-myapp1-80&quot; http://myapp.test.com; done
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+</code></pre>
+<p>yaml</p>
+<h5 id="4-流量复制">4 流量复制</h5>
+<p><a href="https://doc.traefik.io/traefik/routing/services/#mirroring-service">官方文档</a></p>
+<p>所谓的流量复制，也称为镜像服务是指将请求的流量按规则复制一份发送给其它服务，并且会忽略这部分请求的响应，这个功能在做一些压测或者问题复现的时候很有用。</p>
+<p>创建 traefikService 和 ingressRoute</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-mirror
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`myapp.test.com`) &amp;&amp; PathPrefix(`/`) 
+    kind: Rule
+    services:
+    - name: mirror-from-service         
+      namespace: default
+      kind: TraefikService
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TraefikService
+metadata:
+  name: mirror-from-service
+  namespace: default
+spec:
+  mirroring:
+    name: myapp1       # 发送 100% 的请求到 myapp1
+    port: 80
+    mirrors:
+      - name: myapp2   # 然后复制 10% 的请求到 myapp2
+        port: 80
+        percent: 10,
+</code></pre>
+<p>yaml</p>
+<p>测试如下，可以看到只有 <code>myapp1</code> 应用会有数据返回</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# for i in {1..20}; do curl http://myapp.test.com &amp;&amp; sleep 1; done
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;
+.......
+</code></pre>
+<p>bash</p>
+<p><code>myapp2</code> 应用同样收到了请求，与预期相同，收到了 10% 的流量，</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# kubectl logs -l app=bar
+....
+10.244.36.64 - - [20/Apr/2023:07:04:33 +0000] &quot;GET / HTTP/1.1&quot; 200 65 &quot;-&quot; &quot;curl/7.29.0&quot; &quot;1.1.1.1&quot;
+10.244.36.64 - - [20/Apr/2023:07:04:43 +0000] &quot;GET / HTTP/1.1&quot; 200 65 &quot;-&quot; &quot;curl/7.29.0&quot; &quot;1.1.1.1&quot;
+</code></pre>
+<p>bash</p>
+<h4 id="3Traefik-部署">3:Traefik 部署</h4>
+<p><a href="https://www.lvbibir.cn/posts/tech/kubernetes-traefik-1-deploy/#21-crd-rbac-serviceaccount">https://www.lvbibir.cn/posts/tech/kubernetes-traefik-1-deploy/#21-crd-rbac-serviceaccount</a></p>
+<p>traefik 是支持 helm 部署的，但是查看 helm 包的 value.yaml 配置发现总共有 500  多行配置，当需要修改配置项或者对 traefik 做一下自定义配置时，并不灵活。如果只是使用 traefik 的基础功能，推荐使用 helm  部署。如果想深入研究使用 traefik 的话，推荐使用自定义方式部署。</p>
+<p>crd:</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# mkdir /opt/traefik
+[root@k8s-node1 ~]# cd /opt/traefik
+[root@k8s-node1 traefik]# wget https://raw.githubusercontent.com/traefik/traefik/v2.9/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+[root@k8s-node1 traefik]# kubectl apply -f kubernetes-crd-definition-v1.yml
+</code></pre>
+<p>rbac:</p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# wget https://raw.githubusercontent.com/traefik/traefik/v2.9/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+[root@k8s-node1 traefik]# kubectl apply -f kubernetes-crd-rbac.yml
+clusterrole.rbac.authorization.k8s.io/traefik-ingress-controller created
+clusterrolebinding.rbac.authorization.k8s.io/traefik-ingress-controller created
+</code></pre>
+<p>serviceaccount.yml:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: traefik
+  name: traefik-ingress-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: traefik
+    
+    
+    
+    
+    
+    
+</code></pre>
+<h4 id="configmap">configmap</h4>
+<p>在 Traefik 中有三种方式定义静态配置：在配置文件中、在命令行参数中、通过环境变量传递，由于 Traefik 配置很多，通过 CLI 定义不是很方便，一般时候选择将其配置选项放到配置文件中，然后存入 ConfigMap，将其挂入 traefik 中。</p>
+<p><code>configmap.yml</code> 文件内容：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: traefik
+data:
+  traefik.yaml: |-
+    global:
+      checkNewVersion: false    # 周期性的检查是否有新版本发布
+      sendAnonymousUsage: false # 周期性的匿名发送使用统计信息
+    serversTransport:
+      insecureSkipVerify: true  # Traefik忽略验证代理服务的TLS证书
+    api:
+      insecure: true            # 允许HTTP 方式访问API
+      dashboard: true           # 启用Dashboard
+      debug: false              # 启用Debug调试模式
+    metrics:
+      prometheus:               # 配置Prometheus监控指标数据，并使用默认配置
+        addRoutersLabels: true  # 添加routers metrics
+        entryPoint: &quot;metrics&quot;   # 指定metrics监听地址
+    entryPoints:
+      web:
+        address: &quot;:80&quot;          # 配置80端口，并设置入口名称为 web
+        forwardedHeaders: 
+          insecure: true        # 信任所有的forward headers
+      websecure:
+        address: &quot;:443&quot;         # 配置443端口，并设置入口名称为 websecure
+        forwardedHeaders: 
+          insecure: true
+      traefik:
+        address: &quot;:9000&quot;        # 配置9000端口为 dashboard 的端口，不设置默认值为 8080
+      metrics:
+        address: &quot;:9100&quot;        # 配置9100端口，作为metrics收集入口
+      tcpep:
+        address: &quot;:9200&quot;        # 配置9200端口，作为tcp入口
+      udpep:
+        address: &quot;:9300/udp&quot;    # 配置9300端口，作为udp入口
+    providers:
+      kubernetesIngress: &quot;&quot;     # 启用 Kubernetes Ingress 方式来配置路由规则
+      kubernetesGateway: &quot;&quot;     # 启用 Kubernetes Gateway API
+      kubernetesCRD:            # 启用Kubernetes CRD方式来配置路由规则
+        ingressClass: &quot;&quot;        # 指定traefik的ingressClass名称
+        allowCrossNamespace: true   #允许跨namespace
+        allowEmptyServices: true    #允许空endpoints的service
+    log:
+      filePath: &quot;/etc/traefik/logs/traefik.log&quot; # 设置调试日志文件存储路径，如果为空则输出到控制台
+      level: &quot;DEBUG&quot;            # 设置调试日志级别
+      format: &quot;json&quot;          # 设置调试日志格式
+    accessLog:
+      filePath: &quot;/etc/traefik/logs/access.log&quot; # 设置访问日志文件存储路径，如果为空则输出到 stdout 和 stderr
+      format: &quot;json&quot;          # 设置访问调试日志格式
+      bufferingSize: 0          # 设置访问日志缓存行数
+      fields:                   # 设置访问日志中的字段是否保留（keep保留、drop不保留）
+        defaultMode: keep       # 设置默认保留访问日志字段
+        names:                  # 针对访问日志特别字段特别配置保留模式
+          ClientUsername: drop
+          StartUTC: drop        # 禁用日志timestamp使用UTC
+        headers:                # 设置Header中字段是否保留
+          defaultMode: keep     # 设置默认保留Header中字段
+          names:                # 针对Header中特别字段特别配置保留模式
+            # User-Agent: redact# 可以针对指定agent
+            Authorization: drop
+            Content-Type: keep    
+</code></pre>
+<p>设置节点 label，用于控制在哪些节点部署 Traefik，这里我们使用 k8s-node1(master) 节点作为边缘节点部署</p>
+<pre><code class="language-bash">kubectl label node k8s-node1  IngressProxy=true
+</code></pre>
+<p>使用 DeamonSet 或者 Deployment 均可，此处使用 Deployment 方式部署 Traefik，调度至含有 IngressProxy=true 的边缘节点</p>
+<p>同时使用 <code>podAntiAffinity</code> 避免多个 traefik 实例运行在同一节点造成单点故障.</p>
+<pre><code>kubectl apply -f deployment.yml
+</code></pre>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      name: traefik
+      labels:
+        app: traefik
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - traefik
+            topologyKey: &quot;kubernetes.io/hostname&quot;
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 5         # 等待容器优雅退出的时长
+      tolerations:                             # 设置容忍所有污点，防止节点被设置污点
+        - operator: &quot;Exists&quot;
+      nodeSelector:                            # 设置node筛选器，在特定label的节点上启动
+        IngressProxy: &quot;true&quot;                   # 调度至IngressProxy: &quot;true&quot;的节点
+      containers:
+      - name: traefik
+        image: traefik:v2.9
+        env:
+        - name: KUBERNETES_SERVICE_HOST       # 手动指定k8s api,避免网络组件不稳定。
+          value: &quot;1.1.1.1&quot;
+        - name: KUBERNETES_SERVICE_PORT_HTTPS # API server端口
+          value: &quot;6443&quot;
+        - name: KUBERNETES_SERVICE_PORT       # API server端口
+          value: &quot;6443&quot;
+        - name: TZ                            # 指定时区
+          value: &quot;Asia/Shanghai&quot;
+        ports:
+          - name: web
+            containerPort: 80
+          - name: websecure
+            containerPort: 443
+          - name: dashboard
+            containerPort: 9000               # Traefik Dashboard 端口
+          - name: metrics
+            containerPort: 9100
+          - name: tcpep
+            containerPort: 9200               # tcp端口
+          - name: udpep
+            containerPort: 9300               # udp端口
+        securityContext:                      # 只开放网络权限
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - NET_BIND_SERVICE
+        args:
+          - --configfile=/etc/traefik/config/traefik.yaml
+        volumeMounts:
+        - mountPath: /etc/traefik/config
+          name: config
+        - mountPath: /etc/traefik/logs
+          name: logdir
+        - mountPath: /etc/localtime
+          name: timezone
+          readOnly: true
+        resources:
+          requests:
+            memory: &quot;5Mi&quot;
+            cpu: &quot;10m&quot;
+          limits:
+            memory: &quot;256Mi&quot;
+            cpu: &quot;1000m&quot;
+      volumes:
+        - name: config                         # traefik配置文件
+          configMap:
+            name: traefik-config
+        - name: logdir                         # traefik日志目录
+          hostPath:
+            path: /var/log/traefik
+            type: &quot;DirectoryOrCreate&quot;
+        - name: timezone                       # 挂载时区文件
+          hostPath:
+            path: /etc/localtime
+            type: File
+</code></pre>
+<p>service <code>kubectl apply -f service.yml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: traefik
+  name: traefik             # 实际提供服务的 service, 使用 NodePort 模式
+  namespace: traefik
+spec:
+  type: NodePort
+  selector:
+    app: traefik
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 80
+  - name: websecure
+    protocol: TCP
+    port: 443
+    targetPort: 443
+    nodePort: 443
+  - name: dashboard
+    protocol: TCP
+    port: 9000
+    targetPort: 9000
+    nodePort: 9000
+  - name: tcpep
+    protocol: TCP
+    port: 9200
+    targetPort: 9200
+    nodePort: 9200
+  - name: udpep
+    protocol: UDP
+    port: 9300
+    targetPort: 9300
+    nodePort: 9300
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: traefik-metrics
+  name: traefik-metrics           # metrics 用于给集群内的 prometheus 提供数据
+  namespace: traefik
+spec:
+  selector:
+    app: traefik
+  ports:
+  - name: metrics
+    protocol: TCP
+    port: 9100
+    targetPort: 9100
+</code></pre>
+<p>验证：</p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# kubectl get pod,cm,sa,svc -n traefik |grep traefik
+pod/traefik-69bd67497f-v27qp   1/1     Running   0          12m
+configmap/traefik-config     1      7d5h
+serviceaccount/traefik-ingress-controller   1         7d5h
+service/traefik          NodePort    10.101.142.158   &lt;none&gt;        80:80/TCP,443:443/TCP,9000:9000/TCP,9200:9200/TCP,9300:9300/UDP   11m
+service/traefik-metrics   ClusterIP   10.98.89.13      &lt;none&gt;        9100/TCP                                                          12m
+</code></pre>
+<p>可以直接通过 <a href="http://1.1.1.1:9000">http://1.1.1.1:9000</a> 访问到 dashboard</p>
+<p>其他配置：</p>
+<p>2.5.1 强制使用 TLS v1.2+</p>
+<p><a href="https://doc.traefik.io/traefik/user-guides/crd-acme/#force-tls-v12">官方文档</a></p>
+<p>如今，TLS v1.0 和 v1.1 因为存在安全问题，现在已被弃用。为了保障系统安全，所有入口路由都应该强制使用 TLS v1.2 或更高版本。</p>
+<pre><code class="language-bash">[root@k8s-node1 traefik]# tee traefik-tlsoption.yml &lt;&lt;-&#39;EOF&#39;
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSOption
+metadata:
+  name: default
+  namespace: traefik
+spec:
+  minVersion: VersionTLS12
+  cipherSuites:
+    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384   # TLS 1.2
+    - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305    # TLS 1.2
+    - TLS_AES_256_GCM_SHA384                  # TLS 1.3
+    - TLS_CHACHA20_POLY1305_SHA256            # TLS 1.3
+  curvePreferences:
+    - CurveP521
+    - CurveP384
+  sniStrict: true
+EOF
+[root@k8s-node1 traefik]# kubectl apply -f traefik-tlsoption.yml
+tlsoption.traefik.containo.us/default created
+</code></pre>
+<p>bash</p>
+<h3 id="252-日志切割">2.5.2 日志切割</h3>
+<p>官方并没有日志轮换的功能，但是 traefik 收到 <code>USR1</code> 信号后会重建日志文件，因此可以通过 <code>logrotate</code> 实现日志轮换</p>
+<pre><code class="language-bash">mkdir -p /etc/logrotate.d/traefik
+tee /etc/logrotate.d/traefik/config &lt;&lt;-&#39;EOF&#39;
+/var/log/traefik/*.log {
+  daily
+  rotate 15
+  missingok
+  notifempty
+  compress
+  dateext
+  dateyesterday
+  dateformat .%Y-%m-%d
+  create 0644 root root
+  postrotate
+   docker kill --signal=&quot;USR1&quot; &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex-error&quot; title=&quot;ParseError: KaTeX parse error: Expected &amp;#x27;}&amp;#x27;, got &amp;#x27;EOF&amp;#x27; at end of input: …se| awk &amp;#x27;{print&quot; style=&quot;color:#cc0000&quot;&gt;(docker ps | grep traefik |grep -v pause| awk &amp;#x27;{print&lt;/span&gt;&lt;/span&gt;1}&#39;)
+  endscript
+ }
+EOF
+</code></pre>
+<p>bash</p>
+<p>创建定时任务</p>
+<pre><code class="language-bash">crontab -e
+0 0 * * * /usr/sbin/logrotate -f /etc/logrotate.d/traefik/config &gt;/dev/null 2&gt;&amp;1
+</code></pre>
+<p>bash</p>
+<h2 id="26-多控制器">2.6 多控制器</h2>
+<p>有的业务场景下可能需要在一个集群中部署多个 traefik，例如：避免单个 traefik 配置规则过多导致加载处理缓慢。每个  namespace 部署一个 traefik。或者 traefik 生产与测试环境区分等场景，需要不同的实例控制不同的 IngressRoute 资源对象，要实现该功能有两种方法</p>
+<h3 id="261-annotations-注解筛选">2.6.1 annotations 注解筛选</h3>
+<p>首先在 traefik 配置文件中的 providers 下增加 Ingressclass 参数，指定具体的值</p>
+<pre><code class="language-yaml">    providers:
+      kubernetesCRD:            # 启用Kubernetes CRD方式来配置路由规则
+        ingressClass: &quot;traefik-v2.9&quot; # 指定traefik的ingressClass实例名称
+        allowCrossNamespace: true   #允许跨namespace
+        allowEmptyServices: true    #允许空endpoints的service
+</code></pre>
+<p>yaml</p>
+<p>接下来在 IngressRoute 资源对象中的 annotations 参数中添加 <code>kubernetes.io/ingress.class: traefik-v2.9</code> 即可</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik-v2.9 #  因为静态配置文件指定了ingressclass，所以这里的annotations 要指定，否则访问会404
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.test.com`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+          namespace: traefik
+</code></pre>
+<p>yaml</p>
+<h3 id="262-label-标签选择器筛选">2.6.2 label 标签选择器筛选</h3>
+<p>首先在 traefik 配置文件中的 providers 下增加 labelSelector 参数，指定具体的标签键值。</p>
+<pre><code class="language-yaml">    providers:
+      kubernetesCRD:            # 启用Kubernetes CRD方式来配置路由规则
+        # ingressClass: &quot;traefik-v2.9&quot;    # 指定traefik的ingressClass名称
+        labelSelector: &quot;app=traefik-v2.9&quot; # 通过标签选择器指定traefik标签 
+        allowCrossNamespace: true   #允许跨namespace
+        allowEmptyServices: true    #允许空endpoints的service
+</code></pre>
+<p>yaml</p>
+<p>然后在 IngressRoute 资源对象中添加 labels 标签选择器，选择 <code>app: traefik-v2.9</code> 这个标签即可</p>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  labels:     # 通过标签选择器，该IngressRoute资源由配置了app=traefik-v2.9的traefik处理
+    app: traefik-v2.9
+  # annotations:
+    # kubernetes.io/ingress.class: traefik-v2.9
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.test.com`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+          namespace: traefik
+</code></pre>
+<p>yaml</p>
+<p>以上</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-ingress
+  namespace: default
+  annotations:
+    #kubernetes.io/ingress.class: traefik-v2.9
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+  - host: hello.by.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: hello
+            port:
+              number: 8080
+</code></pre>
+<pre><code class="language-yaml">apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hello
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik-v2.9 #  因为静态配置文件指定了ingressclass，所以这里的annotations 要指定，否则访问会404
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`192.168.5.21`)
+    kind: Rule
+    services:
+    - name: hello
+      port: 8080
+</code></pre>
+<pre><code class="language-bash">#gateway
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/release-VERSION/config/crd.yaml
+</code></pre>
+<p>configmap:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: default
+data:
+  traefik.yml: |-
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
+    log:
+      level: DEBUG
+    api:
+      insecure: true # 仅用于测试环境，生产环境请禁用
+    entryPoints:
+      web:
+        address: &quot;:80&quot;
+      websecure:
+        address: &quot;:443&quot;
+    providers:
+      kubernetesCRD: {}
+    # 更多 Traefik 配置...
+    #     #
+    #         # # 若有 TLS 配置，可以添加到 ConfigMap 中：
+    #             # # tls:
+    #                 # #   stores:
+    #                     # #     default:
+    #                         # #       defaultCertificate:
+    #                             # #         certFile: &quot;/ssl/tls.crt&quot;
+    #                                 # #         keyFile: &quot;/ssl/tls.key&quot;
+    #
+</code></pre>
+<p>serviceAccount:</p>
+<pre><code class="language-yaml">kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-ingress-controller
+  namespace: default
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;services&quot;,&quot;endpoints&quot;,&quot;secrets&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;extensions&quot;,&quot;networking.k8s.io&quot;]
+    resources: [&quot;ingresses&quot;,&quot;ingressclasses&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;extensions&quot;,&quot;networking.k8s.io&quot;]
+    resources: [&quot;ingresses/status&quot;]
+    verbs:  [&quot;update&quot;]
+ # - apiGroups: [&quot;traefik.containo.us&quot;]
+ #   #  resources: [&quot;middlewares&quot;]
+ #      # verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+ #       # - apiGroups: [&quot;traefik.containo.us&quot;]
+ #         #  resources: [&quot;ingressroutes&quot;]
+ #            # verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+ #
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+  namespace: default
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: default
+</code></pre>
+<p>deployment</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-ingress-service
+  namespace: default
+spec:
+  selector:
+    app: traefik
+  ports:
+    - name: web
+      port: 80
+      targetPort: web
+      nodePort: 31888
+    - name: dashboard
+      port: 8080
+      targetPort: dashboard
+      nodePort: 31889
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  traefik-ingress-controller
+  labels:
+    app: traefik
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          image: traefik:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - --api.insecure
+            - --providers.kubernetesingress
+          volumeMounts:
+          - name: traefik-config
+            mountPath: /etc/traefik/config
+            readOnly: true
+          ports:
+            - name: web
+              containerPort: 80
+            - name: dashboard
+              containerPort: 8080
+            - name: websecure
+              containerPort: 443
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 1000m
+              memory: 1024Mi
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+      volumes:
+        - name: traefik-config
+          configMap:
+          name: traefik-config
+</code></pre>
+<h2 id="kubeadm-搭建-K8s-集群">kubeadm 搭建 K8s 集群</h2>
+<p>Kubeadm 概述</p>
+<ul>
+<li><code>kubeadm</code> 是 <code>Kubernetes</code> 项目自带的及集群构建工具，负责执行构建一个最小化的可用集群以及将其启动等的必要基本步骤，<code>kubeadm</code> 是 <code>Kubernetes</code> 集群全生命周期的管理工具，可用于实现集群的部署、升级、降级及拆除。<code>kubeadm</code> 部署 <code>Kubernetes</code> 集群是将大部分资源以 <code>pod</code> 的方式运行，例如（<code>kube-proxy</code>、<code>kube-controller-manager</code>、<code>kube-scheduler</code>、<code>kube-apiserver</code>、<code>flannel</code>) 都是以 <code>pod</code> 方式运行。</li>
+<li><code>Kubeadm</code> 仅关心如何初始化并启动集群，余下的其他操作，例如安装 <code>Kubernetes Dashboard</code>、监控系统、日志系统等必要的附加组件则不在其考虑范围之内，需要管理员自行部署。</li>
+<li><code>Kubeadm</code> 集成了 <code>Kubeadm init</code> 和 <code>kubeadm join</code> 等工具程序，其中 <code>kubeadm init</code> 用于集群的快速初始化，其核心功能是部署 Master 节点的各个组件，而 <code>kubeadm join</code> 则用于将节点快速加入到指定集群中，它们是创建 <code>Kubernetes</code> 集群最佳实践的“快速路径”。另外，<code>kubeadm token</code> 可于集群构建后管理用于加入集群时使用的认证令牌（<code>token</code>)，而 <code>kubeadm reset</code> 命令的功能则是删除集群构建过程中生成的文件以重置回初始状态。</li>
+</ul>
+<img src="imgs/image-20240414092432884.png" alt="image-20240414092432884" style="zoom:50%;" />
+
+<p>基于 <code>centos7.9</code>，<code>docker-ce-20.10.18</code>，<code>kubelet-1.22.3-0</code></p>
+<p>部署 Kubernetes 集群需要满足每个节点至少满足 2 核 CPU、2G 内存和 30GB 硬盘且都可以访问外网</p>
+<h3 id="前期准备">前期准备</h3>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s-node1</td>
+<td>1.1.1.1</td>
+</tr>
+<tr>
+<td>k8s-node2</td>
+<td>1.1.1.2</td>
+</tr>
+<tr>
+<td>k8s-node3</td>
+<td>1.1.1.3</td>
+</tr>
+</tbody></table>
+<pre><code class="language-bash"># 关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+
+# 关闭selinux
+sed -i &#39;s/enforcing/disabled/&#39; /etc/selinux/config  # 永久
+setenforce 0  # 临时
+
+# 关闭swap
+swapoff -a  # 临时
+vim /etc/fstab  # 永久, 注释掉swap分区相关行
+
+# 设置主机名
+hostnamectl set-hostname &lt;hostname&gt;
+
+# 添加hosts
+cat &gt;&gt; /etc/hosts &lt;&lt; EOF
+1.1.1.1 k8s-node1
+1.1.1.2 k8s-node2
+1.1.1.3 k8s-node3
+EOF
+
+# 将桥接的IPv4流量传递到iptables的链
+cat &gt; /etc/sysctl.d/k8s.conf &lt;&lt; EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system  # 生效
+
+# 时间同步
+timedatectl set-timezone Asia/Shanghai
+yum install ntpdate -y
+ntpdate time.windows.com
+</code></pre>
+<h3 id="docker">docker</h3>
+<p>Kubernetes 默认 CRI（容器运行时）为 Docker，因此先安装 Docker。</p>
+<pre><code class="language-bash">wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
+yum list docker-ce --show-duplicates
+yum install docker-ce-20.10.23-3.el7.x86_64
+
+mkdir /etc/docker
+cat &gt; /etc/docker/daemon.json &lt;&lt; EOF
+{
+  &quot;registry-mirrors&quot;: [
+    &quot;http://hub-mirror.c.163.com&quot;,
+    &quot;https://docker.mirrors.ustc.edu.cn&quot;,
+    &quot;https://jc0srqak.mirror.aliyuncs.com&quot;
+  ],
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
+}
+EOF
+
+systemctl daemon-reload
+systemctl enable docker &amp;&amp; systemctl start docker
+docker info
+</code></pre>
+<h3 id="1kubeadmkubeletkubectl">1:kubeadm/kubelet/kubectl</h3>
+<p>添加阿里云 YUM 软件源</p>
+<pre><code class="language-bash">cat &gt; /etc/yum.repos.d/kubernetes.repo &lt;&lt; EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+</code></pre>
+<pre><code class="language-bash">yum install -y kubelet-1.22.3 kubeadm-1.22.3 kubectl-1.22.3
+systemctl enable kubelet
+systemctl start kubelet
+</code></pre>
+<h3 id="2Kubernetes-Master">2:Kubernetes Master</h3>
+<p>在 1.1.1.1（Master）执行</p>
+<pre><code class="language-bash">kubeadm init \
+--apiserver-advertise-address=1.1.1.1 \
+--kubernetes-version v1.22.3 \
+--service-cidr=10.96.0.0/12 \
+--pod-network-cidr=10.244.0.0/16 \
+--ignore-preflight-errors=all \
+--image-repository registry.aliyuncs.com/google_containers 
+</code></pre>
+<ul>
+<li>–apiserver-advertise-address 集群通告地址</li>
+<li>–kubernetes-version K8s 版本，与上面安装的一致</li>
+<li>–service-cidr 集群内部虚拟网络，Pod 统一访问入口</li>
+<li>–pod-network-cidr Pod 网络，与下面部署的 CNI 网络组件 yaml 中保持一致</li>
+<li>–ignore-preflight-errors=all，跳过一些错误</li>
+<li>–image-repository 由于默认拉取镜像地址 k8s.gcr.io 国内无法访问，这里指定阿里云镜像仓库地址</li>
+</ul>
+<p>或者使用配置文件引导：</p>
+<pre><code class="language-bash">cat &gt; kubeadm.conf &lt;&lt; EOF
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.22.3
+imageRepository: registry.aliyuncs.com/google_containers 
+networking:
+  podSubnet: 10.244.0.0/16 
+  serviceSubnet: 10.96.0.0/12 
+EOF
+
+kubeadm init --config kubeadm.conf --ignore-preflight-errors=all  
+</code></pre>
+<p>拷贝 kubectl 使用的连接 k8s 认证文件到默认路径：</p>
+<pre><code class="language-bash">mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;(id -g) $HOME/.kube/config
+</code></pre>
+<pre><code class="language-bash">#查看 k8s 集群状态
+kubectl get cs
+NAME                 STATUS      MESSAGE                                                                                       ERROR
+scheduler            Unhealthy   Get &quot;http://127.0.0.1:10251/healthz&quot;: dial tcp 127.0.0.1:10251: connect: connection refused
+controller-manager   Healthy     ok                                                                      
+etcd-0               Healthy     {&quot;health&quot;:&quot;true&quot;,&quot;reason&quot;:&quot;&quot;}   
+
+vim /etc/kubernetes/manifests/kube-scheduler.yaml
+# 注释掉 --port=0 ，scheduler会自动重启，稍等一小会状态变为正常
+
+kubectl get cs
+NAME                 STATUS    MESSAGE                         ERROR
+scheduler            Healthy   ok
+controller-manager   Healthy   ok
+etcd-0               Healthy   {&quot;health&quot;:&quot;true&quot;,&quot;reason&quot;:&quot;&quot;}
+</code></pre>
+<h3 id="3-Kubernetes-Node">3: Kubernetes Node</h3>
+<p>在 192.168.150.102/103（Node）执行。</p>
+<p>向集群添加新节点，执行在 kubeadm init 输出的 kubeadm join 命令：</p>
+<pre><code class="language-bash">kubeadm join 1.1.1.1:6443 --token esce21.q6hetwm8si29qxwn \
+--discovery-token-ca-cert-hash sha256:00603a05805807501d7181c3d60b478788408cfe6cedefedb1f97569708be9c5
+</code></pre>
+<p>默认 token 有效期为 24 小时，当过期之后，该 token 就不可用了。这时就需要重新创建 token，操作如下</p>
+<pre><code class="language-bash">kubeadm token create
+kubeadm token list
+
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | openssl dgst -sha256 -hex | sed &#39;s/^.* //&#39;
+63bca849e0e01691ae14eab449570284f0c3ddeea590f8da988c07fe2729e924
+
+kubeadm join 1.1.1.1:6443 --token nuja6n.o3jrhsffiqs9swnu --discovery-token-ca-cert-hash 
+sha256:63bca849e0e01691ae14eab449570284f0c3ddeea590f8da988c07fe2729e924
+</code></pre>
+<h3 id="4部署容器网络-cni">4:部署容器网络 (cni)</h3>
+<p>Calico 是一个纯三层的数据中心网络方案，Calico 支持广泛的平台，包括 Kubernetes、OpenStack 等。</p>
+<p>Calico 在每一个计算节点利用 Linux Kernel 实现了一个高效的虚拟路由器（ vRouter） 来负责数据转发，而每个 vRouter 通过 BGP 协议负责把自己上运行的 workload 的路由信息向整个 Calico 网络内传播。</p>
+<p>此外，Calico 项目还实现了 Kubernetes 网络策略，提供 ACL 功能。</p>
+<p><a href="https://docs.projectcalico.org/getting-started/kubernetes/quickstart">quickstart</a></p>
+<p><a href="https://docs.tigera.io/archive/v3.23/getting-started/kubernetes/requirements">版本对照表</a>，在此页面可以看到 calico 每个版本支持的 kubernetes 的版本</p>
+<p>安装 calico</p>
+<pre><code class="language-bash">wget --no-check-certificate https://docs.tigera.io/archive/v3.23/manifests/calico.yaml
+</code></pre>
+<p>修改 Pod 网络和网卡识别参数，Pod 网络与前面 kubeadm init 指定的一样</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# vim calico.yaml
+# 修改位置：DaemonSet.spec.template.spec.containers.env
+# 新增如下四行
+- name: CALICO_IPV4POOL_CIDR
+  value: &quot;10.244.0.0/16&quot;
+- name: IP_AUTODETECTION_METHOD
+  value: interface=bond*,ens* #网卡名根据实际情况修改
+
+kubectl apply -f calico.yaml
+kubectl get pods -n kube-system
+
+# 所有Pod起来后，节点状态应该都是Ready状态了
+[root@k8s-node1 ~]# kubectl get nodes
+NAME        STATUS   ROLES                  AGE    VERSION
+k8s-node1   Ready    control-plane,master   153m   v1.22.3
+k8s-node2   Ready    &lt;none&gt;                 151m   v1.22.3
+k8s-node3   Ready    &lt;none&gt;                 151m   v1.22.3
+</code></pre>
+<h3 id="5metric-server">5:metric-server</h3>
+<p>cadvisor 负责提供数据，已集成到 k8s 中</p>
+<p>Metrics-server 负责数据汇总，需额外安装</p>
+<img src="imgs/image-20240414093414662.png" alt="image-20240414093414662" style="zoom:33%;" />
+
+<pre><code class="language-bash">wget --no-check-certificate https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.0/components.yaml 
+mv components.yaml metrics-server.yaml
+</code></pre>
+<p>修改：</p>
+<pre><code class="language-yaml">      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP # 第一处修改
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls # 第二处修改
+        image: registry.aliyuncs.com/google_containers/metrics-server:v0.6.0 # 第三处修改
+        imagePullPolicy: IfNotPresent
+</code></pre>
+<ul>
+<li><pre><code>--kubelet-insecure-tls
+</code></pre>
+<ul>
+<li>不验证 kubelet 自签的证书</li>
+</ul>
+</li>
+<li><p>`–kubelet-preferred-address-types=InternalIP</p>
+<ul>
+<li>Metrics-server 连接 cadvisor 默认通过主机名即 node 的名称进行连接，而 Metric-server 作为 pod 运行在集群中默认是无法解析的，所以这里修改成通过节点 ip 连接</li>
+</ul>
+</li>
+</ul>
+<p>部署 metrics-server：</p>
+<pre><code class="language-bash">[root@k8s-node1 ~]# kubectl apply -f metrics-server.yaml
+[root@k8s-node1 ~]# kubectl get pods -n kube-system -l k8s-app=metrics-server
+NAME                              READY   STATUS    RESTARTS   AGE
+metrics-server-7f66b69ff6-bkfqg   1/1     Running   0          59s
+[root@k8s-node1 ~]# kubectl top nodes
+NAME        CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+k8s-node1   226m         11%    2004Mi          54%
+k8s-node2   97m          4%     1047Mi          28%
+k8s-node3   98m          4%     1096Mi          29%
+</code></pre>
+<h3 id="6测试-kubernetes-集群">6：测试 kubernetes 集群</h3>
+<ul>
+<li>验证 Pod 工作</li>
+<li>验证 Pod 网络通信</li>
+<li>验证 DNS 解析</li>
+</ul>
+<p>在 Kubernetes 集群中创建一个 pod，验证是否正常运行：</p>
+<pre><code class="language-bash">kubectl create deployment nginx --image=nginx
+kubectl expose deployment nginx --type=NodePort --port=80  --target-port=80
+[root@k8s-node1 ~]# kubectl get pod,deploy,svc
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-6799fc88d8-57bqd   1/1     Running   0          10m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     1            1           10m
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP        170m
+service/nginx        NodePort    10.102.188.108   &lt;none&gt;        80:30954/TCP   2m31s
+</code></pre>
+<p>访问地址：<a href="http://1.1.1.1:30954%EF%BC%8C%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84%EF%BC%8Cip">http://1.1.1.1:30954，端口是固定的，ip</a> 可以是集群内任一节点的 ip</p>
+<h3 id="7部署-Dashboard">7：部署 Dashboard</h3>
+<pre><code class="language-bash">wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
+</code></pre>
+<p>默认 Dashboard 只能集群内部访问，修改 Service 为 NodePort 类型，暴露到外部：</p>
+<pre><code class="language-bash">vi recommended.yaml
+...
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: kubernetes-dashboard
+  name: kubernetes-dashboard
+  namespace: kubernetes-dashboard
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+      nodePort: 30001
+  selector:
+    k8s-app: kubernetes-dashboard
+  type: NodePort
+...
+
+kubectl apply -f recommended.yaml
+
+kubectl get pods -n kubernetes-dashboard
+NAME                                         READY   STATUS    RESTARTS   AGE
+dashboard-metrics-scraper-6b4884c9d5-gl8nr   1/1     Running   0          13m
+kubernetes-dashboard-7f99b75bf4-89cds        1/1     Running   0          13m
+</code></pre>
+<p>创建 service account 并绑定默认 cluster-admin 管理员集群角色：</p>
+<pre><code class="language-bash"># 创建用户
+kubectl create serviceaccount dashboard-admin -n kube-system
+# 用户授权
+kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
+# 获取用户Token
+kubectl describe secrets -n kube-system &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex-error&quot; title=&quot;ParseError: KaTeX parse error: Expected &amp;#x27;}&amp;#x27;, got &amp;#x27;EOF&amp;#x27; at end of input: …rd-admin/{print&quot; style=&quot;color:#cc0000&quot;&gt;(kubectl -n kube-system get secret | awk &amp;#x27;/dashboard-admin/{print&lt;/span&gt;&lt;/span&gt;1}&#39;)
+</code></pre>
+<h2 id="相关专题独立笔记">相关专题（独立笔记）</h2>
+<ul>
+<li><a href="OpenStack-Kolla.md">OpenStack（Kolla-Ansible）</a> — 单节点/集群部署、Horizon、实例</li>
+<li><a href="Ambari-HDP.md">Ambari 2.7.5 + HDP 3.1.5</a></li>
+<li><a href="Azure.md">Azure 基础</a></li>
+</ul>
+<hr>
+<h2 id="附录">附录</h2>
+<h3 id="存储方案--Ceph">存储方案 · Ceph</h3>
+<p>（占位，待补充 Ceph 与 K8s 存储类笔记。）</p>
+<h3 id="Docker-镜像导入导出">Docker 镜像导入导出</h3>
+<pre><code class="language-bash">#!/bin/bash
+docker images &gt; images.txt
+awk &#39;{print $1}&#39; images.txt &gt; images_cut.txt
+sed -i &#39;1d&#39; images_cut.txt
+while read LINE
+do
+docker save &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.7224em;vertical-align:-0.0391em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;L&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0785em;&quot;&gt;I&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.109em;&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;{LINE//\//_}.train.tar
+echo ok
+done &lt; images_cut.txt
+echo finish
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+while read LINE
+do
+docker  load -i $LINE
+echo ok
+done &lt; tarname.txt
+echo finish
+</code></pre>
+<h3 id="Deployment-模板示例Helm-风格占位符">Deployment 模板示例（Helm 风格占位符）</h3>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.name}}
+  namespace: {{.namespace}}
+  labels:
+    app: {{.name}}
+    language: {{.language}}
+spec:
+  minReadySeconds: 10
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.name}}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{.name}}
+        language: {{.language}}
+    spec:
+      imagePullSecrets:
+      - name:  {{.imagesecret}}
+      containers:
+      - image: {{.image}}{{if .command}}
+        command: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .command}}
+        - {{$v}}{{end}}{{end}}{{if .args}}
+        args: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .args}}
+        - {{$v}}{{end}}{{end}}
+        imagePullPolicy: IfNotPresent
+        name: {{.name}}
+        ports: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .ports}}
+        - containerPort: {{$v.port}}{{end}}
+        resources:
+          requests:
+            memory: {{.memory}}
+          limits:
+            memory: {{.maxMemory}}
+        env:
+        - name: ENV
+          value: prod
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: INSTANCE_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+      volumes:
+      - name: &quot;tz-config&quot;
+        hostPath:
+          path: &quot;/usr/share/zoneinfo/Asia/Shanghai&quot;
+          
+          
+          
+</code></pre>
+<h2 id="Go-生态client-go--Cobra">Go 生态（client-go / Cobra）</h2>
+<h3 id="client-go">client-go</h3>
+<h3 id="GVR-GVK">GVR GVK</h3>
+<p>GVR:  无组名资源组（核心资源组 Core group） 和有组名资源组</p>
+<ul>
+<li><p>有组名资源组</p>
+<p>/api/apps/v1/deployments</p>
+<p>apps: 分组  v1: 版本 deployments 资源</p>
+</li>
+<li><p>无组名资源组</p>
+<p>/api/v1/pods</p>
+<p>v1: 版本  pods : resources</p>
+</li>
+</ul>
+<p>在一般接口调用的时候，只需要知道GVR，通过GVR操作对应的资源。</p>
+<p>GVK， 信息可以获取资源对象的GVR， GVK与GVR的映射叫做RestMapper</p>
+<p>RestMapper 主要作用，是ListerWather , 根据Schema 定义的类型GVK 解析出GVR，向ApiServer发起http请求获取资源，然后watch</p>
+<h3 id="Informer">Informer:</h3>
+<p>informer 负责与kubernets ApiServer 进行watch 操作， watch 的资源可以是k8s 内置资源对象，也可以是CRD。</p>
+<p>informer 是一个带有本地缓存以及索引的核心工具包，当请求为<code>查询操作</code>的时候，会优先从本地缓存中查找数据，而更新，创建，删除操作，则会根据事件通知写入到队列DeltaFIFO,同时对应的事件处理后，更新本地缓存，使本地缓存与ETCD的数据保持一致。</p>
+<p>List-Watch:</p>
+<p>​	是k8s 中异步消息通知机制，确保消息的实时性，顺序性，可靠性</p>
+<p>List 是http 短连接实现，watch 是基于http 长链路实现</p>
+<ul>
+<li>Reflector:  使用List-watch 来保证本地缓存数据，准确性和一致性，list 对应资源的全量数据，watch负责变化的数据，watch 指定的k8s 资源，当watch 资源发生变化的时候，触发变更事件，Added, Updated 和Deleted 事件，并将资源对象变化事件存放到本地队列DeltaFIFO中</li>
+<li>DeltaFIFO : 是一个增量队列，记录资源变化的过程，Reflector 是队列的生产者。这个组件可拆分成2部分，FIFO就是一个队列，2： Delta 是一个资源对象存储，保存存储对象的消费类型，比如Added, Updated , Deleted </li>
+<li>Indexer: 用来存储资源对象并自带索引功能的本地存储，Reflector 从DeltaFIFO 中将消费出来的资源对象存储到indexer, indexer 与ETCD中数据完全保存一致，从而client-go 可用本地读取，减少k8s api-server 的数据交互能力</li>
+</ul>
+<h4 id="Reflector">Reflector:</h4>
+<p>用来监听指定资源的组件，当资源发送变化的时候，例如增加，更新，删除操作的时候，会以事件的形式存入到本地队列，然后对应的方法处理。Reflector 核心部分就是List-watch</p>
+<p>Reflector 核心逻辑：</p>
+<ol>
+<li>list ,调用List 方法获取全部资源数据，转换为资源列表，然后保存到本地缓存</li>
+<li>定时同步：定时器定时触发同步数据，定时更新缓存数据，在refelector 的结构体对象中，可以配置定时同步的周期时间</li>
+<li>watch: 监听资源的变化，并且调用对应的事件处理函数进行处理</li>
+</ol>
+<p>Reflector 组件对于数据的更新同步，都是基于ResourceVersion 来进行的，每个资源对象会有ResourceVersion 这个属性，当数据发生变化的时候，ResourceVersion 将会与递增的形式进行更新，这样就确保了变更事件的顺序性。</p>
+<p>watch 资源对象的时候，ResourceVersion可用根据我们的需求，进行配置</p>
+<p>ResourceVersion 没有设置，从最新版本进行监听</p>
+<p>ResourceVersion 设置为0， 则从任意版本进行监听</p>
+<p>ResourceVersion 从指定版本进行监听</p>
+<h4 id="DeltaFIFO">DeltaFIFO</h4>
+<p>FIFO: 负载Reflector 传递过来的事件，并将其按照顺序存储，然后等待事件的处理函数进行处理，同时若出现多个相同的事件，则只会处理一次</p>
+<p>Delta: 有2个属性 Type 和object</p>
+<p>Type: 表示这个事件的类型， 比如说 Added ,Updated </p>
+<p>Obeject: 是一个interface 类型， 它表示一个k8s 具体资源对象</p>
+<h4 id="Indexer">Indexer</h4>
+<p>indexer 本身是一个存储，同时在存储的基础上扩展了索引功能</p>
+<ul>
+<li><p>IndexFunc : 索引函数，用于计算一个资源对象的索引值列表，可用根据其定义其他的，比如label标签，annotation 等属性来生成索引值列表</p>
+</li>
+<li><p>index: 存储数据 ，要查找某个命名空间下的pod, 那就要让pod 按照其命名空间进行索引，对应的index 类型就是map[namespace] sets.pod</p>
+</li>
+<li><p>indexers : 存储索引器 ,key 为索引器名称， value 为索引器的实现函数  map[“namespace”] MetaNamespaceIndexFunc</p>
+</li>
+<li><p>indices: 存储缓冲器, key 为索引器名称， value 为缓存数据 map[“namespace”] map[namespace] sets.pod</p>
+</li>
+</ul>
+<p>SharedInformer:</p>
+<p>主要负责2大类功能：</p>
+<ol>
+<li>缓存我们关注的资源对象的最新状态数据</li>
+<li>根据资源对象的变化事件来通知我们注册的处理方法</li>
+</ol>
+<p>workqueue:</p>
+<p>通用队列</p>
+<h3 id="Cobra">Cobra</h3>
+<pre><code>cobra: 3部分组成
+commands : 命令
+arguments: 参数
+flags: 标志
+
+http://docs.kubernetes.org.cn/750.html
+https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/names/
+git clone https://github.com/apicat/apicat.git
+</code></pre>
+<h2 id="Consul">Consul</h2>
+<p>consul是hashicorp公司推出的开源工具，用于实现分布式系统的服务发现与配置。  与其它分布式服务注册与发现方案相比，consul的方案更“一站式”，  内置了服务注册与发现框架、分布一致性协议实现、健康检查、key/value存储、多数据中心方案，不再需要依赖其它工具（比如zookeeper等),使用起来也比较简单。 consul使用go语言编写，因此具有天然可移值性（支持linux,windows,mac  os); 安装包仅包仿一个可执行文件，方便部署，与docker等轻量级容器可无缝配合</p>
+<p><strong>consul特性：</strong></p>
+<ol>
+<li>raft算法</li>
+<li>服务发现</li>
+<li>健康检查</li>
+<li>key/value存储</li>
+<li>多数据中心</li>
+<li>支持http和dns协议接口</li>
+<li>官方提供web管理办面</li>
+</ol>
+<p>常见注册中心</p>
+<p>netfix eureka</p>
+<p>alibaba nacos</p>
+<p>hashicorp consul</p>
+<p>apache zookeeper</p>
+<p>coreos etcd</p>
+<p>cncf coredns</p>
+<p><img src="imgs/1674478166113267.png" alt="image.png"></p>
+<h2 id="注册中心-cap定理">注册中心-cap定理</h2>
+<p>CAP定理：</p>
+<p>指的是在一个分布式系统中，</p>
+<p>Consistency（一致性）、 </p>
+<p>Availability（可用性）、</p>
+<p>Partition tolerance（分区容错性），三者不可同时获得</p>
+<p>其中：</p>
+<p>一致性（C）：所有节点都可以访问到最新的数据</p>
+<p>可用性（A）：每个请求都是可以得到响应的，不管请求是成功还是失败</p>
+<p>分区容错性（P）：除了全部整体网络故障，其他故障都不能导致整个系统不可用</p>
+<p>CAP理论就是说在分布式存储系统中，最多只能实现上面的两点。</p>
+<p>而由于当前的网络硬件肯定会出现延迟丢包等问题，所以分区容忍性是我们必须需要实现的。</p>
+<p>所以我们只能在一致性和可用性之间进行权衡</p>
+<p>CA： 如果不要求P（不允许分区），则C（强一致性）和A（可用性）是可以保证的。但放弃P的同时也就意味着放弃了系统的扩展性，也就是分布式节点受限，没办法部署子节点，这是违背分布式系统设计的初衷的</p>
+<p>CP: 如果不要求A（可用），每个请求都需要在服务器之间保持强一致，而P（分区）会导致同步时间无限延长(也就是等待数据同步完才能正常访问服务)，一旦发生网络故障或者消息丢失等情况，就要牺牲用户的体验，等待所有数据全部一致了之后再让用户访问系统</p>
+<p>AP：要高可用并允许分区，则需放弃一致性。一旦分区发生，节点之间可能会失去联系，为了高可用，每个节点只能用本地数据提供服务，而这样会导致全局数据的不一致性。</p>
+<p>Zookeeper：CP设计，保证了一致性，集群搭建的时候，某个节点失效，则会进行选举行的leader，或者半数以上节点不可用，则无法提供服务，因此可用性没法满足</p>
+<p>Eureka：AP原则，无主从节点，一个节点挂了，自动切换其他节点可以使用，去中心化</p>
+<p>结论：</p>
+<p>分布式系统中P,肯定要满足，所以只能在CA中二选一</p>
+<p>没有最好的选择，最好的选择是根据业务场景来进行架构设计</p>
+<p>如果要求一致性，则选择zookeeper/Nacos，如金融行业 CP</p>
+<p>如果要求可用性，则Eureka/Nacos，如电商系统 AP</p>
+<p>CP ： 适合支付、交易类，要求数据强一致性，宁可业务不可用，也不能出现脏数据</p>
+<p>AP: 互联网业务，比如信息流架构，不要求数据强一致，更想要服务可用</p>
+<p><strong>dev:用于开发，以下两种用于生产环境</strong></p>
+<p><strong>client:客户端，无状态，将http和dns接口请求</strong>转发给局域网内的服务端集群，它只是一个代理的角色。 </p>
+<p>server:服务端 ，保存配置信息，高可用集群，每个数据中心的server数据推荐为3个或5个</p>
+<p><img src="imgs/1674479784507689.png" alt="image.png"></p>
+<p>上图是一个简单的consul cluster架构，consul  cluster有server和client两种角色，不管是server还是client,统称为agent,consul  client是相对无状态的，只负责转发rpc到server，资源开销很少.server是一个有一组扩展功能的代理，这些功能包括参与raft选举，维护集群状态，响应rpc查询，与其它数据中心交互wan gossip和转发查询给leader或远程数据中心。 </p>
+<p>每个数据中心，client和server是混合的。一般建有3-5台server.这是基于有故障情况下的可用性和性能之间的权衡结果，因为越多的机器加入达成共识越慢，server之初间会选择出一个leader.<strong>然而并不限制client的数量</strong>，一般建议一个服务对应一个client,它们可以很容易的扩展到数千或者数万台，在开发的时候我们绑定一组服务注册中心中的客户端 即可。 </p>
+<p>producer：服务提供者</p>
+<p>consumer:服务消费者</p>
+<p><img src="imgs/1674480519991279.png" alt="image.png"></p>
+<p>服务发现及注册：</p>
+<p>producer启动时，会将自己的ip/host等信息通过发送请求告知consul,consul接收到producer的注册信息后，每隔10秒（默认）会向producer发送一个健康检查的请求，检查producer是否处于可用状态，防止consumer调到不可用的服务；</p>
+<p>服务调用</p>
+<p>当consumer请求product时，会先从consul中拿存储的producer服务的ip和port的临时表（temp  table),从表中任选一个producer的ip和port,然后根据这个ip和port,发送访问请求;此表只包含通过健康检查的producer信息，并且每隔10秒更新。。</p>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: {{.name}}
+  namespace: {{.namespace}}
+  annotations:
+    sidecar.istio.io/inject: &quot;false&quot;
+  labels:
+    app: {{.name}}
+spec:
+  ports: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .ports}}
+    - port: {{$v.port}}
+      name: {{$v.name}}
+      protocol: {{$v.protocol}}{{end}}
+  {{if eq .resourceType &quot;service&quot;}}selector:
+    app: {{.name}}{{end}}
+---
+</code></pre>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.name}}
+  namespace: {{.namespace}}
+  labels:
+    app: {{.name}}
+    language: {{.language}}
+spec:
+  minReadySeconds: 10
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.name}}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{.name}}
+        language: {{.language}}
+    spec:
+      imagePullSecrets:
+      - name:  {{.imagesecret}}
+      containers:
+      - image: {{.image}}{{if .command}}
+        command: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .command}}
+        - {{$v}}{{end}}{{end}}{{if .args}}
+        args: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .args}}
+        - {{$v}}{{end}}{{end}}
+        imagePullPolicy: IfNotPresent
+        name: {{.name}}
+        ports: {{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .ports}}
+        - containerPort: {{$v.port}}{{end}}
+        resources:
+          requests:
+            memory: {{.memory}}
+          limits:
+            memory: {{.maxMemory}}
+        env:
+        - name: ENV
+          value: prod
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: INSTANCE_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: tz-config
+          mountPath: /etc/localtime
+      volumes:
+      - name: &quot;tz-config&quot;
+        hostPath:
+          path: &quot;/usr/share/zoneinfo/Asia/Shanghai&quot;
+</code></pre>
+<pre><code>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{.name}}
+  namespace: {{.namespace}}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:{{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8889em;vertical-align:-0.1944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0315em;&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v := .rules}}
+  - host: {{$v.domain}}
+    http:
+      paths:{{range &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6944em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0359em;&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0197em;&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:=&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;v.paths}}
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: {{$val.serviceName}}
+            port:
+              number: {{$val.port}}{{end}}{{end}}
+---
+</code></pre>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>实验机部署：<a href="VMWare.md"><code>VMWare.md</code></a>（KubeKey / Harbor / Jenkins）</li>
+<li>OpenStack：<a href="OpenStack-Kolla.md"><code>OpenStack-Kolla.md</code></a></li>
+<li>Ambari/HDP：<a href="Ambari-HDP.md"><code>Ambari-HDP.md</code></a></li>
+<li>Azure：<a href="Azure.md"><code>Azure.md</code></a></li>
+<li><a href="https://istio.io/latest/docs/releases/supported-releases/">Istio 发布与支持版本</a></li>
+<li><a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/">kubeadm 官方文档</a></li>
+</ul>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

@@ -1,0 +1,1136 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="- [云模式：IaaS / PaaS / SaaS](#云模式iaas--paas--saas)"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>Microsoft Azure 笔记 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>16-Cloud</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>Microsoft Azure 笔记</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>- [云模式：IaaS / PaaS / SaaS](#云模式iaas--paas--saas)</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#云模式IaaS--PaaS--SaaS" class="toc-link depth-2" data-astro-cid-5eggoaxc> 云模式：IaaS / PaaS / SaaS </a><a href="#Azure-基础概念" class="toc-link depth-2" data-astro-cid-5eggoaxc> Azure 基础概念 </a><a href="#层级管理资源--资源组--订阅--管理组" class="toc-link depth-3" data-astro-cid-5eggoaxc> 层级管理（资源 → 资源组 → 订阅 → 管理组） </a><a href="#管理工具门户--Cloud-Shell--PowerShell--CLI" class="toc-link depth-3" data-astro-cid-5eggoaxc> 管理工具（门户 / Cloud Shell / PowerShell / CLI） </a><a href="#Azure-门户" class="toc-link depth-4" data-astro-cid-5eggoaxc> Azure 门户 </a><a href="#Azure-Cloud-Shell" class="toc-link depth-4" data-astro-cid-5eggoaxc> Azure Cloud Shell </a><a href="#Azure-CLI" class="toc-link depth-4" data-astro-cid-5eggoaxc> Azure CLI </a><a href="#Azure-Marketplace-十大类别" class="toc-link depth-3" data-astro-cid-5eggoaxc> Azure Marketplace 十大类别 </a><a href="#计算" class="toc-link depth-4" data-astro-cid-5eggoaxc> 计算 </a><a href="#网络" class="toc-link depth-4" data-astro-cid-5eggoaxc> 网络 </a><a href="#存储" class="toc-link depth-4" data-astro-cid-5eggoaxc> 存储 </a><a href="#存储帐户的类型" class="toc-link depth-5" data-astro-cid-5eggoaxc> 存储帐户的类型 </a><a href="#块-Blob-数据的访问层" class="toc-link depth-5" data-astro-cid-5eggoaxc> 块 Blob 数据的访问层 </a><a href="#容器" class="toc-link depth-5" data-astro-cid-5eggoaxc> 容器 </a><a href="#Blob" class="toc-link depth-5" data-astro-cid-5eggoaxc> Blob </a><a href="#主要区域中的冗余" class="toc-link depth-5" data-astro-cid-5eggoaxc> 主要区域中的冗余 </a><a href="#移动" class="toc-link depth-4" data-astro-cid-5eggoaxc> 移动 </a><a href="#数据库" class="toc-link depth-4" data-astro-cid-5eggoaxc> 数据库 </a><a href="#Web" class="toc-link depth-4" data-astro-cid-5eggoaxc> Web </a><a href="#IoT" class="toc-link depth-4" data-astro-cid-5eggoaxc> IoT </a><a href="#大数据" class="toc-link depth-4" data-astro-cid-5eggoaxc> 大数据 </a><a href="#AI" class="toc-link depth-4" data-astro-cid-5eggoaxc> AI </a><a href="#DevOps" class="toc-link depth-4" data-astro-cid-5eggoaxc> DevOps </a><a href="#虚拟机规模集VMSS" class="toc-link depth-2" data-astro-cid-5eggoaxc> 虚拟机规模集（VMSS） </a><a href="#案例电子商务网站灾备与弹性" class="toc-link depth-2" data-astro-cid-5eggoaxc> 案例：电子商务网站（灾备与弹性） </a><a href="#Azure-SKU-与资源选型" class="toc-link depth-2" data-astro-cid-5eggoaxc> Azure SKU 与资源选型 </a><a href="#主要特征" class="toc-link depth-3" data-astro-cid-5eggoaxc> 主要特征 </a><a href="#示例" class="toc-link depth-3" data-astro-cid-5eggoaxc> 示例 </a><a href="#1-虚拟机SKU" class="toc-link depth-4" data-astro-cid-5eggoaxc> 1. 虚拟机SKU </a><a href="#2-存储SKU" class="toc-link depth-4" data-astro-cid-5eggoaxc> 2. 存储SKU </a><a href="#3-数据库SKU" class="toc-link depth-4" data-astro-cid-5eggoaxc> 3. 数据库SKU </a><a href="#如何选择合适的SKU" class="toc-link depth-3" data-astro-cid-5eggoaxc> 如何选择合适的SKU </a><a href="#示例配置" class="toc-link depth-3" data-astro-cid-5eggoaxc> 示例配置 </a><a href="#创建虚拟机" class="toc-link depth-4" data-astro-cid-5eggoaxc> 创建虚拟机 </a><a href="#创建存储账户" class="toc-link depth-4" data-astro-cid-5eggoaxc> 创建存储账户 </a><a href="#总结" class="toc-link depth-3" data-astro-cid-5eggoaxc> 总结 </a><a href="#AKS-网络与子网规划" class="toc-link depth-2" data-astro-cid-5eggoaxc> AKS 网络与子网规划 </a><a href="#1-网络模式概述" class="toc-link depth-3" data-astro-cid-5eggoaxc> 1. 网络模式概述 </a><a href="#覆盖网络Overlay-Network" class="toc-link depth-4" data-astro-cid-5eggoaxc> 覆盖网络（Overlay Network） </a><a href="#平面网络Flat-Network" class="toc-link depth-4" data-astro-cid-5eggoaxc> 平面网络（Flat Network） </a><a href="#2-子网大小的影响" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2. 子网大小的影响 </a><a href="#覆盖网络下的子网大小" class="toc-link depth-4" data-astro-cid-5eggoaxc> 覆盖网络下的子网大小 </a><a href="#平面网络下的子网大小" class="toc-link depth-4" data-astro-cid-5eggoaxc> 平面网络下的子网大小 </a><a href="#3-配置建议" class="toc-link depth-3" data-astro-cid-5eggoaxc> 3. 配置建议 </a><a href="#覆盖网络模式" class="toc-link depth-4" data-astro-cid-5eggoaxc> 覆盖网络模式 </a><a href="#平面网络模式" class="toc-link depth-4" data-astro-cid-5eggoaxc> 平面网络模式 </a><a href="#总结-2" class="toc-link depth-3" data-astro-cid-5eggoaxc> 总结 </a><a href="#AKS-服务暴露类型" class="toc-link depth-2" data-astro-cid-5eggoaxc> AKS 服务暴露类型 </a><a href="#ClusterIP" class="toc-link depth-3" data-astro-cid-5eggoaxc> ClusterIP </a><a href="#NodePort" class="toc-link depth-3" data-astro-cid-5eggoaxc> NodePort </a><a href="#LoadBalancer" class="toc-link depth-3" data-astro-cid-5eggoaxc> LoadBalancer </a><a href="#AKS-端到端部署Traefik--App-Gateway" class="toc-link depth-2" data-astro-cid-5eggoaxc> AKS 端到端部署（Traefik + App Gateway） </a><a href="#1-创建资源组和虚拟网络" class="toc-link depth-3" data-astro-cid-5eggoaxc> 1. 创建资源组和虚拟网络 </a><a href="#11-创建资源组" class="toc-link depth-4" data-astro-cid-5eggoaxc> 1.1 创建资源组 </a><a href="#12-创建虚拟网络和子网" class="toc-link depth-4" data-astro-cid-5eggoaxc> 1.2 创建虚拟网络和子网 </a><a href="#2-部署Azure-Kubernetes-Service-AKS" class="toc-link depth-3" data-astro-cid-5eggoaxc> 2. 部署Azure Kubernetes Service (AKS) </a><a href="#21-创建AKS集群" class="toc-link depth-4" data-astro-cid-5eggoaxc> 2.1 创建AKS集群 </a><a href="#22-获取AKS凭证" class="toc-link depth-4" data-astro-cid-5eggoaxc> 2.2 获取AKS凭证 </a><a href="#3-安装Ingress-Controller例如Traefik" class="toc-link depth-3" data-astro-cid-5eggoaxc> 3. 安装Ingress Controller（例如Traefik） </a><a href="#31-使用Helm安装Traefik" class="toc-link depth-4" data-astro-cid-5eggoaxc> 3.1 使用Helm安装Traefik </a><a href="#4-配置Azure-Application-Gateway" class="toc-link depth-3" data-astro-cid-5eggoaxc> 4. 配置Azure Application Gateway </a><a href="#41-创建公共IP地址" class="toc-link depth-4" data-astro-cid-5eggoaxc> 4.1 创建公共IP地址 </a><a href="#42-创建Application-Gateway" class="toc-link depth-4" data-astro-cid-5eggoaxc> 4.2 创建Application Gateway </a><a href="#5-配置负载均衡和流量路由" class="toc-link depth-3" data-astro-cid-5eggoaxc> 5. 配置负载均衡和流量路由 </a><a href="#51-创建一个示例应用" class="toc-link depth-4" data-astro-cid-5eggoaxc> 5.1 创建一个示例应用 </a><a href="#52-创建Ingress资源" class="toc-link depth-4" data-astro-cid-5eggoaxc> 5.2 创建Ingress资源 </a><a href="#6-验证和监控" class="toc-link depth-3" data-astro-cid-5eggoaxc> 6. 验证和监控 </a><a href="#61-验证配置" class="toc-link depth-4" data-astro-cid-5eggoaxc> 6.1 验证配置 </a><a href="#62-监控和日志" class="toc-link depth-4" data-astro-cid-5eggoaxc> 6.2 监控和日志 </a><a href="#总结-3" class="toc-link depth-3" data-astro-cid-5eggoaxc> 总结 </a><a href="#AKS-专用集群" class="toc-link depth-2" data-astro-cid-5eggoaxc> AKS 专用集群 </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><h1 id="Microsoft-Azure-笔记">Microsoft Azure 笔记</h1>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#%E4%BA%91%E6%A8%A1%E5%BC%8Fiaas--paas--saas">云模式：IaaS / PaaS / SaaS</a></li>
+<li><a href="#azure-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5">Azure 基础概念</a></li>
+<li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%A7%84%E6%A8%A1%E9%9B%86vmss">虚拟机规模集（VMSS）</a></li>
+<li><a href="#%E6%A1%88%E4%BE%8B%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1%E7%BD%91%E7%AB%99%E7%81%BE%E5%A4%87%E4%B8%8E%E5%BC%B9%E6%80%A7">案例：电子商务网站</a></li>
+<li><a href="#azure-sku-%E4%B8%8E%E8%B5%84%E6%BA%90%E9%80%89%E5%9E%8B">Azure SKU 与资源选型</a></li>
+<li><a href="#aks-%E7%BD%91%E7%BB%9C%E4%B8%8E%E5%AD%90%E7%BD%91%E8%A7%84%E5%88%92">AKS 网络与子网规划</a></li>
+<li><a href="#aks-%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E7%B1%BB%E5%9E%8B">AKS 服务暴露类型</a></li>
+<li><a href="#aks-%E7%AB%AF%E5%88%B0%E7%AB%AF%E9%83%A8%E7%BD%B2traefik--app-gateway">AKS 端到端部署</a></li>
+<li><a href="#aks-%E4%B8%93%E7%94%A8%E9%9B%86%E7%BE%A4">AKS 专用集群</a></li>
+</ul>
+<hr>
+<h2 id="云模式IaaS--PaaS--SaaS">云模式：IaaS / PaaS / SaaS</h2>
+<p>公有云上的IaaS、PaaS与SaaS划分如下：</p>
+<p><img src="/notes-media/img/image-20240609172100087.png" alt="image-20240609172100087"></p>
+<h2 id="Azure-基础概念">Azure 基础概念</h2>
+<h3 id="层级管理资源--资源组--订阅--管理组">层级管理（资源 → 资源组 → 订阅 → 管理组）</h3>
+<p>Azure的资源、资源组、订阅、管理组四个层级：</p>
+<p><img src="/notes-media/img/image-20240609172131127.png" alt="image-20240609172131127"></p>
+<ul>
+<li>资源：资源是你创建的服务的实例，如虚拟机、存储或 SQL 数据库。</li>
+<li>资源组：资源合并成为资源组，资源组充当在其中部署和管理 Azure 资源（如 Web 应用、数据库和存储帐户）的逻辑容器。</li>
+<li>订阅：订阅将用户帐户和这些用户帐户创建的资源组合在一起。对于每个订阅，你可以创建和使用的资源量有限制或配额。组织可以使用订阅来管理成本，或者由用户、团队或项目创建的资源。</li>
+<li>管理组：这些组有助于你管理多个订阅的访问、策略和合规性。管理组中的所有订阅都会自动继承应用于管理组的条件。</li>
+</ul>
+<h3 id="管理工具门户--Cloud-Shell--PowerShell--CLI">管理工具（门户 / Cloud Shell / PowerShell / CLI）</h3>
+<p>若要充分利用 Azure，需要一种方法来与 Azure 环境、管理组、订阅、资源组、资源等进行交互。Azure 提供了多个用于管理环境的工具，包括：</p>
+<ul>
+<li>Azure 门户</li>
+<li>Azure PowerShell</li>
+<li>Azure 命令行界面 (CLI)</li>
+</ul>
+<h4 id="Azure-门户"><strong>Azure 门户</strong></h4>
+<p>Azure门户是基于 Web 的统一控制台，提供可替代命令行工具的方法。通过 Azure 门户，可以使用图形用户界面来管理 Azure 订阅。方法：</p>
+<ul>
+<li>·生成、管理和监视一切内容，从简单的 Web 应用到复杂的云部署</li>
+<li>·创建自定义仪表板以有序地显示资源</li>
+<li>·配置辅助功能选项以提供最佳体验</li>
+</ul>
+<h4 id="Azure-Cloud-Shell"><strong>Azure Cloud Shell</strong></h4>
+<p>Azure Cloud Shell 是基于浏览器的 shell 工具，可用于使用 shell 创建、配置和管理 Azure 资源。Azure Cloud Shell 支持 Azure PowerShell 和 Azure 命令行接口 (CLI)，后者是 Bash shell。</p>
+<p>你可以经 Azure 门户通过选择 Cloud Shell 图标访问 Azure Cloud Shell：</p>
+<p>Azure Cloud Shell 具有多个特征，使它成为支持你管理 Azure 的独特产品/服务。其中的部分特征包括：</p>
+<ul>
+<li>·它是基于浏览器的 shell 体验，无需本地安装或配置。</li>
+<li>·它已经过 Azure 凭据身份验证，因此，登录时本质上知道你是谁以及你拥有哪些权限。</li>
+<li>·你可以选择最熟悉的 shell；Azure Cloud Shell 支持 Azure PowerShell 和使用 Bash 的 Azure CLI。</li>
+</ul>
+<p><strong>Azure PowerShell</strong></p>
+<p>Azure PowerShell 是一种 shell，开发人员、DevOps 和 IT 专业人员可用于运行名为 command-lets (cmdlet) 的命令。这些命令调用 Azure REST API 来执行 Azure 中的管理任务。可以独立运行 cmdlet 来处理一次性更改，也可以将它们组合在一起，以帮助协调复杂的操作，例如：</p>
+<ul>
+<li>·单个资源或多个已连接资源的例程设置、清除和维护。</li>
+<li>·通过命令式编程部署可能包含数十个，或者数百个资源的整个基础结构。</li>
+<li>捕获脚本中的命令可使进程可重复和自动化。</li>
+</ul>
+<h4 id="Azure-CLI"><strong>Azure CLI</strong></h4>
+<p>Azure CLI 在功能上等效于 Azure PowerShell，主要区别是命令的语法。Azure PowerShell 使用 PowerShell 命令，而 Azure CLI 使用 Bash 命令。</p>
+<p>Azure CLI 提供处理离散任务或通过代码协调复杂操作的相同优势。它还可在 Windows、Linux 和 Mac 平台上以及通过 Azure Cloud Shell 进行安装。</p>
+<p>由于 Azure PowerShell 与基于 Bash 的 Azure CLI 之间的功能和访问的相似性，它主要取决于你最熟悉的语言。</p>
+<pre><code class="language-shell"># 登录到Azure
+az login
+# 设置默认的资源组和AKS集群名称
+RESOURCE_GROUP=myResourceGroup
+AKS_NAME=myAKSCluster
+
+# 创建资源组
+az group create --name $RESOURCE_GROUP --location eastus
+
+# 创建AKS集群
+az aks create --resource-group &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8333em;vertical-align:-0.15em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0278em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.109em;&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0715em;&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;msupsub&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.3283em;&quot;&gt;&lt;span style=&quot;top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:2.7em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;katex-sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mathnormal mtight&quot;&gt;G&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.15em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0278em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.109em;&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6667em;vertical-align:-0.0833em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;nam&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;e&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;AKS_NAME --node-count 1 --enable-addons monitoring --generate-ssh-keys
+# 获取AKS集群的认证凭据
+az aks get-credentials --resource-group &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.8333em;vertical-align:-0.15em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;S&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0278em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.109em;&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0715em;&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0576em;&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;msupsub&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.3283em;&quot;&gt;&lt;span style=&quot;top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:2.7em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;katex-sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mathnormal mtight&quot;&gt;G&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.15em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0077em;&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0278em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.109em;&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6667em;vertical-align:-0.0833em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;nam&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;e&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;AKS_NAME
+</code></pre>
+<p><strong>Azure Application Gateway</strong>：应用交付控制器（ADC），提供负载均衡、SSL 终止、WAF 等。</p>
+<h3 id="Azure-Marketplace-十大类别">Azure Marketplace 十大类别</h3>
+<ul>
+<li>计算</li>
+<li>网络</li>
+<li>存储</li>
+<li>移动</li>
+<li>数据库</li>
+<li>Web</li>
+<li>物联网(IoT)</li>
+<li>大数据</li>
+<li>AI</li>
+<li>DevOps</li>
+</ul>
+<h4 id="计算"><strong>计算</strong></h4>
+<p>计算服务通常是众多公司迁移到 Azure 平台的主要原因之一。Azure 提供了一系列用于托管应用程序和服务的选项。下面是 Azure 中的计算服务的一些示例。</p>
+<ul>
+<li>Azure 虚拟机：Azure 中托管的 Windows 或Linux 虚拟机 (VM)。</li>
+<li>Azure 虚拟机规模集：缩放在 Azure 中托管的 Windows VM 或Linux VM。</li>
+<li>Azure Kubernetes 服务：运行容器化服务的VM 的群集管理。</li>
+<li>Azure Service Fabric：在 Azure 或本地运行的分布式系统平台。</li>
+<li>Azure Batch：适用于并行和高性能计算应用程序的托管服务。</li>
+<li>Azure 容器实例：容器化应用在 Azure 上运行，无需预配服务器或 VM。</li>
+<li>Azure Functions：事件驱动的无服务器计算服务。</li>
+</ul>
+<h4 id="网络"><strong>网络</strong></h4>
+<p>Azure 网络的关键功能是连接计算机资源并提供对应用程序的访问。Azure 中的网络功能包括一系列选项，可将外部世界与全球 Azure 数据中心的服务和功能相连。</p>
+<p>下面是 Azure 中的网络服务的一些示例。</p>
+<ul>
+<li>Azure 虚拟网络：将 VM 连接到传入虚拟专用网络 (VPN) 连接。</li>
+<li>Azure 负载均衡器：平衡应用程序或服务终结点的入站和出站连接。</li>
+<li>Azure 应用程序网关：优化应用程序服务器场传递，同时提高应用程序安全性。</li>
+<li>Azure VPN 网关：通过高性能 VPN 网关访问 Azure 虚拟网络。</li>
+<li>Azure DNS：提供超快 DNS 响应和超高域可用性。</li>
+<li>Azure 内容分发网络：在全球范围内为客户提供高带宽内容。</li>
+<li>Azure DDoS 防护：保护 Azure 托管的应用程序免遭分布式拒绝服务 (DDoS) 攻击。</li>
+<li>Azure 流量管理器：在全球的 Azure 区域间分布网络流量。</li>
+<li>Azure ExpressRoute：通过高带宽的专用安全连接连接到Azure。</li>
+<li>Azure 网络观察程序：使用基于场景的分析，监视和诊断网络问题。</li>
+<li>Azure 防火墙：实现具有无限制可扩展性的高度安全和高度可用的防火墙。</li>
+<li>Azure 虚拟 WAN：创建连接本地和远程站点的统一的广域网(WAN)。</li>
+</ul>
+<p>在Azure中国的北区和东区，分别有两个虚拟网络：Vnet1和Vnet2。</p>
+<p>Vnet1的网段是：10.0.0.0/16；Vnet2的网段是：20.0.0.0/16； </p>
+<p>Vnet1中有一个subnet，网段是：10.0.0.1.0/24；Vnet2也有一个subnet，网段是：20.0.1.0/24； </p>
+<ul>
+<li>Vnet1-subnet1中有个虚拟机VM1，IP是10.0.1.4;</li>
+<li>Vnet2-subnet1中有个虚拟机VM2，IP是20.0.1.4;</li>
+</ul>
+<p>我们如何让VM1和VM2进行通讯？</p>
+<p><img src="/notes-media/img/image-20240609175749068.png" alt="image-20240609175749068"></p>
+<p>第一步，在两个Vnet中创建subnet gateway：</p>
+<p><img src="/notes-media/img/image-20240609175804300.png" alt="image-20240609175804300"></p>
+<p>第二步，为两个跨Region的通讯准备两个public IP：</p>
+<p><img src="/notes-media/img/image-20240609175825613.png" alt="image-20240609175825613"></p>
+<p>第三步，创建vnet gateway，创建过程中，会和public ip、subnet gateway创建关联关系。</p>
+<p><img src="/notes-media/img/image-20240609175843446.png" alt="image-20240609175843446"></p>
+<p>第四步：创建vnet  gateway之间的connection。</p>
+<p><img src="/notes-media/img/image-20240609175859355.png" alt="image-20240609175859355"></p>
+<p>至此，分别位于两个区域的两个VM，就可以通过通讯了。当然，需要VM上的Network interface的Network security group放行相关的网络策略。</p>
+<h4 id="存储"><strong>存储</strong></h4>
+<p>Azure 主要提供四种存储服务。</p>
+<ul>
+<li>Azure Blob 存储：用于存储大型对象（例如视频文件或位图）的服务。</li>
+<li>Azure 文件存储：可以像文件服务器那样访问并管理的文件共享。</li>
+<li>Azure 队列存储：用于排队并在应用程序间可靠地传递消息的数据存储。</li>
+<li>Azure 表存储：表存储是一项在云中存储非关系结构化数据（也称为结构化NoSQL 数据）的服务，它提供具有无架构设计的键/属性存储。</li>
+</ul>
+<p>这些服务全都拥有多个共同特征：</p>
+<ul>
+<li>持久且高度可用，包含冗余和复制选项。</li>
+<li>通过自动加密和基于角色的访问控制实现安全性。</li>
+<li>可通过几乎无限制的存储进行缩放。</li>
+<li>托管型，可为你处理维护问题和任何严重问题。</li>
+<li>可通过 HTTP 或 HTTPS 在全球任意位置访问。</li>
+</ul>
+<p>Azure提供的存储服务有几种类型：Blob、Files、Tables、Queues。</p>
+<ul>
+<li>Blob是对象存储。适合存放：图片、视频、文件、日志文件、大数据等。</li>
+<li>Files是文件存储。为应用提供文件系统的服务。</li>
+<li>Tables是为非结构化数据提供存储的，它是一个Key-Value的方式，支持NOSQL，不支持RDBMS。</li>
+<li>Queues用于存放通过http/s协议发请求类服务的查询消息。</li>
+<li>Disk storage：为VM提供高性能的持久存储，包含SSD和HDD。</li>
+</ul>
+<p>Azure的存储服务中，有一个很重要的概念：Storage Account。它是Azure存储服务的namespaces。</p>
+<p>Storage Account的复制技术有6种：</p>
+<ul>
+<li>LRS（Locally Redundant Storage）：数据三个副本都存在于一个Region。</li>
+<li>ZRS（Zero-Redundant Storage）:数据的三个副本跨1-2个region。</li>
+<li>GRS（Geo-Redundant storage）:数据六个副本，三个在第一个region，另外三个在第二个region。第二个region的数据是静态不能被修改的（在主备region发生切换前，第二个region的数据不可读写）。</li>
+<li>RA-GRS（Read-Access Geo-Redundant storage ）：在GRS基础上，第二个 region的数据是可读的。</li>
+<li>异地区域冗余存储 (GZRS)</li>
+<li>读取访问异地区域冗余存储 (RA-GZRS)</li>
+</ul>
+<p><img src="/notes-media/img/image-20240609174019949.png" alt="image-20240609174019949"></p>
+<p>具体使用：</p>
+<p>在创建storage account的时候，可以指定存储的复制技术：</p>
+<p><img src="/notes-media/img/image-20240609174328979.png" alt="image-20240609174328979"></p>
+<p>接下来，在创建好的Storage Account中，选择Blob Service：</p>
+<p><img src="/notes-media/img/image-20240609174350834.png" alt="image-20240609174350834"></p>
+<p>然后创建一个container（方便按照存储内容的细分。如可以有日志、大数据等类型的数据，就可以分成不同的container）：</p>
+<p>用户或客户端应用程序通过 HTTP/HTTPS 可以从世界任何地方访问 Blob 存储中的对象。Blob 存储中的对象可以通过 Azure 存储 REST API、Azure PowerShell、Azure CLI 或 Azure 存储客户端库访问。</p>
+<p>Azure 存储帐户是所有 Azure Blob 存储的顶级容器。存储帐户为你的 Azure 存储数据提供了一个唯一的命名空间，可以从世界上的任何位置通过 HTTP 或 HTTPS 访问该命名空间。</p>
+<h5 id="存储帐户的类型">存储帐户的类型</h5>
+<p>Azure 存储提供两个性能级别的存储帐户（标准和高级）。每个性能级别支持不同的功能，并且有其自己的定价模型。</p>
+<ul>
+<li>标准：这是标准的常规用途 v2 帐户，建议用于大多数使用 Azure 存储的场景。</li>
+<li>高级：高级帐户使用固态硬盘提供更高性能。如果创建高级帐户，则可以在三个帐户类型（块 blob、页 blob 或文件共享）之间进行选择。</li>
+</ul>
+<p>下表介绍了 Microsoft 为大多数使用 Blob 存储的方案建议的存储帐户类型。</p>
+<p><img src="/notes-media/img/image-20240609180221542.png" alt="image-20240609180221542"></p>
+<p>我们登陆Azure，创建存储账户，可以看到性能菜单有标准和高级两种：</p>
+<p><img src="/notes-media/img/image-20240609180239825.png" alt="image-20240609180239825"></p>
+<p><img src="/notes-media/img/image-20240609180301321.png" alt="image-20240609180301321"></p>
+<p><img src="/notes-media/img/image-20240609180316451.png" alt="image-20240609180316451"></p>
+<h5 id="块-Blob-数据的访问层">块 Blob 数据的访问层</h5>
+<p>Azure 存储提供不同的选项，适用于根据使用模型访问块 Blob 数据。Azure 存储中的每个访问层都针对特定的数据使用模式进行了优化。根据需要选择适当的访问层以后，即可以最经济有效的方式存储块 Blob 数据。</p>
+<p><img src="/notes-media/img/image-20240609180421251.png" alt="image-20240609180421251"></p>
+<p>可用的访问层包括：</p>
+<ul>
+<li>热访问层，已针对存储帐户中频繁访问的对象进行优化。热层的存储成本最高，但访问成本最低。新的存储帐户默认在热层中创建。</li>
+<li>冷访问层，已针对存储不常访问且存储时间至少为 30 天的大量数据进行优化。与热层相比，冷层的存储成本较低，访问成本较高。</li>
+<li>存档层，仅适用于单个块 Blob。存档层已针对可以容忍数小时的检索延迟且会保留在存档层至少 180 天的数据进行优化。存档层是用于存储数据的最经济高效的选项，但访问这些数据的开销比访问热层或冷层中的数据要高一些。</li>
+</ul>
+<p><strong>三.Blob存储的三种资源.</strong></p>
+<p>Blob 存储提供了三种类型的资源：</p>
+<p>存储账户&gt;容器&gt; blob</p>
+<ul>
+<li>存储帐户</li>
+<li>存储帐户中的容器</li>
+<li>容器中的 Blob</li>
+</ul>
+<h5 id="容器">容器</h5>
+<p>容器对一组 blob 进行组织，类似于文件系统中的目录。一个存储帐户可以包含无限数量的容器，一个容器可以存储无限数量的 Blob。容器名称必须小写。</p>
+<h5 id="Blob">Blob</h5>
+<ul>
+<li><p>块 Blob ：存储文本和二进制数据，最多约为 4.7 TB。块 Blob 由可以分别管理的数据块构成。</p>
+</li>
+<li><p>与块 Blob 一样，追加 Blob 也由块构成，但针对追加操作进行了优化。追加 Blob 非常适用</p>
+<p>于诸如记录来自虚拟机的数据之类的场景。</p>
+</li>
+<li><p>页 Blob：用于存储最大 8 TB 的随机访问文件。页 blob 存储虚拟硬盘 (VHD) 文件并作为</p>
+<p>Azure 虚拟机的磁盘。</p>
+</li>
+</ul>
+<p>Azure 存储提供一整套安全性功能，这些功能相辅相成，帮助开发人员构建安全的应用程序：</p>
+<ul>
+<li><p>所有写入 Azure 存储的数据（包括元数据），都使用存储服务加密 (SSE) 进行自动加密。</p>
+</li>
+<li><p>Azure 存储支持使用 Azure Active Directory (Azure AD) 和基于角色的访问控制 (RBAC) 进行资源管理操作和数据操作，如下所示：</p>
+</li>
+<li><ul>
+<li><p>可以将作用域为存储帐户的 RBAC 角色分配给安全主体，并使用 Azure AD 为密钥管</p>
+<p>理之类的资源管理操作授权。</p>
+</li>
+<li><p>支持通过 Azure AD 集成执行 blob 和队列数据操作。可以将范围为订阅、资源组、存储帐户或单个容器或队列的 RBAC 角色分配给 Azure 资源的某个安全主体或托管标识。</p>
+</li>
+</ul>
+</li>
+<li><p>在应用程序和 Azure 之间传输数据时，可以使用客户端加密、HTTPS 或 SMB 3.0 来保护数据。</p>
+</li>
+<li><p>Azure 虚拟机使用的 OS 和数据磁盘可使用 Azure 磁盘加密进行加密。</p>
+</li>
+<li><p>在 Azure 存储中，可以使用共享访问签名授予数据对象的委派访问权限。</p>
+</li>
+</ul>
+<p>Azure 存储始终会存储数据的多个副本，以防范各种计划内和计划外的事件，包括暂时性的硬件故障、网络中断或断电、大范围自然灾害等。冗余可确保即使遇到故障，存储帐户也能达到其可用性和持久性目标。</p>
+<p>在确定最适合自己方案的冗余选项时，请考虑如何在较低成本与较高可用性之间做出取舍。可帮助你确定应选择哪种冗余选项的因素包括：</p>
+<ul>
+<li>如何在主要区域中复制数据</li>
+<li>是否要将你的数据复制到地理上距主要区域较远的另一个区域，以防范区域性灾难</li>
+<li>应用程序是否要求在主要区域出于任何原因而不可用时，能够对次要区域中复制的数据进行读取访问</li>
+</ul>
+<h5 id="主要区域中的冗余">主要区域中的冗余</h5>
+<p>Azure 存储帐户中的数据在主要区域中始终复制三次。Azure 存储为在主要区域中复制数据的方式提供两个选项。</p>
+<ul>
+<li>本地冗余存储 (LRS)：在主要区域中的单个物理位置同步复制数据三次。LRS 是成本最低的复制选项，但不建议对需要高可用性或持续性的应用程序使用此选项。</li>
+<li>区域冗余存储 (ZRS)：在主区域中的三个 Azure 可用性区域同步复制数据。对于需要高可用性的应用程序，Microsoft 建议在主要区域中使用 ZRS，并复制到次要区域。</li>
+</ul>
+<p><img src="/notes-media/img/image-20240609180725125.png" alt="image-20240609180725125"></p>
+<h4 id="移动"><strong>移动</strong></h4>
+<p>借助 Azure，开发人员能够快速、轻松地为 iOS、Android 和 Windows 应用创建移动后端服务。以往耗时且会增加项目风险的功能现在都可轻松地包括其中，例如添加企业登录信息，然后连接到 SAP、Oracle、SQL Server 和 SharePoint 等本地资源。</p>
+<p>此服务的其他功能包括：</p>
+<ul>
+<li>离线数据同步。</li>
+<li>连接到本地数据。</li>
+<li>广播推送通知。</li>
+<li>根据业务需求进行自动缩放。</li>
+</ul>
+<h4 id="数据库"><strong>数据库</strong></h4>
+<p>Azure 提供了多个数据库服务来存储各种数据类型和卷。并且通过全球连接，这些数据立即就能供用户使用。</p>
+<ul>
+<li>Azure Cosmos DB：支持NoSQL 选项的全球分布式数据库。</li>
+<li>Azure SQL 数据库：具有自动缩放、完备智能和可靠安全性的完全托管关系数据库。</li>
+<li>Azure Database for MySQL：具有高可用性和高安全性的完全托管且可缩放的MySQL 关系数据库。</li>
+<li>Azure Database for PostgreSQL：具有高可用性和高安全性的完全托管且可缩放的PostgreSQL 关系数据库。</li>
+<li>Azure 虚拟机上的SQL Server：在云中托管企业SQL Server 应用的服务。</li>
+<li>Azure Synapse Analytics：在每个缩放级别具有完备安全性而没有额外费用的完全托管数据仓库。</li>
+<li>Azure 数据库迁移服务：将数据库迁移到云而无需更改应用程序代码的服务。</li>
+<li>用于Redis 的Azure 缓存：完全托管服务缓存常用的静态数据以降低数据和应用程序延迟。</li>
+<li>Azure Database for MariaDB：具有高可用性和高安全性的完全托管且可缩放的MariaDB 关系数据库</li>
+</ul>
+<h4 id="Web"><strong>Web</strong></h4>
+<p>拥有出色的 Web 体验对于当今商业世界而言至关重要。Azure 包含对生成和托管 Web 应用以及基于 HTTP 的 Web 服务的一流支持。以下 Azure 服务侧重于 Web 托管。</p>
+<ul>
+<li>Azure 应用服务：快速创建功能强大的基于Web 的云应用。</li>
+<li>Azure 通知中心：从任何后端向任何平台发送推送通知。</li>
+<li>Azure API 管理：安全且大规模地向开发人员、合作伙伴和员工发布API。</li>
+<li>Azure 认知搜索：部署这项完全托管的搜索即服务。</li>
+<li>Azure 应用服务的Web 应用功能：大规模创建和部署任务关键型Web 应用。</li>
+<li>Azure SignalR 服务：轻松添加实时Web 功能。</li>
+</ul>
+<h4 id="IoT"><strong>IoT</strong></h4>
+<p>人们能够访问比以往更多的信息。个人数字助手使智能手机应运而生，现在还出现了智能手表、智能恒温器和智能冰箱。个人电脑曾经是标准配置。现在的互联网接纳任何能够联机访问宝贵信息的物品。设备获取信息并进行中继以执行数据分析的这种能力被称为 IoT。</p>
+<p>许多服务可以为 Azure 上的 IoT 提供帮助并推动生成端到端解决方案。</p>
+<ul>
+<li>IoT Central:完全托管的全球IoT 服务型软件(SaaS) 解决方案，借助此解决方案可轻松连接、监视以及管理大规模的IoT 资产。</li>
+<li>Azure IoT 中心:在数百万个IoT 设备之间提供安全通信并对其进行监视的消息中心。</li>
+<li>IoT Edge: 完全托管的服务，可将数据分析模型直接推送到IoT 设备上，使其能够快速响应状态更改而无需咨询基于云的AI 模型。</li>
+</ul>
+<h4 id="大数据"><strong>大数据</strong></h4>
+<p>数据有各种格式和大小。当我们谈论大数据时，我们指的是大量数据。来自天气系统、通信系统、基因组研究、成像平台和许多其他方案的数据可产生数百 GB 的数据。这一数据量使得分析和制定决策变得困难。它的数量通常十分巨大，以至于传统形式的处理和分析已不再合适。</p>
+<p>现在已经开发了开源集群技术来处理这些大型数据集。Azure 支持各种技术和服务，以提供大数据的分析解决方案。</p>
+<ul>
+<li>Azure Synapse Analytics：使用基于云的企业数据仓库大规模运行分析，该仓库可利用大规模并行处理快速运行 PB 级数据的复杂查询。</li>
+<li>Azure HDInsight：使用云中Hadoop 群集的托管群集处理大量数据。</li>
+<li>Azure Databricks：将基于Apache Spark 的协作式分析服务与Azure 中的其他大数据服务集成。</li>
+</ul>
+<h4 id="AI"><strong>AI</strong></h4>
+<p>在云计算的背景下，AI 的运行基于各种服务，其核心是机器学习。机器学习是一项数据科研技术，可以让计算机根据现有的数据来预测将来的行为、结果和趋势。使用机器学习，计算机可以在无需显式编程的情况下进行学习。</p>
+<p>机器学习的预测可让应用和设备变得更智能。例如，当你进行在线购买时，机器学习将根据你购买的产品来帮助建议你可能喜欢的其他产品。或者，当你刷信用卡时，机器学习会将交易与交易数据库进行比较，帮助检测欺诈行为。当吸尘器机器人打扫房间时，机器学习可帮助它确定作业是否已完成。</p>
+<p>以下是 Azure 中最常见的一些 AI 和机器学习服务类型。</p>
+<ul>
+<li>Azure 机器学习服务：基于云的环境，可用于开发、训练、测试、部署、管理和跟踪机器学习模型。它可以为你自动生成并自动调整模型。它让你可以先在本地计算机上开始训练，然后横向扩展到云。</li>
+<li>Azure 机器学习工作室：协作式可视化工作区，可在其中使用预建的机器学习算法和数据处理模块来生成、测试和部署机器学习解决方案。一组密切相关的产品是认知服务。可以在应用程序中使用这些预生成 API 解决复杂问题。</li>
+<li>影像：使用图像处理算法，智能识别、捕获、索引和调节图片及视频。</li>
+<li>语音：将语音音频转换为文本、使用语音进行验证，或在应用中添加说话人辨识功能。</li>
+<li>知识映射：映射复杂信息和数据，以处理智能推荐和语义搜索等任务。</li>
+<li>必应搜索：将必应搜索API 添加到应用中，并利用单一API 调用梳理数十亿网页、图像、视频和新闻的能力。</li>
+<li>自然语言处理：允许应用使用预建脚本处理自然语言、评估情绪及学习如何识别用户想要的内容。</li>
+</ul>
+<h4 id="DevOps"><strong>DevOps</strong></h4>
+<p>DevOps 将人员、流程和技术汇集在一起，通过自动化软件交付来为用户持续提供价值。借助 Azure DevOps，可以创建、生成和发布管道，为应用程序提供持续集成、交付和部署。你可以集成存储库和应用程序测试、执行应用程序监视，以及使用生成项目。还可以使用积压工作项进行跟踪、自动化基础结构部署以及集成一系列第三方工具和服务（例如 Jenkins 和 Chef）。所有这些功能以及更多功能都与 Azure 紧密集成，可为应用程序提供一致、可重复的部署，使生成和发布流程变得精简。</p>
+<ul>
+<li>Azure DevOps：使用开发协作工具，例如高性能管道、免费专用Git 存储库、可配置看板，以及各种自动化和基于云的负载测试。以前称为 Visual Studio Team Services。</li>
+<li>Azure 开发测试实验室：快速创建按需Windows 和Linux 环境，以直接从部署管道测试或演示应用程序。</li>
+</ul>
+<h2 id="虚拟机规模集VMSS">虚拟机规模集（VMSS）</h2>
+<p>管理大规模虚拟机十分不易，尤其是在使用模式不尽相同以及对应用程序的需求存在波动时。你希望能够调整虚拟机资源以满足需求。同时，你可能希望保持虚拟机配置的一致性，以确保应用程序的稳定性。实现这些目标意味着可以保持吞吐量和响应能力，同时最大程度降低持续运行大量虚拟机的成本。</p>
+<h2 id="案例电子商务网站灾备与弹性">案例：电子商务网站（灾备与弹性）</h2>
+<p>用到的技术：</p>
+<p>Traffic Manager，使用目的：将客户端发过来的请求进行流量分发。默认都分发到主站点。</p>
+<p>Virtual Network，使用目的：用于网络隔离。</p>
+<p>Virtual Machines，使用目的：承载应用。</p>
+<p>Azure AD Service，使用目的：故障切换后，用户信息、密码、权限等不变。</p>
+<p>LoadBalancer：使用目的：应用的负载均衡。</p>
+<p>Express Route，使用目的：构建On-Premises和Azure Cloud之间的隧道。</p>
+<p>Availability Set：用于保证VM的高可用。</p>
+<p>Scale Sets，使用目的：让虚拟机实现弹性伸缩。</p>
+<p>Site Recovery，使用目的：主站点发生灾难时，自动触发灾难恢复。</p>
+<p>Storage Backup，使用目的：将主站点的SQL Server数据备份到备站点。</p>
+<p>Blob Storage，使用目的：用于Azure上存放SQL Server归档数据。</p>
+<p>Disk storage，使用目的：为SQL Server提供存储空间。</p>
+<h2 id="Azure-SKU-与资源选型">Azure SKU 与资源选型</h2>
+<p>参考：<a href="https://mp.weixin.qq.com/s/h9PhONGhDHcmCxGOkgMbOA">Azure SKU 说明（微信）</a></p>
+<p>在Azure中，SKU（Stock Keeping Unit，库存单位）是用于标识Azure服务或资源的特定配置的唯一标识符。SKU包含了该资源的定价层级、性能特征和其他配置选项。不同的SKU表示同一类型资源的不同版本或配置选项，用户可以根据需求选择合适的SKU。</p>
+<h3 id="主要特征">主要特征</h3>
+<ul>
+<li><strong>定价层级</strong>：不同SKU对应不同的定价。例如，某些SKU可能属于“标准”层级，而其他的可能属于“高级”层级。</li>
+<li><strong>性能特征</strong>：SKU定义了资源的性能特征，如存储大小、处理器类型、内存大小等。</li>
+<li><strong>区域可用性</strong>：某些SKU可能只在特定的区域可用。</li>
+<li><strong>功能特性</strong>：不同SKU可能提供不同的功能或限制。</li>
+</ul>
+<h3 id="示例">示例</h3>
+<h4 id="1-虚拟机SKU">1. <strong>虚拟机SKU</strong></h4>
+<p>在Azure中，虚拟机有多种SKU，每种SKU定义了虚拟机的大小和性能特征。</p>
+<ul>
+<li><strong>Standard_B2s</strong>：2 个vCPU，4 GB内存，适用于小型到中型应用工作负载。</li>
+<li><strong>Standard_D2s_v3</strong>：2 个vCPU，8 GB内存，适用于通用工作负载。</li>
+<li><strong>Standard_E64i_v3</strong>：64 个vCPU，432 GB内存，适用于内存密集型应用。</li>
+</ul>
+<h4 id="2-存储SKU">2. <strong>存储SKU</strong></h4>
+<p>Azure存储账户也有不同的SKU。</p>
+<ul>
+<li><strong>Standard_LRS</strong>（本地冗余存储）：数据在单个数据中心内进行复制。</li>
+<li><strong>Standard_GRS</strong>（异地冗余存储）：数据在主要区域和辅助区域的两个数据中心内进行复制。</li>
+<li><strong>Premium_LRS</strong>（本地冗余存储）：高性能的存储，适用于需要高吞吐量和低延迟的应用。</li>
+</ul>
+<h4 id="3-数据库SKU">3. <strong>数据库SKU</strong></h4>
+<p>Azure SQL数据库有不同的SKU，表示不同的服务层级和性能。</p>
+<ul>
+<li><strong>Basic</strong>：适用于轻量工作负载。</li>
+<li><strong>Standard</strong>：适用于典型的业务应用。</li>
+<li><strong>Premium</strong>：适用于高性能需求的应用。</li>
+</ul>
+<h3 id="如何选择合适的SKU">如何选择合适的SKU</h3>
+<p>选择合适的SKU取决于以下几个因素：</p>
+<ol>
+<li><strong>性能需求</strong>：根据应用所需的处理能力、内存大小、存储性能等选择合适的SKU。</li>
+<li><strong>预算</strong>：根据预算选择合适的定价层级，确保在成本可控的范围内满足需求。</li>
+<li><strong>功能需求</strong>：确定是否需要特定的功能或服务层级，比如异地冗余存储或高性能计算。</li>
+<li><strong>区域可用性</strong>：检查所选SKU是否在目标部署区域内可用。</li>
+</ol>
+<h3 id="示例配置">示例配置</h3>
+<p>以下是创建一个使用特定SKU的资源示例：</p>
+<h4 id="创建虚拟机">创建虚拟机</h4>
+<p>使用Azure CLI创建一个虚拟机，指定SKU为<code>Standard_B2s</code>：</p>
+<pre><code>az vm create /
+  --resource-group myResourceGroup /
+  --name myVM /
+  --image UbuntuLTS /
+  --size Standard_B2s /
+  --admin-username azureuser /
+  --generate-ssh-keys
+</code></pre>
+<h4 id="创建存储账户">创建存储账户</h4>
+<p>使用Azure CLI创建一个存储账户，指定SKU为<code>Standard_LRS</code>：</p>
+<pre><code>az storage account create /
+  --name mystorageaccount /
+  --resource-group myResourceGroup /
+  --location eastus /
+  --sku Standard_LRS
+</code></pre>
+<h3 id="总结">总结</h3>
+<p>Azure SKU定义了Azure资源的特定配置、性能和定价。通过选择合适的SKU，用户可以确保资源配置符合应用需求，同时保持成本可控。了解不同SKU的特性和差异，有助于做出更明智的选择。</p>
+<h2 id="AKS-网络与子网规划">AKS 网络与子网规划</h2>
+<p>在Azure中，使用虚拟网络（VNet）来部署Azure Kubernetes Service（AKS）集群时，需要特别注意子网的大小配置。这句话的意思是，在为AKS集群配置Azure VNet子网时，子网的IP地址范围必须足够大，以便容纳所有的集群组件（如节点和Pod），具体取决于你选择的是覆盖网络（Overlay Network）还是平面网络（Flat Network）。以下是对这两种网络模式的解释以及子网大小配置的建议。</p>
+<h3 id="1-网络模式概述">1. 网络模式概述</h3>
+<h4 id="覆盖网络Overlay-Network">覆盖网络（Overlay Network）</h4>
+<p>在覆盖网络模式下，Pod的IP地址是从一个独立的CIDR范围分配的，这个范围与VNet子网的IP地址范围是分开的。Pod间通信通过覆盖网络进行，通常使用网络插件（如 Flannel、Calico）来实现。</p>
+<ul>
+<li><strong>优点</strong>：更灵活，IP地址管理更加独立。</li>
+<li><strong>缺点</strong>：引入了一层额外的网络开销，可能影响网络性能。</li>
+</ul>
+<h4 id="平面网络Flat-Network">平面网络（Flat Network）</h4>
+<p>在平面网络模式下，Pod的IP地址直接从VNet子网的IP地址范围分配，Pod和节点共享同一个子网。Pod间的通信通过VNet路由直接进行，没有额外的网络层。</p>
+<ul>
+<li><strong>优点</strong>：网络性能更高，因为没有额外的网络层。</li>
+<li><strong>缺点</strong>：需要更大的子网IP地址范围，以容纳所有Pod和节点。</li>
+</ul>
+<h3 id="2-子网大小的影响">2. 子网大小的影响</h3>
+<p>子网的大小（CIDR范围）直接影响到能容纳的节点和Pod的数量。如果子网太小，可能导致IP地址耗尽，限制了集群的扩展性。</p>
+<h4 id="覆盖网络下的子网大小">覆盖网络下的子网大小</h4>
+<p>在覆盖网络模式下，节点的IP地址从VNet子网中分配，而Pod的IP地址从单独的CIDR范围分配。子网的大小主要考虑节点的数量。</p>
+<ul>
+<li>例子：假设你有一个VNet子网 <code>10.0.0.0/24</code>（256个IP地址），可以容纳约250个节点。</li>
+</ul>
+<h4 id="平面网络下的子网大小">平面网络下的子网大小</h4>
+<p>在平面网络模式下，节点和Pod的IP地址都从VNet子网中分配，因此子网必须足够大以容纳所有节点和Pod。</p>
+<ul>
+<li>例子：假设你有一个VNet子网 <code>10.0.0.0/16</code>（65536个IP地址），这既可以容纳节点，也可以容纳大量的Pod。</li>
+</ul>
+<h3 id="3-配置建议">3. 配置建议</h3>
+<h4 id="覆盖网络模式">覆盖网络模式</h4>
+<ol>
+<li><strong>VNet子网</strong>：考虑到仅节点需要IP地址，通常子网范围可以较小。</li>
+<li><strong>Pod CIDR</strong>：单独配置一个较大的CIDR范围，适用于Pod的IP地址分配。</li>
+</ol>
+<pre><code class="language-bashaz">  --resource-group myResourceGroup /
+  --name myAKSCluster /
+  --network-plugin azure /
+  --vnet-subnet-id &lt;subnetResourceId&gt; /
+  --pod-cidr 10.244.0.0/16 /
+  --service-cidr 10.0.0.0/16
+</code></pre>
+<h4 id="平面网络模式">平面网络模式</h4>
+<ol>
+<li><strong>VNet子网</strong>：子网范围需要足够大，以容纳所有节点和Pod。</li>
+</ol>
+<pre><code class="language-bashaz">  --resource-group myResourceGroup /
+  --name myAKSCluster /
+  --network-plugin azure /
+  --vnet-subnet-id &lt;subnetResourceId&gt; /
+  --docker-bridge-address 172.17.0.1/16 /
+  --dns-service-ip 10.0.0.10 /
+  --service-cidr 10.0.0.0/16
+</code></pre>
+<h3 id="总结-2">总结</h3>
+<p>为了确保Azure VNet子网足够大以适应AKS集群，需要根据网络模式（覆盖网络或平面网络）进行适当的配置。覆盖网络模式下，节点和Pod的IP地址分配独立，因此子网只需考虑节点数量。而平面网络模式下，子网需要同时容纳节点和Pod，因此需要更大的子网范围。通过合理配置子网大小，可以确保AKS集群的正常运行和扩展性。</p>
+<h2 id="AKS-服务暴露类型">AKS 服务暴露类型</h2>
+<h3 id="ClusterIP">ClusterIP</h3>
+<p>ClusterIP 创建在 AKS 群集中使用的内部 IP 地址。 ClusterIP 服务适用于支持群集中其他工作负载的<em>仅内部应用程序</em>。 如果未显式指定服务的类型，则默认使用 ClusterIP。</p>
+<p><img src="https://learn.microsoft.com/zh-cn/azure/aks/media/concepts-network/aks-clusterip.png" alt="此图显示 AKS 群集中的 ClusterIP 通信流。"></p>
+<h3 id="NodePort">NodePort</h3>
+<p>NodePort 在基础节点上创建端口映射，该映射允许使用节点 IP 地址和端口直接访问应用程序。</p>
+<p><img src="https://learn.microsoft.com/zh-cn/azure/aks/media/concepts-network/aks-nodeport.png" alt="显示 AKS 群集中 NodePort 流量的示意图。"></p>
+<h3 id="LoadBalancer">LoadBalancer</h3>
+<p>LoadBalancer 创建 Azure 负载均衡器资源、配置外部 IP 地址并将请求的 Pod 连接到负载均衡器后端池。 为允许客户流量发送到应用程序，要在所需端口上创建负载均衡规则。</p>
+<p><img src="https://learn.microsoft.com/zh-cn/azure/aks/media/concepts-network/aks-loadbalancer.png" alt="显示 AKS 群集中负载均衡器流量的示意图。"></p>
+<p>对于入站流量的 HTTP 负载均衡，另一个选项是使用<a href="https://learn.microsoft.com/zh-cn/azure/aks/concepts-network-ingress#ingress-controllers">入口控制器</a></p>
+<p><img src="/notes-media/img/image-20240720181246374.png" alt="image-20240720181246374"></p>
+<pre><code class="language-shell">Azure应用程序网关是一个功能强大的Web流量负载均衡器，运行在第7层，能够优化和保护Web应用。启用Web应用程序防火墙（WAF）的应用程序网关v2 SKU提供了增强的安全性和性能。应用程序网关配置了公共前端IP地址，用于接收和处理用户请求，并需要部署在一个专用子网中，以确保其网络流量的独立性和管理的便捷性。
+
+创建资源组
+az group create --name myResourceGroup --location eastus
+创建虚拟网络和子网
+sh
+复制代码
+az network vnet create --resource-group myResourceGroup --name myVNet --address-prefix 10.0.0.0/16 --subnet-name myAGSubnet --subnet-prefix 10.0.1.0/24
+创建公共IP地址
+sh
+复制代码
+az network public-ip create --resource-group myResourceGroup --name myAGPublicIP
+创建应用程序网关
+
+az network application-gateway create /
+  --resource-group myResourceGroup /
+  --name myAppGateway /
+  --sku WAF_v2 /
+  --capacity 2 /
+  --vnet-name myVNet /
+  --subnet myAGSubnet /
+  --public-ip-address myAGPublicIP /
+  --frontend-port 80 /
+  --http-settings-cookie-based-affinity Enabled /
+  --routing-rule-type Basic /
+  --web-application-firewall-mode Detection
+</code></pre>
+<p><img src="/notes-media/img/image-20240720182127655.png" alt="image-20240720182127655"></p>
+<p>在Azure上从头开始搭建一个Kubernetes集群并配置流量管理的过程包括几个主要步骤：创建Azure资源、部署Kubernetes集群、安装Ingress Controller、配置Application Gateway、以及设置负载均衡和流量路由。下面是一个从头开始的详细步骤指南：</p>
+<h2 id="AKS-端到端部署Traefik--App-Gateway">AKS 端到端部署（Traefik + App Gateway）</h2>
+<h3 id="1-创建资源组和虚拟网络">1. 创建资源组和虚拟网络</h3>
+<h4 id="11-创建资源组">1.1 创建资源组</h4>
+<p>首先，创建一个资源组来组织所有的Azure资源：</p>
+<pre><code class="language-bash">az group create --name myResourceGroup --location eastus
+</code></pre>
+<h4 id="12-创建虚拟网络和子网">1.2 创建虚拟网络和子网</h4>
+<p>创建一个虚拟网络和子网以供Kubernetes集群使用：</p>
+<pre><code class="language-bashaz">  --resource-group myResourceGroup /
+  --name myVNet /
+  --address-prefix 10.0.0.0/16 /
+  --subnet-name mySubnet /
+  --subnet-prefix 10.0.1.0/24
+</code></pre>
+<h3 id="2-部署Azure-Kubernetes-Service-AKS">2. 部署Azure Kubernetes Service (AKS)</h3>
+<h4 id="21-创建AKS集群">2.1 创建AKS集群</h4>
+<p>使用Azure CLI创建一个AKS集群：</p>
+<pre><code class="language-bashaz">  --resource-group myResourceGroup /
+  --name myAKSCluster /
+  --node-count 3 /
+  --enable-addons monitoring /
+  --generate-ssh-keys /
+  --vnet-subnet-id $(az network vnet subnet show --resource-group myResourceGroup --vnet-name myVNet --name mySubnet --query id -o tsv)
+</code></pre>
+<ul>
+<li><code>--node-count 3</code>：指定节点数。根据需求可以调整。</li>
+<li><code>--enable-addons monitoring</code>：启用监控插件。</li>
+<li><code>--vnet-subnet-id</code>：指定虚拟网络子网ID。</li>
+</ul>
+<h4 id="22-获取AKS凭证">2.2 获取AKS凭证</h4>
+<p>获取AKS集群凭证以便通过<code>kubectl</code>命令管理集群：</p>
+<pre><code class="language-bash">az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+</code></pre>
+<h3 id="3-安装Ingress-Controller例如Traefik">3. 安装Ingress Controller（例如Traefik）</h3>
+<h4 id="31-使用Helm安装Traefik">3.1 使用Helm安装Traefik</h4>
+<p>首先，安装Helm（Kubernetes的包管理工具），然后使用它来安装Traefik：</p>
+<pre><code class="language-bashhelm">helm repo update
+
+helm install traefik traefik/traefik /
+  --namespace kube-system /
+  --create-namespace /
+  --set deployment.replicas=2 /
+  --set service.type=LoadBalancer
+</code></pre>
+<h3 id="4-配置Azure-Application-Gateway">4. 配置Azure Application Gateway</h3>
+<h4 id="41-创建公共IP地址">4.1 创建公共IP地址</h4>
+<p>创建一个公共IP地址，用于Application Gateway：</p>
+<pre><code>az network public-ip create --resource-group myResourceGroup --name myAppGatewayPublicIP --sku Standard
+</code></pre>
+<h4 id="42-创建Application-Gateway">4.2 创建Application Gateway</h4>
+<p>创建并配置Application Gateway：</p>
+<pre><code class="language-bashaz">  --resource-group myResourceGroup /
+  --name myAppGateway /
+  --sku WAF_v2 /
+  --capacity 2 /
+  --vnet-name myVNet /
+  --subnet mySubnet /
+  --public-ip-address myAppGatewayPublicIP /
+  --frontend-port 80 /
+  --http-settings-cookie-based-affinity Enabled /
+  --routing-rule-type Basic /
+  --web-application-firewall-mode Detection
+</code></pre>
+<h3 id="5-配置负载均衡和流量路由">5. 配置负载均衡和流量路由</h3>
+<h4 id="51-创建一个示例应用">5.1 创建一个示例应用</h4>
+<p>创建一个简单的示例应用，以便测试流量路由。以下是一个简单的Nginx部署示例：</p>
+<pre><code class="language-yamlapiVersion:">kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+</code></pre>
+<p>应用这个配置：</p>
+<pre><code class="language-bash">kubectl apply -f nginx-deployment.yaml
+</code></pre>
+<h4 id="52-创建Ingress资源">5.2 创建Ingress资源</h4>
+<p>创建一个Ingress资源，将流量路由到你的服务：</p>
+<pre><code class="language-yamlapiVersion:">kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: &quot;web,websecure&quot;
+spec:
+  rules:
+    - host: your-domain.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+</code></pre>
+<p>应用Ingress配置：</p>
+<pre><code class="language-bash">kubectl apply -f nginx-ingress.yaml
+</code></pre>
+<h3 id="6-验证和监控">6. 验证和监控</h3>
+<h4 id="61-验证配置">6.1 验证配置</h4>
+<p>通过访问Application Gateway的公共IP地址（在Azure门户中获取），你应该能够看到你的应用程序。</p>
+<h4 id="62-监控和日志">6.2 监控和日志</h4>
+<p>在Azure门户中查看Application Gateway和AKS的监控数据和日志，以确保一切正常运行。</p>
+<h3 id="总结-3">总结</h3>
+<p>通过以上步骤，你可以从头开始在Azure上搭建一个完整的Kubernetes环境，配置Traefik作为Ingress Controller，并通过Azure Application Gateway和内部负载均衡器来管理流量。这种架构提供了高可用性和灵活性，同时确保了流量的有效管理和安全。</p>
+<p><img src="/notes-media/img/image-20240720183216714.png" alt="image-20240720183216714"></p>
+<h2 id="AKS-专用集群">AKS 专用集群</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/zh-cn/azure/cloud-adoption-framework/scenarios/app-platform/aks/network-topology-and-connectivity?source=recommendations">网络拓扑与连接（CAF）</a></li>
+</ul>
+<p>AKS 群集 IP 可见性可以是公共的，也可以是专用的。<a href="https://learn.microsoft.com/zh-cn/azure/aks/private-clusters">专用群集</a>通过专用 IP 地址（而非公共 IP 地址）公开 Kubernetes API。</p>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

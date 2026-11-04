@@ -1,0 +1,2178 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="> 迁移自 `C:\Users\Mrwang\Desktop\2024\7-DataBase.md`。图片目录：`../img/`（`1-Note/img`）。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>数据库与中间件笔记 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>11-Database</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>数据库与中间件笔记</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>&gt; 迁移自 `C:\Users\Mrwang\Desktop\2024\7-DataBase.md`。图片目录：`../img/`（`1-Note/img`）。</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#SQL-与关系型数据库" class="toc-link depth-2" data-astro-cid-5eggoaxc> SQL 与关系型数据库 </a><a href="#基本知识" class="toc-link depth-3" data-astro-cid-5eggoaxc> 基本知识 </a><a href="#关系模型" class="toc-link depth-3" data-astro-cid-5eggoaxc> 关系模型 </a><a href="#关系的完整性" class="toc-link depth-3" data-astro-cid-5eggoaxc> 关系的完整性 </a><a href="#实践Join-与查询示例" class="toc-link depth-3" data-astro-cid-5eggoaxc> 实践：Join 与查询示例 </a><a href="#事务与分布式架构" class="toc-link depth-3" data-astro-cid-5eggoaxc> 事务与分布式架构 </a><a href="#分布式事务产生原因" class="toc-link depth-4" data-astro-cid-5eggoaxc> 分布式事务产生原因： </a><a href="#CAP" class="toc-link depth-4" data-astro-cid-5eggoaxc> CAP </a><a href="#单体应用拆分" class="toc-link depth-4" data-astro-cid-5eggoaxc> 单体应用拆分 </a><a href="#绞杀者模式" class="toc-link depth-5" data-astro-cid-5eggoaxc> 绞杀者模式 </a><a href="#修缮者模式" class="toc-link depth-5" data-astro-cid-5eggoaxc> 修缮者模式 </a><a href="#应用架构" class="toc-link depth-3" data-astro-cid-5eggoaxc> 应用架构 </a><a href="#关系型数据库分库分表" class="toc-link depth-3" data-astro-cid-5eggoaxc> 关系型数据库分库分表 </a><a href="#微服务异步架构实现" class="toc-link depth-3" data-astro-cid-5eggoaxc> 微服务异步架构实现 </a><a href="#MySQL" class="toc-link depth-2" data-astro-cid-5eggoaxc> MySQL </a><a href="#事务隔离级别与-InnoDB" class="toc-link depth-3" data-astro-cid-5eggoaxc> 事务、隔离级别与 InnoDB </a><a href="#客户端连接与-DDL-速查" class="toc-link depth-3" data-astro-cid-5eggoaxc> 客户端连接与 DDL 速查 </a><a href="#KV-数据库" class="toc-link depth-2" data-astro-cid-5eggoaxc> KV 数据库 </a><a href="#Redis" class="toc-link depth-3" data-astro-cid-5eggoaxc> Redis </a><a href="#基本概念" class="toc-link depth-4" data-astro-cid-5eggoaxc> 基本概念 </a><a href="#特点" class="toc-link depth-4" data-astro-cid-5eggoaxc> 特点： </a><a href="#使用场景" class="toc-link depth-4" data-astro-cid-5eggoaxc> 使用场景 </a><a href="#cache" class="toc-link depth-5" data-astro-cid-5eggoaxc> cache </a><a href="#基本使用" class="toc-link depth-4" data-astro-cid-5eggoaxc> 基本使用 </a><a href="#global-commands" class="toc-link depth-5" data-astro-cid-5eggoaxc> global commands: </a><a href="#string" class="toc-link depth-5" data-astro-cid-5eggoaxc> string </a><a href="#hash" class="toc-link depth-5" data-astro-cid-5eggoaxc> hash </a><a href="#lists" class="toc-link depth-5" data-astro-cid-5eggoaxc> lists: </a><a href="#set" class="toc-link depth-5" data-astro-cid-5eggoaxc> set </a><a href="#zset" class="toc-link depth-5" data-astro-cid-5eggoaxc> zset </a><a href="#事物和exec-命令" class="toc-link depth-4" data-astro-cid-5eggoaxc> 事物和exec 命令 </a><a href="#发布订阅" class="toc-link depth-4" data-astro-cid-5eggoaxc> 发布订阅 </a><a href="#持久化主从同步与缓存设计" class="toc-link depth-4" data-astro-cid-5eggoaxc> 持久化、主从同步与缓存设计 </a><a href="#ElasticsearchES" class="toc-link depth-2" data-astro-cid-5eggoaxc> Elasticsearch（ES） </a><a href="#MongoDB" class="toc-link depth-2" data-astro-cid-5eggoaxc> MongoDB </a><a href="#Neo4j" class="toc-link depth-2" data-astro-cid-5eggoaxc> Neo4j </a><a href="#Hive" class="toc-link depth-2" data-astro-cid-5eggoaxc> Hive </a><a href="#PySpark--Hive-SQL-练习Yelp" class="toc-link depth-3" data-astro-cid-5eggoaxc> PySpark / Hive SQL 练习（Yelp） </a><a href="#Hive-SQL-速查教程摘录" class="toc-link depth-3" data-astro-cid-5eggoaxc> Hive SQL 速查（教程摘录） </a><a href="#Consul" class="toc-link depth-2" data-astro-cid-5eggoaxc> Consul </a><a href="#注册中心与-CAP" class="toc-link depth-3" data-astro-cid-5eggoaxc> 注册中心与 CAP </a><a href="#时序数据库" class="toc-link depth-2" data-astro-cid-5eggoaxc> 时序数据库 </a><a href="#向量数据库" class="toc-link depth-2" data-astro-cid-5eggoaxc> 向量数据库 </a><a href="#消息中间件" class="toc-link depth-2" data-astro-cid-5eggoaxc> 消息中间件 </a><a href="#Kafka" class="toc-link depth-3" data-astro-cid-5eggoaxc> Kafka </a><a href="#producer" class="toc-link depth-4" data-astro-cid-5eggoaxc> producer </a><a href="#kafka-副本" class="toc-link depth-4" data-astro-cid-5eggoaxc> kafka 副本 </a><a href="#文件存储" class="toc-link depth-4" data-astro-cid-5eggoaxc> 文件存储 </a><a href="#kafka-高效率读写数据" class="toc-link depth-4" data-astro-cid-5eggoaxc> kafka 高效率读写数据 </a><a href="#consumer" class="toc-link depth-4" data-astro-cid-5eggoaxc> consumer </a><a href="#RabbitMQ" class="toc-link depth-3" data-astro-cid-5eggoaxc> RabbitMQ </a><a href="#RocketMQ" class="toc-link depth-3" data-astro-cid-5eggoaxc> RocketMQ </a><a href="#nginx" class="toc-link depth-3" data-astro-cid-5eggoaxc> nginx </a><a href="#负载均衡中间件" class="toc-link depth-2" data-astro-cid-5eggoaxc> 负载均衡中间件 </a><a href="#RPC" class="toc-link depth-2" data-astro-cid-5eggoaxc> RPC </a><a href="#HTTP" class="toc-link depth-3" data-astro-cid-5eggoaxc> HTTP </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><blockquote>
+<p>迁移自 <code>C:\Users\Mrwang\Desktop\2024\7-DataBase.md</code>。图片目录：<code>../img/</code>（<code>1-Note/img</code>）。</p>
+</blockquote>
+<h1 id="数据库与中间件笔记">数据库与中间件笔记</h1>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#sql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">SQL 与关系型数据库</a></li>
+<li><a href="#mysql">MySQL</a></li>
+<li><a href="#kv-%E6%95%B0%E6%8D%AE%E5%BA%93">KV 数据库与 Redis</a></li>
+<li><a href="#elasticsearches">Elasticsearch（ES）</a></li>
+<li><a href="#mongodb">MongoDB</a></li>
+<li><a href="#neo4j">Neo4j</a></li>
+<li><a href="#hive">Hive</a></li>
+<li><a href="#consul">Consul</a></li>
+<li><a href="#%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E5%BA%93">时序数据库</a></li>
+<li><a href="#%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93">向量数据库</a></li>
+<li><a href="#%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6">消息中间件</a></li>
+<li><a href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD%E9%97%B4%E4%BB%B6">负载均衡中间件</a></li>
+<li><a href="#rpc">RPC 与 HTTP</a></li>
+</ul>
+<hr>
+<h2 id="SQL-与关系型数据库">SQL 与关系型数据库</h2>
+<h3 id="基本知识">基本知识</h3>
+<p>数据库系统实现整体数据结构化，这是数据库的主要特征之一。</p>
+<p>数据的共享性高，冗余度低且易扩充</p>
+<p>数据独立性高</p>
+<p>数据由数据库管理系统统一管理和控制</p>
+<p>数据的安全性security保护</p>
+<p>防止不合法使用造成数据泄露和破坏</p>
+<p>数据的完整性integrity</p>
+<p>并发 concurrency 控制</p>
+<p>数据库恢复 recovery</p>
+<h3 id="关系模型">关系模型</h3>
+<p>实体 entity</p>
+<p>属性 attribute</p>
+<p>码 key 唯一标识实体属性集</p>
+<p>实体型 entity type</p>
+<p>实体集 entity set</p>
+<p>联系 relationship</p>
+<p>实体-联系方法  Entity-Relationship approch E-R</p>
+<p><strong>关系操作：</strong>
+查询 query</p>
+<p>选择 select 投影 project 连接 join 除 divide 并 union 差 except 交intersection</p>
+<p>插入 insert</p>
+<p>删除 delete</p>
+<p>修改 update</p>
+<h3 id="关系的完整性">关系的完整性</h3>
+<p>实体完整性  </p>
+<p>primary key主码属性不能为空</p>
+<p>参照完整性</p>
+<p>用户自定义完整性</p>
+<pre><code class="language-sql">定义表：
+create table table_name (
+ col1 char(10) primary key , 
+ col2 smallint   ,
+ col3 smallint   ,
+   /*表级完整性约束条件 col1 是外码 ，被参照表是table_name2 */
+ foreign key (col1) references table_name2(col) 
+   /* primary key(col1,col2,...)*/
+) ;
+修改表：
+alter table &lt;table_nale&gt;
+   [	add column&lt;新列名&gt;&lt;数据类型&gt;[完整性约束] ]
+   [ 	add &lt;表级完整性约束&gt;]
+   [	drop [column] &lt;列名&gt;[cascade][restrict]]
+   [	drop constraint &lt;完整性约束&gt;[restrict| cascade] ]
+   [	alter column &lt;列名&gt; &lt;数据类型&gt;]
+删除表
+drop table &lt;表名&gt;[restrict | cascade]
+restrict : 删除表是有条件的，不能被其他表引用， check , foreign key ,不能有视图触发器，存储过程，或者函数
+
+索引的建立和删除
+
+表的数据量非常大的时候，查询操作非常耗时，建立索引是加快查询的手段
+索引有多种类型，
+顺序文件上的索引
+B+树索引
+散列hash
+位图索引
+创建索引：
+create [unique ] [cluster] index &lt;索引名&gt;
+on &lt;表名&gt;（&lt;列名&gt;[次序],...）  desc asc（默认是升序）
+修改索引：
+alter index &lt;旧索引名&gt; rename to &lt;新索引名&gt;
+删除索引
+drop index &lt;索引名&gt;
+
+数据查询
+select [all | distinct] &lt;目标列表达式&gt; [,&lt;目标列表达式&gt;]...
+from &lt;表名或者视图名&gt;[,&lt;表名或视图名&gt;...]|(select 语句)[as]&lt;别名&gt;
+[where &lt;条件表达式&gt;]
+[group by &lt;列名1&gt;[having &lt;条件表达式&gt;]]  //结果按照列名1的值进行分组，属性值相等的元素分为一个组， having 是加入一定的条件
+[order by &lt;列名2&gt;[asc | desc ]]   // 按照一个属性列默认升序排序，asc desc 
+
+distinct :  查询某一列，出现重复值， 
+where :  短语作用于基本表或者视图 having : 短语作用于组，从中选择满足条件的组
+&gt; &lt; = != , and ,or ,not in , between 20 and 30 
+字符串匹配： like , % ,_ ,
+
+聚集函数：
+count(*)
+count([distinct | all]&lt;列明&gt;)
+sum()
+avg()
+max()
+min()
+注意： where 字句中不能使用聚集函数作为表达式，只能作用于select 和group by 中的having 字句
+
+连接查询
+1： 等值连接 （嵌套循环连接） 从第1个表第1条数据 ，去另一个表从头到位匹配，然后组成一个元组。
+ex:
+select Student.Sno,Sname
+from Student , SC 
+where Student.Sno = SC.Sno and SC.Cno=&#39;2&#39; and SC.Grade &gt; 90
+2： 自身连接
+	例如查询某个字段的前一个字段  先修课的先修课
+3： 外连接
+select Student.Sno,Sname
+from Student left outer join SC on(Student.Sno = SC.Sno)
+4: 多表连接
+select Student.Sno,Sname
+from Student , SC ,Coure
+where Student.Sno = SC.Sno and SC.Cno = Course.Cno
+5: 嵌套查询
+   select-from-where 定义为查询快
+   将一个查询快嵌套在另一个查询快的where ， 或者having 短语中，称为嵌套查询
+   注意： order by 字句只能对最终的查询结果排序，字句查询中不能使用order by
+  1: 带有 in 谓词的子查询
+  2： any all   &gt; all   &gt;=all !=all 
+  eg:
+  	select Sname ,Sage
+  	from Studetn
+  	where Sagg &lt; ANY(select Sage from student where Sdept= &#39;CS&#39;)
+  	and Sdep &lt;&gt;&#39;CS&#39;
+  	首先处理子查询，然后在处理父查询
+  3 union、union all、or
+  union 联合查询针对每一个查询结果，必须保证列数量、列数据类型及查询顺序一致
+  group by 分组查询，根据一个或多个列对结果集进行分组，一般配合聚合函数使用
+  
+  select  col_1 ,col_2 , ... ,聚合函数...
+  from table_name where 条件语句 group by 分组字段  ..having 分组条件
+  eg :
+  select red_num1 ,count(red_num1)
+  from dlt where create_at &gt;=&#39;2021-11-01&#39; group by red_num1 hvaing count(red_num1)&gt;=2 ;
+
+其中，having 和 where 使用上有下面区别：
+where
+在 group by 分组前执行，将查询结果按照条件过滤数据
+需要注意的是，where 无法与聚合函数一起使用
+having
+只能配合 group by 使用，在分组之后执行，用于过滤满足条件的组
+需要注意的是，分组是一个耗时的操作，建议在分组前使用 where 对数据进行一次过滤，然后再进行分组
+</code></pre>
+<h3 id="实践Join-与查询示例">实践：Join 与查询示例</h3>
+<pre><code>关系性数据库： mysql  postgre  oracle 
+redis :
+查询内容时添加缓存 ， 
+查询数据库之前先查询缓存  ，
+https://blog.csdn.net/qq_34090008/article/details/110223773?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.pc_relevant_default&amp;spm=1001.2101.3001.4242.1&amp;utm_relevant_index=3
+
+大规模数据如何检索:
+如何解决单点故障；(lvs、F5、A10、Zookeep、MQ)
+如何保证数据安全性；(热备、冷备、异地多活)
+如何解决检索难题；(数据库代理中间件：mysql-proxy、Cobar、MaxScale等;)
+如何解决统计分析问题；(离线、近实时)
+为解决以上问题，从源头着手分析，通常会从以下方式来寻找方法：
+1、存储数据时按有序存储；
+2、将数据和索引分离；
+3、压缩数据；
+</code></pre>
+<pre><code class="language-sql">left join(左联接) 返回包括左表中的所有记录 和右表中联结字段相等的记录  左所有
+right join(右联接) 返回包括右表中的所有记录和左表中联结字段相等的记录  
+inner join(等值连接) 只返回两个表中联结字段相等的行   相等的
+union  连接两个查询  唯一
+union all  全部
+date_add(data,1)
+
+-- 计算某点到 state 中心距离
+SELECT b1.business_id, SQRT(POWER(b1.latitude - b2.avg_lat, 2) +POWER(b1.longitude - b2.avg_long, 2)) as dist
+FROM b_etl b1 
+INNER JOIN 
+(SELECT state, AVG(latitude) as avg_lat, AVG(longitude) as avg_long
+FROM b_etl GROUP BY state) b2
+ON b1.state = b2.state 
+ORDER BY dist DESC
+
+
+SELECT b.* FROM 
+b_etl b 
+INNER JOIN outlier o 
+ON b.business_id = o.business_id 
+WHERE o.dist&lt;10
+
+SELECT state, city, stars, review_count, explode(categories) AS category FROM business
+
+SELECT state, city, stars, review_count, REPLACE(category, &#39; &#39;,&#39;&#39;)as new_category FROM part_business_1
+
+SELECT business_id, explode(categories) AS category FROM business
+
+SELECT new_category, AVG(review_count)as avg_review_count 
+FROM part_business 
+GROUP BY new_category 
+ORDER BY avg_review_count DESC
+
+select t1.date,t1.cases - t2.cases as caseIncrease,t1.deaths - t2.deaths as deathIncrease 
+from ustotal t1,ustotal t2 
+where t1.date = date_add(t2.date,1)
+
+select date,state,sum(cases) as totalCases,sum(deaths) as totalDeaths,round(sum(deaths)/sum(cases),4) as deathRate 
+from usInfo 
+where date = to_date(&#39;2020-05-19&#39;,&#39;yyyy-MM-dd&#39;) 
+group by date,state
+
+
+select 1 as sign,date,&#39;USA&#39; as state,round(sum(totalDeaths)/sum(totalCases),4) as deathRate 
+from eachStateInfo 
+group by date 
+union select 2 as sign,date,state,deathRate 
+from eachStateInfo
+
+
+SELECT Country,SUM(Quantity) AS sumOfQuantity
+FROM data 
+GROUP BY Country
+ORDER BY sumOfQuantity DESC
+LIMIT 10
+
+
+SELECT Country,COUNT(DISTINCT InvoiceNo) AS countOfReturnInvoice 
+FROM data 
+WHERE InvoiceNo LIKE &#39;C%&#39; 
+GROUP BY Country 
+ORDER BY countOfReturnInvoice DESC 
+LIMIT 10
+
+
+SELECT StockCode,AVG(DISTINCT UnitPrice) AS avgUnitPrice,SUM(Quantity) AS sumOfQuantity 
+FROM data 
+GROUP BY StockCode
+</code></pre>
+<pre><code class="language-http">https://mp.weixin.qq.com/s?__biz=MzI1NzI5NDM4Mw==&amp;mid=2247484048&amp;idx=1&amp;sn=49f970d4421cfd8783808c9d63379074&amp;chksm=ea18ebd0dd6f62c68988bfb894d4e4d9e9bdc2d0d44595f5a98d2df59debfec5ea43541c23d1&amp;token=1376660398&amp;lang=zh_CN&amp;scene=21#wechat_redirect
+</code></pre>
+<p>SET @i=0;  # 更新主键id 
+UPDATE table_name SET <code>id</code>=(@i:=@i+1); 
+crate table new_name as select * from table_old  #复制一个表</p>
+<h3 id="事务与分布式架构">事务与分布式架构</h3>
+<p><img src="/notes-media/img/image-20240609112350239.png" alt="image-20240609112350239"></p>
+<p><img src="/notes-media/img/image-20240609112359399.png" alt="image-20240609112359399"></p>
+<h4 id="分布式事务产生原因">分布式事务产生原因：</h4>
+<ul>
+<li>一个请求需要跨多个服务</li>
+<li>一个请求需要跨多个数据 （数据库/缓存）</li>
+<li>一个请求需要同时跨多个服务和数据</li>
+</ul>
+<h4 id="CAP">CAP</h4>
+<p><img src="/notes-media/img/image-20240609112712629.png" alt="image-20240609112712629"></p>
+<p><img src="/notes-media/img/image-20240609112742210.png" alt="image-20240609112742210"></p>
+<p><img src="/notes-media/img/image-20240609112836947.png" alt="image-20240609112836947"></p>
+<h4 id="单体应用拆分">单体应用拆分</h4>
+<p><img src="/notes-media/img/image-20240609113028361.png" alt="image-20240609113028361"></p>
+<h5 id="绞杀者模式">绞杀者模式</h5>
+<p><img src="/notes-media/img/image-20240609113108463.png" alt="image-20240609113108463"></p>
+<p>新模块逐步拆分</p>
+<p><img src="/notes-media/img/image-20240609113251685.png" alt="image-20240609113251685"></p>
+<h5 id="修缮者模式">修缮者模式</h5>
+<p><img src="/notes-media/img/image-20240609113233341.png" alt="image-20240609113233341"></p>
+<p><img src="/notes-media/img/image-20240609113305624.png" alt="image-20240609113305624"></p>
+<p><img src="/notes-media/img/image-20240609113347068.png" alt="image-20240609113347068"></p>
+<h3 id="应用架构">应用架构</h3>
+<p><img src="/notes-media/img/image-20240609113425971.png" alt="image-20240609113425971"></p>
+<p><img src="/notes-media/img/image-20240609113459411.png" alt="image-20240609113459411"></p>
+<p><img src="/notes-media/img/image-20240609113516980.png" alt="image-20240609113516980"></p>
+<p><img src="/notes-media/img/image-20240609113537541.png" alt="image-20240609113537541"></p>
+<p><img src="/notes-media/img/image-20240609113601638.png" alt="image-20240609113601638"></p>
+<h3 id="关系型数据库分库分表">关系型数据库分库分表</h3>
+<p><img src="/notes-media/img/image-20240609113650356.png" alt="image-20240609113650356"></p>
+<p><img src="/notes-media/img/image-20240609113701616.png" alt="image-20240609113701616"></p>
+<p><img src="/notes-media/img/image-20240609113729315.png" alt="image-20240609113729315"></p>
+<p><img src="/notes-media/img/image-20240609113742375.png" alt="image-20240609113742375"></p>
+<h3 id="微服务异步架构实现">微服务异步架构实现</h3>
+<p><img src="/notes-media/img/image-20240609113851961.png" alt="image-20240609113851961"></p>
+<p><img src="/notes-media/img/image-20240609113907728.png" alt="image-20240609113907728"></p>
+<p>微信：大魏分享  分布式事务架构</p>
+<h2 id="MySQL">MySQL</h2>
+<h3 id="事务隔离级别与-InnoDB">事务、隔离级别与 InnoDB</h3>
+<p>如果不对事务进行并发控制，我们看看数据库并发操作是会有那些异常情形</p>
+<ul>
+<li>（1）一类丢失更新：两个事物读同一数据，一个修改字段1，一个修改字段2，后提交的恢复了先提交修改的字段。</li>
+<li>（2）二类丢失更新：两个事物读同一数据，都修改同一字段，后提交的覆盖了先提交的修改。</li>
+<li>（3）脏读：读到了未提交的值，万一该事物回滚，则产生脏读。</li>
+<li>（4）不可重复读：两个查询之间，被另外一个事务修改（update）了数据的内容，产生内容的不一致。</li>
+<li>（5）幻读：两个查询之间，被另外一个事务插入或删除了（insert、delete）记录，产生结果集的不一致。</li>
+</ul>
+<p><strong>SQL中的4个事务隔离级别：</strong></p>
+<p>在数据库操作中，为了有效保证并发读取数据的正确性，提出的事务隔离级别。数据库锁，也是为了构建这些隔离级别存在的</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读（Dirty Read）</th>
+<th>不可重复读（NonRepeatable Read）</th>
+<th>幻读（Phantom Read）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交(Read uncommitted）</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>读已提交（Read committed）</td>
+<td>不可能</td>
+<td>可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>可重复读（Repeatable read）</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>可能</td>
+</tr>
+<tr>
+<td>可串行化（Serializable ）</td>
+<td>不可能</td>
+<td>不可能</td>
+<td>不可能</td>
+</tr>
+</tbody></table>
+<p><strong>（1）读未提交</strong></p>
+<p>未提交意味着这些数据可能会回滚，也就是可能最终不会存到数据库中，也就是不存在的数据。</p>
+<p>读到了并一定最终存在的数据，这就是脏读。</p>
+<p>**允许脏读。**在 <strong>读未提交</strong> 隔离级别下，允许 <strong>脏读</strong> 的情况发生。</p>
+<img src="/notes-media/img/image-20231023205059240.png" alt="image-20231023205059240" style="zoom:50%;" />
+
+<p>1： 开始事物</p>
+<p>2： 更新数据</p>
+<p>3： 读取到未提交的数据</p>
+<p>4： 回滚了事物</p>
+<p>事务B的更新数据被事务A读取，但是事务B回滚了，更新数据全部还原，也就是说事务A刚刚读到的数据并没有存在于数据库中。</p>
+<p><strong>（2）读已提交</strong></p>
+<p>在 <strong>读已提交</strong> 隔离级别下，<strong>禁止了 脏读</strong>，但是 允许<strong>不可重复读</strong>的情况发生</p>
+<p><img src="/notes-media/img/image-20231023205835935-1716730541873.png" alt="image-20231023205835935"></p>
+<p><strong>（3）可重复读</strong></p>
+<p>在<strong>可重复读</strong>隔离级别下，禁止了：<strong>脏读、不可重复读</strong>。但是，允许<strong>幻读</strong>。</p>
+<p>在可重复读中，该sql第一次读取到数据后，就将这些数据加锁（悲观锁），其它事务无法修改这些数据，就可以实现可重复读了。</p>
+<p>但这种方法却无法锁住insert的数据，所以当事务A先前读取了数据，或者修改了全部数据，事务B还是可以insert数据提交，</p>
+<p>这时事务A就会发现莫名其妙多了一条之前没有的数据，这就是幻读，不能通过行锁来避免。</p>
+<p><strong>（4）串行化</strong></p>
+<pre><code class="language-text">最严格的事务，要求所有事务被串行执行，不能并发执行。
+</code></pre>
+<p>MySQL默认事务隔离级别为可重复读(RR)</p>
+<p>MySQL 的InnoDB （InnoDB 是 MySQL 的一个存储引擎）</p>
+<p>InnoDB 是通过 日志和锁 来保证的事务的 ACID特性，具体如下：</p>
+<p>（1）通过数据库锁的机制，保障事务的隔离性；</p>
+<p>（2）通过 Redo Log（重做日志）来，保障事务的持久性；</p>
+<p>（3）通过 Undo Log （撤销日志）来，保障事务的原子性；</p>
+<p><strong>Undo Log 如何保障事务的原子性呢？</strong></p>
+<p>具体的方式为：在操作任何数据之前，首先将数据备份到一个地方（这个存储数据备份的地方称为 Undo Log），然后进行数据的修改。如果出现了错误或者用户执行了 Rollback 语句，系统可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。</p>
+<p>具体的方式为：Redo Log 记录的是新数据的备份（和 Undo Log 相反）。在事务提交前，只要将 Redo Log  持久化即可，不需要将数据持久化。当系统崩溃时，虽然数据没有持久化，但是 Redo Log 已经持久化。系统可以根据 Redo Log  的内容，将所有数据恢复到崩溃之前的状态。</p>
+<p><strong>脏读、幻读、不可重复读</strong></p>
+<p>在多个事务并发操作时，数据库中会出现下面三种问题：<strong>脏读，幻读，不可重复读</strong>。</p>
+<p><strong>脏读（Dirty Read）</strong></p>
+<p>事务A读到了事务B还未提交的数据：</p>
+<p><strong>幻读（Phantom Read）</strong></p>
+<p>事务A进行范围查询时，事务B中新增了满足该范围条件的记录，当事务A再次按该条件进行范围查询，会查到在事务B中提交的新的满足条件的记录（<strong>幻行</strong> Phantom Row）。</p>
+<p><strong>不可重复读（Unrepeatable Read）</strong></p>
+<p>事务A在读取某些数据后，再次读取该数据，发现读出的该数据已经在事务B中发生了变更或删除。</p>
+<ul>
+<li><strong>幻读</strong>：在同一事务中，相同条件下，两次查询出来的 <strong>记录数</strong> 不一样；</li>
+<li><strong>不可重复读</strong>：在同一事务中，相同条件下，两次查询出来的 <strong>数据</strong> 不一样；</li>
+</ul>
+<p>DDL : data definition language </p>
+<h3 id="客户端连接与-DDL-速查">客户端连接与 DDL 速查</h3>
+<pre><code class="language-bash"># DBMS (关系型数据库管理系统)
+# connect database
+mysql -u user -p
+update mysql.user set authentication_string=passowrd(&#39;123456&#39;) where user=&#39;root&#39; and host = &#39;localhost&#39;
+
+DDL  Database Language
+DML 
+DQL 
+DCL 
+
+CRUD 
+show create database database_name # 查看创建数据库创建语句
+desc table_name  # 查看表的结构
+
+数据库引擎 
+
+数据表的类型 ：
+Innodb: 默认使用 
+MyISAM: 
+create
+select 
+insert 
+update
+delete  # 不会影响自增 
+truncate # 清空表 自增会归0 
+
+</code></pre>
+<p><img src="/notes-media/img/image-20230406221458907.png" alt="image-20230406221458907"></p>
+<p><img src="/notes-media/img/image-20230406221601618.png" alt="image-20230406221601618"></p>
+<p><img src="/notes-media/img/image-20230406222047081.png" alt="image-20230406222047081"></p>
+<p>分页和排序</p>
+<p>limit orderby </p>
+<p><img src="/notes-media/img/image-20230406223121004.png" alt="image-20230406223121004"></p>
+<p><img src="/notes-media/img/image-20230505212117166-1716638295720.png" alt="image-20230505212117166"></p>
+<p><img src="/notes-media/img/image-20230505212148508-1716638295719.png" alt="image-20230505212148508"></p>
+<p><img src="/notes-media/img/image-20230505212200168-1716638295720.png" alt="image-20230505212200168"></p>
+<p><img src="/notes-media/img/image-20230505212345951-1716638295721.png" alt="image-20230505212345951"></p>
+<p><img src="/notes-media/img/image-20230505212423502-1716638295720.png" alt="image-20230505212423502"></p>
+<p><img src="/notes-media/img/image-20230505212809969-1716638295721.png" alt="image-20230505212809969"></p>
+<p><img src="/notes-media/img/image-20230505212936006-1716638295721.png" alt="image-20230505212936006"></p>
+<p><img src="/notes-media/img/image-20230505213115436-1716638295721.png" alt="image-20230505213115436"></p>
+<p><img src="/notes-media/img/image-20230505213422579-1716638295721.png" alt="image-20230505213422579"></p>
+<p><img src="/notes-media/img/image-20230505213515128-1716638295721.png" alt="image-20230505213515128"></p>
+<p><img src="/notes-media/img/image-20230505213618483-1716638295721.png" alt="image-20230505213618483"></p>
+<p><img src="/notes-media/img/image-20230505213939656-1716638295721.png" alt="image-20230505213939656"></p>
+<p><img src="/notes-media/img/image-20230505214024554-1716638295721.png" alt="image-20230505214024554"></p>
+<p><img src="/notes-media/img/image-20230505214047848-1716638295721.png" alt="image-20230505214047848"></p>
+<p><img src="/notes-media/img/image-20230505214123286-1716638295721.png" alt="image-20230505214123286"></p>
+<p><img src="/notes-media/img/image-20230505214200387-1716638295721.png" alt="image-20230505214200387"></p>
+<p><img src="/notes-media/img/image-20230505214229628-1716638295721.png" alt="image-20230505214229628"></p>
+<p><img src="/notes-media/img/image-20230505214303248-1716638295722.png" alt="image-20230505214303248"></p>
+<p><img src="/notes-media/img/image-20230505214345732-1716638295722.png" alt="image-20230505214345732"></p>
+<p><img src="/notes-media/img/image-20230505214543138-1716638295722.png" alt="image-20230505214543138"></p>
+<p><img src="/notes-media/img/image-20230505214633952-1716638295722.png" alt="image-20230505214633952"></p>
+<p><img src="/notes-media/img/image-20230505214725812-1716638295722.png" alt="image-20230505214725812"></p>
+<p><img src="/notes-media/img/image-20230505214848780-1716638295722.png" alt="image-20230505214848780"></p>
+<p><img src="/notes-media/img/image-20230505214933150-1716638295722.png" alt="image-20230505214933150"></p>
+<p><img src="/notes-media/img/image-20230505215215540-1716638295722.png" alt="image-20230505215215540"></p>
+<p><img src="/notes-media/img/image-20230505215342472-1716638295722.png" alt="image-20230505215342472"></p>
+<p><img src="/notes-media/img/image-20230505215408336-1716638295722.png" alt="image-20230505215408336"></p>
+<p><img src="/notes-media/img/image-20230505215502852-1716638295722.png" alt="image-20230505215502852"></p>
+<p><img src="/notes-media/img/image-20230505215705031-1716638295722.png" alt="image-20230505215705031"></p>
+<p><img src="/notes-media/img/image-20230505215835336-1716638295722.png" alt="image-20230505215835336"></p>
+<p><img src="/notes-media/img/image-20230505215941394-1716638295722.png" alt="image-20230505215941394"></p>
+<p><img src="/notes-media/img/image-20230505220321376-1716638295723.png" alt="image-20230505220321376"></p>
+<p><img src="/notes-media/img/image-20230505220348081-1716638295723.png" alt="image-20230505220348081"></p>
+<p><img src="/notes-media/img/image-20230505220540625-1716638295723.png" alt="image-20230505220540625"></p>
+<p><img src="/notes-media/img/image-20230505220700585-1716638295723.png" alt="image-20230505220700585"></p>
+<p><img src="/notes-media/img/image-20230505220728347-1716638295723.png" alt="image-20230505220728347"></p>
+<p><img src="/notes-media/img/image-20230505220808498-1716638295723.png" alt="image-20230505220808498"></p>
+<p><img src="/notes-media/img/image-20230505220844619-1716638295723.png" alt="image-20230505220844619"></p>
+<p><img src="/notes-media/img/image-20230505221051013-1716638295723.png" alt="image-20230505221051013"></p>
+<p><img src="/notes-media/img/image-20230505221112338-1716638295723.png" alt="image-20230505221112338"></p>
+<p><img src="/notes-media/img/image-20230505221358508-1716638295723.png" alt="image-20230505221358508"></p>
+<h2 id="KV-数据库">KV 数据库</h2>
+<h3 id="Redis">Redis</h3>
+<p>docker search redis 
+docker pull redis </p>
+<p>docker run --restart=always --log-opt max-size=100m --log-opt max-file=2 -p 6379:6379 --name myredis -v /home/redis/myredis/myredis.conf:/etc/redis/redis.conf -v /home/redis/myredis/data:/data -d redis redis-server /etc/redis/redis.conf  --appendonly yes  --requirepass 123456</p>
+<h4 id="基本概念">基本概念</h4>
+<p>Remote Dictionary Server <strong>基于内存的且支持持久化，高性能的Key-Value的NOSQL数据库</strong></p>
+<p>5大基本类型：</p>
+<ul>
+<li>String: 字符串</li>
+<li>Hash: 散列</li>
+<li>List: 列表</li>
+<li>Set: 集合</li>
+<li>Sorted Set: 有序集合 zset</li>
+</ul>
+<p>Redis also includes:</p>
+<ul>
+<li><a href="https://redis.io/topics/transactions">Transactions</a></li>
+<li><a href="https://redis.io/topics/pubsub">Pub/Sub</a></li>
+<li><a href="https://redis.io/commands/eval">Lua scripting</a></li>
+<li><a href="https://redis.io/commands/expire">Keys with a limited time-to-live</a></li>
+<li><a href="https://redis.io/docs/reference/eviction">LRU eviction of keys</a></li>
+<li><a href="https://redis.io/topics/sentinel">Automatic failover</a></li>
+</ul>
+<h4 id="特点">特点：</h4>
+<ul>
+<li><p>速度快
+- 单节点读 110000次/s，写81000次/s</p>
+</li>
+<li><ul>
+<li>数据存放内存中</li>
+<li>用 C 语言实现，离操作系统更近</li>
+<li>单线程架构，6.0 开始支持多线程（CPU、IO 读写负荷）</li>
+</ul>
+</li>
+<li><p>持久化</p>
+</li>
+<li><ul>
+<li>数据的更新将异步地保存到硬盘（RDB 和 AOF）</li>
+</ul>
+</li>
+<li><p>多种数据结构 - 不仅仅支持简单的 key-value 类型数据，还支持：字符串、hash、列表、集合、有序集合，</p>
+</li>
+<li><p>功能丰富
+- HyperLogLog、GEO、发布订阅、Lua脚本、事务、Pipeline、Bitmaps，key 过期</p>
+</li>
+<li><p>简单稳定
+- 源码少、单线程模型</p>
+</li>
+<li><p>主从复制</p>
+</li>
+<li><p>Redis 支持数据的备份（master-slave）与集群（分片存储），以及拥有哨兵监控机制。</p>
+</li>
+<li><p>Redis 的所有操作都是原子性的，同时 Redis 还支持对几个操作合并后的原子性执行。</p>
+</li>
+</ul>
+<h4 id="使用场景">使用场景</h4>
+<h5 id="cache">cache</h5>
+<p>计数器</p>
+<p>消息队列</p>
+<h4 id="基本使用">基本使用</h4>
+<h5 id="global-commands">global commands:</h5>
+<pre><code class="language-sql">keys：查看所有键
+dbsize：键总数
+exists key：检查键是否存在
+del key [key ...]：删除键
+expire key seconds：键过期
+ttl key: 通过 ttl 命令观察键键的剩余过期时间
+type key：键的数据结构类型
+</code></pre>
+<h5 id="string">string</h5>
+<p>常用字符串命令</p>
+<pre><code>set key value [ex seconds][px milliseconds] [nx|xx]: 设置值，返回 ok 表示成功
+	ex seconds:为键设置秒级过期时间。
+	px milliseconds:为键设置毫秒级过期时间。
+	nx:键必须不存在，才可以设置成功，用于添加。可单独用 setnx 命令替代
+	xx:与 nx 相反，键必须存在，才可以设置成功，用于更新。可单独用 setxx 命令替代
+	
+get key：获取值
+mset key value [key value ...]：批量设置值，批量操作命令可以有效提高业务处理效率
+mget key [key ...]：批量获取值，批量操作命令可以有效提高业务处理效率
+
+incr key：计数，返回结果分 3 种情况：
+	值不是整数，返回错误。
+	值是整数，返回自增后的结果。
+	键不存在，按照值为 0 自增，返回结果为 1。
+
+decr(自减)、incrby(自增指定数字)、 decrby(自减指定数字)
+incrby by num 3
+
+</code></pre>
+<p>字符串使用场景：</p>
+<ol>
+<li>缓存数据，提高查询性能。比如存储登录用户信息、电商中存储商品信息</li>
+<li>可以做计数器（想知道什么时候封锁一个 IP 地址(访问超过几次)）,短信限流</li>
+<li>共享 Session，例如：一个分布式 Web 服务将用户的 Session 信息(例如用户登录信息)保存在各自服务器中，这样会造成一个问题，出于负载均衡的考虑，分布式服务会将用户的访问均衡到不同服务器上，用户刷新一次访问可 能会发现需要重新登录，为了解决这个问题，可以使用 Redis 将用户的 Session 进行集中管理，在这种模式下只要保证 Redis 是高可用和扩展性的，每次用户 更新或者查询登录信息都直接从 Redis 中集中获取，如图：</li>
+</ol>
+<img src="/notes-media/img/image-20231009212625087.png" alt="image-20231009212625087" style="zoom:50%;" />
+
+
+
+<h5 id="hash">hash</h5>
+<p>内部是无序字典,一个哈希表有多个节点，每个节点保存一个键值对</p>
+<pre><code>hset key field value：设置值
+	hset student name xiaoming age 18 
+hget key field：获取值
+	hget student name 
+hdel key field [field ...]：删除 field
+hlen key：计算 field 个数
+hmset key field value [field value ...]：批量设置 field-value
+hmget key field [field ...]：批量获取 field-value
+hexists key field：判断 field 是否存在
+hkeys key：获取所有 field
+hvals key：获取所有 value
+hgetall key：获取所有的 field-value
+incrbyfloat 和 hincrbyfloat:就像 incrby 和 incrbyfloat 命令一样，但是它们的作 用域是 filed
+</code></pre>
+<p><strong>哈希使用场景</strong></p>
+<p>Hash 也可以同于对象存储，比如存储用户信息，与字符串不一样的是，字符串是需要将对象进行序列化（比如 json 序列化）之后才能保存，而 Hash 则可以讲用户对象的每个字段单独存储，这样就能节省序列化和反序列的时间。如下：</p>
+<h5 id="lists">lists:</h5>
+<pre><code>rpush key value [value ...]：从右边插入元素
+lpush key value [value ...]：从左边插入元素
+linsert key before|after pivot value：向某个元素前或者后插入元素
+lrange key start end：获取指定范围内的元素列表，lrange key 0 -1可以从左到右获取列表的所有元素
+lindex key index：获取列表指定索引下标的元素
+llen key：获取列表长度
+lpop key：从列表左侧弹出元素
+rpop key：从列表右侧弹出
+lrem key count value：删除指定元素，lrem 命令会从列表中找到等于 value 的元素进行删除，根据 count 的不同 分为三种情况:
+    count&gt;0，从左到右，删除最多 count 个元素。
+    count&lt;0，从右到左，删除最多 count 绝对值个元素。
+    count=0，删除所有。
+
+ltrim key start end：按照索引范围修剪列表
+lset key index newValue：修改指定索引下标的元素
+blpop key [key ...] timeout 和 brpop key [key ...] timeout：阻塞式弹出
+</code></pre>
+<p><strong>列表使用场景</strong></p>
+<ol>
+<li>热销榜，文章列表</li>
+<li>实现工作队列（利用 lists 的 push 操作，将任务存在 lists 中，然后工作线程再用 pop 操作将任务取出进行执行 ），例如消息队列</li>
+<li>最新列表，比如最新评论</li>
+</ol>
+<p>使用参考：</p>
+<ul>
+<li>lpush+lpop=Stack(栈)</li>
+<li>lpush+rpop=Queue(队列)</li>
+<li>lpsh+ltrim=Capped Collection(有限集合)</li>
+<li>lpush+brpop=Message Queue(消息队列)</li>
+</ul>
+<h5 id="set">set</h5>
+<p>Redis 的集合相当于 Java 语言里面的 HashSet 和 JS 里面的 Set，它内部的键值对是无序的<strong>唯一</strong>的。Set 集合中最后一个 value 被移除后，数据结构自动删除，内存被回收。</p>
+<pre><code>sadd key element [element ...]：添加元素，返回结果为添加成功的元素个数
+srem key element [element ...]：删除元素，返回结果为成功删除元素个数
+smembers key：获取所有元素
+sismember key element：判断元素是否在集合中，如果给定元素 element 在集合内返回 1，反之返回 0
+scard key：计算元素个数，scard 的时间复杂度为 O(1)，它不会遍历集合所有元素
+spop key：从集合随机弹出元素，从 3.2 版本开始，spop 也支持[count]参数。
+srandmember key [count]：随机从集合返回指定个数元素，[count]是可选参数，如果不写默认为 1
+sinter key [key ...]：求多个集合的交集
+suinon key [key ...]：求多个集合的并集
+sdiff key [key ...]：求多个集合的差集
+</code></pre>
+<h5 id="zset">zset</h5>
+<p>zset 可能是 Redis 提供的最为特色的数据结构，它也是在面试中面试官最爱问的数据结构。它类似于 Java 的 SortedSet 和 HashMap 的结合体，一方面它是一个 set，保证了内部 value 的唯一性，另一方面它可以给每个 value 赋予一个 score，代表这个 value 的排序权重。它的内部实现用的是一种叫着「跳跃列表」(后面会简单介绍)的数据结构。</p>
+<pre><code>zadd key score member [score member ...]：添加成员，返回结果代表成功添加成员的个数。Redis3.2 为 zadd 命令添加了 nx、xx、ch、incr 四个选项:
+    nx:member 必须不存在，才可以设置成功，用于添加
+    xx:member 必须存在，才可以设置成功，用于更新
+    ch:返回此次操作后，有序集合元素和分数发生变化的个数
+    incr:对 score 做增加，相当于后面介绍的 zincrby
+
+zcard key：计算成员个数
+zscore key member：计算某个成员的分数
+zrank key member 和 zrevrank key member：计算成员的排名，zrank 是从分数从低到高返回排名，zrevrank 反之
+zrem key member [member ...]：删除成员
+zincrby key increment member：增加成员的分数
+zrange key start end [withscores] 和 zrevrange key start end [withscores]：返回指定排名范围的成员，zrange 是从低到高返回，zrevrange 反之。
+zrangebyscore key min max [withscores][limit offset count] 和 zrevrangebyscore key max min [withscores][limit offset count] 返回指定分数范围的成员，其中 zrangebyscore 按照分数从低到高返回，zrevrangebyscore 反之
+zcount key min max：返回指定分数范围成员个数
+zremrangebyrank key start end：删除指定排名内的升序元素
+zremrangebyscore key min max：删除指定分数范围的成员
+zinterstore 和 zunionstore 命令求集合的交集和并集，可用参数比较多，可用到再查文档
+</code></pre>
+<p><strong>集合和有序集合使用场景</strong></p>
+<ol>
+<li>给用户添加标签</li>
+<li>给标签添加用户</li>
+<li>根据某个权重进行排序的队列的场景，比如游戏积分排行榜，</li>
+</ol>
+<p> Redis 客户端执行一条命令的过程：</p>
+<img src="/notes-media/img/image-20231010205237113.png" alt="image-20231010205237113" style="zoom:50%;" />
+
+<p><strong>慢查询分析</strong>：</p>
+<p>所谓慢查询日志就是系统在命令执行前后计算每条命令的执行时间，当超过预设阈值，就将这条命令的相关信息（例如：发生时间，耗时，命令的详细信息）记录下来</p>
+<p><strong>Pipeline（流水线）机制</strong></p>
+<p>Redis 提供了批量操作命令（例如 mget、mset 等</p>
+<h4 id="事物和exec-命令">事物和exec 命令</h4>
+<p>一次执行不止一个命令，而且需要其同时成功或者失败。为了保证多条命令组合的原子性，Redis 提供了简单的事务功能以及集成 Lua 脚本来解决这个问题</p>
+<p>Redis 提供了简单的事务功能，将一组需要一起执行的命令放到 multi 和 exec 两个命令之间。Multi 命令代表事务开始，exec 命令代表事务结束，它们之间的命令是原子顺序执行的</p>
+<pre><code>multi
+	command1
+	command2
+	...
+exec 
+</code></pre>
+<h4 id="发布订阅"><strong>发布订阅</strong></h4>
+<img src="/notes-media/img/image-20231010205851026.png" alt="image-20231010205851026" style="zoom:50%;" />
+
+<pre><code class="language-sql">subscribe channel [channel ...] # 订阅一个或多个频道
+unsubscribe channel # 退订指定频道
+publish channel message # 发送消息
+psubscribe pattern # 订阅指定模式
+punsubscribe pattern # 退订指定模式
+</code></pre>
+<p> Redis 发布的消息不会被持久化，这就会导致新订阅的客户端将不会收到历史消息。所以，如果当前的业务场景不能容忍这些缺点，那还是用专业 MQ 吧。</p>
+<h4 id="持久化主从同步与缓存设计"><strong>持久化、主从同步与缓存设计</strong></h4>
+<p>Redis 支持 RDB 和 AOF 两种持久化机制,持久化功能有效地避免因进程 退出造成的数据丢失问题，当下次重启时利用之前持久化的文件即可实现数据恢复。</p>
+<p><a href="https://redis.io/docs/">https://redis.io/docs/</a></p>
+<p><a href="https://redis.com.cn/documentation.html">https://redis.com.cn/documentation.html</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/573593502?utm_id=0">https://zhuanlan.zhihu.com/p/573593502?utm_id=0</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/469102289">https://zhuanlan.zhihu.com/p/469102289</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/469102289">https://zhuanlan.zhihu.com/p/469102289</a></p>
+<h2 id="ElasticsearchES">Elasticsearch（ES）</h2>
+<pre><code class="language-text">倒排索引
+索引 ：  dataset
+https://blog.csdn.net/u011863024/article/details/115721328
+索引 Index 
+类型 type
+文档 document  JSON 
+字段 fild 
+映射 Mapping 是处理数据的方式 ，和规则方面做的一些限制 ，
+分片 shards 
+副本 Replicas  分片的副本 高可用 
+分配 allocation  
+倒排索引
+分词器
+安装
+基本使用 
+高级应用
+</code></pre>
+<pre><code class="language-python"># 镜像与基本 API
+docker pull elasticsearch:7.7.0
+docker run --name elasticsearch -d -e ES_JAVA_OPTS=&quot;-Xms512m -Xmx512m&quot; -e &quot;discovery.type=single-node&quot; -p 9200:9200 -p 9300:9300 elasticsearch:7.12.0
+#运行kibana 注意IP一定不要写错
+docker run --name kibana -e ELASTICSEARCH_HOSTS=http://192.168.5.6:9200 -p 5601:5601 -d kibana:7.12.0
+
+es提供了一套api，叫做cat api，可以查看es中各种各样的数据
+GET /_cat/health?v
+GET /_cat/indices?v
+创建索引：
+PUT 
+	/demo_index
+	/book
+删除索引
+DELETE
+	/demo_index
+	/book
+新增文档:
+POST 
+	/index/type/id
+	/book/_doc/1
+	{json 数据}
+检索文档：
+GET
+	/index/type/id
+	/book/_doc/1
+替换操作：
+POST
+	PUT /book/_doc/1
+	{}
+更新文档：
+POST
+	/{index}/type /{id}/_update
+	/{index}/_update/{id}
+删除文档：
+DELETE 
+	/book/_doc/1
+	
+	
+mget 批量查询：
+POST /_bulk
+
+index  分片 shard  ()
+{
+   &quot;settings&quot; : {
+      &quot;number_of_shards&quot; : 3, # 分片个数
+      &quot;number_of_replicas&quot; : 1 # 副本
+   }
+
+单节点： 单点故障 
+水平扩容 
+	加入新的节点： 主分片定下来，就不能修改，副本分片可以调整数量
+	
+增删改可以看做update,都是对数据的改动。一个改动请求发送到es集群，经历以下四个步骤：
+
+（1）客户端选择一个node发送请求过去，这个node就是coordinating node（协调节点）找主分片
+在主节点进行业务操作
+（2）coordinating node，对document进行路由，将请求转发给对应的node（有primary shard）
+（3）实际的node上的primary shard处理请求，然后将数据同步到replica node。
+（4）coordinating node，如果发现primary node和所有replica node都搞定之后，就返回响应结果给客户端。
+
+
+词条
+词典
+倒排表
+    
+    
+dynamic mapping：
+ 自动为我们建立index，以及对应的mapping，mapping中包含了每个field对应的数据类型，以及如何分词等设置。
+    
+tf-idf
+tf : term-frequence 词频
+idf : verse-document frequence
+</code></pre>
+<p>预定义 logical form 模板：</p>
+<p>实体检索</p>
+<p>实体属性检索</p>
+<p>实体属性多跳检索</p>
+<p>多种属性条件检索实体</p>
+<p>jieba 分词</p>
+<p>数据类型：</p>
+<p>text : 文本类型 分词</p>
+<p>keywords:  不会被分词</p>
+<p>数组类型 ： []  都要一样</p>
+<p>映射参数：</p>
+<p>index  默认为true </p>
+<p>flase ，这该字段不会被创建索引，但是可以在source 元数据中展示 调优</p>
+<p><img src="/notes-media/img/image-20230802214536778.png" alt="image-20230802214536778"></p>
+<p>analyzer ： 分词词</p>
+<p>boost ： 当前设置评分的权重</p>
+<p>coerce ： 是否能强制类型转换</p>
+<p>copy_to</p>
+<p>doc_values ： text  默认false </p>
+<p><img src="/notes-media/img/image-20230802215823944.png" alt="image-20230802215823944"></p>
+<h2 id="MongoDB">MongoDB</h2>
+<p>MongoDB 是一款流行的开源文档型数据库，分布式</p>
+<ol>
+<li>面向文档存储，基于JSON/BSON 可表示灵活的数据结构</li>
+<li>动态 DDL能力，没有强Schema约束，支持快速迭代</li>
+<li>高性能计算，提供基于内存的快速数据查询</li>
+<li>容易扩展，利用数据分片可以支持海量数据存储</li>
+<li>丰富的功能集，支持二级索引、强大的聚合管道功能，为开发者量身定做的功能，如数据自动老化、固定集合等等。</li>
+<li>跨平台版本、支持多语言SDK.</li>
+</ol>
+<p>database:</p>
+<p>collection:</p>
+<p>document:</p>
+<p>field :</p>
+<pre><code class="language-sqlite">use database_name # 创建数据库 
+show dbs 
+db 
+db.dropDatabase()
+# 显示创建
+db.createCollection(name)
+show colletions /show tables 
+df.colletion_name.drop()
+
+CRUD :
+
+</code></pre>
+<p>存储机制：</p>
+<p>​	内存</p>
+<p>​	磁盘</p>
+<h2 id="Neo4j">Neo4j</h2>
+<pre><code class="language-text">属性图
+    节点 Node (可以包含多个属性property 和标签 label)
+    属性
+    关系: edge ,可以有多个property , 但是只能有一个类型type
+    标签: 
+    数据浏览器
+</code></pre>
+<p><img src="/notes-media/img/image-20230405153637462-1716637638724.png" alt="image-20230405153637462"></p>
+<p><img src="/notes-media/img/image-20230405153556494-1716637638726.png" alt="image-20230405153556494"></p>
+<img src="/notes-media/img/image-20230405154948374.png" alt="image-20230405154948374" style="zoom:50%;" />
+
+<pre><code class="language-cypher">cypyter : CQL
+(identify:label{property})  : 表示节点
+标识符：就是起的变量名，用来保存节点，后面也可以使用他来引用。
+标签：代表节点的类型，节点可以有多个标签，也可以没有。
+属性：花括号{}代表节点的属性，属性类似Python的字典。
+--
+- &gt;
+&lt; - 
+-[identify:label{property}]- &gt;
+[] 
+
+match (n:Label) return n
+</code></pre>
+<h2 id="Hive">Hive</h2>
+<pre><code class="language-shell">Hive支持基本数据类型和复杂类型,
+基本数据类型主要有数值类型(INT、FLOAT、DOUBLE ) 、布尔型和字符串
+复杂数据类型：
+ARRAY: 有序字段
+MAP: 无序字段
+STRUCT: 一组命名的字段
+HiveQL操作命令：
+数据定义、数据操作
+除 dbproperties属性外，数据库的元数据信息都是不可更改的，包括数据库名和数据库所在的目录位置，没有办法删除或重置数据库属性。
+https://dblab.xmu.edu.cn/blog/1080-2/
+
+https://zhuanlan.zhihu.com/p/100163942
+https://zhuanlan.zhihu.com/p/103413663
+
+1：Hive 查询原理：
+hive 其实是将hql转成MR程序
+元数据 是hive 表的一些参数 不是hdfs 上的数据
+在执行查询操作时 ,先从元数据库中找到 对应表对应的文件位置
+通过 hive的解析器、编译器、优化器 执行器 将 sql 语句 转换成 MR 程序，运行在 Yarn 上，最终得到结果。
+Hive 是将数据映射成数据库和一张张的表，库和表的元数据信息一般存在关系型数据库上（比如 MySQL）
+Hive 本身并不提供数据的存储功能，数据一般都是存储在 HDFS 上的（对数据完整性、格式要求并不严格）
+MetaStore：存储和管理Hive的元数据，使用关系数据库来保存元数据信息。
+
+
+2： 内部表和外部表
+内部表会移动数据到指定位置 ，将数据文件移动到默认位置，一般都是/usr/hive/warehouse/ 目录下
+外部表不会移动数据，数据在哪就是哪
+内部表删除，数据一起删除
+外部表不会删除数据
+工作中使用外部表做为数据映射，而统计出的结果一般多使用内部表，因为内部表仅仅用于储存结果或者关联，与 HDFS 数据无关。
+desc formatted 表名即可查看。 是否内部表 外部表
+
+
+分区表
+动态分区
+静态分区
+分桶表 超大数据
+分桶表一般在超大数据时才会使用，分桶将整个数据内容按某列属性值取hash值进行区分，具有相同hash值的数据进入到同一个文件中，意味着原本属于一个文件的数据经过分桶后会落到多个文件中。
+
+倾斜表
+临时表
+
+复合数据类型：
+Hive 中复合数据类型有 Array、Map、Struct 这三种
+
+Array 代表数组，类型相同的数据
+Map 映射 k--v 对
+Struct 则存储类型不同的一组数据
+
+
+CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name   --DATABASE|SCHEMA 是等价的
+  [COMMENT database_comment] --数据库注释
+  [LOCATION hdfs_path] --存储在 HDFS 上的位置
+  [WITH DBPROPERTIES (property_name=property_value, ...)]; --指定额外属性
+describe database hive_test;
+
+#删除数据库
+DROP (DATABASE|SCHEMA) [IF EXISTS] database_name [RESTRICT|CASCADE];
+
+
+CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name     --表名
+  [(col_name data_type [COMMENT col_comment],
+    ... [constraint_specification])]  --列名 列数据类型
+  [COMMENT table_comment]   --表描述
+  [PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)]  --分区表分区规则
+  [
+    CLUSTERED BY (col_name, col_name, ...) 
+   [SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS
+  ]  --分桶表分桶规则
+  [SKEWED BY (col_name, col_name, ...) ON ((col_value, col_value, ...), (col_value, col_value, ...), ...)  
+   [STORED AS DIRECTORIES] 
+  ]  --指定倾斜列和值
+  [
+   [ROW FORMAT row_format]    
+   [STORED AS file_format]
+     | STORED BY &#39;storage.handler.class.name&#39; [WITH SERDEPROPERTIES (...)]  
+  ]  -- 指定行分隔符、存储文件格式或采用自定义存储格式
+  [LOCATION hdfs_path]  -- 指定表的存储位置
+  [TBLPROPERTIES (property_name=property_value, ...)]  --指定表的属性
+  [AS select_statement];   --从查询结果创建表
+
+# 通过查询建立表
+CREATE TABLE emp_copy AS SELECT * FROM emp WHERE deptno=&#39;20&#39;;
+CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name  --创建表表名
+   LIKE existing_table_or_view_name  --被复制表的表名
+   [LOCATION hdfs_path]; --存储位置
+CREATE TEMPORARY EXTERNAL TABLE  IF NOT EXISTS  emp_co  LIKE emp
+
+加载数据到表
+load data local inpath &quot;/usr/file/emp.txt&quot; into table emp;
+重命名表
+ALTER TABLE table_name RENAME TO new_table_name;
+修改列
+
+查询结果插入表
+INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]]   
+select_statement1 FROM from_statement;
+
+INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] 
+select_statement1 FROM from_statement
+
+
+导出数据
+INSERT OVERWRITE [LOCAL] DIRECTORY directory1
+  [ROW FORMAT row_format] [STORED AS file_format] 
+  SELECT ... FROM ...
+ 
+# 累计窗口 函数
+sum() over()
+avg() over()
+# 排序窗口函数
+rank() over()
+dense_rank() over()
+row_number() over()
+</code></pre>
+<h3 id="PySpark--Hive-SQL-练习Yelp">PySpark / Hive SQL 练习（Yelp）</h3>
+<pre><code class="language-python"># 分列
+split_col = f.split(business[&#39;categories&#39;], &#39;,&#39;)
+# 重命名、过滤掉空的数据
+business = business.withColumn(&quot;categories&quot;, split_col).filter(business[&quot;city&quot;] != &quot;&quot;).dropna()
+# 临时表
+business.createOrReplaceTempView(&quot;business&quot;)
+# 筛选列
+b_etl = spark.sql(
+    &quot;SELECT business_id, name, city, state, latitude, longitude, stars, review_count, is_open, categories, attributes FROM business&quot;
+).cache()
+
+# 到某店到 state center 的距离
+outlier = spark.sql(
+    &quot;SELECT b1.business_id, SQRT(POWER(b1.latitude - b2.avg_lat, 2) + POWER(b1.longitude - b2.avg_long, 2)) &quot;
+    &quot;as dist FROM b_etl b1 INNER JOIN (SELECT state, AVG(latitude) as avg_lat, AVG(longitude) as avg_long &quot;
+    &quot;FROM b_etl GROUP BY state) b2 ON b1.state = b2.state ORDER BY dist DESC&quot;
+)
+
+# 内连接
+joined = spark.sql(
+    &quot;SELECT b.* FROM b_etl b INNER JOIN outlier o ON b.business_id = o.business_id WHERE o.dist&lt;10&quot;
+)
+# explode 拆行
+part_business = spark.sql(
+    &quot;SELECT state, city, stars, review_count, explode(categories) AS category FROM business&quot;
+).cache()
+
+spark.sql(&quot;SELECT COUNT(DISTINCT(new_category)) FROM part_business&quot;)
+spark.sql(&quot;SELECT new_category, COUNT(*) as freq FROM part_business GROUP BY new_category ORDER BY freq DESC&quot;)
+spark.sql(&quot;SELECT city, new_category, COUNT(*) as freq FROM part_business GROUP BY city, new_category ORDER BY freq DESC&quot;)
+spark.sql(&quot;SELECT city, COUNT(business_id) as no_of_busy FROM business GROUP BY city ORDER BY no_of_bus DESC&quot;)
+
+df.toJSON()
+df.toPandas()
+</code></pre>
+<h3 id="Hive-SQL-速查教程摘录">Hive SQL 速查（教程摘录）</h3>
+<pre><code class="language-text">一文学完所有的Hive Sql（两万字最全详解） 五分钟学大数据  
+1： 基本概念
+存储格式： textfile ,sequencefile(binary insert 加载) rcfile(行列混合压缩) orc
+
+
+2： 基本操作 
+DDL : 
+创建，修改数据库
+表： 内部表，外部表，分区表。分桶表
+单表的查询，关联查询
+hive 函数： 聚合函数,条件函数，日期函数 ，字符串函数
+行转列,列转行  ： lateral view , explode  reflect
+窗口函数 
+分析函数
+3： 语法知识 
+
+#对数据库的操作 
+创建数据库
+create database if not exists myhive;
+说明：hive的表存放位置模式是由hive-site.xml当中的一个属性指定的:hive.metastore.warehouse.dir
+
+创建数据库并指定hdfs存储位置 :
+create database myhive2 location &#39;/myhive2&#39;;
+
+查看数据库详细信息
+desc database  myhive2;
+desc database extended  myhive2; 查看数据库更多详细信息
+
+删除数据库
+drop  database  myhive2;
+强制删除数据库，包含数据库下面的表一起删除
+drop  database  myhive  cascade; 
+
+#对数据表的操作
+	建内部表
+create  table 
+if not exists stu2(id int ,name string) 
+row format delimited fields terminated by &#39;\t&#39; 
+stored as textfile 
+location &#39;/user/stu2&#39;;
+row format delimited fields terminated by &#39;\t&#39; 指定字段分隔符，默认分隔符为 &#39;\001&#39;
+stored as 指定存储格式
+location 指定存储位置
+
+根据查询结果创建表
+create table stu3 as select * from stu2;
+根据已经存在的表结构创建表
+create table stu4 like stu2;
+查询表的结构
+desc stu2;
+详细查询
+desc formatted  stu2;
+查询创建表的语句
+show create table stu2;
+
+#对外部表操作
+外部表因为是指定其他的hdfs路径的数据加载到表当中来，所以hive表会认为自己不完全独占这份数据，所以删除hive表的时候，数据仍然存放在hdfs当中，不会删掉，只会删除表的元数据
+
+构建外部表
+create external table student (s_id string,s_name string) 
+row format delimited fields terminated by &#39;\t&#39;;
+从本地文件系统向表中加载数据
+追加操作
+load data local inpath &#39;/export/servers/hivedatas/student.csv&#39; into table student;
+覆盖操作
+load data local inpath &#39;/export/servers/hivedatas/student.csv&#39; overwrite  into table student;
+从hdfs文件系统向表中加载数据
+load data inpath &#39;/hivedatas/techer.csv&#39; into table techer;
+加载数据到指定分区
+load data inpath &#39;/hivedatas/techer.csv&#39; into table techer partition(cur_date=20201210);
+
+1.使用 load data local 表示从本地文件系统加载，文件会拷贝到hdfs上
+2.使用 load data 表示从hdfs文件系统加载，文件会直接移动到hive相关目录下，注意不是拷贝过去，因为hive认为hdfs文件已经有3副本了，没必要再次拷贝了
+3.如果表是分区表，load 时不指定分区会报错
+4.如果加载相同文件名的文件，会被自动重命名
+
+#对分区表的操作
+创建分区表的语法
+create table score(s_id string, s_score int) partitioned by (month string);
+创建一个表带多个分区
+create table score2 (s_id string, s_score int) partitioned by (year string,month string,day string);
+加载数据到一个分区的表中
+load data local inpath &#39;/export/servers/hivedatas/score.csv&#39; into table score partition (month=&#39;201806&#39;);
+加载数据到一个多分区的表中去
+load data local inpath &#39;/export/servers/hivedatas/score.csv&#39; into table score2 partition(year=&#39;2018&#39;,month=&#39;06&#39;,day=&#39;01&#39;);
+当表是分区表时，比如 partitioned by (day string)， 则这个文件夹下的每一个文件夹就是一个分区，且文件夹名为 day=20201123 这种格式，然后使用：msck  repair   table  score; 修复表结构，成功之后即可看到数据已经全部加载到表当中去了
+
+查看分区
+show  partitions  score;
+添加一个分区
+alter table score add partition(month=&#39;201805&#39;);
+同时添加多个分区
+alter table score add partition(month=&#39;201804&#39;) partition(month = &#39;201803&#39;);
+注意：添加分区之后就可以在hdfs文件系统当中看到表下面多了一个文件夹
+删除分区
+alter table score drop partition(month = &#39;201806&#39;);
+
+#对分桶表操作
+将数据按照指定的字段进行分成多个桶中去，就是按照分桶字段进行哈希划分到多个文件当中去
+分区就是分文件夹，分桶就是分文件
+分桶优点：
+1. 提高join查询效率
+2. 提高抽样效率
+开启hive的捅表功能
+set hive.enforce.bucketing=true;
+设置reduce的个数
+set mapreduce.job.reduces=3;
+
+创建桶表
+create table course (c_id string,c_name string) 
+clustered by(c_id) into 3 buckets;
+
+桶表的数据加载：由于桶表的数据加载通过hdfs  dfs  -put文件或者通过load  data均不可以，只能通过insert  overwrite 进行加载所以把文件加载到桶表中，需要先创建普通表，并通过insert  overwrite的方式将普通表的数据通过查询的方式加载到桶表当中去
+
+通过insert overwrite给桶表中加载数据
+insert overwrite table course 
+select * from course_common cluster by(c_id);  -- 最后指定桶字段
+
+
+#修改表和删除表
+修改表名称
+alter table  old_table_name  rename to new_table_name;
+增加/修改列信息
+查询表结构
+desc score5;
+添加列
+alter table score5 add columns (mycol string, mysco string);
+更新列
+alter table score5 change column mysco mysconew int;
+删除表操作
+drop table score5;
+清空表操作
+truncate table score6;
+说明：只能清空管理表，也就是内部表；清空外部表，会产生错误
+
+如果 hdfs 开启了回收站，drop 删除的表数据是可以从回收站恢复的，表结构恢复不了，需要自己重新创建；truncate 清空的表是不进回收站的，所以无法恢复truncate清空的表
+所以 truncate 一定慎用，一旦清空将无力回天
+
+#向hive表中加载数据
+直接向分区表中插入数据
+insert into table score partition(month =&#39;201807&#39;) values (&#39;001&#39;,&#39;002&#39;,&#39;100&#39;);
+通过load方式加载数据
+load data local inpath &#39;/export/servers/hivedatas/score.csv&#39; overwrite into table score partition(month=&#39;201806&#39;);
+通过查询方式加载数据
+insert overwrite table score2 partition(month = &#39;201806&#39;) select s_id,c_id,s_score from score1;
+查询语句中创建表并加载数据
+create table score2 as select * from score1;
+在创建表是通过location指定加载数据的路径
+create external table score6 (s_id string,c_id string,s_score int) 
+row format delimited fields terminated by &#39;,&#39; 
+location &#39;/myscore&#39;;
+
+export导出与import 导入 hive表数据（内部表操作）
+
+create table techer2 like techer; --依据已有表结构创建表
+export table techer to  &#39;/export/techer&#39;;
+import table techer2 from &#39;/export/techer&#39;;
+
+
+#hive表中数据导出
+
+将查询的结果导出到本地
+insert overwrite local directory &#39;/export/servers/exporthive&#39;
+select * from score;
+将查询的结果格式化导出到本地
+insert overwrite local directory &#39;/export/servers/exporthive&#39; 
+row format delimited fields terminated by &#39;\t&#39; 
+collection items terminated by &#39;#&#39; 
+select * from student;
+
+将查询的结果导出到HDFS上(没有local)
+insert overwrite directory &#39;/export/servers/exporthive&#39; 
+row format delimited fields terminated by &#39;\t&#39; 
+collection items terminated by &#39;#&#39; 
+select * from score;
+
+Hadoop命令导出到本地
+dfs -get /export/servers/exporthive/000000_0 /export/servers/exporthive/local.txt;
+
+hive shell 命令导出
+基本语法：（hive -f/-e 执行语句或者脚本 &gt; file）
+hive -e &quot;select * from myhive.score;&quot; &gt; /export/servers/exporthive/score.txt
+hive -f export.sh &gt; /export/servers/exporthive/score.txt
+
+export导出到HDFS上
+export table score to &#39;/export/exporthive/score&#39;;
+
+#hive的DQL查询语法
+
+单表查询
+
+SELECT [ALL | DISTINCT] select_expr, select_expr, ... 
+FROM table_reference
+[WHERE where_condition] 
+[GROUP BY col_list [HAVING condition]] 
+[CLUSTER BY col_list 
+  | [DISTRIBUTE BY col_list] [SORT BY| ORDER BY col_list] 
+] 
+[LIMIT number]
+
+
+注意：
+1、order by 会对输入做全局排序，因此只有一个reducer，会导致当输入规模较大时，需要较长的计算时间。
+2、sort by不是全局排序，其在数据进入reducer前完成排序。因此，如果用sort by进行排序，并且设置mapred.reduce.tasks&gt;1，则sort by只保证每个reducer的输出有序，不保证全局有序。
+3、distribute by(字段)根据指定的字段将数据分到不同的reducer，且分发算法是hash散列。
+4、Cluster by(字段) 除了具有Distribute by的功能外，还会对该字段进行排序。因此，如果分桶和sort字段是同一个时，此时，cluster by = distribute by + sort by
+
+WHERE语句
+select * from score where s_score &lt; 60;
+GROUP BY 分组
+select s_id ,avg(s_score) from score group by s_id;
+
+分组后对数据进行筛选，使用having
+select s_id ,avg(s_score) avgscore 
+from score 
+group by s_id 
+having avgscore &gt; 85;
+
+如果使用 group by 分组，则 select 后面只能写分组的字段或者聚合函数where和having区别：
+1 having是在group by分完组之后再对数据进行筛选，所以having 要筛选的字段只能是**分组字段**或者**聚合函数**
+2 where 是从数据表中的字段直接进行的筛选的，所以不能跟在gruop by后面，也不能使用聚合函数
+
+
+join 连接:
+NNER JOIN 内连接：只有进行连接的两个表中都存在与连接条件相匹配的数据才会被保留下来
+select * from techer t [inner] join course c on t.t_id = c.t_id; -- inner 可省略
+
+LEFT OUTER JOIN 左外连接：左边所有数据会被返回，右边符合条件的被返回
+select * from techer t left join course c on t.t_id = c.t_id; -- outer可省略
+
+RIGHT OUTER JOIN 右外连接：右边所有数据会被返回，左边符合条件的被返回、
+select * from techer t right join course c on t.t_id = c.t_id;
+
+FULL OUTER JOIN 满外(全外)连接: 将会返回所有表中符合条件的所有记录。如果任一表的指定字段没有符合条件的值的话，那么就使用NULL值替代。
+SELECT * FROM techer t FULL JOIN course c ON t.t_id = c.t_id ;
+
+order by 排序
+局排序，只会有一个reduce
+ASC（ascend）: 升序（默认） DESC（descend）: 降序
+SELECT * FROM students 
+LEFT JOIN score sco ON s.s_id = sco.s_id 
+ORDER BY sco.s_score DESC;
+order by 是全局排序，所以最后只有一个reduce，也就是在一个节点执行，如果数据量太大，就会耗费较长时间
+
+sort by 局部排序
+每个MapReduce内部进行排序，对全局结果集来说不是排序。
+设置reduce个数
+set mapreduce.job.reduces=3;
+查看设置reduce个数
+set mapreduce.job.reduces;
+查询成绩按照成绩降序排列
+select * from score sort by s_score;
+将查询结果导入到文件中（按照成绩降序排列）
+insert overwrite local directory &#39;/export/servers/hivedatas/sort&#39; 
+select * from score sort by s_score;
+
+distribute by 分区排序
+distribute by：类似MR中partition，进行分区，结合sort by使用
+设置reduce的个数，将我们对应的s_id划分到对应的reduce当中去
+set mapreduce.job.reduces=7;
+通过distribute by  进行数据的分区
+select * from score 
+distribute by s_id sort by s_score;
+注意：Hive要求 distribute by 语句要写在 sort by 语句之前
+
+cluster by
+当distribute by和sort by字段相同时，可以使用cluster by方式.
+cluster by除了具有distribute by的功能外还兼具sort by的功能。但是排序只能是正序排序，不能指定排序规则为ASC或者DESC。
+以下两种写法等价
+select * from score 
+cluster by s_id;
+
+select * from score 
+distribute by s_id sort by s_id;
+</code></pre>
+<h2 id="Consul">Consul</h2>
+<p>consul是hashicorp公司推出的开源工具，用于实现分布式系统的服务发现与配置。  与其它分布式服务注册与发现方案相比，consul的方案更“一站式”，  内置了服务注册与发现框架、分布一致性协议实现、健康检查、key/value存储、多数据中心方案，不再需要依赖其它工具（比如zookeeper等),使用起来也比较简单。 consul使用go语言编写，因此具有天然可移值性（支持linux,windows,mac  os); 安装包仅包仿一个可执行文件，方便部署，与docker等轻量级容器可无缝配合</p>
+<p><strong>consul特性：</strong></p>
+<ol>
+<li>raft算法</li>
+<li>服务发现</li>
+<li>健康检查</li>
+<li>key/value存储</li>
+<li>多数据中心</li>
+<li>支持http和dns协议接口</li>
+<li>官方提供web管理办面</li>
+</ol>
+<p>常见注册中心</p>
+<p>netfix eureka</p>
+<p>alibaba nacos</p>
+<p>hashicorp consul</p>
+<p>apache zookeeper</p>
+<p>coreos etcd</p>
+<p>cncf coredns</p>
+<p><img src="/notes-media/img/1674478166113267-1716728846880.png" alt="image.png"></p>
+<h3 id="注册中心与-CAP">注册中心与 CAP</h3>
+<p>CAP定理：</p>
+<p>指的是在一个分布式系统中，</p>
+<p>Consistency（一致性）、 </p>
+<p>Availability（可用性）、</p>
+<p>Partition tolerance（分区容错性），三者不可同时获得</p>
+<p>其中：</p>
+<p>一致性（C）：所有节点都可以访问到最新的数据</p>
+<p>可用性（A）：每个请求都是可以得到响应的，不管请求是成功还是失败</p>
+<p>分区容错性（P）：除了全部整体网络故障，其他故障都不能导致整个系统不可用</p>
+<p>CAP理论就是说在分布式存储系统中，最多只能实现上面的两点。</p>
+<p>而由于当前的网络硬件肯定会出现延迟丢包等问题，所以分区容忍性是我们必须需要实现的。</p>
+<p>所以我们只能在一致性和可用性之间进行权衡</p>
+<p>CA： 如果不要求P（不允许分区），则C（强一致性）和A（可用性）是可以保证的。但放弃P的同时也就意味着放弃了系统的扩展性，也就是分布式节点受限，没办法部署子节点，这是违背分布式系统设计的初衷的</p>
+<p>CP: 如果不要求A（可用），每个请求都需要在服务器之间保持强一致，而P（分区）会导致同步时间无限延长(也就是等待数据同步完才能正常访问服务)，一旦发生网络故障或者消息丢失等情况，就要牺牲用户的体验，等待所有数据全部一致了之后再让用户访问系统</p>
+<p>AP：要高可用并允许分区，则需放弃一致性。一旦分区发生，节点之间可能会失去联系，为了高可用，每个节点只能用本地数据提供服务，而这样会导致全局数据的不一致性。</p>
+<p>Zookeeper：CP设计，保证了一致性，集群搭建的时候，某个节点失效，则会进行选举行的leader，或者半数以上节点不可用，则无法提供服务，因此可用性没法满足</p>
+<p>Eureka：AP原则，无主从节点，一个节点挂了，自动切换其他节点可以使用，去中心化</p>
+<p>结论：</p>
+<p>分布式系统中P,肯定要满足，所以只能在CA中二选一</p>
+<p>没有最好的选择，最好的选择是根据业务场景来进行架构设计</p>
+<p>如果要求一致性，则选择zookeeper/Nacos，如金融行业 CP</p>
+<p>如果要求可用性，则Eureka/Nacos，如电商系统 AP</p>
+<p>CP ： 适合支付、交易类，要求数据强一致性，宁可业务不可用，也不能出现脏数据</p>
+<p>AP: 互联网业务，比如信息流架构，不要求数据强一致，更想要服务可用</p>
+<p><strong>dev:用于开发，以下两种用于生产环境</strong></p>
+<p><strong>client:客户端，无状态，将http和dns接口请求</strong>转发给局域网内的服务端集群，它只是一个代理的角色。 </p>
+<p>server:服务端 ，保存配置信息，高可用集群，每个数据中心的server数据推荐为3个或5个</p>
+<p><img src="/notes-media/img/1674479784507689-1716728873575.png" alt="image.png"></p>
+<p>上图是一个简单的consul cluster架构，consul  cluster有server和client两种角色，不管是server还是client,统称为agent,consul  client是相对无状态的，只负责转发rpc到server，资源开销很少.server是一个有一组扩展功能的代理，这些功能包括参与raft选举，维护集群状态，响应rpc查询，与其它数据中心交互wan gossip和转发查询给leader或远程数据中心。 </p>
+<p>每个数据中心，client和server是混合的。一般建有3-5台server.这是基于有故障情况下的可用性和性能之间的权衡结果，因为越多的机器加入达成共识越慢，server之初间会选择出一个leader.<strong>然而并不限制client的数量</strong>，一般建议一个服务对应一个client,它们可以很容易的扩展到数千或者数万台，在开发的时候我们绑定一组服务注册中心中的客户端 即可。 </p>
+<p>producer：服务提供者</p>
+<p>consumer:服务消费者</p>
+<p><img src="/notes-media/img/1674480519991279-1716728873575.png" alt="image.png"></p>
+<p>服务发现及注册：</p>
+<p>producer启动时，会将自己的ip/host等信息通过发送请求告知consul,consul接收到producer的注册信息后，每隔10秒（默认）会向producer发送一个健康检查的请求，检查producer是否处于可用状态，防止consumer调到不可用的服务；</p>
+<p>服务调用</p>
+<p>当consumer请求product时，会先从consul中拿存储的producer服务的ip和port的临时表（temp  table),从表中任选一个producer的ip和port,然后根据这个ip和port,发送访问请求;此表只包含通过健康检查的producer信息，并且每隔10秒更新。。</p>
+<h2 id="时序数据库">时序数据库</h2>
+<p>（提纲占位，待补充具体产品与实践笔记。）</p>
+<h2 id="向量数据库">向量数据库</h2>
+<p>（提纲占位，待补充 Qdrant 等专题；见 <a href="7-qdrant.md">7-qdrant.md</a>。）</p>
+<h2 id="消息中间件">消息中间件</h2>
+<h3 id="Kafka">Kafka</h3>
+<p>作用：</p>
+<p>异步、削峰、<a href="https://so.csdn.net/so/search?q=%E8%A7%A3%E8%80%A6&spm=1001.2101.3001.7020">解耦</a></p>
+<p>消息队列两种模式：</p>
+<p>1： 点对点模型</p>
+<p>消费者主动拉取数据，消息收到后清除消息</p>
+<img src="/notes-media/img/image-20231010214906987.png" alt="image-20231010214906987" style="zoom:50%;" />
+
+<p>2： 发布订阅模式</p>
+<ol>
+<li>可以有多个topic 主题</li>
+<li>消费者消费数据后，不删除数据</li>
+<li>每个消费者相互独立，都可以消费到数据</li>
+</ol>
+<p>同步的概念：</p>
+<p><img src="/notes-media/img/image-20231010215755388-1716730906768.png" alt="image-20231010215755388"></p>
+<p><em>用户发起一个请求，系统A收到请求，接着系统A必须立马去调用系统B，直到系统B返回了，系统A
+ <code>才能</code>返回结果给用户</em></p>
+<p>中间件实现异步：</p>
+<p><img src="/notes-media/img/image-20231010215830614-1716730906770.png" alt="image-20231010215830614"></p>
+<p><img src="/notes-media/img/image-20231010215930496-1716730906770.png" alt="image-20231010215930496"></p>
+<p> Kafka是一个分布式发布 - 订阅消息系统和一个强大的队列</p>
+<p>Kafka可以在许多用例中使用。 其中一些列出如下 - </p>
+<ul>
+<li><strong>指标</strong>  -  Kafka通常用于操作监控数据。 这涉及聚合来自分布式应用程序的统计信息，以产生操作数据的集中馈送。</li>
+<li><strong>日志聚合解决方案</strong>  -  Kafka可用于跨组织从多个服务收集日志，并使它们以标准格式提供给多个服务器。</li>
+<li><strong>流处理</strong>  - 流行的框架(如Storm和Spark Streaming)从主题中读取数据，对其进行处理，并将处理后的数据写入新主题，供用户和应用程序使用。 Kafka的强耐久性在流处理的上下文中也非常有用。</li>
+</ul>
+<p>Topic ： 主题</p>
+<p>Partition： 分区</p>
+<p>Partiion offset  分区偏移</p>
+<p>Brokers</p>
+<p>Producers</p>
+<p>Consumers </p>
+<p>Leader</p>
+<p>Follower</p>
+<p><img src="/notes-media/img/image-20231010221119385-1716730906770.png" alt="image-20231010221119385"></p>
+<p>100T 数据 -&gt;producer -&gt;topic(单台机器存储空间不够，partition ) </p>
+<p>kafka cluster 集群 ：  leader 和follower </p>
+<p>注意： 每个组内的消费者，只能单独消费1个parttion </p>
+<p>zookpper : 可以有，可以没有</p>
+<pre><code>基本操作：
+create topic 
+list topic 
+create producer 
+create consumer (从当前开始消费，或者从头开始)
+
+</code></pre>
+<h4 id="producer">producer</h4>
+<p>生产者发送数据：</p>
+<p>RecordAccumulator: 是缓存队列</p>
+<p>sender 线程： 什么时候拉取数据 ， batch_size  , linger.ms</p>
+<p><img src="/notes-media/img/image-20231010222637375-1716730906770.png" alt="image-20231010222637375"></p>
+<p><strong>异步发送：</strong></p>
+<p>send  or 带callback 的send </p>
+<p>同步发送：</p>
+<p>分区器的好处：</p>
+<img src="/notes-media/img/image-20231011202409976.png" alt="image-20231011202409976" style="zoom:50%;" />
+
+<p><strong>分区策略：send 方法</strong>
+the default partitioning strategy：</p>
+<ol>
+<li>if a parttion is specific in the record ,use it </li>
+<li>if no parttion is specific but a key is present choose a partition based on the hash of the key </li>
+<li>if no parttion or key is present choose the sticky partition that changes when the batch is full</li>
+</ol>
+<p><img src="/notes-media/img/image-20231011203245028-1716730906770.png" alt="image-20231011203245028"></p>
+<p><strong>自定义分区器：</strong></p>
+<p>需求： 实现一个分区器： 当发送过来的数据包含 test_partition , 就发送到0 号分区，否则就发送到其他分区</p>
+<p>实现步骤： </p>
+<p>（1）定义类实现partitioner 接口</p>
+<p>（2）重写parttion()方法</p>
+<p><strong>生产者如何提高吞吐量：</strong></p>
+<p>batch.size 16k -&gt;32K</p>
+<p>linger.ms 5-100ms</p>
+<p>RecordAccumulator: 缓冲器大小，修改为64m</p>
+<img src=".img/image-20231011204122128.png" alt="image-20231011204122128" style="zoom:50%;" />
+
+
+
+<p><strong>数据可靠性：</strong></p>
+<p>acks 应答：</p>
+<p><img src="/notes-media/img/image-20231011204432879-1716730906770.png" alt="image-20231011204432879"></p>
+<p>in-sync replica set(ISR):</p>
+<p><img src="/notes-media/img/image-20231011204956013-1716730906771.png" alt="image-20231011204956013"></p>
+<p>数据完全可靠条件： ack =-1 分区副本数&gt;=2 , isr 里应答的最小副本数量&gt;=2 </p>
+<p>isr: 是集群所有的broker 节点</p>
+<p>数据重复： ack =-1  当leader 节点接受到数据，挂掉，但是没有同步到producer,但是已经同步给了follwer,  新选的leader , 又接受相同的数据，就重复了</p>
+<p><img src="/notes-media/img/image-20231011205252718-1716730906771.png" alt="image-20231011205252718"></p>
+<p><strong>数据的传递语义：</strong></p>
+<p>At Least Once : 至少一次</p>
+<p>At most once : 最多一次</p>
+<p>Exactly Once : 精确一次</p>
+<img src="/notes-media/img/image-20231011205734232.png" alt="image-20231011205734232" style="zoom:50%;" />
+
+<p><img src="/notes-media/img/image-20231011210132550-1716730906771.png" alt="image-20231011210132550"></p>
+<p>不想数据重复，必须开启事务</p>
+<p><img src="/notes-media/img/image-20231011210713487-1716730906771.png" alt="image-20231011210713487"></p>
+<p><img src="/notes-media/img/image-20231011210846592-1716730906771.png" alt="image-20231011210846592"></p>
+<p><strong>数据有序：</strong></p>
+<p><img src="/notes-media/img/image-20231011211301535-1716730906771.png" alt="image-20231011211301535"></p>
+<p>一个分区： 就能保住有序 </p>
+<p>否则，一个消费者，拉取所有分区数据再排序</p>
+<p><strong>数据乱序：</strong></p>
+<p><img src="/notes-media/img/image-20231011211422176-1716730906771.png" alt="image-20231011211422176"></p>
+<p><img src="/notes-media/img/image-20231011211741270-1716730906771.png" alt="image-20231011211741270"></p>
+<p><strong>zookeeper</strong></p>
+<p><img src="/notes-media/img/image-20231011212030240-1716730906771.png" alt="image-20231011212030240"></p>
+<p><img src="/notes-media/img/image-20231011212154020-1716730906771.png" alt="image-20231011212154020"></p>
+<p><img src="/notes-media/img/image-20231011212250632-1716730906771.png" alt="image-20231011212250632"></p>
+<p><img src="/notes-media/img/image-20231011212608107-1716730906771.png" alt="image-20231011212608107"></p>
+<p><img src="/notes-media/img/image-20231011212646079-1716730906772.png" alt="image-20231011212646079"></p>
+<p><img src="/notes-media/img/image-20231011212717335-1716730906772.png" alt="image-20231011212717335"></p>
+<img src="/notes-media/img/image-20231011212908145.png" alt="image-20231011212908145" style="zoom:50%;" />
+
+<p><img src="/notes-media/img/image-20231011212933978-1716730906772.png" alt="image-20231011212933978"></p>
+<h4 id="kafka-副本">kafka 副本</h4>
+<p><img src="/notes-media/img/image-20231011213033142-1716730906772.png" alt="image-20231011213033142"></p>
+<p><img src="/notes-media/img/image-20231011213312430-1716730906772.png" alt="image-20231011213312430"></p>
+<p><img src="/notes-media/img/image-20231011213418001-1716730906772.png" alt="image-20231011213418001"></p>
+<p><img src="/notes-media/img/image-20231011213539712-1716730906772.png" alt="image-20231011213539712"></p>
+<p>负载均衡：均匀分布</p>
+<p><img src="/notes-media/img/image-20231011213840436-1716730906772.png" alt="image-20231011213840436"></p>
+<p><strong>手动调整分区副本存储：</strong></p>
+<p><img src="/notes-media/img/image-20231011214039473-1716730906772.png" alt="image-20231011214039473"></p>
+<p><img src="/notes-media/img/image-20231011214220540-1716730906772.png" alt="image-20231011214220540"></p>
+<p><img src="/notes-media/img/image-20231011214346339-1716730906772.png" alt="image-20231011214346339"></p>
+<h4 id="文件存储">文件存储</h4>
+<p><img src="/notes-media/img/image-20231011214411747-1716730906772.png" alt="image-20231011214411747"></p>
+<p>切割： topic -&gt; parttion -&gt;log-&gt;segement -&gt;()</p>
+<p>分片+索引</p>
+<p><img src="/notes-media/img/image-20231011215027126-1716730906772.png" alt="image-20231011215027126"></p>
+<p>删除策略： delete 和compact 两种：</p>
+<p><img src="/notes-media/img/image-20231011215709797-1716730906772.png" alt="image-20231011215709797"></p>
+<h4 id="kafka-高效率读写数据">kafka 高效率读写数据</h4>
+<p><img src="/notes-media/img/image-20231011220139633-1716730906773.png" alt="image-20231011220139633"></p>
+<p><img src="/notes-media/img/image-20231011220346557-1716730906773.png" alt="image-20231011220346557"></p>
+<p><img src="/notes-media/img/image-20231011220433663-1716730906773.png" alt="image-20231011220433663"></p>
+<p>4： 页缓存+ 0拷贝技术</p>
+<h4 id="consumer">consumer</h4>
+<p><img src="/notes-media/img/image-20231011220838811-1716730906773.png" alt="image-20231011220838811"></p>
+<p>拉： 是consumer 主动</p>
+<p>推： 是producer 主动</p>
+<p><strong>消费流程</strong>：</p>
+<p><img src="/notes-media/img/image-20231011221814778-1716730906773.png" alt="image-20231011221814778"></p>
+<p>消费者之间是相互独立的</p>
+<p>offset 持久化保存</p>
+<p><img src="/notes-media/img/image-20231011221936943-1716730906773.png" alt="image-20231011221936943"></p>
+<p>1个消费者： 也需要提供一个消费者组id </p>
+<p><img src="/notes-media/img/image-20231011222204643-1716730906773.png" alt="image-20231011222204643"></p>
+<p><img src="/notes-media/img/image-20231011222315193-1716730906773.png" alt="image-20231011222315193"></p>
+<p><img src="/notes-media/img/image-20231011222515078-1716730906773.png" alt="image-20231011222515078"></p>
+<p>create consumer </p>
+<p>subscribe  订阅topic</p>
+<p>assgin 订阅某个topoic 下的某个分区</p>
+<p><img src="/notes-media/img/image-20231011223254517-1716730906773.png" alt="image-20231011223254517"></p>
+<p>组内怎么分配分区：</p>
+<p><img src="/notes-media/img/image-20231011223431910-1716730906773.png" alt="image-20231011223431910"></p>
+<p>分区数只能增加不能减少</p>
+<p><img src="/notes-media/img/image-20231011223629129-1716730906773.png" alt="image-20231011223629129"></p>
+<p><img src="/notes-media/img/image-20231011223658173-1716730906773.png" alt="image-20231011223658173"></p>
+<p>offset <strong>维护位置</strong></p>
+<p><img src="/notes-media/img/image-20231011223849468-1716730906773.png" alt="image-20231011223849468"></p>
+<p><img src="/notes-media/img/image-20231011224043531-1716730906774.png" alt="image-20231011224043531"></p>
+<p><img src="/notes-media/img/image-20231011224230890-1716730906774.png" alt="image-20231011224230890"></p>
+<p>offset 消费</p>
+<p><img src="/notes-media/img/image-20231011224336632-1716730906774.png" alt="image-20231011224336632"></p>
+<ol>
+<li><p>指定位置进行消费： 指定offset 进行消费</p>
+</li>
+<li><p>指定时间消费：在生成环境中，会遇到最近消费的几个小时数据异常，想要新按照时间消费。</p>
+<p>把时间转成对应的offset  :</p>
+</li>
+</ol>
+<p><strong>漏消费</strong>：</p>
+<p><strong>重复消费</strong>：</p>
+<p><img src="/notes-media/img/image-20231012204951962-1716730906774.png" alt="image-20231012204951962"></p>
+<p><img src="/notes-media/img/image-20231012205117742-1716730906774.png" alt="image-20231012205117742"></p>
+<p><strong>消息积压</strong>：</p>
+<p><img src="/notes-media/img/image-20231012205244371-1716730906774.png" alt="image-20231012205244371"></p>
+<p><img src="/notes-media/img/image-20231012205458065-1716730906774.png" alt="image-20231012205458065"></p>
+<p><img src="/notes-media/img/image-20231012205530621-1716730906774.png" alt="image-20231012205530621"></p>
+<p><img src="/notes-media/img/image-20231012205612628-1716730906774.png" alt="image-20231012205612628"></p>
+<p><img src="/notes-media/img/image-20231012205718244-1716730906774.png" alt="image-20231012205718244"></p>
+<p><img src="/notes-media/img/image-20231012205931865-1716730906774.png" alt="image-20231012205931865"></p>
+<p><img src="/notes-media/img/image-20231012210001842-1716730906774.png" alt="image-20231012210001842"></p>
+<p><img src="/notes-media/img/image-20231012210033527-1716730906774.png" alt="image-20231012210033527"></p>
+<p><a href="https://www.bilibili.com/video/BV1vr4y1677k?p=10&spm_id_from=pageDriver&vd_source=ae11379595599a1cedeb268c109fc9bb">https://www.bilibili.com/video/BV1vr4y1677k?p=10&amp;spm_id_from=pageDriver&amp;vd_source=ae11379595599a1cedeb268c109fc9bb</a></p>
+<p><a href="https://achang.blog.csdn.net/article/details/121307740">https://achang.blog.csdn.net/article/details/121307740</a></p>
+<p>优先队列的实现：</p>
+<p><img src="/notes-media/img/image-20231012213008856-1716730906774.png" alt="image-20231012213008856"></p>
+<p><a href="https://blog.csdn.net/GaleZhang/article/details/126493027">https://blog.csdn.net/GaleZhang/article/details/126493027</a></p>
+<h3 id="RabbitMQ">RabbitMQ</h3>
+<p>4大核心</p>
+<ol>
+<li>生产者</li>
+<li>消费者</li>
+<li>队列</li>
+<li>交换机</li>
+</ol>
+<p><strong>生产者</strong>：产生数据发送消息的程序是生产者。</p>
+<p><strong>交换机</strong>：交换机是 RabbitMQ 非常重要的一个部件，一方面它接收来自生产者的消息，另一方面它将消息推送到队列中。交换机必须确切知道如何处理它接收到的消息，是将这些消息推送到特定队列还是推送到多个队列，亦或者是把消息丢弃，这个是由交换机类型决定的。</p>
+<p><strong>队列</strong>：队列是 RabbitMQ 内部使用的一种数据结构，尽管消息流经 RabbitMQ  和应用程序，但它们只能存储在队列中。队列仅受主机的内存和磁盘限制的约束，本质上是一个大的消息缓冲区。许多生产者可以将消息发送到一个队列，许多消费者可以尝试从一个队列接收数据。</p>
+<p><strong>消费者</strong>：消费与接收具有相似的含义。消费者大多时候是一个等待接收消息的程序。请注意生产者，消费者和消息中间件很多时候并不在同一机器上。同一个应用程序既可以是生产者又是可以是消费者。</p>
+<p>AMQP 协议是一种二进制协议， 它定义了一组规则和标注，以确保消息可以在不同的应用程序和平台传递和解释，AMQP 协议包含4个核心组件</p>
+<ul>
+<li>消息</li>
+<li>交换机</li>
+<li>队列</li>
+<li>绑定</li>
+</ul>
+<p><img src="/notes-media/img/image-20231225212920034.png" alt="image-20231225212920034"></p>
+<ul>
+<li><p><code>Broker</code>：就是 RabbitMQ 服务，用于接收和分发消息，接受客户端的连接，实现 AMQP 实体服务。</p>
+</li>
+<li><p><code>Virtual host</code>：出于多租户和安全因素设计的，把 AMQP 的基本组件划分到一个虚拟的分组中，类似于网络中的 namespace 概念。当多个不同的用户使用同一个 RabbitMQ server 提供的服务时，可以划分出多个 vhost，每个用户在自己的 vhost 创建 exchange 或 queue 等。</p>
+</li>
+<li><p><code>Connection</code>：连接，生产者/消费者与 Broker 之间的 TCP 网络连接。</p>
+</li>
+<li><p><code>Channel</code>：网络信道，如果每一次访问 RabbitMQ 都建立一个 Connection，在消息量大的时候建立连接的开销将是巨大的，效率也较低。Channel 是在 connection 内部建立的逻辑连接，如果应用程序支持多线程，通常每个 thread 创建单独的 channel 进行通讯，AMQP method 包含了 channel id 帮助客户端和 message broker 识别 channel，所以 channel  之间是完全隔离的。Channel 作为轻量级的Connection 极大减少了操作系统建立 TCP connection 的开销。</p>
+</li>
+<li><p><code>Message</code>：消息，服务与应用程序之间传送的数据，由Properties和body组成，Properties可是对消息进行修饰，比如消息的优先级，延迟等高级特性，Body则就是消息体的内容。</p>
+</li>
+<li><p><code>Virtual Host</code>：虚拟节点，用于进行逻辑隔离，最上层的消息路由，一个虚拟主机理由可以有若干个Exhange和Queue，同一个虚拟主机里面不能有相同名字的Exchange</p>
+</li>
+<li><p><code>Exchange</code>：交换机，是 message 到达 broker 的第一站，用于根据分发规则、匹配查询表中的 routing key，分发消息到 queue 中去，不具备消息存储的功能。常用的类型有：direct、topic、fanout。</p>
+</li>
+<li><p><code>Bindings</code>：exchange 和 queue 之间的虚拟连接，binding 中可以包含 routing key，Binding 信息被保存到 exchange 中的查询表中，用于 message 的分发依据。</p>
+</li>
+<li><p><code>Routing key</code>：是一个路由规则，虚拟机可以用它来确定如何路由一个特定消息</p>
+</li>
+<li><p><code>Queue</code>：消息队列，保存消息并将它们转发给消费者进行消费。</p>
+</li>
+</ul>
+<p><img src="/notes-media/img/image-20231225214036775.png" alt="image-20231225214036775"></p>
+<p>fanout</p>
+<p>Direcot</p>
+<h3 id="RocketMQ">RocketMQ</h3>
+<p>RocketMQ是阿里开源的消息中间件，久经沙场，非常的靠谱。他几乎同时解决了Kafka和RabbitMQ的缺陷。</p>
+<h3 id="nginx">nginx</h3>
+<p><img src="/notes-media/img/image-20240118210735429-1716730906775.png" alt="image-20240118210735429"></p>
+<p><img src="/notes-media/img/image-20240118210833942-1716730906775.png" alt="image-20240118210833942"></p>
+<p><img src="/notes-media/img/image-20240118210921650-1716730906775.png" alt="image-20240118210921650"></p>
+<p>nginx -v :</p>
+<p>查看支持的模块：</p>
+<p>nginx -s reload  会发什么？</p>
+<p>worker 会变， master 不会变</p>
+<p>nginx -s stop</p>
+<p>rpm -ql nginx  # 查看nginx 配置文件</p>
+<p><img src="/notes-media/img/image-20240118212114272-1716730906775.png" alt="image-20240118212114272"></p>
+<p>server ： 虚拟主机，必须写在http {} 区域中。</p>
+<p><img src="/notes-media/img/image-20240118212402782-1716730906775.png" alt="image-20240118212402782"></p>
+<p>单虚拟主机：</p>
+<p>基于多ip的虚拟主机</p>
+<p>多域名的虚拟主机：</p>
+<p><img src="/notes-media/img/image-20240118214915689-1716730906775.png" alt="image-20240118214915689"></p>
+<pre><code>server {
+    listen 80; # 如果需要HTTPS，请替换为listen 443 ssl，并配置SSL证书相关项
+    server_name dockerhub.kubekey.local;
+
+    location / {
+        proxy_pass http://127.0.0.1:4433;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+
+server {
+    listen 443 ssl;
+    server_name dockerhub.kubekey.local;
+
+    # SSL证书配置部分
+    ssl_certificate /etc/docker/certs.d/dockerhub.kubekey.local/dockerhub.kubekey.local.cert;
+    ssl_certificate_key /etc/docker/certs.d/dockerhub.kubekey.local/dockerhub.kubekey.local.key;
+
+    location / {
+        proxy_pass https://192.168.5.24:4433;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+</code></pre>
+<h2 id="负载均衡中间件">负载均衡中间件</h2>
+<p>Nginx</p>
+<p>LVS </p>
+<p>KeepLive </p>
+<p>CDN </p>
+<h2 id="RPC">RPC</h2>
+<p>grpc : google 开源的高性能 rpc 框架，stubby  演化</p>
+<ol>
+<li>网络通信 （grpc 自己封装网络通信部分，C，java[Netty] ,Go）</li>
+<li>协议  http2  传输数据的时候，二进制内容 支持双向流 双工，连接的多路复用</li>
+<li>序列化  基本文本， json , 二进制， Thrift 二进制序列化， 压缩二进制序列化 protobuf google 开源的一种序列化（IDL 语言）</li>
+<li>代理的创建  让调用者像调用本地方法那样，去调用远端的服务方法</li>
+</ol>
+<p>thrift 与gRPC 的区别：</p>
+<p>共性： 支持异构语言的RPC</p>
+<p>区别：</p>
+<ol>
+<li>网络通信： thrift TCP  专属协议   gPRC  http2</li>
+<li>性能角度：  thrift 效率 高于gprc</li>
+</ol>
+<p>grpc 好处：</p>
+<ol>
+<li>高效的进程间通信</li>
+<li>支持多种语言， C，GO， Java </li>
+<li>支持多平台 linux</li>
+<li>grpc protobuf 效率高</li>
+<li>http2 协议</li>
+<li>大厂背书</li>
+</ol>
+<h3 id="HTTP">HTTP</h3>
+<p>http1.0  协议 ：  请求响应模式， 短连接协议 （无状态协议），单工 无法实现服务器推送</p>
+<p>变现轮询，（客服端轮询，隔一段时间就发送请求），增加服务器压力</p>
+<p>http1.1 协议： 请求响应模式，有限的长连接，升级的方式websocket , 双工，实现服务器向客服端的推送</p>
+<ol>
+<li>传输数据文本格式，可读性好，效率差</li>
+<li>本质http1.x 协议无法实现双工通信</li>
+<li>资源的请求，需要发送多次请求，建立多个连接才可以完成</li>
+</ol>
+<p>http 是基于TCP 长连接， 但是服务器压力大，主动断开</p>
+<p>htt2.0 协议：</p>
+<ol>
+<li>是一个二进制协议，</li>
+<li>双工通信</li>
+<li>多路复用</li>
+<li>流控。数据流优先级</li>
+</ol>
+<p>RPC ： remote procedure call</p>
+<p><img src="/notes-media/img/image-20240111213716628-1716730962437.png" alt="image-20240111213716628"></p>
+<p><img src="/notes-media/img/image-20240111213909909-1716730962438.png" alt="image-20240111213909909"></p>
+<p><img src="/notes-media/img/image-20240111213953081-1716730962438.png" alt="image-20240111213953081"></p>
+<p><img src="/notes-media/img/image-20240111214113129-1716730962438.png" alt="image-20240111214113129"></p>
+<p><img src="/notes-media/img/image-20240111214147087-1716730962438.png" alt="image-20240111214147087"></p>
+<p><img src="/notes-media/img/image-20240111214558971-1716730962438.png" alt="image-20240111214558971"></p>
+<p><img src="/notes-media/img/image-20240111214621301-1716730962438.png" alt="image-20240111214621301"></p>
+<p><img src="/notes-media/img/image-20240117205421686-1716730962438.png" alt="image-20240117205421686"></p>
+<p><img src="/notes-media/img/image-20240117205615666-1716730962438.png" alt="image-20240117205615666"></p>
+<p><img src="/notes-media/img/image-20240117205727832-1716730962438.png" alt="image-20240117205727832"></p>
+<p><img src="/notes-media/img/image-20240117205924877-1716730962438.png" alt="image-20240117205924877"></p>
+<p><img src="/notes-media/img/image-20240117205950751-1716730962438.png" alt="image-20240117205950751"></p>
+<p><img src="/notes-media/img/image-20240117210036671-1716730962438.png" alt="image-20240117210036671"></p>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

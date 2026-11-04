@@ -1,0 +1,1290 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="在 VMware 虚拟机（示例网段 `192.168.5.x`）上搭建 Docker、Harbor、GitLab、Jenkins、KubeSphere / K8s、Traefik 等组件的操作笔记。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>VMware 虚拟机 · DevOps 实验环境 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>5 · Infrastructure</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>VMware 虚拟机 · DevOps 实验环境</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>在 VMware 虚拟机（示例网段 `192.168.5.x`）上搭建 Docker、Harbor、GitLab、Jenkins、KubeSphere / K8s、Traefik 等组件的操作笔记。</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#DevOps-环境搭建" class="toc-link depth-2" data-astro-cid-5eggoaxc> DevOps 环境搭建 </a><a href="#配置-IP静态" class="toc-link depth-3" data-astro-cid-5eggoaxc> 配置 IP（静态） </a><a href="#系统初始化防火墙--SELinux--时区" class="toc-link depth-3" data-astro-cid-5eggoaxc> 系统初始化（防火墙 / SELinux / 时区） </a><a href="#Docker-安装" class="toc-link depth-3" data-astro-cid-5eggoaxc> Docker 安装 </a><a href="#jenkins-docker" class="toc-link depth-3" data-astro-cid-5eggoaxc> jenkins-docker </a><a href="#docker-compose" class="toc-link depth-3" data-astro-cid-5eggoaxc> docker-compose </a><a href="#CA证书" class="toc-link depth-3" data-astro-cid-5eggoaxc> CA证书 </a><a href="#gitlab" class="toc-link depth-3" data-astro-cid-5eggoaxc> gitlab </a><a href="#harbor" class="toc-link depth-3" data-astro-cid-5eggoaxc> harbor </a><a href="#Miniconda3" class="toc-link depth-3" data-astro-cid-5eggoaxc> Miniconda3 </a><a href="#Go" class="toc-link depth-3" data-astro-cid-5eggoaxc> Go </a><a href="#NodeJs" class="toc-link depth-3" data-astro-cid-5eggoaxc> NodeJs </a><a href="#jenkins" class="toc-link depth-3" data-astro-cid-5eggoaxc> jenkins </a><a href="#KubernetesKubeKey--KubeSphere" class="toc-link depth-2" data-astro-cid-5eggoaxc> Kubernetes（KubeKey / KubeSphere） </a><a href="#服务账号与-URL-速查" class="toc-link depth-2" data-astro-cid-5eggoaxc> 服务账号与 URL 速查 </a><a href="#KpCloud" class="toc-link depth-2" data-astro-cid-5eggoaxc> KpCloud </a><a href="#Nginx" class="toc-link depth-2" data-astro-cid-5eggoaxc> Nginx </a><a href="#Traefik-Ingress" class="toc-link depth-2" data-astro-cid-5eggoaxc> Traefik Ingress </a><a href="#GitLab-Docker-单机部署" class="toc-link depth-2" data-astro-cid-5eggoaxc> GitLab Docker 单机部署 </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><h1 id="VMware-虚拟机--DevOps-实验环境">VMware 虚拟机 · DevOps 实验环境</h1>
+<p>在 VMware 虚拟机（示例网段 <code>192.168.5.x</code>）上搭建 Docker、Harbor、GitLab、Jenkins、KubeSphere / K8s、Traefik 等组件的操作笔记。</p>
+<blockquote>
+<p><strong>说明</strong>：文件名沿用 VMWare；内容为 <strong>Linux 虚拟机内 DevOps 部署</strong>，非 VMware 产品手册。详细 K8s 概念见同目录 <code>K8s.md</code>。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#devops-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">DevOps 环境搭建</a></td>
+<td>网络、Docker、Compose、CA、GitLab/Harbor、语言运行时、Jenkins</td>
+</tr>
+<tr>
+<td><a href="#kubernetes-kubekey--kubesphere">Kubernetes</a></td>
+<td>KubeKey、KubeSphere、Harbor Secret</td>
+</tr>
+<tr>
+<td><a href="#%E6%9C%8D%E5%8A%A1%E8%B4%A6%E5%8F%B7%E4%B8%8E-url-%E9%80%9F%E6%9F%A5">服务账号与 URL</a></td>
+<td>控制台地址与默认账号</td>
+</tr>
+<tr>
+<td><a href="#kpcloud">KpCloud</a></td>
+<td>MySQL / RabbitMQ / Jenkins 源</td>
+</tr>
+<tr>
+<td><a href="#nginx">Nginx</a></td>
+<td>卸载重装</td>
+</tr>
+<tr>
+<td><a href="#traefik-ingress">Traefik</a></td>
+<td>CRD、RBAC、DaemonSet、IngressRoute</td>
+</tr>
+<tr>
+<td><a href="#gitlab-docker-%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2">GitLab Docker 单机</a></td>
+<td>容器方式安装</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="DevOps-环境搭建">DevOps 环境搭建</h2>
+<h3 id="配置-IP静态">配置 IP（静态）</h3>
+<pre><code class="language-bash">vi /etc/sysconfig/network-scripts/ifcfg-ens33
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=1cd9ad26-696f-40d4-8e14-dc102681372e
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=192.168.5.24
+GATEWAY=192.168.5.2
+NETMASK=255.255.255.0
+DNS1=114.114.114.114
+DNS2=8.8.8.8
+</code></pre>
+<h3 id="系统初始化防火墙--SELinux--时区">系统初始化（防火墙 / SELinux / 时区）</h3>
+<pre><code class="language-bash">yum install -y wget vim
+yum -y install curl socat conntrack chrony
+
+# 关闭防火墙（原笔记为 stop 后 enable；若需长期关闭请改为 disable）
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo setenforce 0
+sudo sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+sudo iptables -F
+# 查看SELinux的状态
+getenforce
+# 设置时区
+timedatectl
+timedatectl set-timezone Asia/Shanghai
+chronyc -n sources -v
+chronyc tracking
+timedatectl status 
+
+yum install unzip -y 
+</code></pre>
+<h3 id="Docker-安装">Docker 安装</h3>
+<pre><code class="language-bash">wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.8.tgz 
+tar -xzvf docker-20.10.8.tgz
+sudo mv docker/* /usr/local/bin/
+# 设置权限
+sudo groupadd docker || true
+sudo usermod -aG docker $USER
+#systemd
+################################################
+cat &lt;&lt; EOF | sudo tee /etc/systemd/system/docker.service
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/dockerd
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TimeoutStartSec=0
+Delegate=yes
+KillMode=process
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+
+
+
+#验证
+docker --version
+
+#检查Docker服务状态：
+sudo systemctl status docker
+sudo systemctl start docker
+#并且为了确保Docker在系统启动时自动运行  开机自动启动
+sudo systemctl enable docker
+sudo usermod -aG docker $USER # 添加到docker 组 
+
+ls -l /var/run/docker.sock
+srw-rw---- 1 root docker 0 Jun 22 14:58 /var/run/docker.sock
+systemctl daemon-reload
+sudo systemctl edit docker.service
+sudo systemctl enable docker
+journalctl -u docker
+journalctl -xeu docker.service
+</code></pre>
+<h3 id="jenkins-docker">jenkins-docker</h3>
+<pre><code class="language-bash">ubantu:
+apt --fix-broken install
+apt-get update
+apt-get install iptables
+apt-get install -y libdevmapper1.02.1
+apt purge docker-ce
+docker info
+chmod +x /usr/sbin/policy-rc.d
+vim /usr/sbin/policy-rc.d
+#!/bin/sh
+# For most Docker users, &quot;apt-get install&quot; only happens during &quot;docker build&quot;,
+# where starting services doesn&#39;t work and often fails in humorous ways. This
+# prevents those failures by stopping the services from attempting to start.
+
+exit 101
+
+next 0 
+192.168.5.24  k8sworker2.cluster.local k8sworker2
+192.168.5.21  k8smaster.cluster.local k8smaster
+192.168.5.24  dockerhub.kubekey.local
+192.168.5.21  lb.kubesphere.local
+echo &quot;next 0&quot; &gt;&gt; /usr/sbin/policy-rc.d
+echo &quot;192.168.5.24  dockerhub.kubekey.local&quot; &gt;&gt; /etc/hosts
+ docker login -u admin -p Harbor12345  dockerhub.kubekey.local
+sudo dpkg -i containerd.io_1.4.12-1_amd64.deb
+sudo dpkg -i docker-ce-cli_20.10.12~3-0~ubuntu-focal_amd64.deb
+sudo dpkg -i docker-ce_20.10.12~3-0~ubuntu-focal_amd64.deb
+https://zhuanlan.zhihu.com/p/458172588
+service docker start
+</code></pre>
+<h3 id="docker-compose">docker-compose</h3>
+<pre><code class="language-bash">curl -L &quot;https://github.com/docker/compose/releases/download/1.29.2/docker-compose-linux-x86_64&quot; -o docker-compose
+sudo mv docker-compose /usr/local/bin/
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+</code></pre>
+<h3 id="CA证书">CA证书</h3>
+<pre><code class="language-bash">mkdir  ./cert
+1. 创建自签名CA证书
+# 生成CA私钥
+openssl genrsa -out ca.key 4096
+# 根据私钥创建自签名的CA证书，有效期3650天（十年）
+openssl req -x509 -new -nodes -key ca.key -sha512 -days 3650 -subj &quot;/C=CN/ST=YourState/L=YourCity/O=YourOrganization/CN=YourRootCA&quot; -out ca.crt
+2. 生成服务器证书请求（CSR）
+#生成服务器证书请求（CSR）
+openssl genrsa -out harbor-server.key 4096
+# 根据服务器私钥创建CSR文件
+openssl req -new -key harbor-server.key -sha512 -days 3650 -out harbor-server.csr -subj &quot;/C=CN/ST=YourState/L=YourCity/O=YourOrg/CN=&lt;your-harbor-domain-or-ip&gt;&quot;
+3. 使用CA为服务器签发证书
+# 创建v3.ext扩展配置文件（包含如Subject Alternative Name等额外信息）
+cat &lt;&lt;EOF &gt; v3.ext
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = dockerhub.kubekey.local
+DNS.2 = dockerhub.kubekey.local
+IP.1 = 192.168.5.24
+EOF
+
+openssl x509 -req -in harbor-server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out harbor-server.crt -days 3650 -sha512 -extfile v3.ext
+
+# 生成文件
+ca.crt  ca.key  ca.srl  harbor-server.crt  harbor-server.csr  harbor-server.key  v3.ext
+</code></pre>
+<h3 id="gitlab">gitlab</h3>
+<pre><code class="language-yaml">version: &#39;3.1&#39;
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:15 # 使用最新的社区版镜像
+    container_name: gitlab
+    privileged: true
+    restart: always
+    ulimits:
+      sigpending: 62793 # 设置挂起信号数限制为10000个
+      nproc: 131072
+      nofile:
+        soft: 60000
+        hard: 60000
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+          external_url &#39;http://192.168.5.24:8929&#39;
+          gitlab_rails[&#39;gitlab_shell_ssh_port&#39;] = 2224
+    ports:
+      - &#39;8929:8929&#39;
+      - &#39;2224:2224&#39;
+    volumes:
+      - &#39;./config:/etc/gitlab&#39;
+      - &#39;./logs:/var/log/gitlab&#39;
+      - &#39;./data:/var/opt/gitlab&#39;
+networks:
+  default:
+    name: gitlab_network
+</code></pre>
+<h3 id="harbor">harbor</h3>
+<pre><code class="language-bash">wget https://your-repo-url/harbor-offline-installer-v2.5.3.tgz 
+tar -xzvf harbor-offline-installer-v2.5.3.tgz
+cd harbor
+cp harbor.yml.tmpl harbor.yml
+vim harbor.yml
+
+#配置
+hostname: dockerhub.kubekey.local
+# http related config
+http:
+  # port for http, default is 80. If https enabled, this port will redirect to https port
+  port: 80
+# https related config
+https:
+  port: 443
+  certificate: /home/softs/cert/harbor-server.crt
+  private_key: /home/softs/cert/harbor-server.key
+harbor_admin_password: Harbor12345
+# Harbor DB configuration
+database:
+  # The password for the root user of Harbor DB. Change this before any production use.
+  password: root123
+  # The maximum number of connections in the idle connection pool. If it &lt;=0, no idle connections are retained.
+  max_idle_conns: 100
+  # The maximum number of open connections to the database. If it &lt;= 0, then there is no limit on the number of open connections.
+  # Note: the default number of connections is 1024 for postgres of harbor.
+  max_open_conns: 900
+# The default data volume
+data_volume: /data
+</code></pre>
+<h3 id="Miniconda3">Miniconda3</h3>
+<pre><code class="language-bash">chmod +x Miniconda3-py38_4.11.0-Linux-x86_64.sh
+./Miniconda3-py38_4.11.0-Linux-x86_64.sh
+export PATH=&quot;/root/miniconda3/bin:$PATH&quot;
+source ~/.bashrc
+conda --version
+python --version
+</code></pre>
+<h3 id="Go">Go</h3>
+<pre><code class="language-bash">wget https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+curl -O https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+tar -C /usr/local/ -xzf go1.21.5.linux-amd64.tar.gz
+#配置环境变量： 更新系统环境变量以包含Go的bin目录路径。打开或编辑您的bash shell配置文件，通常是 ~/.bashrc 或 ~/.bash_profile：
+echo &#39;export GOROOT=/usr/local/go&#39; &gt;&gt; ~/.bashrc
+echo &#39;export GOPATH=$HOME/go&#39; &gt;&gt; ~/.bashrc
+echo &#39;export PATH=&lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:0.6833em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.1389em;&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot; style=&quot;margin-right:0.0813em;&quot;&gt;H&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;GOROOT/bin:$GOPATH/bin&#39; &gt;&gt; ~/.bashrc
+source ~/.bashrc
+
+#env 
+go env -w GOPROXY=https://goproxy.cn,direct
+go env -w GO111MODULE=on
+</code></pre>
+<h3 id="NodeJs">NodeJs</h3>
+<pre><code class="language-bash">wget https://nodejs.org/dist/v18.19.0/node-v18.19.0-linux-x64.tar.xz
+sudo tar -xJf node-v18.19.0-linux-x64.tar.xz -C /usr/local/
+sudo ln -s /usr/local/node-v13.14.0-linux-x64/bin/node /usr/local/bin/node
+sudo ln -s /usr/local/node-v13.14.0-linux-x64/bin/npm /usr/local/bin/npm
+export PATH=&quot;/usr/local/node-v13.14.0-linux-x64/bin:$PATH&quot;
+source ~/.bashrc
+source /etc/profile
+node --version
+npm --version
+# 卸载
+sudo rm /usr/local/bin/node
+sudo rm /usr/local/bin/npm
+# 删除这一行
+#/.bash_profile
+export PATH=&quot;/usr/local/node-v18.19.0-linux-x64/bin:$PATH&quot;
+source ~/.bashrc
+sudo rm -rf /usr/local/node-v18.19.0-linux-x64
+#https://nodejs.org/en/blog/release/v16.13.0
+ unlink /usr/local/bin/node
+</code></pre>
+<h3 id="jenkins">jenkins</h3>
+<pre><code class="language-yaml">version: &#39;3&#39;
+services:
+  jenkins:
+    image: jenkins/jenkins:2.176.2-jdk11
+    container_name: jenkins
+    restart: unless-stopped
+    privileged: true
+    user: root
+    volumes:
+     #挂载宿主机本地的maven环境
+      - /home/softs/jenkins/maven_home:/var/maven_home
+      - /home/softs/jenkins/java_home:/var/java_home
+      - /home/softs/jenkins/jenkins_home:/var/jenkins_home
+       # 让容器使用宿主的docke
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /etc/docker:/etc/docker
+    ports:
+      - 50000:50000
+      - 9999:8080
+    environment: 
+      TZ: Asia/Shanghai
+    networks:
+      - shanhy-ci
+networks:
+  shanhy-ci:
+    driver: bridge
+</code></pre>
+<p><a href="https://blog.csdn.net/fly910905/article/details/117254938">https://blog.csdn.net/fly910905/article/details/117254938</a></p>
+<p><a href="http://192.168.5.24:9999//api/json/api/json?tree=useCrumbs">http://192.168.5.24:9999//api/json/api/json?tree=useCrumbs</a></p>
+<p>{&quot;_class&quot;:&quot;hudson.security.csrf.DefaultCrumbIssuer&quot;,&quot;crumb&quot;:&quot;a2bb843144b65f4199ea3f13a9e48eb6727c1ced50f92fcaa86a75290d4c3eb0&quot;,&quot;crumbRequestField&quot;:&quot;Jenkins-Crumb&quot;</p>
+<p>插件：</p>
+<ol>
+<li><pre><code class="language-markdown">Build With Parameters
+active choice 
+http://192.168.5.24:9999/job/test/api/xml
+http://192.168.5.24:9999/job/test/config.xml
+</code></pre>
+</li>
+</ol>
+<h2 id="KubernetesKubeKey--KubeSphere">Kubernetes（KubeKey / KubeSphere）</h2>
+<pre><code class="language-bash"># yum install 
+yum update -y
+sudo yum install -y yum-utils
+sudo yum makecache fast
+sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+sudo systemctl start docker
+
+# hostname
+hostnamectl set-hostname k8smaster
+hostnamectl set-hostname k8sworker1
+hostnamectl status
+echo &quot;127.0.0.1   $(hostname)&quot; &gt;&gt; /etc/hosts
+# 免密登录配置
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.5.24
+
+#3： 关闭防火墙, selinux,iptables 
+sudo systemctl stop firewalld
+sudo  systemctl enable firewalld
+sudo setenforce 0
+sudo sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+sudo iptables -F
+
+# 查看SELinux的状态
+getenforce
+
+# install 
+yum -y install curl socat conntrack chrony
+# 设置时区
+timedatectl
+timedatectl set-timezone Asia/Shanghai
+chronyc -n sources -v
+chronyc tracking
+timedatectl status 
+# 登录harbor
+docker login https://dockerhub.kubekey.local -u admin -p Harbor12345
+
+./kk init registry -a kubesphere-artifact-k8s.tar.gz -f config-sample.yaml
+./kk artifact image push -f config-sample.yaml -a kubesphere-artifact-k8s.tar.gz
+
+#在dockerhub 中新建 kubesphereio 空间
+./kk delete cluster -f config-sample.yaml
+./kk create cluster -f config-sample.yaml -a k8s-kubesphere.tar.gz  --with-kubernetes v1.23.6 --with-kubesphere v3.3.1 --with-package 
+
+
+
+Console: http://192.168.5.21:30880
+Account: admin
+Password: P@88w0rd
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;(id -g) $HOME/.kube/config
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubeadm join lb.kubesphere.local:6443 --token q5v37f.sxh7hzkrlukhs3xd \
+        --discovery-token-ca-cert-hash sha256:51510e85b6d91f2ce6f56d4c4e6e3f8d838667621ef1560c1b66f55fb8e7bb12 \
+        --control-plane
+
+
+</code></pre>
+<p>创建harbor secret：</p>
+<pre><code class="language-bash">kubectl create secret docker-registry harbor-secret \
+  --docker-email=tiger@acme.example \ 
+  --docker-username=admin \
+  --docker-password=Harbor12345 \ 
+  --docker-server=dockerhub.kubekey.local:443 \
+kubectl create secret docker-registry harbor-secret --docker-email=tiger@acme.example --docker-username=admin  --docker-password=Harbor12345 --docker-server=dockerhub.kubekey.local:443
+  
+kubectl get secret
+</code></pre>
+<pre><code class="language-bash">mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown &lt;span class=&quot;math-inline&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;−&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;katex-base&quot;&gt;&lt;span class=&quot;katex-strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathnormal&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;(id -g) $HOME/.kube/config
+</code></pre>
+<h2 id="服务账号与-URL-速查">服务账号与 URL 速查</h2>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>地址</th>
+<th>账号 / 密码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KubeSphere</td>
+<td><a href="http://192.168.5.21:30880">http://192.168.5.21:30880</a></td>
+<td>admin / P@88w0rd（Harbor12345 见原笔记）</td>
+</tr>
+<tr>
+<td>Harbor</td>
+<td><a href="https://dockerhub.kubekey.local">https://dockerhub.kubekey.local</a> 或 192.168.5.24</td>
+<td>admin / Harbor12345</td>
+</tr>
+<tr>
+<td>Jenkins</td>
+<td><a href="http://192.168.5.21:30180">http://192.168.5.21:30180</a> 、<a href="http://192.168.5.24:9999">http://192.168.5.24:9999</a></td>
+<td>admin / P@88w0rd</td>
+</tr>
+<tr>
+<td>GitLab</td>
+<td><a href="http://192.168.5.24:8929">http://192.168.5.24:8929</a></td>
+<td>root / asdf123456</td>
+</tr>
+<tr>
+<td>RabbitMQ</td>
+<td><a href="http://192.168.5.24:15672">http://192.168.5.24:15672</a></td>
+<td>见 KpCloud 节</td>
+</tr>
+<tr>
+<td>KpCloud 前台</td>
+<td><a href="http://192.168.5.24:8080">http://192.168.5.24:8080</a></td>
+<td><a href="mailto:kplcloud@nsini.com">kplcloud@nsini.com</a> / admin</td>
+</tr>
+</tbody></table>
+<p>MinIO 发布包参考：<code>RELEASE.2019-08-07T01-59-21Z</code></p>
+<h2 id="KpCloud">KpCloud</h2>
+<pre><code class="language-bash">docker-compse -up
+
+mysql:
+host: 192.168.5.24 root pwd:admin db:kplcloud
+rabbitMQ:
+http://localhost:15672
+1:在admin: 添加virtual host :kplcloud 
+2: 设置权限
+3：登录：http://192.168.5.24:8080/
+kplcloud@nsini.com
+admin
+
+kplcloud/hello.git
+
+jenkins 清华源
+https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
+</code></pre>
+<h2 id="Nginx">Nginx</h2>
+<pre><code>sudo systemctl stop nginx
+sudo yum remove nginx
+sudo rm -rf /etc/nginx/ /var/log/nginx/ /var/cache/nginx/
+sudo yum makecache
+</code></pre>
+<h2 id="Traefik-Ingress">Traefik Ingress</h2>
+<p>部署步骤概览：① CRD → ② RBAC → ③ ConfigMap → ④ 节点 Label → ⑤ DaemonSet → ⑥ IngressRoute。<br>文档：<a href="https://docs.traefik.io/v2.0/">Traefik v2</a>（默认部署在 <code>kube-system</code>）。</p>
+<pre><code class="language-yaml">kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.7/docs/content/routing/providers/kubernetes-crd/quickstart/crd.yaml
+# 1、创建 CRD 资源
+2、创建 RBAC 权限
+3、创建 Traefik 配置文件
+4、节点设置 Label 标签
+5、Kubernetes 部署 Traefik
+1、配置 HTTP 路由规则 （Traefik Dashboard 为例）
+2、配置 HTTPS 路由规则（Kubernetes Dashboard 为例）
+https://docs.traefik.io/v2.0/
+Traefik 是部署在 Kube-system Namespace 下，如果不是需要修改下面部署文件中的 Namespace 属性
+
+1: 创建crd 资源：  
+kubectl apply -f traefik-crd.yaml
+## IngressRoute
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ingressroutes.traefik.containo.us
+spec:
+  scope: Namespaced
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: IngressRoute
+    plural: ingressroutes
+    singular: ingressroute
+---
+## IngressRouteTCP
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: ingressroutetcps.traefik.containo.us
+spec:
+  scope: Namespaced
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: IngressRouteTCP
+    plural: ingressroutetcps
+    singular: ingressroutetcp
+---
+## Middleware
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: middlewares.traefik.containo.us
+spec:
+  scope: Namespaced
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: Middleware
+    plural: middlewares
+    singular: middleware
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: tlsoptions.traefik.containo.us
+spec:
+  scope: Namespaced
+  group: traefik.containo.us
+  version: v1alpha1
+  names:
+    kind: TLSOption
+    plural: tlsoptions
+    singular: tlsoption
+    
+    
+2：创建 RBAC 权限
+kubectl apply -f traefik-rbac.yaml -n kube-system
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: kube-system
+  name: traefik-ingress-controller
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;services&quot;,&quot;endpoints&quot;,&quot;secrets&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;extensions&quot;]
+    resources: [&quot;ingresses&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;extensions&quot;]
+    resources: [&quot;ingresses/status&quot;]
+    verbs: [&quot;update&quot;]
+  - apiGroups: [&quot;traefik.containo.us&quot;]
+    resources: [&quot;middlewares&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;traefik.containo.us&quot;]
+    resources: [&quot;ingressroutes&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;traefik.containo.us&quot;]
+    resources: [&quot;ingressroutetcps&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+  - apiGroups: [&quot;traefik.containo.us&quot;]
+    resources: [&quot;tlsoptions&quot;]
+    verbs: [&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: kube-system
+    
+    
+3：创建 Traefik 配置文件
+traefik-config.yaml 文件
+kubectl apply -f traefik-config.yaml -n kube-system
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: traefik-config
+data:
+  traefik.yaml: |-
+    serversTransport:
+      insecureSkipVerify: true
+    api:
+      insecure: true
+      dashboard: true
+      debug: true
+    metrics:
+      prometheus: &quot;&quot;
+    entryPoints:
+      web:
+        address: &quot;:80&quot;
+      websecure:
+        address: &quot;:443&quot;
+    providers:
+      kubernetesCRD: &quot;&quot;
+    log:
+      filePath: &quot;&quot;
+      level: error
+      format: json
+    accessLog:
+      filePath: &quot;&quot;
+      format: json
+      bufferingSize: 0
+      filters:
+        retryAttempts: true
+        minDuration: 20
+      fields:
+        defaultMode: keep
+        names:
+          ClientUsername: drop
+        headers:
+          defaultMode: keep
+          names:
+            User-Agent: redact
+            Authorization: drop
+            Content-Type: keep
+
+4：节点设置 Label 标签
+由于是 Kubernetes DeamonSet 这种方式部署 Traefik，所以需要提前给节点设置 Label，这样当程序部署时 Pod 会自动调度到设置 Label 的点上。
+kubectl label nodes k8s-node-2-12 IngressProxy=true
+ kubectl label nodes k8s-node-2-12 IngressProxy-   # 删除标签
+ 
+5、Kubernetes 部署 Traefik
+kubectl apply -f traefik-deploy.yaml -n kube-system
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+spec:
+  ports:
+    - name: web
+      port: 80
+    - name: websecure
+      port: 443
+    - name: admin
+      port: 8080
+  selector:
+    app: traefik
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: traefik-ingress-controller
+  labels:
+    app: traefik
+spec:
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      name: traefik
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 1
+      containers:
+        - image: traefik:latest
+          name: traefik-ingress-lb
+          ports:
+            - name: web
+              containerPort: 80
+              hostPort: 80           #hostPort方式，将端口暴露到集群节点
+            - name: websecure
+              containerPort: 443
+              hostPort: 443          #hostPort方式，将端口暴露到集群节点
+            - name: admin
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 1000m
+              memory: 1024Mi
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          args:
+            - --configfile=/config/traefik.yaml
+          volumeMounts:
+            - mountPath: &quot;/config&quot;
+              name: &quot;config&quot;
+      volumes:
+        - name: config
+          configMap:
+            name: traefik-config 
+      tolerations:              #设置容忍所有污点，防止节点被设置污点
+        - operator: &quot;Exists&quot;
+      nodeSelector:             #设置node筛选器，在特定label的节点上启动
+        IngressProxy: &quot;true&quot;
+        
+        
+Traefik 路由规则配置
+$ kubectl apply -f traefik-dashboard-route.yaml -n kube-system
+
+raefik 应用已经部署完成，但是想让外部访问 Kubernetes 内部服务，还需要配置路由规则，这里开启了 Traefik Dashboard 配置，所以首先配置 Traefik Dashboard 看板的路由规则，使外部能够访问 Traefik Dashboard。
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard-route
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.mydlq.club`)
+      kind: Rule
+      services:
+        - name: traefik
+          port: 8080
+</code></pre>
+<h2 id="GitLab-Docker-单机部署">GitLab Docker 单机部署</h2>
+<pre><code class="language-bash">docker pull gitlab/gitlab-ce:15.3.1-ce.0
+
+docker pull 镜像名称 -–registry-mirror=国内镜像源地址
+https://docker-practice.github.io/zh-cn/cloud/alicloud.html
+asdf123456
+
+
+mkdir -p /docker/gitlab/{config,data,logs}
+docker pull gitlab/gitlab-ce:15.3.1-ce.0
+docker run -d \
+-p 8888:80 \
+-p 2222:22 \
+-v /docker/gitlab/config:/etc/gitlab \
+-v /docker/gitlab/data:/var/opt/gitlab \
+-v /docker/gitlab/logs:/var/log/gitlab \
+-e GITLAB_OMNIBUS_CONFIG=&quot;external_url &#39;http://192.168.2.110&#39;; gitlab_rails[&#39;gitlab_shell_ssh_port&#39;] = 2222; gitlab_rails[&#39;time_zone&#39;] = &#39;Asia/Shanghai&#39;&quot; \
+-e TZ=Asia/Shanghai \
+--memory 16G \
+--cpus=8 \
+--restart always \
+--name gitlab \
+gitlab/gitlab-ce:15.3.1-ce.0
+
+docker exec -it gitlab grep &quot;Password&quot;: /etc/gitlab/initial_root_password
+
+</code></pre>
+<!-- URL 与账号已合并至「服务账号与 URL 速查」 --></div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

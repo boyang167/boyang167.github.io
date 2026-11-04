@@ -1,0 +1,938 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="> 迁移自 `C:\Users\Mrwang\Desktop\2024\8-推荐系统.md`。图片目录：`../img/`（`1-Note/img`）。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>推荐系统 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>15-RecommandSystem</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>推荐系统</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>&gt; 迁移自 `C:\Users\Mrwang\Desktop\2024\8-推荐系统.md`。图片目录：`../img/`（`1-Note/img`）。</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#知识提纲Review" class="toc-link depth-3" data-astro-cid-5eggoaxc> 知识提纲（Review） </a><a href="#协同过滤CF" class="toc-link depth-2" data-astro-cid-5eggoaxc> 协同过滤（CF） </a><a href="#CTR-预估与经典模型" class="toc-link depth-2" data-astro-cid-5eggoaxc> CTR 预估与经典模型 </a><a href="#矩阵分解MF--LFM" class="toc-link depth-3" data-astro-cid-5eggoaxc> 矩阵分解（MF / LFM） </a><a href="#SVD" class="toc-link depth-3" data-astro-cid-5eggoaxc> SVD++ </a><a href="#逻辑回归LR" class="toc-link depth-3" data-astro-cid-5eggoaxc> 逻辑回归（LR） </a><a href="#GBDTLR" class="toc-link depth-3" data-astro-cid-5eggoaxc> GBDT+LR </a><a href="#POLY2" class="toc-link depth-3" data-astro-cid-5eggoaxc> POLY2 </a><a href="#FM" class="toc-link depth-3" data-astro-cid-5eggoaxc> FM </a><a href="#FFM" class="toc-link depth-3" data-astro-cid-5eggoaxc> FFM </a><a href="#AutoRec" class="toc-link depth-3" data-astro-cid-5eggoaxc> AutoRec </a><a href="#Deep-Crossing" class="toc-link depth-3" data-astro-cid-5eggoaxc> Deep Crossing </a><a href="#Neural-CF" class="toc-link depth-3" data-astro-cid-5eggoaxc> Neural CF </a><a href="#PNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> PNN </a><a href="#WideampDeep" class="toc-link depth-3" data-astro-cid-5eggoaxc> Wide&amp;amp;Deep </a><a href="#CrossampDeep" class="toc-link depth-3" data-astro-cid-5eggoaxc> Cross&amp;amp;Deep </a><a href="#ESMM" class="toc-link depth-3" data-astro-cid-5eggoaxc> ESMM </a><a href="#FNN" class="toc-link depth-3" data-astro-cid-5eggoaxc> FNN </a><a href="#DeepFM" class="toc-link depth-3" data-astro-cid-5eggoaxc> DeepFM </a><a href="#NFM" class="toc-link depth-3" data-astro-cid-5eggoaxc> NFM </a><a href="#AFM" class="toc-link depth-3" data-astro-cid-5eggoaxc> AFM </a><a href="#DINDeep-Interest-Network" class="toc-link depth-3" data-astro-cid-5eggoaxc> DIN（Deep Interest Network） </a><a href="#基于内容的推荐TF-IDF" class="toc-link depth-2" data-astro-cid-5eggoaxc> 基于内容的推荐（TF-IDF） </a><a href="#物品画像与推荐流程" class="toc-link depth-3" data-astro-cid-5eggoaxc> 物品画像与推荐流程 </a><a href="#附录协同过滤与-LFM-图示" class="toc-link depth-2" data-astro-cid-5eggoaxc> 附录：协同过滤与 LFM 图示 </a><a href="#基本假设" class="toc-link depth-3" data-astro-cid-5eggoaxc> 基本假设 </a><a href="#Item-CF-流程图" class="toc-link depth-3" data-astro-cid-5eggoaxc> Item-CF 流程图 </a><a href="#User-CF-流程图" class="toc-link depth-3" data-astro-cid-5eggoaxc> User-CF 流程图 </a><a href="#LFM-公式与推导" class="toc-link depth-3" data-astro-cid-5eggoaxc> LFM 公式与推导 </a><a href="#召回与排序补充" class="toc-link depth-2" data-astro-cid-5eggoaxc> 召回与排序补充 </a><a href="#双塔模型" class="toc-link depth-3" data-astro-cid-5eggoaxc> 双塔模型 </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><blockquote>
+<p>迁移自 <code>C:\Users\Mrwang\Desktop\2024\8-推荐系统.md</code>。图片目录：<code>../img/</code>（<code>1-Note/img</code>）。</p>
+</blockquote>
+<h1 id="推荐系统">推荐系统</h1>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#%E7%9F%A5%E8%AF%86%E6%8F%90%E7%BA%B2review">知识提纲</a></li>
+<li><a href="#%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4cf">协同过滤（CF）</a></li>
+<li><a href="#ctr-%E9%A2%84%E4%BC%B0%E4%B8%8E%E7%BB%8F%E5%85%B8%E6%A8%A1%E5%9E%8B">CTR 预估与经典模型</a><ul>
+<li><a href="#%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3mf--lfm">矩阵分解 / LR / GBDT+LR / FM 族 / 深度模型</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E5%86%85%E5%AE%B9%E7%9A%84%E6%8E%A8%E8%8D%90tf-idf">基于内容的推荐（TF-IDF）</a></li>
+<li><a href="#%E9%99%84%E5%BD%95%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E4%B8%8E-lfm-%E5%9B%BE%E7%A4%BA">附录：协同过滤与 LFM 图示</a></li>
+<li><a href="#%E5%8F%AC%E5%9B%9E%E4%B8%8E%E6%8E%92%E5%BA%8F%E8%A1%A5%E5%85%85">召回与排序补充</a></li>
+</ul>
+<hr>
+<h3 id="知识提纲Review">知识提纲（Review）</h3>
+<pre><code class="language-text">1： 重点在review 梳理
+
+LR 
+
+矩阵分解
+
+协同过滤
+
+apori关联分析
+
+FP-groth
+
+fm
+
+推荐系统：
+一种主动的信息过滤系统，将信息过滤的过程由用户主动搜索变成系统主动推送
+信息超载 长尾现象
+</code></pre>
+<h2 id="协同过滤CF">协同过滤（CF）</h2>
+<p>（Collaborative,Filtering,CF）</p>
+<p><strong>根据用户之前的喜好以及其他兴趣相近的用户的选择来给用户推荐物品</strong></p>
+<ul>
+<li><strong>基于用户的协同过滤算法(UserCF)</strong>: 给用户推荐和他兴趣相似的其他用户喜欢的产品</li>
+<li><strong>基于物品的协同过滤算法(ItemCF)</strong>: 给用户推荐和他之前喜欢的物品相似的物品</li>
+</ul>
+<p>基于用户的协同过滤：</p>
+<ol>
+<li>找到和目标用户兴趣相似的集合</li>
+<li>找到这个集合中的用户喜欢的， 且目标用户没有听说过的物品推荐给用户。</li>
+</ol>
+<p>给用户推荐物品的过程可以<strong>形象化为一个猜测用户对商品进行打分的任务</strong></p>
+<p>怎么计算两个向量之间的相似程度：</p>
+<p><strong>欧式距离体现数值上的绝对差异，而余弦距离体现方向上的相对差异</strong></p>
+<p>​	1：<strong>杰卡德(Jaccard)相似系数：</strong></p>
+<p>​	<strong>2：余弦相似度</strong></p>
+<pre><code class="language-python">from sklearn.metrics.pairwise import cosine_similarity
+i = [1, 0, 0, 0]
+j = [1, 0.5, 0.5, 0]
+cosine_similarity([i, j])
+</code></pre>
+<p>评分数据不规范的时候， 也就是说， 存在有的用户喜欢打高分， 有的用户喜欢打低分情况的时候，有的用户喜欢乱打分的情况， 这时候cosine 相似度算出来的结果可能就不是那么准确了</p>
+<p>​	3：<strong>皮尔逊相关系数</strong></p>
+<p>Pearson 相关系数：将两个向量各自减去均值后再计算 cosine 相似度。</p>
+<pre><code class="language-python">from scipy.stats import pearsonr
+i = [1, 0, 0, 0]
+j = [1, 0.5, 0.5, 0]
+pearsonr(i, j)
+</code></pre>
+<p>eg: </p>
+<p>用户给物品打分：</p>
+<p><img src="/notes-media/img/image-20230520112451059-1716637779237.png" alt="image-20230520112451059"></p>
+<p>基于物品的协同过滤：
+预先根据所有用户的历史偏好数据计算物品之间的相似性，然后把与用户喜欢的物品相类似的物品推荐给用户。</p>
+<p>比如物品a和c非常相似，因为喜欢a的用户同时也喜欢c，而用户A喜欢a，所以把c推荐给用户A</p>
+<p><strong>ItemCF算法并不利用物品的内容属性计算物品之间的相似度， 主要通过分析用户的行为记录计算物品之间的相似度， 该算法认为， 物品a和物品c具有很大的相似度是因为喜欢物品a的用户大都喜欢物品c</strong></p>
+<p>基于物品的协同过滤算法主要分为两步：</p>
+<ul>
+<li>计算物品之间的相似度</li>
+<li>根据物品的相似度和用户的历史行为给用户生成推荐列表（购买了该商品的用户也经常购买的其他商品）</li>
+</ul>
+<p><img src="/notes-media/img/image-20230520162153549-1716637779238.png" alt="image-20230520162153549"></p>
+<p>应用场景和存在问题分析</p>
+<p>UserCF
+由于是基于用户相似度进行推荐， 所以具备更强的社交特性， 这样的特点非常适于用户少， 物品多， 时效性较强的场合， 比如新闻推荐场景， 因为新闻本身兴趣点分散， 相比用户对不同新闻的兴趣偏好， 新闻的及时性，热点性往往更加重要， 所以正好适用于发现热点，跟踪热点的趋势。 另外还具有推荐新信息的能力， 更有可能发现惊喜, 因为看的是人与人的相似性, 推出来的结果可能更有惊喜，可以发现用户潜在但自己尚未察觉的兴趣爱好。</p>
+<p>对于用户较少， 要求时效性较强的场合， 就可以考虑UserCF。
+ItemCF</p>
+<p>这个更适用于兴趣变化较为稳定的应用， 更接近于个性化的推荐， 适合物品少，用户多，用户兴趣固定持久， 物品更新速度不是太快的场合， 比如推荐艺术品， 音乐， 电影。</p>
+<p><img src="/notes-media/img/image-20230520162810562-1716637779238.png" alt="image-20230520162810562"></p>
+<p>协同过滤算法存在的共性问题， 协同过滤的特点就是完全没有利用到物品本身或者是用户自身的属性， 仅仅利用了用户与物品的交互信息就可以实现推荐，是一个可解释性很强， 非常直观的模型， 但是也存在一些问题。</p>
+<p>较差的稀疏向量处理能力</p>
+<p><strong>推荐系统头部效应明显， 处理稀疏向量的能力弱。</strong></p>
+<p>为了解决这个问题， 同时增加模型的泛化能力，2006年， 矩阵分解技术(Matrix Factorization,MF)被提出， 该方法在协同过滤共现矩阵的基础上， 使用更稠密的隐向量表示用户和物品， 挖掘用户和物品的隐含兴趣和隐含特征， 在一定程度上弥补协同过滤模型处理稀疏矩阵能力不足的问题。 </p>
+<p>总结3个问题：</p>
+<p>1 泛化能力弱，较差的稀疏向量处理能力</p>
+<p>2 无法利用用户或者物品的本身属性特征</p>
+<p> <strong>推荐系统慢慢的从以协同过滤为核心到了以逻辑回归模型为核心</strong></p>
+<h2 id="CTR-预估与经典模型">CTR 预估与经典模型</h2>
+<h3 id="矩阵分解MF--LFM">矩阵分解（MF / LFM）</h3>
+<p><strong>为了使得协同过滤更好处理稀疏矩阵问题， 增强泛化能力</strong>， 从协同过滤中衍生出矩阵分解模型(Matrix Factorization,MF), 并发展出了矩阵分解的分支模型</p>
+<p>隐语义模型： LDA  (Latent Factor Model）</p>
+<p>隐语义模型其实就是在<strong>想办法基于这个评分矩阵（用户和物品评分矩阵）去找到上面例子中的那两个矩阵， 也就是用户兴趣和物品的隐向量表达， 然后就把这个评分矩阵分解成Q和P两个矩阵乘积的形式， 这时候就可以基于这两个矩阵去预测某个用户对某个物品的评分了。 然后基于这个评分去进行推荐</strong>。</p>
+<p><img src="/notes-media/img/image-20230520165323695-1716637779238.png" alt="image-20230520165323695"></p>
+<p>矩阵分解算法将m × n 维的共享矩阵R 分解成m × k  维的用户矩阵U 和k × n维的物品矩阵V相乘的形式。 其中m 是用户数量， n 是物品数量， k 是隐向量维度， 也就是隐含特征个数。</p>
+<p>矩阵分解：
+EVD 它要求分解的矩阵是方阵， 显然用户-物品矩阵不满足这个要求</p>
+<p>SVD 分解计算复杂度非常高， 而我们的用户-物品矩阵非常大， 所以基本上无法使用。</p>
+<p> 2006年的Netflix Prize之后， Simon Funk公布了一个矩阵分解算法叫做<strong>Funk-SVD</strong>, 后来被Netflix Prize的冠军Koren称为<strong>Latent Factor Model(LFM)</strong></p>
+<p><strong>Latent Factor Model(LFM)</strong>：</p>
+<p><strong>把求解上面两个矩阵的参数问题转换成一个最优化问题， 可以通过训练集里面的观察值利用最小化来学习用户矩阵和物品矩阵</strong>，</p>
+<p><img src="/notes-media/img/image-20230520171529304-1716637779238.png" alt="image-20230520171529304"></p>
+<p><img src="/notes-media/img/image-20230520171556104-1716637779238.png" alt="image-20230520171556104"></p>
+<p>去计算两个参数矩阵U和V， 我们就可以用求解神经网络模型参数的思路计算这两个矩阵：</p>
+<p>首先先初始化这两个矩阵
+把用户评分矩阵里面已经评过分的那些样本当做训练集的label， 把对应的用户和物品的隐向量当做features， 这样就会得到(features, label)相当于训练集
+通过两个隐向量乘积得到预测值pred
+根据label和pred计算损失
+然后反向传播， 通过梯度下降的方式，更新两个隐向量的值
+未评过分的那些样本当做测试集， 通过两个隐向量就可以得到测试集的label值</p>
+<p>这样就填充完了矩阵， 下一步就可以进行推荐了</p>
+<p>消除用户和物品打分的偏差</p>
+<p>一个评分系统， 有些固有的属性和用户物品无关， 而用户也有些属性和物品无关， 物品也有些属性和用户无关。</p>
+<p>通过上面隐向量的方式， 就可以将用户和物品联系到了一起， 但是实际情况中， 单纯的</p>
+<p><img src="/notes-media/img/image-20230520171916743-1716637779239.png" alt="image-20230520171916743"></p>
+<p> Netfix Prize中提出了另一种LFM， 在原来的基础上加了偏置项， 来消除用户和物品打分的偏差， 预测公式如下：</p>
+<p><img src="/notes-media/img/image-20230520171935870-1716637779239.png" alt="image-20230520171935870"></p>
+<p><img src="/notes-media/img/image-20230520172016744-1716637779239.png" alt="image-20230520172016744"></p>
+<h3 id="SVD">SVD++</h3>
+<p>优点：
+泛化能力强： 一定程度上解决了稀疏问题
+空间复杂度低： 由于用户和物品都用隐向量的形式存放， 少了用户和物品相似度矩阵， 空间复杂度由n^2降到了( n + m ) ∗ f 更好的扩展性和灵活性：矩阵分解的最终产物是用户和物品隐向量， 这个深度学习的embedding思想不谋而合， 因此矩阵分解的结果非常便于与其他特征进行组合和拼接， 并可以与深度学习无缝结合。</p>
+<hr>
+<p><strong>矩阵分解算法依然是只用到了评分矩阵， 没有考虑到用户特征， 物品特征和上下文特征， 这使得矩阵分解丧失了利用很多有效信息的机会</strong>， 同时在缺乏用户历史行为的时候， 无法进行有效的推荐。 所以为了解决这个问题， 逻辑回归模型及后续的因子分解机模型， 凭借其天然的融合不同特征的能力， 逐渐在推荐系统领域得到了更广泛的应用</p>
+<p>推荐系统<strong>通过分析用户的历史行为给用户的兴趣建模， 从而主动给用户推荐给能够满足他们兴趣和需求的信息， 能够真正的“懂你”</strong>。</p>
+<p>GBDT+LR模型完成一个点击率预测的任务</p>
+<h3 id="逻辑回归LR">逻辑回归（LR）</h3>
+<p>线性模型加入sigmoid函数就是逻辑回归模型：</p>
+<p><img src="/notes-media/img/image-20230521101639642-1716637779239.png" alt="image-20230521101639642"></p>
+<p><strong>逻辑回归假设数据服从伯努利分布,通过极大化似然函数的方法，运用梯度下降来求解参数，来达到将数据二分类的目的</strong></p>
+<ol>
+<li>逻辑回归对于高维稀疏类别的特征有比较好的拟合效果</li>
+<li>由于特征的稀疏性， 还间接的起到了特征选择的作用， 因为某些特征非常稀疏， 会有很多的0， 这时候， 参数的更新基本上就只更新那几个对于loss非常重要的特征， 使得w0+w1*x1…这一长串很多值都是0</li>
+<li>离散化比如说对某个特征进行分桶， 这样可以增加模型的鲁棒性， 不容易被某个特征给带偏， 比较稳定， 类似于归一化分桶之后， 也相当于引入了非线性</li>
+</ol>
+<ul>
+<li>优点：
+LR模型形式简单，可解释性好，从特征的权重可以看到不同的特征对最后结果的影响。</li>
+<li>训练时便于并行化，在预测时只需要对特征进行线性加权，所以性能比较好，往往适合处理海量id类特征，用id类特征有一个很重要的好处，就是防止信息损失（相对于范化的 CTR 特征），对于头部资源会有更细致的描述资源占用小,尤其是内存。在实际的工程应用中只需要存储权重比较大的特征及特征对应的权重方便输出结果调整。逻辑回归可以很方便的得到最后的分类结果，因为输出的是每个样本的概率分数，我们可以很容易的对这些概率分数进行cutoff，也就是划分阈值(大于某个阈值的是一类，小于某个阈值的是一类)</li>
+<li>工程化需要， 在深度学习技术之前， 逻辑回归凭借易于并行化， 模型简单，训练开销小等特点，占领工程领域的主流， 因为即使工程团队发现了复杂模型会提升效果， 但一般如果没有把握击败逻辑回归的话仍然不敢尝试或者升级。</li>
+</ul>
+<p>缺点：</p>
+<ol>
+<li>表达能力不强， 无法进行特征交叉， 特征筛选等一系列“高级“操作（这些工作都得人工来干， 这样就需要一定的经验， 否则会走一些弯路）， 因此可能造成信息的损失</li>
+<li>准确率并不是很高。因为这毕竟是一个线性模型加了个sigmoid， 形式非常的简单(非常类似线性模型)，很难去拟合数据的真实分布</li>
+<li>处理非线性数据较麻烦。逻辑回归在不引入其他方法的情况下，只能处理线性可分的数据， 如果想处理非线性， 首先对连续特征的处理需要先进行离散化（离散化的目的是为了引入非线性），如上文所说，人工分桶的方式会引入多种问题。</li>
+<li>LR 需要进行人工特征组合，这就需要开发者有非常丰富的领域经验，才能不走弯路。这样的模型迁移起来比较困难，换一个领域又需要重新进行大量的特征工程。</li>
+</ol>
+<hr>
+<p><strong>自动发现有效的特征、特征组合，弥补人工经验不足，缩短LR特征实验周期</strong></p>
+<h3 id="GBDTLR">GBDT+LR</h3>
+<p><strong>训练时</strong>，GBDT 建树的过程相当于自动进行的特征组合和离散化，然后从<strong>根结点到叶子节点的这条路径就可以看成是不同特征进行的特征组合，用叶子节点可以唯一的表示这条路径</strong>，并作为一个离散特征传入 LR 进行<strong>二次训练</strong>。（叶子节点是1，或者0）</p>
+<p>几个关键的点：</p>
+<ol>
+<li><p>通过GBDT进行特征组合之后得到的离散向量是和训练数据的原特征一块作为逻辑回归的输入， 而不仅仅全是这种离散特征</p>
+</li>
+<li><p>建树的时候用ensemble建树的原因就是一棵树的表达能力很弱，不足以表达多个有区分性的特征组合，多棵树的表达能力更强一些。GBDT每棵树都在学习前面棵树尚存的不足，迭代多少次就会生成多少棵树。</p>
+</li>
+<li><p>RF也是多棵树，但从效果上有实践证明不如GBDT。且GBDT前面的树，特征分裂主要体现对多数样本有区分度的特征；后面的树，主要体现的是经过前N颗树，残差仍然较大的少数样本。优先选用在整体上有区分度的特征，再选用针对少数样本有区分度的特征，思路更加合理，这应该也是用GBDT的原因。</p>
+</li>
+<li><p>在CRT预估中， GBDT一般会建立两类树(非ID特征建一类， ID类特征建一类)， AD，ID类特征在CTR预估中是非常重要的特征，直接将AD，ID作为feature进行建树不可行，故考虑为每个AD，ID建GBDT树。</p>
+<p>非ID类树：不以细粒度的ID建树，此类树作为base，即便曝光少的广告、广告主，仍可以通过此类树得到有区分性的特征、特征组合</p>
+<p>ID类树：以细粒度 的ID建一类树，用于发现曝光充分的ID对应有区分性的特征、特征组合</p>
+</li>
+</ol>
+<p>树模型不能处理大量高维度离散数据的原因是容易导致过拟合， 但是具体是怎么导致的过拟合呢？ 发现下面这张图片的理由说的非常好， 直接拿过来了</p>
+<p><img src="/notes-media/img/image-20230521110209179-1716637779239.png" alt="image-20230521110209179"></p>
+<p>假设1w个样本， 类别为0或者1，总共有100 维特征。 其中10个样本都是类别1，其他9990个样本为0.</p>
+<p>f1 特征取值为0，或者1。</p>
+<p>这个模型也是工业上非常喜欢使用的模型， 下面除了上面这些关键点， 再整理几个工业上使用这个模型的细节：</p>
+<ol>
+<li>GBDT+LR模型， GBDT的输入特征一般不能是高维稀疏的id离散特征， 树模型是不喜欢这种特征的。原因就是上面这个了， 所以如果有大量的id类特征， 一定要放到LR这块里面，也就是让连续的特征过gbdt， 然后得到输出的新特征和离散特征走LR。</li>
+<li>GBDT+LR模型是可以进行增量训练的， 所谓增量训练，就是定期(比如一个小时)用新的数据对模型进行局部的更新，使的模型更加反映实时性的数据变化， 对于树模型来讲是不能进行增量更新的，因为这种模型没法局部， 训练只能是从头训练(全量更新模式)， 而GBDT+LR模型之所以能增量更新，也不是更新GBDT这块，而是LR这块可以进行增量更新。 适合增量更新的模型一般是类似于神经网络这种才可以， 可以冻结某些层，用新数据只更新某些层这种。所以GBDT的更新周期要比LR长。</li>
+</ol>
+<p>GBDT的实现一般可以使用xgboost， 或者lightgbm：</p>
+<h3 id="POLY2">POLY2</h3>
+<p>逻辑回归存在很大的一个问题就是<strong>只对单一特征做简单加权， 不具备特征交叉生成组合特征的能力， 因此表达能力受到了限制</strong></p>
+<p>POLY2是二阶多项式模型， 数学形式如下：</p>
+<p><img src="/notes-media/img/image-20230521162415388-1716637779239.png" alt="image-20230521162415388"></p>
+<p><strong>数据稀疏性是实际问题中不可避免的挑战</strong>。</p>
+<ol>
+<li><p>推荐系统中的数据往往是非常稀疏的(类别型数据经过独热）, 这样会导致特征向量非常的稀疏， 这时候如果再交叉的时候， 往往x i 和x j 同时不为0的情况很少， 这会导致交叉特征的权重缺乏有效的数据进行训练而无法收敛。</p>
+</li>
+<li><p>POLY2中权重参数的数量是( n − 1 ) n /2   ， 任意两个参数相互独立， 这时候如果数据非常稀疏， 再要训练这么多参数， 无疑是非常困难的， 最终模型也不会很好。</p>
+</li>
+</ol>
+<p>POLY2模型虽然是引入了特征的二阶交叉组合， 但是由于其模型参数， 稀疏场景受限的问题使得FM登场了！</p>
+<h3 id="FM">FM</h3>
+<p>因子分解机(Factorization Machine, FM)和域感知因子分解机(Field-aware Factorization Machine, FFM)</p>
+<p>对于稀疏的评分矩阵， 我们有办法分解成两个向量相乘的形式， 那么为何不把这种思想用到解决POLY2的缺陷上呢？ 无非就是评分矩阵换成POLY2后面的W矩阵(所有二次项系数w i j  组成的）。于是乎， 这种思想真的就用过来了， 那就是把W 矩阵进行分解成两个矩阵相乘的方式， 可是有依据的哟：</p>
+<p><img src="/notes-media/img/image-20230521163235083-1716637779239.png" alt="image-20230521163235083"></p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.1774em;vertical-align:-0.2861em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ocess</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mclose">]</span><span class="mord cjk_fallback">对于二次项参数</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord cjk_fallback">组成的对称阵</span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord cjk_fallback">为了方面说明</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord cjk_fallback">的由来，对角元素设置为正实数</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord cjk_fallback">可以分解成</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord cjk_fallback">形式。</span></span></span></span></span></div>
+
+
+
+
+
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ocess</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mclose">]</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord cjk_fallback">的第</span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mord cjk_fallback">列</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord cjk_fallback">表示的是第</span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mord cjk_fallback">维特征</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">的隐向量</span></span></span></span></span></div>
+
+
+
+
+
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ocess</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mclose">]</span><span class="mord cjk_fallback">换句话说，特征分量</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">和</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">的交叉系数就等于</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">和</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">对应的隐向量的内积，</span></span></span></span></span></div>
+
+
+
+
+
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ocess</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mclose">]</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8252em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span></span></span></span></span></div>
+
+<p> , 这就是FM模型的核心 ，</p>
+<p>隐向量特征空间K维度：</p>
+<p><img src="/notes-media/img/image-20230521164616791-1716637779239.png" alt="image-20230521164616791"></p>
+<p><img src="/notes-media/img/image-20230521164644790-1716637779239.png" alt="image-20230521164644790"></p>
+<p>FM的模型方程：</p>
+<p><img src="/notes-media/img/image-20230521164925325-1716637779239.png" alt="image-20230521164925325"></p>
+<p><img src="/notes-media/img/image-20230521165102961-1716637779239.png" alt="image-20230521165102961"></p>
+<p>k(k&lt;&lt;n)为隐向量的长度，包含 k 个描述特征的因子。（k*n &lt;&lt; n * n )</p>
+<p>FM在2012-2014前后， 成为了业界主流的推荐模型之一</p>
+<p>特征交叉时候，学习每个特征的latent vector , 要与其他所有特征交互学习，这样可能会使得模型的表达能力收到限制。</p>
+<h3 id="FFM">FFM</h3>
+<p>是FFM在FM的基础上做的改进， <strong>引入了域的概念， 对于每个特征， 针对不同的交叉域要学习不同的隐向量特征</strong>。</p>
+<p>一个特征，对应多个隐向量。不同的域学习不同的隐向量。</p>
+<p>域内特征一般都是同一个categorical特征经过One-Hot编码生成的数值特征，比如用户性别， 职业， 日期啊等等</p>
+<p>对于连续特征， 一个特征就对应一个域， 或者可以对连续特征离散化， 一个分箱成为一个特征， 总的分箱是一个域</p>
+<p>更能够体现出不同域里面特征的差异性(这就是FFM里面&quot;field-aware&quot;的由来)， 表达能力更强， 另外一个就是学习USA特征的多个隐向量的时候， 不是综合考虑所有的类别特征， 而是自个学习自个的.</p>
+<p>那么时间复杂度上会从FM的O ( n k ) 到FFM的O ( n f k ) ， 这里的f 就是域的个数， 这里的时间复杂度会到O ( k n 2 ) </p>
+<h3 id="AutoRec">AutoRec</h3>
+<p>将自编码器的思想和协同过滤结合起来的一种单隐层的神经网络推荐模型。 它的基本原理是利用协同过滤中的共现矩阵， 完成物品向量或者用户向量的自编码。 再利用自编码的结果得到用户对物品的预估评分， 进而进行的推荐排序。</p>
+<p>和协同过滤一样， AutoRec也分为基于物品的和基于用户的， 上面这个就是基于物品的， 称为I-AutoRec。 如果把用户的评分向量作为输入， 就得到了U-AutoRec。 这个输入之后得到的输出， 就是用户对所有物品的一个评分。 这样就直接可以根据这个评分做推荐了。 但是往往用户向量会比较稀疏， 可能会影响模型效果。</p>
+<h3 id="Deep-Crossing">Deep Crossing</h3>
+<p>真正的把深度学习架构应用于推荐系统中的模型了， 2016年由微软提出， 完整的解决了特征工程、稀疏向量稠密化， 多层神经网络进行优化目标拟合等一系列深度学习再推荐系统的应用问题。 这个模型涉及到的技术比较基础，在传统神经网络的基础上加入了embedding， 残差连接等思想， 且结构比较简单</p>
+<p>DeepCrossing模型应用场景是微软搜索引擎Bing中的搜索广告推荐， 用户在输入搜索词之后， 搜索引擎除了返回相关结果， 还返回与搜索词相关的广告，Deep Crossing的优化目标就是预测对于某一广告， 用户是否会点击， 依然是点击率预测的一个问题。</p>
+<p>端到端的训练， DeepCrossing模型要在内部网络结构中解决如下问题：</p>
+<ol>
+<li>离散类特征编码后过于稀疏， 不利于直接输入神经网络训练， 需要解决稀疏特征向量稠密化的问题</li>
+<li>如何解决特征自动交叉组合的问题</li>
+<li>如何在输出层中达成问题设定的优化目标</li>
+</ol>
+<p><img src="/notes-media/img/image-20230527162921455-1716637779239.png" alt="image-20230527162921455"></p>
+<p>常规的Embedding+多层神经网络。但这个网络模型的出现， 有革命意义。 DeepCrossing模型中没有任何人工特征工程的参与， 只需要清洗一下， 原始特征经Embedding后输入神经网络层， 自主交叉和学习。 相比于FM， FFM只具备二阶特征交叉能力的模型， DeepCrossing可以通过调整神经网络的深度进行特征之间的“深度交叉”， 这也是Deep Crossing名称的由来。</p>
+<p>AutoRec和Deep Crossing模型我们说是在神经网络的复杂度和层数方面进行的进化，而这两个模型也是使用深度学习从用户和条目表征的角度解决推荐问题的方案， 因为它们并没有刻意去研究特征与特征之间的两两或者三三的交互（没有应对特征交叉的能力）， 而是用全连接隐层把所有特征进行了统一的交叉学习， 这在很多场景下其实是不太合理的(这样可能会使的即使没有半毛钱关系的特征在这种情况下也会发生点关系，也可能会使几个很亲密的特征也很难擦出点火花），没有什么针对性， 所以使得模型的学习能力受到限制。另外， 虽然感觉Deep Crossing用了embedding, stacking， 残差等， 但是模型的结构还是不够复杂</p>
+<h3 id="Neural-CF">Neural CF</h3>
+<p>2017:新加坡国立大学的研究人员提出的一个模型，</p>
+<p>根本性思路的， 一个是用户和条目的表征， 也就是如何更好地把用户特征和物品特征信息表示出来， 隐语义模型(MF)就是属于这个思路上的， 使用了embedding的思路去表示用户和物品， 从而用向量的乘积表示用户对物品的喜好程度。 第二个思路是特征交叉， 即考虑特征之间的交互信息以丰富数据的表达能力， 因子分解机(FM)的家族就是致力于解决这个问题上的。</p>
+<p>MF:  因为相似度是夹角衡量的， 夹角关系在降维之后有可能发生了错乱， 但是这间接的说明了<strong>单单使用内积不足以可靠的预测评分</strong>。</p>
+<p>提出的动机就是看着MF的内积操作比较简单， 表达能力不强， 而此时正是深度学习的浪潮啊， 所以作者就用一个“多层的神经网络+输出层”替换了矩阵分解里面的内积操作， 这样做一是让用户向量和物品向量做更充分的交叉， 得到更多有价值的特征组合信息。 二是引入更多的非线性特征， 让模型的表达能力更强.</p>
+<p><img src="/notes-media/img/image-20230528111107715-1716637779239.png" alt="image-20230528111107715"></p>
+<p>特征交叉：</p>
+<p>1： 内积</p>
+<p> 2：多层神经网络加入更多非线性，模拟更复杂的交叉函数也是一种</p>
+<p><img src="/notes-media/img/image-20230528111331636-1716637779239.png" alt="image-20230528111331636"></p>
+<p>general NCF框架： （通用neural 协同过滤）</p>
+<p> 因为向量交叉的方式可以有很多种， 如果这里是内积操作， 那么这个NCF框架就成了普通的MF：</p>
+<p> 如果这里是多层神经网络， 那么这个框架就成了一种MLP的网络。 框架的计算公式如下</p>
+<p><img src="/notes-media/img/image-20230528112350635-1716637779240.png" alt="image-20230528112350635"></p>
+<p>1： Generalized Matrix Factorization （GMF）</p>
+<p><img src="/notes-media/img/image-20230528112521342-1716637779240.png" alt="image-20230528112521342"></p>
+<p>⊙表示对应元素相乘。 与普通的MF不同的是， 这里的隐向量进行对应元素相乘之后会有个权重， 也就是各个隐向量维度的重要性不一定相同了。 如果h hh是一个全1向量的话， 那模型实际上就是MF了</p>
+<p>h: 学习的参数 </p>
+<p>2： MLP</p>
+<p>把 user 和 item 的 Embedding 拼起来，然后输入给多层感知机</p>
+<p><img src="/notes-media/img/image-20230528112710765-1716637779240.png" alt="image-20230528112710765"></p>
+<p><img src="/notes-media/img/image-20230528112811241-1716637779240.png" alt="image-20230528112811241"></p>
+<p><img src="/notes-media/img/image-20230528112827215-1716637779240.png" alt="image-20230528112827215"></p>
+<p>注意的一个细节， 就是这俩模型的embedding向量是单独学习的， 并不是共享的， 作者在论文里面也给出了原因， 就是这样会更加的灵活，可以根据模型的复杂程度确定不同的隐向量的维度， 然后单独去各自的模型计算， 计算的结果进行合并， 再过一层全连接得到最后的输出。</p>
+<p>Neural CF并没有引入更多其他类型特征， 造成了一种可用信息的浪费。也就是有效资源并没有好好的利用起来。</p>
+<h3 id="PNN">PNN</h3>
+<p>Product-based Neural Networks， 这是2016年上海交大团队在ICDM会议上提出的一个模型</p>
+<p><img src="/notes-media/img/image-20230610110105843-1716637779240.png" alt="image-20230610110105843"></p>
+<p>input layer :</p>
+<p> 模型输入由N个特征域（Field）组成，都是离散稀疏的分类特征，如年龄、性别、id等（经过one-hot编码， 但是实际上我们知道， 真实复现的时候往往用LabelEncoder编码， 取相应位置的embeddind</p>
+<p>embedding layter :  就是简单的embedding 层</p>
+<p>product layter :</p>
+<p>输入是N个特征域的embedding 向量，Feature1 ,...FeatureN </p>
+<p>输出是： lz ,lp </p>
+<p><img src="/notes-media/img/image-20230610110701055-1716637779240.png" alt="image-20230610110701055"></p>
+<p>简单的模型， 比如协同过滤， 逻辑回归等，能够从历史数据中学习到高频共现的特征组合能力， 但是泛化能力不足；而像矩阵分解， embedding再加上深度学习网络， 能够利用相关性的传递性去探索历史数据中未出现的特征组合， 挖掘数据潜在的关联模式， 但是对于某些特定的场景(数据分布长尾， 共现矩阵稀疏高秩）很难有效学习低纬度的表示， 造成推荐的过渡泛化。 既然这两种模型的优缺点都这么的互补， 为啥不组合一下子他俩呢？</p>
+<h3 id="WideampDeep">Wide&amp;Deep</h3>
+<p>Wide&amp;Deep这种线性模型与DNN的并行连接模式，后来成为推荐领域的经典模式</p>
+<p>Memorization&quot;和”Generalization 	记忆和泛化</p>
+<p><strong>&quot;记忆能力&quot;可以被理解为模型直接学习并利用历史数据中物品和特征的“共现频率”的能力</strong></p>
+<p>一般来说， 协同过滤、逻辑回归这种都具有较强的“记忆能力”, 由于这类模型比较简单， 原始数据往往可以直接影响推荐结果</p>
+<p><strong>泛化能力“可以被理解为模型传递特征的相关性， 以及发掘稀疏甚至从未出现过的稀有特征与最终标签相关性的能力</strong>。</p>
+<p>比如矩阵分解， embedding等， 使得数据稀少的用户或者物品也能生成隐向量， 从而获得由数据支撑的推荐得分， 将全局数据传递到了稀疏物品上， 提高泛化能力。再比如神经网络， 通过特征自动组合， 可以深度发掘数据中的潜在模式，提高泛化等。</p>
+<p>Wide&amp;Deep模型的直接动机就是将两者进行融合， 使得模型既有了简单模型的这种“记忆能力”， 也有了神经网络的这种“泛化能力”, 这也是记忆与泛化结合的伟大模式的初始尝试。</p>
+<p><img src="/notes-media/img/image-20230610112307724-1716637779240.png" alt="image-20230610112307724"></p>
+<p><strong>wide:</strong> </p>
+<p><img src="/notes-media/img/image-20230610113506381-1716637779240.png" alt="image-20230610113506381"></p>
+<p><strong>wide</strong>部分训练时候使用的优化器是带正则的FTRL算法(Follow-the-regularized-leader):</p>
+<p>FTRL当作一个稀疏性很好，精度又不错的随机梯度下降方法， <strong>该算法是非常注重模型稀疏性质的</strong></p>
+<p><strong>Wide部分模型训练完之后留下来的特征都是非常重要的，那么模型的“记忆能力”就可以理解为发现&quot;直接的&quot;，“暴力的”，“显然的”关联规则的能力。</strong></p>
+<p><strong>Deep 部分</strong>：</p>
+<p>​	该部分主要是一个Embedding+MLP的神经网络模型。大规模稀疏特征通过embedding转化为低维密集型特征。然后特征进行拼接输入到MLP中，挖掘藏在特征背后的数据模式。</p>
+<p>输入的特征有两类， 一类是数值型特征， 一类是类别型特征(会经embedding)。<strong>我们知道DNN模型随着层数的增加，中间的特征就越抽象，也就提高了模型的泛化能力。</strong> 对于Deep部分的DNN模型作者使用了深度学习常用的优化器AdaGrad，这也是为了使得模型可以得到更精确的解。</p>
+<p> <strong>Wide &amp; Deep</strong></p>
+<p>W&amp;D模型是将两部分输出</p>
+<p><img src="/notes-media/img/image-20230610114008813-1716637779240.png" alt="image-20230610114008813"></p>
+<h3 id="CrossampDeep">Cross&amp;Deep</h3>
+<p>Wide部分有一个不足就是需要人工进行特征的组合筛选， 过程繁琐且需要经验， 2阶的FM模型在线性的时间复杂度中自动进行特征交互，但是这些特征交互的表现能力并不够，并且随着阶数的上升，模型复杂度会大幅度提高。于是乎，作者用一个Cross Network替换掉了Wide部分，来自动进行特征之间的交叉，并且网络的时间和空间复杂度都是线性的。 通过与Deep部分相结合，构成了深度交叉网络（Deep &amp; Cross Network），简称DCN。</p>
+<p><img src="/notes-media/img/image-20230625210215045-1716637779240.png" alt="image-20230625210215045"></p>
+<p>Cross Network：</p>
+<p><img src="/notes-media/img/image-20230625210241875-1716637779240.png" alt="image-20230625210241875"></p>
+<p><img src="/notes-media/img/image-20230625210312002-1716637779240.png" alt="image-20230625210312002"></p>
+<h3 id="ESMM">ESMM</h3>
+<p>entire space multi-task model </p>
+<ol>
+<li>特征交互上要进一步加强学习，来增强模型的表达能力</li>
+<li>繁重的特征工程要尽可能的避免，尽量端到端无脑搞</li>
+</ol>
+<h3 id="FNN">FNN</h3>
+<p>2016 FM和DNN组合</p>
+<p>Factorization Machine supported Neural Network </p>
+<p><img src="/notes-media/img/image-20230625211505004-1716637779240.png" alt="image-20230625211505004"></p>
+<p> FNN几个比较大的缺点：</p>
+<ol>
+<li>两阶段的训练模型，应用过程不太方便，且模型能力受限于FM表征能力的上限</li>
+<li>只关注于高阶组合特征的交叉</li>
+</ol>
+<h3 id="DeepFM">DeepFM</h3>
+<p>经典模型</p>
+<p>Factorization-Machine Based Neural Network </p>
+<p>2017：  FM和DNN组合</p>
+<p>1:	it does not need any pre-train</p>
+<p>2: it learns both high and low-order feature interactions</p>
+<p>3: it introduces a sharing stragegy of feature embedding to avoid feature engineering</p>
+<p>CTR预测任务中， 高阶特征和低阶特征的学习都非常的重要,</p>
+<p>基本上是从最简单的线性模型(LR)， 到考虑低阶特征交叉的FM， 到考虑高度交叉的神经网络，再到两者都考虑的W&amp;D组合模型</p>
+<p>简单的线性模型虽然简单，同样这样是它的不足，就是限制了模型的表达能力，随着数据的大且复杂，这种模型并不能充分挖掘数据中的隐含信息，且忽略了特征间的交互，如果想交互，需要复杂的特征工程。
+FM模型考虑了特征的二阶交叉，但是这种交叉仅停留在了二阶层次，虽然说能够进行高阶，但是计算量和复杂性一下子随着阶数的增加一下子就上来了。所以二阶是最常见的情况，会忽略高阶特征交叉的信息
+DNN，适合天然的高阶交叉信息的学习，但是低阶的交叉会忽略掉
+那么如果把上面这几种结构组合一下子，是不是效果会强大一些呢？ 所以W&amp;D模型在这个思路上进行了一个伟大的尝试，把简单的LR模型和DNN模型进行了组合， 使得模型既能够学习高阶组合特征，又能够学习低阶的特征模式，但是W&amp;D的wide部分是用了LR模型， 这一块依然是需要一些经验性的特征工程的，且Wide部分和Deep部分需要两种不同的输入模式， 这个在具体实际应用中需要很强的业务经验</p>
+<p><img src="/notes-media/img/image-20230625212157691-1716637779240.png" alt="image-20230625212157691"></p>
+<p> 左边的FM和右边的DNN共享相同的Embedding层的输入（这个要和W&amp;D进行区分， 不单单是FM替换Wide那么简单，模型的输入模式上也进行了改进）</p>
+<p>作者发现<strong>通过高阶和低阶交互特征一块来进行反向传播更新参数反而会使得模型表现更佳，当然，这个也依赖于共享Embedding输入的策略</strong>。</p>
+<h3 id="NFM">NFM</h3>
+<p>Neural Factorization Machine </p>
+<h3 id="AFM">AFM</h3>
+<h3 id="DINDeep-Interest-Network">DIN（Deep Interest Network）</h3>
+<p>Deep Interest Network(DIN)</p>
+<p><strong>会有大量的用户历史行为信息</strong></p>
+<p>用了注意力机制来对用户的兴趣动态模拟， 而这个模拟过程存在的前提就是用户之前有大量的历史行为了，这样我们在预测某个商品广告用户是否点击的时候，就可以参考他之前购买过或者查看过的商品，这样就能猜测出用户的大致兴趣来，这样我们的推荐才能做的更加到位，所以这个模型的使用场景是非常注重用户的历史行为特征（历史购买过的商品或者类别信息）。</p>
+<ol>
+<li>用户兴趣多种多样，并变化多端</li>
+<li>捕捉用户兴趣点非常重要</li>
+<li>用户的兴趣往往可以在其历史行为中进行学习</li>
+</ol>
+<p>Embeding&amp;MLP模型，</p>
+<p>大量稀疏特征先经过embedding层， 转成低维稠密的，然后进行拼接，最后喂入到多层神经网络中去。 这些模型在这种个性化广告点击预测任务中存在的问题就是<strong>无法表达用户广泛的兴趣</strong>，因为这些模型在得到各个特征的embedding之后，就蛮力拼接了，然后就各种交叉</p>
+<p>matching stage: 这里知道了原来召回阶段就是matching呀，之前听到过好多次，但一直不知道这个matching是个啥， 这个阶段任务就是通过协同过滤等方法生成与访问用户相关的候选广告列表
+排序阶段： 就是通过排序模型来预测用户对于候选广告的点击概率，然后根据这个概率生成一个广告推荐列表</p>
+<p><img src="/notes-media/img/image-20230704214412356-1716637779240.png" alt="image-20230704214412356"></p>
+<p>基准模型：</p>
+<p>Embedding layer，Pooling &amp; Concat layer和MLP， 结构如下:</p>
+<p><img src="/notes-media/img/image-20230704214513226-1716637779240.png" alt="image-20230704214513226"></p>
+<p><img src="/notes-media/img/image-20230704214856779-1716637779240.png" alt="image-20230704214856779"></p>
+<h2 id="基于内容的推荐TF-IDF">基于内容的推荐（TF-IDF）</h2>
+<p>Term-Frequency,TF </p>
+<p>TF指的是某一个给定的词语在该文件中出现的次数。这个数字通常会被正规化，以防止它偏向长的文件</p>
+<p>Inverse Document  Frequency， IDF</p>
+<p>表示某一个词语在整个文档集中出现的频率。某一特定词语的IDF，可以由总文件数目除以包含该词语之文件的数目，再将得到的商取对数得到。</p>
+<p><strong>用途：在目标文档中，提取关键词(特征标签)的方法就是将该文档所有词语的TF-IDF计算出来并进行对比，取其中TF-IDF值最大的k个数组成目标文档的特征向量用以表示文档。</strong></p>
+<p><strong>可用来提取目标文档中，并得到关键词用于计算对于目标文档的权重，并将这些权重组合到一起得到特征向量</strong></p>
+<ul>
+<li>基于内容的推荐算法简介</li>
+<li>基于TF-IDF的特征提取技术</li>
+<li>基于内容的推荐流程(物品画像 -&gt; 倒排索引 -&gt; 用户画像 -&gt; 产生推荐)</li>
+<li>物品的冷启动处理（Word2Vec、Doc2Vec）</li>
+</ul>
+<h3 id="物品画像与推荐流程">物品画像与推荐流程</h3>
+<p>物品画像：</p>
+<ol>
+<li>PGC(应用生成内容): 物品自带的属性，比如电影的标题， 导演，演员，类型， 或者服务提供方设定的属性， 比如短视频话题，微博话题</li>
+<li>UGC(用户生成内容): 用户在享受服务过程中提供的物品属性， 如用户评论内容， 微博话题等</li>
+</ol>
+<ul>
+<li>根据PGC/UGC内容构建物品画像</li>
+<li>根据用户行为记录生成用户画像</li>
+<li>根据用户画像从物品中寻找最匹配的TOP-N物品进行推荐</li>
+</ul>
+<h2 id="附录协同过滤与-LFM-图示">附录：协同过滤与 LFM 图示</h2>
+<blockquote>
+<p>与正文 CF / MF 章节呼应，便于对照公式与流程。</p>
+</blockquote>
+<h3 id="基本假设">基本假设</h3>
+<p>过去兴趣相似的 user, 在未来的兴趣也会相似</p>
+<p>相似的user会产生相似的（历史）行为数据</p>
+<p>协同过滤：
+	基于邻域： 基于用户，基于项目，图扩散</p>
+<p>​	基于模型：矩阵分解，关联规则，机器学习</p>
+<p>User-CF:</p>
+<p>用户相似度：</p>
+<p>兴趣度相似度：</p>
+<h3 id="Item-CF-流程图">Item-CF 流程图</h3>
+<p><img src="/notes-media/img/image-20230507110756681-1716637779240.png" alt="image-20230507110756681"></p>
+<p><img src="/notes-media/img/image-20230507110828006-1716637779240.png" alt="image-20230507110828006"></p>
+<p><img src="/notes-media/img/image-20230507110908168-1716637779241.png" alt="image-20230507110908168"></p>
+<p><img src="/notes-media/img/image-20230507111100884-1716637779241.png" alt="image-20230507111100884"></p>
+<h3 id="User-CF-流程图">User-CF 流程图</h3>
+<p><img src="/notes-media/img/image-20230507114026424-1716637779241.png" alt="image-20230507114026424"></p>
+<p><img src="/notes-media/img/image-20230507114150396-1716637779241.png" alt="image-20230507114150396"></p>
+<h3 id="LFM-公式与推导">LFM 公式与推导</h3>
+<p>latent factor model </p>
+<p><img src="/notes-media/img/image-20230507164752872-1716637779241.png" alt="image-20230507164752872"></p>
+<p><img src="/notes-media/img/image-20230507164856621-1716637779241.png" alt="image-20230507164856621"></p>
+<p><img src="/notes-media/img/image-20230507164926368-1716637779241.png" alt="image-20230507164926368"></p>
+<p><img src="/notes-media/img/image-20230507165021244-1716637779241.png" alt="image-20230507165021244"></p>
+<p><img src="/notes-media/img/image-20230507165047121-1716637779241.png" alt="image-20230507165047121"></p>
+<p><img src="/notes-media/img/image-20230507165102760-1716637779241.png" alt="image-20230507165102760"></p>
+<p><img src="/notes-media/img/image-20230507165137432-1716637779241.png" alt="image-20230507165137432"></p>
+<p><img src="/notes-media/img/image-20230507170523330-1716637779241.png" alt="image-20230507170523330"></p>
+<p><img src="/notes-media/img/image-20230507170453007-1716637779241.png" alt="image-20230507170453007"></p>
+<p><img src="/notes-media/img/image-20230507170605863-1716637779241.png" alt="image-20230507170605863"></p>
+<p><img src="/notes-media/img/image-20230507170853141-1716637779241.png" alt="image-20230507170853141"></p>
+<p><img src="/notes-media/img/image-20230507172324398-1716637779241.png" alt="image-20230507172324398"></p>
+<p><img src="/notes-media/img/image-20230507172352677-1716637779241.png" alt="image-20230507172352677"></p>
+<p><img src="/notes-media/img/image-20230507172422774-1716637779242.png" alt="image-20230507172422774"></p>
+<h2 id="召回与排序补充">召回与排序补充</h2>
+<h3 id="双塔模型">双塔模型</h3>
+<p>训练目标：</p>
+<ul>
+<li>point-wise</li>
+<li>pairwise</li>
+<li>list-wise</li>
+</ul>
+<p>推荐排序阶段（Ranking）。</p>
+<p>《Real-time Personalization using Embeddings for Search Ranking at Airbnb》</p>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

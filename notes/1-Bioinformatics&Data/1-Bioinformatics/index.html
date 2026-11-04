@@ -1,0 +1,1885 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="> 生物信息学、数据库、蛋白纯化、序列比对与 GeneCards 等综合笔记。图片：`../img/`。相关：[Bio Business summary.md](Bio%20Business%20summary.md)、[Protein/protein.md](Protein/protein.md)。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>生物信息学 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.CMQ2GYsq.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>1 · Bioinformatics &amp; Data</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>生物信息学</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>&gt; 生物信息学、数据库、蛋白纯化、序列比对与 GeneCards 等综合笔记。图片：`../img/`。相关：[Bio Business summary.md](Bio%20Business%20summary.md)、[Protein/protein.md](Protein/protein.md)。</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc" aria-label="本文目录" data-astro-cid-5eggoaxc> <p class="toc-title" data-astro-cid-5eggoaxc>本文目录</p> <nav class="toc-nav" data-astro-cid-5eggoaxc> <a href="#目录" class="toc-link depth-2" data-astro-cid-5eggoaxc> 目录 </a><a href="#1-基本生物知识" class="toc-link depth-2" data-astro-cid-5eggoaxc> 1： 基本生物知识 </a><a href="#蛋白质" class="toc-link depth-2" data-astro-cid-5eggoaxc> 蛋白质 </a><a href="#Gene-Ontology" class="toc-link depth-2" data-astro-cid-5eggoaxc> Gene Ontology </a><a href="#NCBI" class="toc-link depth-2" data-astro-cid-5eggoaxc> NCBI </a><a href="#Ensembl" class="toc-link depth-2" data-astro-cid-5eggoaxc> Ensembl </a><a href="#UMLS" class="toc-link depth-2" data-astro-cid-5eggoaxc> UMLS </a><a href="#UniPort" class="toc-link depth-2" data-astro-cid-5eggoaxc> UniPort </a><a href="#SRC-amp-MERC" class="toc-link depth-2" data-astro-cid-5eggoaxc> SRC &amp;amp; MERC </a><a href="#Metaclust" class="toc-link depth-2" data-astro-cid-5eggoaxc> Metaclust </a><a href="#四大名谱色谱光谱质谱波谱" class="toc-link depth-2" data-astro-cid-5eggoaxc> 四大名谱：色谱、光谱、质谱、波谱 </a><a href="#色谱方法" class="toc-link depth-2" data-astro-cid-5eggoaxc> 色谱方法 </a><a href="#重组蛋白" class="toc-link depth-2" data-astro-cid-5eggoaxc> 重组蛋白 </a><a href="#抗体纯化" class="toc-link depth-2" data-astro-cid-5eggoaxc> 抗体纯化 </a><a href="#蛋白质纯化" class="toc-link depth-2" data-astro-cid-5eggoaxc> 蛋白质纯化 </a> </nav> </aside> <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><h1 id="生物信息学">生物信息学</h1>
+<blockquote>
+<p>生物信息学、数据库、蛋白纯化、序列比对与 GeneCards 等综合笔记。图片：<code>../img/</code>。相关：<a href="Bio%20Business%20summary.md">Bio Business summary.md</a>、<a href="Protein/protein.md">Protein/protein.md</a>。</p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6">生物信息学</a></li>
+<li><a href="#%E7%8E%B0%E4%BB%A3%E8%8D%AF%E7%89%A9%E5%88%86%E7%A6%BB%E4%B8%8E%E7%BA%AF%E5%8C%96">现代药物分离与纯化</a></li>
+<li><a href="#%E7%BB%93%E6%9E%84%E5%85%8D%E7%96%AB%E5%AD%A6">结构免疫学</a></li>
+<li><a href="#%E7%94%9F%E7%89%A9%E5%A4%A7%E6%95%B0%E6%8D%AE">生物大数据</a></li>
+<li><a href="#%E8%9B%8B%E7%99%BD%E7%BA%AF%E5%8C%96">蛋白纯化</a></li>
+<li><a href="#%E5%BA%8F%E5%88%97%E6%AF%94%E5%AF%B9%E5%B7%A5%E5%85%B7">序列比对工具</a></li>
+<li><a href="#%E5%8F%B0%E6%B9%BE%E5%A4%A7%E5%AD%A6">台湾大学</a></li>
+<li><a href="#genecards-%E5%9F%BA%E5%9B%A0%E5%8D%A1%E7%89%87">GeneCards 基因卡片</a></li>
+</ul>
+<hr>
+<h2 id="1-基本生物知识">1： 基本生物知识</h2>
+<p>核酸种类：</p>
+<ol>
+<li>脱氧核糖核酸 DNA</li>
+<li>核糖核酸 RNA</li>
+</ol>
+<p>核酸的组成元素： C，H，O，N，P</p>
+<p>核酸的基本组成单位：核苷酸</p>
+<p>核苷酸：  一分子磷酸 一分子含氮碱基 一分子五碳糖（DNA 脱氧核糖，RNA核糖）</p>
+<ol>
+<li>DNA： 脱氧核糖核苷酸</li>
+<li>RNA： 核糖核苷酸</li>
+</ol>
+<p>DNA： A（腺嘌呤） ，G（鸟嘌呤），C（胞嘧啶），T（胸腺嘧啶）</p>
+<p>RNA： A，G，C，U（尿嘧啶）</p>
+<p>DNA的复制：</p>
+<ul>
+<li>全保留复制：新复制出的分子直接形成，完全没有旧的部分</li>
+<li>半保留复制：形成的分子一半是新的，一半是旧的</li>
+</ul>
+<p><img src="/notes-media/img/image-20220913230545065.png" alt="图示"></p>
+<p>dNTP :	脱氧核糖核苷酸  通过磷酸二酯键连接形成DNA链</p>
+<p>ddNTP :	双脱氧核糖核苷酸 的2&#39;和3&#39;位置都不含羟基，ddNTP只能通过磷酸基团形成一个磷酸二酯键而无法在向下延伸使合成反应中断</p>
+<p>HIV : 整个基因组9752个碱基。编码9个基因</p>
+<p>human: 3G bp  , 30亿</p>
+<p>what is a biologcial pathway ? </p>
+<p>A serires of actions among moleculres in a cell that leads to a certain product or a change in a cell .</p>
+<p>main types of biological pathways :</p>
+<pre><code>1. metabolic pathways
+
+	2. gene regulation pathways 
+	3. signal transduction pathways 
+</code></pre>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA4ODY4MDE0NA==&mid=2247527095&idx=1&sn=9b049b64b520793d4adf13c554486ef8&chksm=90245908a753d01e9e8d97d58193d20507330fc6f40cdce871b5404245632ca9fa30419ee3ce&scene=27">https://mp.weixin.qq.com/s?__biz=MzA4ODY4MDE0NA==&amp;mid=2247527095&amp;idx=1&amp;sn=9b049b64b520793d4adf13c554486ef8&amp;chksm=90245908a753d01e9e8d97d58193d20507330fc6f40cdce871b5404245632ca9fa30419ee3ce&amp;scene=27</a></p>
+<h2 id="蛋白质">蛋白质</h2>
+<p><strong>蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构</strong></p>
+<p>蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持</p>
+<p>蛋白质的三级结构：是在二级结构的基础上进一步盘绕、折叠形成。是蛋白质分子处于它的天然折叠状态的三维构象，其主要靠氨基酸侧链之间的疏水作用力、氢键、范德华力和静电作用来维持（非共价键）。</p>
+<p>蛋白质的四级结构：主要靠次级键（非共价键）维持。</p>
+<p><strong>多态 的单字母书写：</strong></p>
+<pre><code> ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
+②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
+③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
+④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
+
+⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
+</code></pre>
+<p><strong>多肽的三字母书写形式</strong></p>
+<pre><code>三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
+①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
+②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
+
+③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
+
+DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
+</code></pre>
+<p><strong>特殊多肽序列的书写</strong></p>
+<pre><code>例如：磷酸化氨基酸的书写，
+
+①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+
+②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+</code></pre>
+<p>homology ： 同源</p>
+<p>similarity： 相似</p>
+<p><a href="https://zhuanlan.zhihu.com/p/437654967">序列比对</a></p>
+<p>两个序列：DP  pair-wise alignments </p>
+<p>多序列：  启发式  multiple alogrithms </p>
+<p>如两条序列的相似程度达到30%或60%。一般来说，相似性很高的两条序列往往具有同源关系。但也有例外，即两条序列的相似性很高，但它们可能并不是同源序列，这两条序列的相似性可能是由随机因素所产生的，这在进化上称为“趋同”（convergence），这样一对序列可称为<strong>同功序列。</strong></p>
+<h1 id="现代药物分离与纯化">现代药物分离与纯化</h1>
+<h1 id="结构免疫学">结构免疫学</h1>
+<p>Structural Immunology</p>
+<p><img src="/notes-media/img/image-20230314195824419.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314195952031.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314200013922.png" alt="image-20230314200013922"></p>
+<p><img src="/notes-media/img/image-20230314200314814.png" alt="image-20230314200314814"></p>
+<h1 id="生物大数据">生物大数据</h1>
+<p>Locus : 基因注   </p>
+<h2 id="Gene-Ontology">Gene Ontology</h2>
+<p>Gene Ontology(GO) 提供目前可获得基于或基于产物的功能，是一个可计算知识的最全面的资源。</p>
+<p>主要包含2大方面：</p>
+<p>1.Gene Ontology </p>
+<p>生物功能 terms 之间的逻辑架构，表现为有向无环图 directed acyclin graph</p>
+<p>2.Go 注释</p>
+<p>每个基因产物 (a protein , non-coding RNA , or macromonlucular complex) 对应的功能</p>
+<p><img src="/notes-media/img/image-20230313203956132.png" alt="图示"></p>
+<p>Go term 类别：</p>
+<ol>
+<li>biological Process 生物过程 what process is it involved in ? (BP)</li>
+<li>Molecular Function 分子功能 what does it do ? (MF)</li>
+<li>Cellular Componet 细胞组分 where does it act ?</li>
+</ol>
+<p><img src="/notes-media/img/image-20230313204526023.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313204629645.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313204701461.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313204945456.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313205100267.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313205311989.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313205502906.png" alt="图示"><img src="/notes-media/img/image-20230313205604554.png" alt="image-20230313205604554"></p>
+<p><img src="/notes-media/img/image-20230313205502906.png" alt="图示"><img src="/notes-media/img/image-20230313205604554.png" alt="image-20230313205604554"></p>
+<p><img src="/notes-media/img/image-20230313205645067.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313205737790.png" alt="image-20230313205737790"></p>
+<p><img src="/notes-media/img/image-20230313205823575.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313210518201.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230313210636593.png" alt="image-20230313210636593"></p>
+<p><img src="/notes-media/img/image-20230313211013405.png" alt="image-20230313211013405"></p>
+<p>biological_process</p>
+<p>molecualr_function</p>
+<p>Cellular Componet</p>
+<p>生信数据库</p>
+<h2 id="NCBI">NCBI</h2>
+<p><img src="/notes-media/img/image-20230504195812185.png" alt="image-20230504195812185"></p>
+<p><img src="/notes-media/img/image-20230504195851703.png" alt="image-20230504195851703"></p>
+<p><img src="/notes-media/img/image-20230504200047075.png" alt="image-20230504200047075"></p>
+<p><img src="/notes-media/img/image-20230504200157139.png" alt="image-20230504200157139"></p>
+<p><img src="/notes-media/img/image-20230504200251659.png" alt="image-20230504200251659"></p>
+<p><img src="/notes-media/img/image-20230504200313860.png" alt="image-20230504200313860"></p>
+<p><img src="/notes-media/img/image-20230504200421116.png" alt="image-20230504200421116"></p>
+<p><img src="/notes-media/img/image-20230504200526115.png" alt="image-20230504200526115"></p>
+<p><img src="/notes-media/img/image-20230504200624272.png" alt="image-20230504200624272"></p>
+<p><img src="/notes-media/img/image-20230504200642855.png" alt="image-20230504200642855"></p>
+<p><img src="/notes-media/img/image-20230504200823220.png" alt="image-20230504200823220"></p>
+<p><img src="/notes-media/img/image-20230504201028759.png" alt="image-20230504201028759"></p>
+<p><img src="/notes-media/img/image-20230504201113587.png" alt="image-20230504201113587"></p>
+<p><img src="/notes-media/img/image-20230504201132085.png" alt="image-20230504201132085"></p>
+<p><img src="/notes-media/img/image-20230504201334250.png" alt="image-20230504201334250"></p>
+<p><img src="/notes-media/img/image-20230504201642470.png" alt="image-20230504201642470"></p>
+<p><img src="/notes-media/img/image-20230504201725478.png" alt="image-20230504201725478"></p>
+<p><img src="/notes-media/img/image-20230504202448788.png" alt="image-20230504202448788"></p>
+<h2 id="Ensembl">Ensembl</h2>
+<p><img src="/notes-media/img/image-20230505193235100.png" alt="image-20230505193235100"></p>
+<p><img src="/notes-media/img/image-20230505193316543.png" alt="image-20230505193316543"></p>
+<p><img src="/notes-media/img/image-20230505193327608.png" alt="image-20230505193327608"></p>
+<p><img src="/notes-media/img/image-20230505193358607.png" alt="image-20230505193358607"></p>
+<h2 id="UMLS">UMLS</h2>
+<ol>
+<li>(1)超级叙词表(Metathesaurus),是UMLS知识源的核心,由来自各种受控词表的概念和术语以及它们之间的关系所构成;</li>
+<li>(2)语义网络(Semantic Network),是对超级叙词表概念的分类和分类之间的关系;</li>
+<li>(3)专家辞典(SPECIALIST Lexicon),是一个词典信息库,用于自然语言处理;</li>
+<li>(4)支持性的软件工具,各种利用UMLS的工具和程序</li>
+</ol>
+<p>Concept Unique Identifier： 统一概念 </p>
+<p>语义网络： </p>
+<p>语义类型(Semantic Types)和语义关系(Semantic Relationships)</p>
+<p>语义类型有135个,可分为实体(Entity)和事件(Event)两大类</p>
+<p>语义类型是分层次的,因此具有等级关系：  </p>
+<p>专家辞典及工具：SPECIALIST Lexicon</p>
+<p>超级词表：</p>
+<p><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fzhuanlan.zhihu.com%2Fp%2F359377333">概念结构: CUI-LUI-SUI-AUI </a></p>
+<p>CUI是概念的唯一标识符</p>
+<p>LUI是概念的同义词</p>
+<p>SUI是不同术语（LUI）所拥有的不同的英语表达形式（单复数/过去式/...）</p>
+<p>AUI是原词</p>
+<p><img src="/notes-media/img/image-20220706191624398.png" alt="图示"></p>
+<h2 id="UniPort">UniPort</h2>
+<p>供了定期更新的、详尽的、高质量的、有功能标记（functional annotation）的蛋白质序列库。</p>
+<p>UniProtKB 包含两类序列：</p>
+<p>（1）Reviewed UniProtKB / Swiss-Prot entries</p>
+<p>（2）Unreviewed UniProtKB / TrEMBL entries</p>
+<h2 id="SRC-amp-MERC">SRC &amp; MERC</h2>
+<h2 id="Metaclust">Metaclust</h2>
+<p>作者用 Linclust 聚类了从2200个宏基因组和宏转录组数据集预测的15.9亿条蛋白质序列片段，获得4.24 亿个聚类，这些聚类的代表结构组成了 Metaclust 蛋白序列库。</p>
+<p><a href="https://qinqianshan.com/bioinformatics/file_type/">https://qinqianshan.com/bioinformatics/file_type/</a></p>
+<h1 id="蛋白纯化">蛋白纯化</h1>
+<p>选择合适的载体-&gt; 重组质粒 </p>
+<p><img src="/notes-media/img/image-20230307195921856.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230307200052268.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230307200213741.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230307200256412.png" alt="图示"><img src="/notes-media/img/image-20230307200412894.png" alt="image-20230307200412894"></p>
+<p><img src="/notes-media/img/image-20230307200428927.png" alt="image-20230307200428927"></p>
+<p><img src="/notes-media/img/image-20230307200611938.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230307200831537.png" alt="image-20230307200831537"></p>
+<p><img src="/notes-media/img/image-20230307201110957.png" alt="image-20230307201110957"></p>
+<p><img src="/notes-media/img/image-20230307201205313.png" alt="image-20230307201205313"></p>
+<p><img src="/notes-media/img/image-20230307201252237.png" alt="image-20230307201252237"></p>
+<h2 id="四大名谱色谱光谱质谱波谱">四大名谱：色谱、光谱、质谱、波谱</h2>
+<p>**质谱：**分析分子、原子、或原子团的质量的，可以推测物质的组成，一般用于定性分析较多，也可定量。</p>
+<p>**色谱：**是一种兼顾分离与定量分析的手段，可分辨样品中的不同物质。</p>
+<p>**光谱：**定性分析，确定样品中主要基团，确定物质类别。从红外到X射线，都是光谱，其应用范围差别很大，是对分子或原子的光谱性质进行分析解析的。</p>
+<p>**波谱：**通常指四大波谱，核磁共振（NMR）,物质粒子的质量谱-质谱（MS）,振动光谱-红外/拉曼(IR/Raman）,电子跃迁-紫外（UV）。</p>
+<h2 id="色谱方法">色谱方法</h2>
+<pre><code>https://zhuanlan.zhihu.com/p/96734920
+</code></pre>
+<p>色谱法利用不同物质在不同相态的选择性分配，以<strong>流动相</strong>对<strong>固定相</strong>中的混合物进行洗脱，混合物中不同的物质会以不同的速度沿固定相移动，最终达到分离的效果。”简而言之，可以把流动相理解为<strong>动力</strong>来源，固定相理解为<strong>阻力</strong>来源，由于物质性质不同，在固定相的影响下通过柱子的时间不同，就能挨个分离检测了</p>
+<p>▪ 固定相：在色谱分离中固定不动，对样品产生保留的一相。</p>
+<p>▪ 流动相：带动样品向前移动的另一相。</p>
+<p><strong>按两相物理状态分类</strong></p>
+<p>▪ 流动相：气相色谱、液相色谱、超临界流体色谱</p>
+<p>▪ 固定相：气－固、气－液；液－固、液－液</p>
+<p><strong>按固定相的形式分类</strong></p>
+<p>▪ 柱色谱：填充柱色谱、毛细管柱色谱、微填充柱色谱、制备色谱</p>
+<p>▪ 平面色谱：纸色谱、薄层色谱、高分子膜色谱</p>
+<p><strong>按分离机制分类</strong></p>
+<p>▪ 吸附色谱：根据不同组分在吸附剂上的吸附和解吸能力的大小而分离</p>
+<p>▪ 分配色谱：根据不同组分在固定液中溶解度的大小而分离</p>
+<p>▪ 分子排阻色谱：依据分子体积大小不同进行分离ln离子交换色谱：不同组分对离子交换树脂的亲和力不同而分离</p>
+<p>▪ 亲和色谱：利用生物大分子之间的存在的专一的特殊亲和力进行分离</p>
+<p>▪ 毛细管电泳：依据各组分淌度和（或）分配行为的差异进行分离</p>
+<p>▪ 手性色谱：用于手性药物的分离分析，可分为三类：手性衍生化试剂法；手性流动相添加剂法；手性固定相拆分法</p>
+<p><img src="/notes-media/img/image-20230312101838426.png" alt="图示"><img src="/notes-media/img/image-20230312101938038.png" alt="图示"><img src="/notes-media/img/image-20230312101838426.png" alt="图示"><img src="/notes-media/img/image-20230312101938038.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102051995.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102209582.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102333154.png" alt="image-20230312102333154"></p>
+<p><img src="/notes-media/img/image-20230312102610866.png" alt="image-20230312102610866"></p>
+<p><img src="/notes-media/img/image-20230312102712030.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102748090.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102819612.png" alt="图示"><img src="/notes-media/img/image-20230312102851935.png" alt="image-20230312102851935"></p>
+<p><img src="/notes-media/img/image-20230312102917754.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312102938532.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103015532.png" alt="图示"><img src="/notes-media/img/image-20230312103033411.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103105948.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103142711.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103205716.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103255097.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103341118.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103412372.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103504162.png" alt="图示"><img src="/notes-media/img/image-20230312103540802.png" alt="image-20230312103540802"></p>
+<p><img src="/notes-media/img/image-20230312103540802.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103629806.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103648210.png" alt="图示"><img src="/notes-media/img/image-20230312103747689.png" alt="image-20230312103747689"></p>
+<p><img src="/notes-media/img/image-20230312103826831.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103902563.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312103952011.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312104008206.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312104124580.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312104245621.png" alt="image-20230312104245621"></p>
+<p><img src="/notes-media/img/image-20230312104326304.png" alt="图示"><img src="/notes-media/img/image-20230312104426626.png" alt="image-20230312104426626"></p>
+<p><img src="/notes-media/img/image-20230312104458005.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312104834503.png" alt="image-20230312104834503"></p>
+<p><img src="/notes-media/img/image-20230312104901459.png" alt="image-20230312104901459"></p>
+<h2 id="重组蛋白">重组蛋白</h2>
+<p><img src="/notes-media/img/image-20230314202920292.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314202942346.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203015650.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203033828.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203100289.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203132004.png" alt="image-20230314203132004"></p>
+<p><img src="/notes-media/img/image-20230314203206173.png" alt="image-20230314203206173"></p>
+<p><img src="/notes-media/img/image-20230314203252853.png" alt="image-20230314203252853"></p>
+<p><img src="/notes-media/img/image-20230314203337073.png" alt="image-20230314203337073"></p>
+<p><img src="/notes-media/img/image-20230314203439737.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203505442.png" alt="image-20230314203505442"></p>
+<p><img src="/notes-media/img/image-20230314203521424.png" alt="image-20230314203521424"></p>
+<p><img src="/notes-media/img/image-20230314203540106.png" alt="image-20230314203540106"></p>
+<p><img src="/notes-media/img/image-20230314203632186.png" alt="image-20230314203632186"></p>
+<p><img src="/notes-media/img/image-20230314203647025.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314203720802.png" alt="image-20230314203720802"></p>
+<p><img src="/notes-media/img/image-20230314203734710.png" alt="image-20230314203734710"></p>
+<p><img src="/notes-media/img/image-20230314203756871.png" alt="image-20230314203756871"></p>
+<p><img src="/notes-media/img/image-20230314203813397.png" alt="image-20230314203813397"></p>
+<p><img src="/notes-media/img/image-20230314203901015.png" alt="image-20230314203901015"></p>
+<p><img src="/notes-media/img/image-20230314203942901.png" alt="image-20230314203942901"></p>
+<p><img src="/notes-media/img/image-20230314204022495.png" alt="image-20230314204022495"></p>
+<p><img src="/notes-media/img/image-20230314204054315.png" alt="image-20230314204054315"></p>
+<p><img src="/notes-media/img/image-20230314204110879.png" alt="image-20230314204110879"></p>
+<p><img src="/notes-media/img/image-20230314204143530.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314204220350.png" alt="图示"><img src="/notes-media/img/image-20230314204253683.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314204446406.png" alt="image-20230314204446406"></p>
+<p><img src="/notes-media/img/image-20230314204520065.png" alt="image-20230314204520065"></p>
+<p><img src="/notes-media/img/image-20230314204611743.png" alt="image-20230314204611743"></p>
+<p><img src="/notes-media/img/image-20230314204638808.png" alt="image-20230314204638808"></p>
+<p><img src="/notes-media/img/image-20230314204709402.png" alt="image-20230314204709402"></p>
+<p><img src="/notes-media/img/image-20230314204749794.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230314204823017.png" alt="image-20230314204823017"></p>
+<p><img src="/notes-media/img/image-20230314204917719.png" alt="image-20230314204917719"></p>
+<p><img src="/notes-media/img/image-20230314204939608.png" alt="image-20230314204939608"></p>
+<p><img src="/notes-media/img/image-20230314204953129.png" alt="image-20230314204953129"></p>
+<p><img src="/notes-media/img/image-20230314205034714.png" alt="image-20230314205034714"></p>
+<p><img src="/notes-media/img/image-20230314205428032.png" alt="image-20230314205428032"></p>
+<p><img src="/notes-media/img/image-20230314205523960.png" alt="image-20230314205523960"></p>
+<p><img src="/notes-media/img/image-20230314205553947.png" alt="image-20230314205553947"></p>
+<p><img src="/notes-media/img/image-20230314205701629.png" alt="image-20230314205701629"></p>
+<p><img src="/notes-media/img/image-20230314205918779.png" alt="image-20230314205918779"></p>
+<p><img src="/notes-media/img/image-20230314205950195.png" alt="image-20230314205950195"></p>
+<p><img src="/notes-media/img/image-20230314210025336.png" alt="image-20230314210025336"></p>
+<p><img src="/notes-media/img/image-20230314210100437.png" alt="image-20230314210100437"></p>
+<p><img src="/notes-media/img/image-20230314210126159.png" alt="image-20230314210126159"></p>
+<p><img src="/notes-media/img/image-20230314210203602.png" alt="image-20230314210203602"></p>
+<p><img src="/notes-media/img/image-20230314210225352.png" alt="image-20230314210225352"></p>
+<p><img src="/notes-media/img/image-20230314210304970.png" alt="image-20230314210304970"></p>
+<p><img src="/notes-media/img/image-20230314210317749.png" alt="image-20230314210317749"></p>
+<p><img src="/notes-media/img/image-20230314210345368.png" alt="image-20230314210345368"></p>
+<p><img src="/notes-media/img/image-20230314210444591.png" alt="image-20230314210444591"></p>
+<p><img src="/notes-media/img/image-20230314210631041.png" alt="image-20230314210631041"></p>
+<p><img src="/notes-media/img/image-20230314210659825.png" alt="image-20230314210659825"></p>
+<p><img src="/notes-media/img/image-20230314210735427.png" alt="image-20230314210735427"></p>
+<p><img src="/notes-media/img/image-20230314210806451.png" alt="image-20230314210806451"></p>
+<p><img src="/notes-media/img/image-20230314210832461.png" alt="image-20230314210832461"></p>
+<p><img src="/notes-media/img/image-20230314210851503.png" alt="image-20230314210851503"></p>
+<p><img src="/notes-media/img/image-20230314210908516.png" alt="image-20230314210908516"></p>
+<p><img src="/notes-media/img/image-20230314210917971.png" alt="image-20230314210917971"></p>
+<p><img src="/notes-media/img/image-20230314210934199.png" alt="image-20230314210934199"></p>
+<p><img src="/notes-media/img/image-20230314210945939.png" alt="image-20230314210945939"></p>
+<p><img src="/notes-media/img/image-20230314210959493.png" alt="image-20230314210959493"></p>
+<p><img src="/notes-media/img/image-20230314211012913.png" alt="image-20230314211012913"></p>
+<p><img src="/notes-media/img/image-20230314211025545.png" alt="image-20230314211025545"></p>
+<p><img src="/notes-media/img/image-20230314211047066.png" alt="image-20230314211047066"></p>
+<p><img src="/notes-media/img/image-20230314211104354.png" alt="image-20230314211104354"></p>
+<p><img src="/notes-media/img/image-20230314211118156.png" alt="image-20230314211118156"></p>
+<p><img src="/notes-media/img/image-20230314211134244.png" alt="image-20230314211134244"></p>
+<p><img src="/notes-media/img/image-20230314211155687.png" alt="image-20230314211155687"></p>
+<p><img src="/notes-media/img/image-20230314211222459.png" alt="image-20230314211222459"></p>
+<p><img src="/notes-media/img/image-20230314211240985.png" alt="image-20230314211240985"></p>
+<p><img src="/notes-media/img/image-20230314211259117.png" alt="image-20230314211259117"></p>
+<p><img src="/notes-media/img/image-20230314211314553.png" alt="image-20230314211314553"></p>
+<p><img src="/notes-media/img/image-20230314211331616.png" alt="image-20230314211331616"></p>
+<p><img src="/notes-media/img/image-20230314211342453.png" alt="image-20230314211342453"></p>
+<p><img src="/notes-media/img/image-20230314211356543.png" alt="image-20230314211356543"></p>
+<p><img src="/notes-media/img/image-20230314211430719.png" alt="image-20230314211430719"></p>
+<p><img src="/notes-media/img/image-20230314211444616.png" alt="image-20230314211444616"></p>
+<p><img src="/notes-media/img/image-20230314211500289.png" alt="image-20230314211500289"></p>
+<p><img src="/notes-media/img/image-20230314211528811.png" alt="image-20230314211528811"></p>
+<p><img src="/notes-media/img/image-20230315211426259.png" alt="image-20230315211426259"></p>
+<p><img src="/notes-media/img/image-20230315211448382.png" alt="image-20230315211448382"></p>
+<p><img src="/notes-media/img/image-20230315211508717.png" alt="image-20230315211508717"></p>
+<p><img src="/notes-media/img/image-20230315211611501.png" alt="image-20230315211611501"></p>
+<p><img src="/notes-media/img/image-20230315211646402.png" alt="image-20230315211646402"></p>
+<p><img src="/notes-media/img/image-20230315211703767.png" alt="image-20230315211703767"></p>
+<p><img src="/notes-media/img/image-20230315211806919.png" alt="image-20230315211806919"></p>
+<p><img src="/notes-media/img/image-20230315211850468.png" alt="image-20230315211850468"></p>
+<p><img src="/notes-media/img/image-20230315212001204.png" alt="image-20230315212001204"></p>
+<p><img src="/notes-media/img/image-20230315212041374.png" alt="image-20230315212041374"></p>
+<p><img src="/notes-media/img/image-20230315212058469.png" alt="image-20230315212058469"></p>
+<p><img src="/notes-media/img/image-20230315212111636.png" alt="image-20230315212111636"></p>
+<p><img src="/notes-media/img/image-20230315212126753.png" alt="image-20230315212126753"></p>
+<p><img src="/notes-media/img/image-20230315212210557.png" alt="image-20230315212210557"></p>
+<p><img src="/notes-media/img/image-20230315212240683.png" alt="image-20230315212240683"></p>
+<p><img src="/notes-media/img/image-20230315212255163.png" alt="image-20230315212255163"></p>
+<p><img src="/notes-media/img/image-20230315212313143.png" alt="image-20230315212313143"></p>
+<p><img src="/notes-media/img/image-20230315212336532.png" alt="image-20230315212336532"></p>
+<p><img src="/notes-media/img/image-20230315212358796.png" alt="image-20230315212358796"></p>
+<p><img src="/notes-media/img/image-20230315212431517.png" alt="image-20230315212431517"></p>
+<p><img src="/notes-media/img/image-20230315212459993.png" alt="image-20230315212459993"></p>
+<p><img src="/notes-media/img/image-20230315212535802.png" alt="image-20230315212535802"></p>
+<p><img src="/notes-media/img/image-20230315212559067.png" alt="image-20230315212559067"></p>
+<p><img src="/notes-media/img/image-20230315212615274.png" alt="image-20230315212615274"></p>
+<p>ph &gt; pi 值， 带负电</p>
+<p>&lt; pi 值 ，带正电</p>
+<p><img src="/notes-media/img/image-20230315212639878.png" alt="image-20230315212639878"></p>
+<p><img src="/notes-media/img/image-20230315213155374.png" alt="image-20230315213155374"></p>
+<p><img src="/notes-media/img/image-20230315213255029.png" alt="image-20230315213255029"></p>
+<p><img src="/notes-media/img/image-20230315213315335.png" alt="image-20230315213315335"></p>
+<p><img src="/notes-media/img/image-20230315213456799.png" alt="image-20230315213456799"></p>
+<p><img src="/notes-media/img/image-20230315213528479.png" alt="image-20230315213528479"></p>
+<p><img src="/notes-media/img/image-20230315213603800.png" alt="image-20230315213603800"></p>
+<p><img src="/notes-media/img/image-20230315213618264.png" alt="image-20230315213618264"></p>
+<p><img src="/notes-media/img/image-20230315213633197.png" alt="image-20230315213633197"></p>
+<p><img src="/notes-media/img/image-20230315213657998.png" alt="image-20230315213657998"></p>
+<p><img src="/notes-media/img/image-20230315213712292.png" alt="image-20230315213712292"></p>
+<p><img src="/notes-media/img/image-20230315213730298.png" alt="image-20230315213730298"></p>
+<p><img src="/notes-media/img/image-20230315213748572.png" alt="image-20230315213748572"></p>
+<p><img src="/notes-media/img/image-20230315213758944.png" alt="image-20230315213758944"></p>
+<p><img src="/notes-media/img/image-20230315213813654.png" alt="image-20230315213813654"></p>
+<p><img src="/notes-media/img/image-20230315213831353.png" alt="image-20230315213831353"></p>
+<p><img src="/notes-media/img/image-20230315213912333.png" alt="image-20230315213912333"></p>
+<p><img src="/notes-media/img/image-20230315213949916.png" alt="image-20230315213949916"></p>
+<p><img src="/notes-media/img/image-20230315214610025.png" alt="image-20230315214610025"></p>
+<p><img src="/notes-media/img/image-20230315214703523.png" alt="image-20230315214703523"></p>
+<p><img src="/notes-media/img/image-20230315214812624.png" alt="image-20230315214812624"></p>
+<p><img src="/notes-media/img/image-20230315214839378.png" alt="image-20230315214839378"></p>
+<p><img src="/notes-media/img/image-20230315214903663.png" alt="image-20230315214903663"></p>
+<p><img src="/notes-media/img/image-20230315215015297.png" alt="image-20230315215015297"></p>
+<p><img src="/notes-media/img/image-20230315215127267.png" alt="image-20230315215127267"></p>
+<p><img src="/notes-media/img/image-20230315215211502.png" alt="image-20230315215211502"></p>
+<p><img src="/notes-media/img/image-20230315215235319.png" alt="image-20230315215235319"></p>
+<p><img src="/notes-media/img/image-20230315215312944.png" alt="image-20230315215312944"></p>
+<p><img src="/notes-media/img/image-20230315215330323.png" alt="image-20230315215330323"></p>
+<p><img src="/notes-media/img/image-20230315215409472.png" alt="image-20230315215409472"></p>
+<p><img src="/notes-media/img/image-20230315215513061.png" alt="image-20230315215513061"></p>
+<p><img src="/notes-media/img/image-20230315215530828.png" alt="image-20230315215530828"></p>
+<p><img src="/notes-media/img/image-20230315215545353.png" alt="image-20230315215545353"></p>
+<p><img src="/notes-media/img/image-20230315215636372.png" alt="image-20230315215636372"></p>
+<p><img src="/notes-media/img/image-20230315215657043.png" alt="image-20230315215657043"></p>
+<p><img src="/notes-media/img/image-20230315215744552.png" alt="image-20230315215744552"></p>
+<p><img src="/notes-media/img/image-20230315215808744.png" alt="image-20230315215808744"></p>
+<p><img src="/notes-media/img/image-20230315220344900.png" alt="image-20230315220344900"></p>
+<p><img src="/notes-media/img/image-20230315220514189.png" alt="image-20230315220514189"></p>
+<p><img src="/notes-media/img/image-20230315220553013.png" alt="image-20230315220553013"></p>
+<p><img src="/notes-media/img/image-20230315220730017.png" alt="image-20230315220730017"></p>
+<p><img src="/notes-media/img/image-20230315220818388.png" alt="image-20230315220818388"></p>
+<p><img src="/notes-media/img/image-20230315220836327.png" alt="image-20230315220836327"></p>
+<p><img src="/notes-media/img/image-20230315220857007.png" alt="image-20230315220857007"></p>
+<p><img src="/notes-media/img/image-20230315220908354.png" alt="image-20230315220908354"></p>
+<p><img src="/notes-media/img/image-20230315220940395.png" alt="image-20230315220940395"></p>
+<p><img src="/notes-media/img/image-20230315221011241.png" alt="image-20230315221011241"></p>
+<p><img src="/notes-media/img/image-20230315221044517.png" alt="image-20230315221044517"></p>
+<p><img src="/notes-media/img/image-20230315221113302.png" alt="image-20230315221113302"></p>
+<p><img src="/notes-media/img/image-20230315221303593.png" alt="image-20230315221303593"></p>
+<p><img src="/notes-media/img/image-20230315221416552.png" alt="image-20230315221416552"></p>
+<p><img src="/notes-media/img/image-20230315221446927.png" alt="image-20230315221446927"></p>
+<p><img src="/notes-media/img/image-20230315221601228.png" alt="image-20230315221601228"></p>
+<p><img src="/notes-media/img/image-20230315222739883.png" alt="image-20230315222739883"></p>
+<p><img src="/notes-media/img/image-20230315222821438.png" alt="image-20230315222821438"></p>
+<p><img src="/notes-media/img/image-20230315222910076.png" alt="image-20230315222910076"></p>
+<h2 id="抗体纯化">抗体纯化</h2>
+<p><img src="/notes-media/img/image-20230320203023425.png" alt="image-20230320203023425"></p>
+<p><img src="/notes-media/img/image-20230320203121097.png" alt="image-20230320203121097"></p>
+<p><img src="/notes-media/img/image-20230320204137989.png" alt="image-20230320204137989"></p>
+<p><img src="/notes-media/img/image-20230320204735462.png" alt="image-20230320204735462"></p>
+<p><img src="/notes-media/img/image-20230320205200178.png" alt="image-20230320205200178"></p>
+<p><img src="/notes-media/img/image-20230320205306754.png" alt="image-20230320205306754"></p>
+<p><img src="/notes-media/img/image-20230320205610689.png" alt="image-20230320205610689"></p>
+<p><img src="/notes-media/img/image-20230320205716291.png" alt="image-20230320205716291"></p>
+<p><img src="/notes-media/img/image-20230320205748542.png" alt="image-20230320205748542"></p>
+<p><img src="/notes-media/img/image-20230320205824684.png" alt="image-20230320205824684"></p>
+<p><img src="/notes-media/img/image-20230320205842661.png" alt="image-20230320205842661"></p>
+<p>Ecoli 大肠杆菌 ： 原核细胞</p>
+<p><img src="/notes-media/img/image-20230320211040153.png" alt="image-20230320211040153"></p>
+<p><img src="/notes-media/img/image-20230320211205931.png" alt="image-20230320211205931"></p>
+<p><img src="/notes-media/img/image-20230320211222595.png" alt="image-20230320211222595"></p>
+<p><strong>Capto MMC一步层析过程可以有效将半抗体以及同源二聚体相互分离</strong></p>
+<p>，<strong>混合模式层析对轻链缺失副产物也有较好的去除效果</strong></p>
+<p>half antobody </p>
+<p>dimer 二聚体</p>
+<p>homodimer 同源二聚体</p>
+<p>轻链缺失 </p>
+<p><strong>MMC对半抗体A、单臂缺失副产物B以及轻链缺失副产物C的去除能力</strong></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MjM5NTI3MDE0NQ==&mid=2653706529&idx=3&sn=dbb85fe545712972c2e89d3da4d25eb0&chksm=bd23e24f8a546b59518ea26daff33d1dd5f8116f10b6b79e2e3b4070472001f7bfe58f05c0bd&scene=27">https://mp.weixin.qq.com/s?__biz=MjM5NTI3MDE0NQ==&amp;mid=2653706529&amp;idx=3&amp;sn=dbb85fe545712972c2e89d3da4d25eb0&amp;chksm=bd23e24f8a546b59518ea26daff33d1dd5f8116f10b6b79e2e3b4070472001f7bfe58f05c0bd&amp;scene=27</a></p>
+<h2 id="蛋白质纯化">蛋白质纯化</h2>
+<p><img src="/notes-media/img/image-20230312111144894.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312111312013.png" alt="image-20230312111312013"></p>
+<p><img src="/notes-media/img/image-20230312111338032.png" alt="图示"></p>
+<p><img src="/notes-media/img/image-20230312111422410.png" alt="图示"></p>
+<p>亲和层析  （Affinity chromatography ）</p>
+<p>**原理：**生物分子间的特异性相互作用进行纯化（如，酶和底物，抗体和抗原之间的专一相互作用），将其中一个作为配基固定在填料上，就可以从初始化样品中吸附相应的生物分子，通过洗脱将其解离达到纯化的目的。</p>
+<p>亲和层析： 标签蛋白纯化，抗体纯化</p>
+<p>标签蛋白：又叫重组蛋白，是指利用基因工程技术，将目的基因构建在载体上，得到重组质粒，然后在表达体系中表达重组蛋白</p>
+<p>标签： 是指在构建重组质粒时，在目的蛋白DNA序列的N端，或者C端添加标签序列，在表达时，标签和目的蛋白一起表达，使重组蛋白和其他杂志蛋白具有区别。</p>
+<p><strong>特点：</strong></p>
+<p>高选择性</p>
+<p>高分辨率</p>
+<p>高结合载量</p>
+<p>快速将目的蛋白与大量杂志分离</p>
+<p><strong>步骤</strong></p>
+<ol>
+<li><p>Equilibration 平衡</p>
+</li>
+<li><p>sample application 上样</p>
+</li>
+<li><p>wash </p>
+</li>
+<li><p>elution 洗脱</p>
+</li>
+</ol>
+<p>ProteinA</p>
+<pre><code>蛋白纯化: 主要利用不同蛋白之间的内在相似性与差异
+蛋白： 大小，形状，电荷，疏水性，溶解度和生物活性
+电荷：  离子交换 IEX 
+大小：  凝胶过滤 GF
+疏水性：  HIC 
+生物识别： 特异性配基 亲和性AC 
+电荷，特异性配基，或者疏水性：  扩张床 EBA 
+
+回收率， 分辨率，速度和容量
+
+分类： 
+非吸附层析 
+ 	分子筛  SEC/GF    限制条件： 上样量
+	简单洗脱条件： 1种缓存液 稀释效应 注效要求极高
+    
+结合-洗脱层析  限制条件 载量
+	离子交换 IEX
+	疏水层析： HIC
+	亲和层析 AC
+特定上样，洗脱条件， 至少2种缓冲液 ，浓缩效应
+
+分辨率： 表明纯化柱分离样品的出峰能力
+	检测方法： 分离系数 Rs 
+    Rs =(v2-v1) /(w1+w2)/2 
+    两个峰之间的距离： 
+    选择性和有效性： 
+    高选择性: 两个峰离得很远
+    峰高： 有效性 越高越好
+柱效： 表明层析柱的性能，层析柱的柱效应应该固定间隔时间进行检测，通过检测理论塔板数和峰形对称性，可表明柱效。
+
+</code></pre>
+<pre><code class="language-markdown">E.Coli 表达 纯化 （宿主）
+
+蛋白表达策略 
+前期调研： 
+    二级结构预测
+    PDB数据库
+    文献收集
+    碱基序列优化
+    氨基酸序列优化
+载体构建：
+标签的选择
+共表达体系
+表达宿主：
+	是否表达
+	表达量高低
+	毒性蛋白表达
+	含硫键蛋白表达
+	低内毒素表达
+	密码子编好表达
+	
+
+诱导表达 -&gt; 收集菌体-&gt; 超声波破摔-&gt; 收集上清液体（可溶性蛋白）-&gt; 过亲和柱-&gt; 过凝胶柱或超滤膜-&gt;蛋白分析
+
+
+蛋白镍柱纯化全过程，从镍柱再生，到洗脱蛋白，配蛋白胶，制样上样，跑蛋白定量胶，蛋白胶染色脱色
+
+
+```
+SDS-PAGE 电泳
+
+```
+SDS： 
+断裂分子内和分子间的氢键
+破坏蛋白质的二级和三级结构
+与蛋白质1.4:1比例结合，使蛋白质带上负电，迁入率与分子量有关
+
+B-ME：
+阻止半胱氨酸氧化
+打开二硫键
+溴酚蓝和甘油：
+与蛋白结合显示蛋白质的运动轨迹
+甘油密度比水大，帮助加样
+
+running buffer 
+
+```
+![image-20230214202334646](/notes-media/img/image-20230214202334646.png)
+
+![image-20230214202410459](/notes-media/img/image-20230214202410459.png)
+
+
+```
+标签蛋白：
+融合蛋白 fusion protein , 加在重组蛋白的N段或者C端，可以提高目标蛋白产量或赋予其一些新的特征
+标签：  大小	 亲和介质
+
+
+```
+![image-20230214210447662](/notes-media/img/image-20230214210447662.png)
+
+```
+EDTA Tris DTT 
+```
+![image-20230214211821000](/notes-media/img/image-20230214211821000.png)
+
+![image-20230214212018320](/notes-media/img/image-20230214212018320.png)
+
+![image-20230214212321916](/notes-media/img/image-20230214212321916.png)
+
+
+![image-20230214212430553](/notes-media/img/image-20230214212430553.png)
+
+![image-20230214212613028](/notes-media/img/image-20230214212613028.png)
+
+![image-20230214213121350](/notes-media/img/image-20230214213121350.png)
+
+![image-20230214213208760](/notes-media/img/image-20230214213208760.png)
+
+
+![image-20230214213742918](/notes-media/img/image-20230214213742918.png)
+
+
+柱体，填料
+
+```
+纯化填料：
+非吸附类填料（裸球） 分子筛填料  sephadex sephacry1 sepharose super 
+吸附类填料（裸球+配基） 
+亲和层析： 抗体纯化protein A ,G His标签镍填料GST垫料
+疏水层析： 苯基 
+离子交换层析 阴离子Q， DEAE， 阳离子S，SP
+多模式层析： 
+
+
+```
+```
+蛋白质：
+天然蛋白
+纯化蛋白
+
+```
+AKTA 
+
+```
+控制面板
+混合池
+系统泵
+上样阀
+AKTA pure 25
+最大操作压力 20Mpa 流速： 25ml/min 
+转柱流速： 50ml/min 
+AkTA pure 150 :   最大压力 5Mpa 150ml/min 
+转柱流速： 300ml/min 
+
+泵前腔
+泵后腔
+wash in 
+wash out 
+buffer in 
+buffer out 
+混合池 M9 
+
+
+```
+```
+层析介质的“皇冠之珠”——令人爱恨交加的Protein A
+
+生物大分子的层析方法主要分为亲和，离子交换，疏水作用及体积排阻。亲和层析是利用介质上的配基与目标蛋白分子有特异性结合，而对其它的蛋白质及杂质不吸附，因此杂质从层析柱中流出，被吸附的目标生物分子通过改变洗脱液的条件使被分离物质与配基解吸附，即可达到分离纯化的目的。亲和层析无疑是最理想的层析分离方法，其与其它分离方法如离子交换、疏水、体积排阻等最大的不同是由于亲和层析只与目标生物分子发生专一性吸附，其它杂质都不吸附，因此亲和层析分离纯化的工艺条件与杂质的组成及含量多少关系不大，从而大大简化亲和分离工艺开发方法，而其它分离方法如离子交换、疏水、体积排阻等都是基于目标分子跟杂质分子之间的大小，电荷及疏水强度的差异来分离的，因此即使分离纯化同样的目标分子，但不同样品的杂质组分不同，含量不同，纯化工艺方法就需要重新调整。
+
+Protein A 亲和介质是 层析介质的皇冠上的明珠
+Protein A 填料一步纯化目标抗体就可以达到95%纯度以上，回收率达到90%以上
+
+抗体分离纯化基本都是标准化的三步曲，第一步用Protein A进行抗体捕获，第二步用阳离子去除多聚体，第三步用阴离子精纯去除剩余少量杂质
+
+Protein A亲和层析已经成为平台化技术，被广泛应用在抗体类分子捕获阶段。Protein A与抗体分子之间可特异性结合，特别对IgG1、IgG2、IgG4有较强亲和作用，使得抗体分子与发酵液中不具FC端结构的杂质如宿主蛋白与核酸等有效分离，进而达到纯化目的。亲和特异性赋予了Protein A填料捕获时可接受更宽泛的样品条件，如pH及电导率等。因此，发酵液通过离心、深层过滤后即可直接进行亲和捕获。另外与离子交换、疏水层析等方法相比，Protein  A亲和层析纯化抗体料液可以获得更大的纯度，一步就可以获得抗体纯度大于98%，而且在回收率上也有明显优势，亲和捕获回收率可达95%。
+
+恨的是Protein A 亲和介质价格贵，寿命短，占据下游分离纯化成主要本
+
+
+ProteinA结构及作用机制:
+ProteinA蛋白是金黄色葡萄球菌细胞壁锚钉蛋白，其C端为细胞壁结合区域，抗体结合区域包括五个同源区域（E、D、A、B、C，N端顺序）。五个domain的序列同源率65-90%（图1）。
+
+
+https://www.instrument.com.cn/news/20211231/602744.shtml
+
+https://www.zhihu.com/search?type=content&amp;q=Protein%20A%20
+
+MabSelectSure是一种亲和层析技术中的固定相，用于单克隆抗体（mAb）的纯化。 MabSelectSure由GE HealthCare公司生产，可以有效地纯化大规模的mAb，包括重组单克隆抗体和嵌合单克隆抗体等。该技术利用特定的亲和层析树脂和mAb之间的亲和力，选择性地从混合物中分离并纯化目标蛋白。MabSelectSure的优点包括高亲和力、高纯化效率、低非特异性吸附、高稳定性、低毒性等。MabSelectSure已被广泛应用于mAb研究和生产领域，有助于提高mAb的质量、纯度和产量。
+
+
+**试剂 — Triton X-114**
+
+Triton X-114：
+1：内毒素主要成分是脂多糖LPS,114是一种离子型表面活性剂，4‘C与水互溶，与LPS充分结合，25 ‘C把结合的LPS从水中析出。
+Triton X-114是一种非离子表面活性剂，常用于生物化学和分子生物学中的蛋白质分离和纯化过程中。 它是一种温和的溶剂，能够解析膜蛋白和其他蛋白质复合物，特别是那些与细胞膜或膜相关的蛋白质。 Triton X-114可以通过其温度敏感的相分离性质，实现膜蛋白和水溶性蛋白的分离。在不同温度下调整 Triton X-114 溶液的相分离性，可以获得纯度更高的蛋白质分离物，并可以去除大部分非蛋白质污染物，如脂类等。
+2：Triton X-114 在一些实验中也被用作裂解细胞膜和上清液中的膜蛋白。
+
+```
+# 序列比对工具
+
+## MMSeqs
+
+MMSeqs 的全称是 **m**any-against-**m**any **seq**uences **s**earching， 意为“多序列对多序列的搜索”
+
+（1）prefilter module：快速敏感地比较 query &amp; target 序列，获得相似 **k-mers** 的打分；
+
+（2）alignment module：排列、对齐打分后的序列；
+
+（3）clustering module：使用贪心算法，逐级聚类对齐序列。
+
+## **BLOSUM**
+
+**blo**ck **su**bstitution **m**atrix ,氨基酸替换打分矩阵
+
+
+## FAMSA
+
+
+我们的讨论都局限于如何处理序列（比较相似度、排列对齐、聚类），获得的是 MSA，
+
+
+https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD%93%E7%84%B6%E6%98%AF%20AlphaFold2%20%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%20Big%20Fantastic%20Database%20%EF%BC%88BFD%EF%BC%89%EF%BC%8C%E6%88%91%E5%8F%AB%E5%AE%83%E2%80%9C%20%E5%A4%A7%E8%B6%85%E5%87%A1,%E2%80%9D%E3%80%82%20AlphaFold2%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E6%98%AF%E7%B2%BE%E5%BF%83%E9%80%89%E6%8B%A9%E3%80%81%E8%B0%83%E8%AF%95%E7%9A%84%E5%BA%8F%E5%88%97%E5%BA%93%E5%92%8C%E4%B8%89%E7%BB%B4%E7%BB%93%E6%9E%84%E5%BA%93%EF%BC%8C%20%E5%A4%A7%E8%B6%85%E5%87%A1%20%E5%B0%B1%E6%98%AF%E7%94%B1%E6%96%87%E7%AB%A0%E7%9A%84%E7%AC%AC25%E4%BD%9C%E8%80%85%20Martin%20Steinegger%20%EF%BC%88M.S.%EF%BC%89%E6%9E%84%E5%BB%BA%E7%9A%84%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82
+
+蛋白质
+
+**蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构**
+
+
+蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持
+
+蛋白质的三级结构：是在二级结构的基础上进一步盘绕、折叠形成。是蛋白质分子处于它的天然折叠状态的三维构象，其主要靠氨基酸侧链之间的疏水作用力、氢键、范德华力和静电作用来维持（非共价键）。
+
+蛋白质的四级结构：主要靠次级键（非共价键）维持。
+
+
+**多态 的单字母书写：**
+
+```
+ ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
+②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
+③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
+④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
+
+⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
+```
+**多肽的三字母书写形式**
+
+```
+三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
+①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
+②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
+
+③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
+
+DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
+```
+**特殊多肽序列的书写**
+
+```
+例如：磷酸化氨基酸的书写，
+
+①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+
+②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+```
+## AlphaFold
+
+的特征提取包含了**序列特征**和**序列平方特征**两大部分。
+
+```
+序列特征是长度和原始输入序列相同的，包括了one-hot[3]的氨基酸种类特征（21维）,HHblit[4]特征（22维），MSA[2]特征等等
+
+1:了one-hot[3]的氨基酸种类特征
+2:其中HHblit[4]特征代表HHblit工具算法对每个氨基酸计算出的一个特征向量，可以理解为类似NLP中的embedding的概念
+
+3:MSA是(Multiple Sequence Alignment) 多序列对齐
+抽取这个特征的原因是类似的氨基酸序列一般来说折叠方式也类似，相当于在特征中就加入了相近的序列结构信息
+
+
+```
+~~~markdown
+input： 氨基酸 sequence 
+output: 氨基酸两两之间的距离分布和夹角
+
+input feature:
+one-hot: 氨基酸种类特征（21维）
+HHblit特征（22维） : embedding 只不过这个embedding是用了很多先验知识算出来的，而不是学出来的
+MSA特征
+
+预测蛋白质的3D结构比较难，先预测Contact map 作为限制来优化蛋白质的折叠
+蛋白质的二维表示：Contact Map Distance Map
+
+预测蛋白质的Contact Map 理论基础：
+序列保守信息 ： 在不同物种中同一个位置的氨基酸不变
+序列的共进化信息：两个不同位置的氨基酸同步变化 
+aplpha 第一代： 预测的是一个二维结构 然后优化 ResNet
+
+构建不同列氨基酸之间的相关性，这可以学习到蛋白质的phylogeny信息。和wise是类似的操作。
+```
+```
+大家下午好，今天我分享的是alphafold2 ，一种经过计算预测蛋白质空间结构的方法，在座各位都是这个领域的大佬，在关公面前耍大刀了，后面有讲的不对的地方，或者有问题，可以补充。
+```
+```
+SOURCE_URL=&quot;https://storage.googleapis.com/alphafold/alphafold_params_2022-03-02.tar&quot;
+```
+
+
+```
+conda config --remove-key channels 
+conda config --show channels
+
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --set show_channel_urls yes
+比如 
+
+pip install tensorboard
+# 阿里镜像源
+conda config --add channels https://mirrors.aliyun.com/pypi/simple/
+# 豆瓣的python的源
+conda config --add channels http://pypi.douban.com/simple/ 
+conda config --set show_channel_urls yes
+
+conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
+conda install --index-url https://pypi.douban.com/simple 
+opencv-python
+pip install --index-url https://pypi.douban.com/simple tensorboard
+pycocotools-windows
+torchvision==0.8.2
+pycocotools-windows
+tf-slim==1.1.0
+Pytorch1.7.1
+tensorflow==2.2.0 
+pip install tensorflow==2.7.0 
+pip install tf-slim==1.1.0
+opencv-python
+matplotlib
+pip install opencv-python pandas
+https://pjreddie.com/media/files/yolov2-tiny-voc.weights
+```
+
+```
+X-ray、冷冻电镜、核磁共振
+
+source ~/.bash  # 进入系统环境
+```
+## 抗体
+
+抗体是脊椎动物为应对外来入侵蛋白（抗原），保护机体不被伤害而分泌的、在体内进行循环的蛋白质分子，是机体体液免疫的主要参与者
+
+抗体又被称为免疫球蛋白（immunoglobulin，Ig） （一类糖蛋白）
+
+```
+SOURCE_URL=&quot;https://storage.googleapis.com/alphafold-databases/reduced_dbs/bfd-first_non_consensus_sequences.fasta.gz&quot;
+```
+
+只能通过B细胞系的相关细胞产生：
+
+分泌型和膜结合型
+
+在体内抗体主要通过两个功能实现对病原清除
+
+1. 抗体可以识别并特异性的结合外来病原，这样的结合足以使病原或者毒素失去活性
+2. 抗体在体内和病原结合后，还可以通过Fc和FcR信号通路引发后续的一系列免疫反应，介导对入侵外来抗原的清除，这些免疫反应包括补体系统的激活、吞噬系统的激活、ADCC等作用
+
+**抗体的Ig结构**
+
+抗体的单体是一个Y形的分子
+
+抗体整体由四条多肽链构成，分别为两条结构相同的轻链（L chain）和两条结构相同的重链（H chain），四条链形成典型的“Y”型抗体结构
+
+*抗体的轻链包含2个Ig结构域，分别为V domain（VL）和C domain（CL）*
+
+重链的4个Ig结构域分别为VH、CH1、CH2和CH3。
+
+
+Fab（fragment antigen binding）片段包括全部的轻链结构和重链的VH和CH1结构域
+
+一个蛋白片段能够很快的形成结晶，被称为Fc片段，Fc是fragment crystallizable的首字母,对应的是抗体两条重链的CH2和CH3结构域
+
+Fab还需要通过一个蛋白片段和Fc进行连接，这个蛋白片段被称为抗体的hinge结构域
+
+![image-20220711145731085](/notes-media/img/image-20220711145731085.png)
+
+
+disulfude bonds  二硫键
+
+effector region 
+
+- **抗体的亚型**
+
+  IgG、IgM、IgA、IgD和IgE五种亚型
+
+  通常情况下，一个抗体的两条重链和轻链是相同的两条链，但是IgG4在某些情况下可以和其它的IgG4交换重链，产生杂合抗体；杂合抗体的Fc是相似的，但是Fab不相同，因此严格说抗体的两条轻链和重链并不一定完全相同。
+
+
+氨基酸序列研究显示，抗体（以IgG为例）轻链的C末端和重链的C末端约3/4的结构都是高度保守的，被称为保守区域（Constant region）而对应的轻链的N末端和重链的N末端，有着极高的氨基酸序列多样性，被称为可变区（Variant region）；在这些可变区域内分布着相对短的序列，表现出极强的多样性，被称为高频突变区域，这样的序列在轻链和重链的可变区分别有三个，被称为CDR（complementarity determining regions，CDRs)，随后的研究证明这些序列和抗体特异性的识别抗原相关。
+
+
+## 抗原
+
+抗原（antigen，缩写Ag）是指能引起抗体生成的物质，是任何可诱发免疫反应的物质。
+
+
+知识
+
+https://blog.csdn.net/qq_45493596/article/details/124903920?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-124903920-blog-122561714.pc_relevant_multi_platform_whitelistv3&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-124903920-blog-122561714.pc_relevant_multi_platform_whitelistv3&amp;utm_relevant_index=1
+
+## 附录
+
+```
+https://github.com/lingluodlut/BioNER-Progress
+https://zhuanlan.zhihu.com/p/330510520 # 抗体 
+http://www.detaibio.com/topics/antibody-structure.html
+pip install tensorboard
+
+https://github.com/lingluodlut/BioNER-Progress
+
+
+https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD%93%E7%84%B6%E6%98%AF%20AlphaFold2%20%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%20Big%20Fantastic%20Database%20%EF%BC%88BFD%EF%BC%89%EF%BC%8C%E6%88%91%E5%8F%AB%E5%AE%83%E2%80%9C%20%E5%A4%A7%E8%B6%85%E5%87%A1,%E2%80%9D%E3%80%82%20AlphaFold2%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E6%98%AF%E7%B2%BE%E5%BF%83%E9%80%89%E6%8B%A9%E3%80%81%E8%B0%83%E8%AF%95%E7%9A%84%E5%BA%8F%E5%88%97%E5%BA%93%E5%92%8C%E4%B8%89%E7%BB%B4%E7%BB%93%E6%9E%84%E5%BA%93%EF%BC%8C%20%E5%A4%A7%E8%B6%85%E5%87%A1%20%E5%B0%B1%E6%98%AF%E7%94%B1%E6%96%87%E7%AB%A0%E7%9A%84%E7%AC%AC25%E4%BD%9C%E8%80%85%20Martin%20Steinegger%20%EF%BC%88M.S.%EF%BC%89%E6%9E%84%E5%BB%BA%E7%9A%84%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82
+```
+## NER
+
+它的目的是从大量的非结构化医学文本中找出基因、疾病、蛋白质等相应的医学实体边界，然后再经过标准化映射到受控词汇表中，从而方便进行文献挖掘的下游任务。
+
+1. 遗传性非息肉性结直肠癌综合征   很长的词汇组成
+2. Zolmitriptan, Zomig and Zomigon  这三个名词都是表示同一实体
+3. 生物医学实体通常由数字和字母缩写组成，有时相同的字母可能表示不同的意思
+
+深度学习需要大量的高质量的已标注的数据集 ，数据集的大小和质量严重影响着最终的识别效果
+
+这些方法分成4个类别，分别是：基于神经网络、基于多任务、基于迁移学习、基于混合模型的方法
+
+
+# 台湾大学
+
+![image-20221010213018985](/notes-media/img/image-20221010213018985.png)
+
+![image-20221010213110422](/notes-media/img/image-20221010213110422.png)
+
+
+![image-20221010213153446](/notes-media/img/image-20221010213153446.png)
+
+![image-20221010213219152](/notes-media/img/image-20221010213219152.png)
+
+
+![image-20221010213258537](/notes-media/img/image-20221010213258537.png)
+
+Alignment: 对齐
+
+PAM scoring matrices 
+
+Blosum62
+
+![image-20221010213908143](/notes-media/img/image-20221010213908143.png)
+
+gloab local alignment :
+
+
+local alignment:
+
+smith-waterman 
+
+![image-20221010214041769](/notes-media/img/image-20221010214041769.png)
+
+Heuristic Search Algorithms : 启发式算法
+
+FASTA：
+
+BLAST
+
+idea:  true alignments will have a short stretch of identity (perfect match)
+
+同源的蛋白质序列，应用有一段很小的序列完全匹配
+
+![image-20221010215718452](/notes-media/img/image-20221010215718452.png)
+
+蛋白质结构：
+
+
+![image-20221010223925649](/notes-media/img/image-20221010223925649.png)
+
+![image-20221010224041385](/notes-media/img/image-20221010224041385.png)
+
+![image-20221010224351524](/notes-media/img/image-20221010224351524.png)
+
+扭角 
+
+## 基于测序：
+
+### 1代测序： Sanger 测序
+
+[双脱氧终止法](https://www.zhihu.com/search?q=双脱氧终止法&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;})
+
+![image-20221003110758427](/notes-media/img/image-20221003110758427.png)
+
+**Sanger 测序法原理**
+
+**构建反应系统**
+
+[Sanger法测序](https://www.zhihu.com/search?q=Sanger法测序&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;})由一套四个单独的反应构成，每个反应系统包含
+
+1. 四种[脱氧核苷酸三磷酸](https://www.zhihu.com/search?q=脱氧核苷酸三磷酸&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;}) (dNTP)，可以正常合成DNA
+2. 每个反应系统加入四种不同的[双脱氧核苷三磷酸](https://www.zhihu.com/search?q=双脱氧核苷三磷酸&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;}) (ddNTP)，由于ddNTP缺乏延伸所需要的3-OH基团，使延长的[寡聚核苷酸](https://www.zhihu.com/search?q=寡聚核苷酸&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;})选择性地在G、A、T或C处终止，另外为了方便定位，需要用荧光或者同位素标记。
+3. 目标片段、DNA聚合酶、引物，反应体系
+
+**扩增目的片段**
+
+下一步进行扩增，以目的片段为模板，在DNA聚合酶的催化下，从引物处起始开始复制DNA，当遇到ddNTP，反应停止
+
+控制 dNTP 与 ddNTP 相对浓度，可以调节扩增的浓度
+
+**[凝胶电泳](https://www.zhihu.com/search?q=凝胶电泳&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra={&quot;sourceType&quot;%3A&quot;article&quot;%2C&quot;sourceId&quot;%3A&quot;94183808&quot;})**
+
+**序列读取**
+
+### 2 illumina 测序
+
+https://www.cn-healthcare.com/articlewm/20210110/content-1179325.html
+
+1： Library Preparation  文库制备
+
+DNA 片段的一个集合，将测序片段打断之后构成了一个DNA文库
+
+
+2： Cluster Generation 族生成
+
+3： Sequencing 测序
+
+4： Data Analysis
+
+
+## word
+
+## 蛋白质
+
+**蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构**
+
+
+蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持
+
+蛋白质的三级结构：是在二级结构的基础上进一步盘绕、折叠形成。是蛋白质分子处于它的天然折叠状态的三维构象，其主要靠氨基酸侧链之间的疏水作用力、氢键、范德华力和静电作用来维持（非共价键）。
+
+蛋白质的四级结构：主要靠次级键（非共价键）维持。
+
+
+**多态 的单字母书写：**
+
+```
+ ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
+②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
+③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
+④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
+
+⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
+```
+**多肽的三字母书写形式**
+
+```
+三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
+①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
+②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
+
+③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
+
+DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
+```
+**特殊多肽序列的书写**
+
+```
+例如：磷酸化氨基酸的书写，
+
+①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+
+②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
+```
+homology ： 同源
+
+similarity： 相似
+
+[序列比对](https://zhuanlan.zhihu.com/p/437654967)
+
+两个序列：DP  pair-wise alignments 
+
+多序列：  启发式  multiple alogrithms 
+
+
+如两条序列的相似程度达到30%或60%。一般来说，相似性很高的两条序列往往具有同源关系。但也有例外，即两条序列的相似性很高，但它们可能并不是同源序列，这两条序列的相似性可能是由随机因素所产生的，这在进化上称为“趋同”（convergence），这样一对序列可称为**同功序列。**
+
+### 序列比对
+
+**全局比对（Global alignment）**和**局部比对（Local alignment）**
+
+序列比对分为**序列两两比对**和**多序列比对**。
+
+ 替换计分矩阵【氨基酸替换矩阵】
+
+**BLOSUM** score matrix【blocks substitution matrix】
+
+**PAM** score matrix，**位置特异性矩阵PSSM**
+
+
+多序列比对算法
+
+是指两个或多个序列按字母比较，尽可能确切地反映它们之间的相似和相异性，用于阐明序列之间的同源关系。通过序列比对，找出序列之间的相似性，发现与结构相联系的保守序列片段，以及检测新测定序列与数据库中已知结构和功能的序列之间的相似性关系，从而以足够的可信度确定新序列的结构和功能信息。
+
+#### 双序列比对：
+
+1. 动态规划的优化方法
+2. 启发式算法
+3. 大型数据库搜索设计的概率方法
+
+Needleman-Wunsch算法是最早的序列比对算法，属于全局序列比对
+
+Smith-Waterman算法是一种局部相似性的动态规划算法，在识别局部相似性时具有很高的灵敏度，是双序列比对算法中最基本的算法
+
+启发式算法
+
+FASTA算法
+
+BLAST算法
+
+PSI-BLAST 
+
+Next Generation Sequencing :  
+
+Advantage : long reads 
+
+Disadvatage : high cost 
+
+potemtial problem :  long mononucleotide  repeats 
+
+
+### 形成稳定分子结构所参与作用的力
+
+- 骨架链：连续的肽键
+- 侧链：R基团
+- α螺旋/β折叠/β转角/无规则卷曲
+- 氢键/范德华力/二硫键/残基的带点性质（盐桥）/疏水性
+
+### 目前观测蛋白质空间结构的方法
+
+实验观测：
+
+- X-ray
+- 冷冻电镜
+- 核磁共振
+- 中子散射
+
+![image-20221006231943146](/notes-media/img/image-20221006231943146.png)
+
+相似性90%以上的氨基酸序列的MSA没什么意义，因为太像了，留一条就够了；相似性30%以下的氨基酸序列MSA也没什么意义，因为太不像了很可能不是同源的。
+
+
+## Data pipeline
+
+
+AlphaFold的运行流程如下：
+
+- 在CPU上运行hhblits,jackhmmer,hhsearch等工具搜索数据库
+- 在GPU上运行Tensorflow代码构造输入特征
+- 在GPU上运行jax代码，运行训练好的深度学习模型，分别运行5个模型，得到5个PDB结构和对应的置信度分数
+- 使用CPU运行amber relax去除violation并加上氢原子
+- 得到基于pLDDT排序的五个模型
+
+
+## AlphaFold
+
+的特征提取包含了**序列特征**和**序列平方特征**两大部分。
+
+https://zhuanlan.zhihu.com/p/464232665
+
+https://zhuanlan.zhihu.com/p/539157126
+
+http://www.knightofnight.com/archives/alphafold2%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0
+
+https://zhuanlan.zhihu.com/p/464232665
+
+```
+序列特征是长度和原始输入序列相同的，包括了one-hot[3]的氨基酸种类特征（21维）,HHblit[4]特征（22维），MSA[2]特征等等
+
+1:了one-hot[3]的氨基酸种类特征
+2:其中HHblit[4]特征代表HHblit工具算法对每个氨基酸计算出的一个特征向量，可以理解为类似NLP中的embedding的概念
+
+3:MSA是(Multiple Sequence Alignment) 多序列对齐
+抽取这个特征的原因是类似的氨基酸序列一般来说折叠方式也类似，相当于在特征中就加入了相近的序列结构信息
+
+
+```
+~~~markdown
+input： 氨基酸 sequence 
+output: 氨基酸两两之间的距离分布和夹角
+
+input feature:
+one-hot: 氨基酸种类特征（21维）
+HHblit特征（22维） : embedding 只不过这个embedding是用了很多先验知识算出来的，而不是学出来的
+MSA特征
+
+预测蛋白质的3D结构比较难，先预测Contact map 作为限制来优化蛋白质的折叠
+蛋白质的二维表示：Contact Map Distance Map
+
+预测蛋白质的Contact Map 理论基础：
+序列保守信息 ： 在不同物种中同一个位置的氨基酸不变
+序列的共进化信息：两个不同位置的氨基酸同步变化 
+aplpha 第一代： 预测的是一个二维结构 然后优化 ResNet
+
+构建不同列氨基酸之间的相关性，这可以学习到蛋白质的phylogeny信息。和wise是类似的操作。
+```
+## 蛋白质结构预测：
+
+1. all the information necessary  for protein folding into its native structure is encoded in its amino acid sequence 
+2. Proteins fold into minimun energy status 
+3. Most proteins fold into a unique conformation 
+
+Method :
+
+Template-based modeling  (基于模板的) PDB
+
+Template-free modeling 
+
+
+```
+大家下午好，今天我分享的是alphafold2 ，一种经过计算预测蛋白质空间结构的方法，在座各位都是这个领域的大佬，在关公面前耍大刀了，后面有讲的不对的地方，或者有问题，可以补充。
+```
+```
+SOURCE_URL=&quot;https://storage.googleapis.com/alphafold/alphafold_params_2022-03-02.tar&quot;
+```
+
+
+![image-20221014000158819](/notes-media/img/image-20221014000158819.png)
+
+
+![image-20221014001926068](/notes-media/img/image-20221014001926068.png)
+
+
+![image-20221014001952419](/notes-media/img/image-20221014001952419.png)
+
+![image-20221014002052608](/notes-media/img/image-20221014002052608.png)
+
+
+![image-20221014002113386](/notes-media/img/image-20221014002113386.png)
+
+
+![image-20221014002144514](/notes-media/img/image-20221014002144514.png)
+
+
+![image-20221014002210883](/notes-media/img/image-20221014002210883.png)
+
+
+在进行基因相关研究的时候，我们经常需要查询了解基因的相关功能，才能知道我们要往哪里进行下一步研究。对于基因功能的查询，我们介绍过ncbi的gene数据库，同样的之前的gene  id转换的时候我们也提到过，关于基因信息的汇总除了gene数据库还有ensembl、uniprot等等很多数据库，各个数据库都提供了不同的基因信息。我们在查询的时候，总不能说把各个数据库都查询一遍吧？所以今天就给大家介绍一个汇总了多个数据库的基因信息查询网站:
+
+## GeneCards 基因卡片
+
+**GeneCards** (https://www.genecards.org/ )
+
+GeneCards 是一个汇总了150个网络数据库的基因功能查询数据库。通过这个数据库我们可以查询到一个基因各个方面的基本功能（主要注意的是这个数据库只能查询人的基因信息哈）。
+
+
+![下载.jpeg](https://www.51xxziyuan.com/ueditor/php/upload/image/20210222/1613990384894070.jpeg)
+
+这类汇总性的数据库，最担心的是数据库的不更新，但是由于genecards所在的公司还有很多功能是付费的，算是一个营利性的机构，所以为了机构的名声，他们也会长时间更新的，目前已经到了4.14版本了。
+
+
+![下载 (1).jpeg](https://www.51xxziyuan.com/ueditor/php/upload/image/20210222/1613990393818325.jpeg)
+
+
+由于查询的信息比较多，所以我们分两期来进行讲解。
+
+
+PART 1
+
+
+**数据库使用**
+
+### 检索与界面
+
+数据库的使用很简单，就是输入我们想要检索的基因即可。这里我们可以输入基因名、ensembl ID、uniprot ID都可以，例如我们这里输入MYC。
+
+![下载 (2).jpeg](/notes-media/img/1613990399747801.jpeg)
+
+检索完之后，我们就可以看这个基因相关的信息了。对于基因的信息，数据库分成了很多个部分。现在基本上分成基因基本信息以及基因实验相关的产品信息。我们这里主要的就来介绍数据库包括那些基本信息。
+
+
+![下载 (3).jpeg](/notes-media/img/1613990408483580.jpeg)
+
+PART 2
+
+
+**基因信息汇总 Summaries**
+
+
+很多数据库对于基因的功能都会有简单的汇总介绍，通过这句话我们基本上能大概的了解这个基因的基本功能。在**Summaries**这个模块当中，genecards汇总了多个数据库对于这个基因功能的总结，我们通过这个就可以知道多个数据库对于这个基因是什么评价的了。
+
+
+![下载 (4).jpeg](/notes-media/img/1613990416555167.jpeg)
+
+
+PART 3
+
+
+**基因结构及调控信息**
+
+
+按照中心法则，一个基因有三个不同的身份：分别是DNA、mRNA、蛋白。对于这三个身份都有信息。因此genecards也基于三个不同身份有了三个不同的模块: **Genomics**、**Transcripts**、**Proteins**
+
+### Genomics
+
+在基因组这个模块当中，我们可以看到目标基因在基因组当中的位置及长度。
+
+
+![下载 (5).jpeg](/notes-media/img/1613990433241923.jpeg)
+
+
+另外，由于基因组对于基因表达的调控，主要是通过转录调控来实现的，所以数据库总结了很多转录调控的信息。我们在这里就可以查询到这个基因可能收到哪些转录因子的调控。
+
+
+![下载 (6).jpeg](/notes-media/img/1613990444845649.jpeg)
+
+### Transcripts
+
+由于可变剪切的存在，基因的mRNA会产生很多的剪切异构体，所以这个数据库汇总了多个数据库对于剪切异构体的ID，以及相对应的可能剪切方式。
+
+
+![下载 (7).jpeg](/notes-media/img/1613990453914649.jpeg)
+
+
+另外，我们在做相关的基础实验的话，需要对这个基因的mRNA进行处理，具体处理的话就需要用到公司的试剂。所以这里也 汇总了相关可能用到的试剂，例如CRISPR、miRNA等等。
+
+
+![下载 (8).jpeg](/notes-media/img/1613990460887832.jpeg)
+
+### Proteins
+
+对于基因蛋白，同样的也是汇总了蛋白的基本信息。另外关于蛋白的调控，也存在翻译后调控，所以 GeneCards 利用 UniprotKB、neXtProt 和 GlyConnect 注释翻译后调控；PhosphoSitePlus 注释磷酸化位点。
+
+![下载 (9).jpeg](/notes-media/img/1613990467328374.jpeg)
+
+对于蛋白功能研究常用抗体，此处汇总各公司抗体型号。
+
+![下载 (10).jpeg](/notes-media/img/1613990473138492.jpeg)
+
+PART 4
+
+
+**基因功能**
+
+
+上面对于基因的介绍是它本身在染色体上的基本特征,了解了基本特征，我们还要进一步的去了解这个基因有什么功能,毕竟功能决定这个基因的研究价值的。GeneCards方面，对于基因功能的注释包括了包括了：**Localization**、 **Pathways**、 **Function**。
+
+### Localization
+
+一个基因的功能经常是由他们的定位决定的，基因在细胞核和细胞质形式的功能不一样的，所以我们就把基因的定位放到基因功能上了。GeneCards对于基因功能的定位使用的是compartments、HPA数据库。另外关于GO数据库，也提供了细胞组分的分类，所以GeneCards把关于这个基因的go的信息也就纳入进来了。
+
+
+![下载.jpeg](/notes-media/img/1613990658220257.jpeg)
+
+
+### Function
+
+提到GO数据库的话，这个数据库还提供了其他两种信息，另外的分子功能就直接放到的功能这个部分了。
+
+
+![下载 (1).jpeg](/notes-media/img/1613990686114732.jpeg)
+
+### Pathways
+
+对于一个基因而言，他的功能也是通过相关的信号通路来发挥作用的。GeneCards收集了目前主流的一些数据库关于这个基因的信号通路信息，例如: **KEGG**、**Reactome**等等。在这里，我们就可以了解到很多关于基因通路的信息。
+
+
+![下载 (2).jpeg](/notes-media/img/1613990712373043.jpeg)
+
+PART 5
+
+
+**基因和临床的相关性**
+
+
+由于我们做的很多基因相关的研究是要来解释疾病的发生原理的，所以往往还是要看这个基因和疾病的相关性。GeneCards提供了两个和疾病有关的模块，分别是：**Disorders**和**Drugs**。
+
+### Disorders
+
+在Disorders这个模块下，汇总了这个基因和哪些疾病是有关系的。当然这种的汇总是基于以往的研究来的，所以如果没有看到和我们研究的疾病有关系，那也不一定说明真的是没关系，这里的数据主要来自于malacards。关于malacards的介绍，我们明天再说。
+
+
+![下载 (3).jpeg](/notes-media/img/1613990726447963.jpeg)
+
+
+### Drugs
+
+药物在体内发挥作用也是需要通过基因的变化来产生的，所以我们可以通过这个模块了解有哪些药物影响这个基因的表达。数据库总结了DrugBank，ClinicalTrials，ApexBio，DGIdb和Novoseek五个数据库的结果，我们可以很容易的看到这个基因的和哪些药物有关系以及可能的激活机制。
+
+
+![下载 (4).jpeg](/notes-media/img/1613990735188386.jpeg)
+
+PART 6
+
+
+**相似基因**
+
+
+有时候我们除了了解了这个基因的功能本身的功能之外，还想要研究这个基因在不同物种的进化关系，以及相同物种这个基因和哪些基因相似，这个在数据库也是有的**Orthologs**、**Paralogs**。
+
+- 我们可以在Orthologs查看，不同物种之间相同基因之间的相似度。
+
+
+![下载 (5).jpeg](/notes-media/img/1613990741927881.jpeg)
+
+
+- 可以在Paralogs查看，这个基因和其他哪些基因高度同源。
+
+
+![下载 (6).jpeg](/notes-media/img/1613990764399077.jpeg)
+
+
+PART 7
+
+
+**目前发表的文章**
+
+
+研究完基因的功能之后，最后还是要看这个基因一共发表了多少篇文章的。这个可以看见**Publications**当中看到，检索的是所有相关的文章。我们可以在进一步检索当中输入关键词，查看和某一个疾病相关的研究都有多少篇。
+
+
+![下载 (7).jpeg](/notes-media/img/1613990756219680.jpeg)
+
+## 数据库总结
+
+对于基因的研究在这个数据库已经汇总的很多了。而且对于一个刚刚入科研门槛的人，如果不清楚基因研究都研究那些方面，那如果能把这个数据各个方面都弄懂的话，也不失为一种入门的方法。这两天我们对于GeneCards的介绍就到这里，明天我们来介绍一下综合性查询疾病相关信息的数据库: MalaCards。
+</code></pre>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=a=>{h.forEach(o=>{o.textContent=a==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",a=>{d(a.detail)});const s=[...document.querySelectorAll(".toc-link")];if(s.length>0){const a=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{s.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>a.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 

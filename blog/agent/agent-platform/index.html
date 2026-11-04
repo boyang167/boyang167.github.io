@@ -1,0 +1,1732 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="DeerFlow+Wren+RAG 架构"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>X-Agent 平台全景 · Boyang Wang</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.XyEOSPMj.css">
+<link rel="stylesheet" href="/_astro/_slug_.CQlRs0BK.css">
+<link rel="stylesheet" href="/_astro/_slug_.DaDPzbwk.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link active" href="/blog/" aria-current="page" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span data-astro-cid-3ef6ksr2>↗</span></a> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap post-page" data-astro-cid-7jjqptxk> <header class="post-top" data-astro-cid-7jjqptxk> <a class="text-link post-back" href="/blog/" data-astro-cid-7jjqptxk>← 返回技术博客</a> <div class="post-banner" data-astro-cid-7jjqptxk> <span class="post-banner-icon" aria-hidden="true" data-astro-cid-7jjqptxk>◈</span> </div> <div class="post-head" data-astro-cid-7jjqptxk> <div class="eyebrow" data-astro-cid-7jjqptxk>AI Agent</div> <h1 data-astro-cid-7jjqptxk>X-Agent 平台全景</h1> <p class="post-lead" data-astro-cid-7jjqptxk>DeerFlow+Wren+RAG 架构</p> <p class="post-meta muted" data-astro-cid-7jjqptxk> <span data-astro-cid-7jjqptxk>Boyang Wang</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>2026-11-02</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>阅读 45 分钟</span> </p> </div> </header> <div class="post-layout" data-astro-cid-7jjqptxk> <aside class="post-toc" aria-label="本文目录" data-astro-cid-7jjqptxk> <p class="post-toc-title" data-astro-cid-7jjqptxk>本文目录</p> <nav class="post-toc-nav" data-astro-cid-7jjqptxk> <a href="#1-一句话" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 1. 一句话 </a><a href="#2-业务背景" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 2. 业务背景 </a><a href="#21-场景" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 2.1 场景 </a><a href="#22-产品要解决什么" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 2.2 产品要解决什么 </a><a href="#23-目标用户" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 2.3 目标用户 </a><a href="#24-明确不做非目标" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 2.4 明确不做（非目标） </a><a href="#3-产品-Scope" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 3. 产品 Scope </a><a href="#31-目标态能力地图PRD-V2" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 3.1 目标态能力地图（PRD V2） </a><a href="#32-当前已落地-Scope工作台" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 3.2 当前已落地 Scope（工作台） </a><a href="#已具备" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 已具备 </a><a href="#部分落地--演进中" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 部分落地 / 演进中 </a><a href="#明确未落地设计稿" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 明确未落地（设计稿） </a><a href="#33-产品边界取数轨道库表--领域--文档" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 3.3 产品边界：取数轨道（库表 / 领域 / 文档） </a><a href="#4-数据" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 4. 数据 </a><a href="#41-A-业务事实数据" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 4.1 A. 业务事实数据 </a><a href="#411-业务汇总表Wren--database_query" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> 4.1.1 业务汇总表（Wren / database_query） </a><a href="#42-B-语义与建模元数据Wren" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 4.2 B. 语义与建模元数据（Wren） </a><a href="#43-C-对话与结构化产物Postgres--Prisma-dct_" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 4.3 C. 对话与结构化产物（Postgres / Prisma dct_*） </a><a href="#44-D-文档与向量" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 4.4 D. 文档与向量 </a><a href="#45-数据流主路径记住这一条" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 4.5 数据流主路径（记住这一条） </a><a href="#5-技术架构" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 5. 技术架构 </a><a href="#51-分层" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.1 分层 </a><a href="#52-技术栈" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.2 技术栈 </a><a href="#53-Agent-运行时" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.3 Agent 运行时 </a><a href="#54-Wren-内化架构迁移要点" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.4 Wren 内化（架构迁移要点） </a><a href="#55-鉴权与治理现状不要美化" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.5 鉴权与治理（现状，不要美化） </a><a href="#56-仓库拓扑找代码" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 5.6 仓库拓扑（找代码） </a><a href="#6-端到端场景对照" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 6. 端到端场景对照 </a><a href="#7-风险技术债与后续方向" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 7. 风险、技术债与后续方向 </a><a href="#8-会被问到什么项目向口述" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 8. 会被问到什么（项目向口述） </a><a href="#81-开场与业务" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.1 开场与业务 </a><a href="#Q1-用两分钟介绍这个项目" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q1. 用两分钟介绍这个项目。 </a><a href="#Q2-用户是谁他们原来怎么干活你们替代了什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q2. 用户是谁？他们原来怎么干活？你们替代了什么？ </a><a href="#Q3-这个产品和-ChatGPT-挂个数据库有什么本质区别" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q3. 这个产品和 ChatGPT 挂个数据库有什么本质区别？ </a><a href="#Q4-产品-Scope-里你认为最核心的-P0-是什么现在做到哪" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q4. 产品 Scope 里你认为最核心的 P0 是什么？现在做到哪？ </a><a href="#Q5-为什么不做自动调工艺参数" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q5. 为什么不做自动调工艺参数？ </a><a href="#82-架构与系统设计" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.2 架构与系统设计 </a><a href="#Q6-画一下整体架构" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q6. 画一下整体架构。 </a><a href="#Q7-为什么用-DeerFlow--LangGraph而不是自研一个-workflow-编排器" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q7. 为什么用 DeerFlow / LangGraph，而不是自研一个 workflow 编排器？ </a><a href="#Q8-Wren-为什么要从独立服务收成-in-process代价是什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q8. Wren 为什么要从独立服务收成 in-process？代价是什么？ </a><a href="#Q9-Harness--App-为什么要防腐" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q9. Harness / App 为什么要防腐？ </a><a href="#Q10-前端为什么做-BFF而不是浏览器直打-LangGraph" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q10. 前端为什么做 BFF，而不是浏览器直打 LangGraph？ </a><a href="#Q11-鉴权你怎么评价如果面试官说你们安全吗" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q11. 鉴权你怎么评价？如果面试官说「你们安全吗」？ </a><a href="#Q12-如果让你重新设计会改什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q12. 如果让你重新设计，会改什么？ </a><a href="#83-Agent中间件Skills" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.3 Agent、中间件、Skills </a><a href="#Q13-Agent-的一次提问内部发生了什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q13. Agent 的一次提问内部发生了什么？ </a><a href="#Q14-为什么用中间件而不是全写进-System-Prompt" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q14. 为什么用中间件而不是全写进 System Prompt？ </a><a href="#Q15-Skill-和-Tool-有什么区别" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q15. Skill 和 Tool 有什么区别？ </a><a href="#Q16-为什么工艺推荐不走-Wren" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q16. 为什么工艺推荐不走 Wren？ </a><a href="#Q17-沙箱里你踩过什么坑STAR个人贡献" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q17. 沙箱里你踩过什么坑？（STAR，个人贡献） </a><a href="#Q18-多步-SQL--子问题怎么调度" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q18. 多步 SQL / 子问题怎么调度？ </a><a href="#Q19-模型乱调工具死循环怎么办" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q19. 模型乱调工具、死循环怎么办？ </a><a href="#84-数据NL2SQLRAG图表" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.4 数据、NL2SQL、RAG、图表 </a><a href="#Q20-你们的数据在哪有几类" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q20. 你们的数据在哪？有几类？ </a><a href="#Q21-为什么不让-LLM-直接写-SQL" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q21. 为什么不让 LLM 直接写 SQL？ </a><a href="#Q22-实体歧义怎么处理用户说那个细胞库怎么办" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q22. 实体歧义怎么处理？用户说「那个细胞库」怎么办？ </a><a href="#Q23-库表答案和-PDF-冲突怎么办" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q23. 库表答案和 PDF 冲突怎么办？ </a><a href="#Q24-RAG-流水线怎么做的为什么-PDF-要页级混合解析" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q24. RAG 流水线怎么做的？为什么 PDF 要页级混合解析？ </a><a href="#Q25-图表为什么不用-matplotlib" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q25. 图表为什么不用 matplotlib？ </a><a href="#Q26-空数据失败-SQL-怎么展示" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q26. 空数据、失败 SQL 怎么展示？ </a><a href="#85-质量评测协同" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.5 质量、评测、协同 </a><a href="#Q27-怎么证明-Agent-变好了而不是-prompt-碰巧" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q27. 怎么证明 Agent 变好了而不是 prompt 碰巧？ </a><a href="#Q28-和开源-DeerFlow-的关系你们改了什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q28. 和开源 DeerFlow 的关系？你们改了什么？ </a><a href="#Q29-你在项目里具体做什么和别人怎么分工" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q29. 你在项目里具体做什么？和别人怎么分工？ </a><a href="#Q30-最大的技术挑战是什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q30. 最大的技术挑战是什么？ </a><a href="#Q31-如果线上有回答但没有报告问题树你怎么查" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q31. 如果线上「有回答但没有报告/问题树」，你怎么查？ </a><a href="#Q32-你还缺什么经验怎么补" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> Q32. 你还缺什么经验？怎么补？ </a><a href="#86-可能的追问速查短答" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.6 可能的追问速查（短答） </a><a href="#87-不该说的话" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 8.7 不该说的话 </a><a href="#10-Agent-架构师A1A90" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 10. Agent 架构师（A1–A90） </a><a href="#101-架构定位与选型" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.1 架构定位与选型 </a><a href="#A1-什么是企业级-Agent-架构和做一个能调工具的-Chatbot差在哪" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A1. 什么是企业级 Agent 架构？和「做一个能调工具的 Chatbot」差在哪？ </a><a href="#A2-你会怎么给-Agent-平台分层" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A2. 你会怎么给 Agent 平台分层？ </a><a href="#A3-ReAct-单循环固定-Workflow两者混合你怎么选" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A3. ReAct 单循环、固定 Workflow、两者混合，你怎么选？ </a><a href="#A4-早期文档说不要整体迁-LangGraph现在却用了你如何评价这次架构转向" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A4. 早期文档说不要整体迁 LangGraph，现在却用了。你如何评价这次架构转向？ </a><a href="#A5-什么时候不该用-Agent" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A5. 什么时候不该用 Agent？ </a><a href="#102-控制面Run状态中断" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.2 控制面：Run、状态、中断 </a><a href="#A6-请设计-Agent-Run-的状态机" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A6. 请设计 Agent Run 的状态机。 </a><a href="#A7-Human-in-the-loop-在图里怎么放才不会把业务状态弄脏" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A7. Human-in-the-loop 在图里怎么放，才不会把业务状态弄脏？ </a><a href="#A8-Checkpoint业务库向量库各存什么为什么不能只存一份" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A8. Checkpoint、业务库、向量库各存什么？为什么不能只存一份？ </a><a href="#A9-流式SSE在架构上的陷阱" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A9. 流式（SSE）在架构上的陷阱？ </a><a href="#103-工具Skill契约" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.3 工具、Skill、契约 </a><a href="#A10-如何设计-Tool-契约让消费方不绑死模型" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A10. 如何设计 Tool 契约，让消费方不绑死模型？ </a><a href="#A11-工具是多了好还是少了好" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A11. 工具是多了好还是少了好？ </a><a href="#A12-Skill-在架构里是什么会不会变成又一套微服务" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A12. Skill 在架构里是什么？会不会变成又一套微服务？ </a><a href="#A13-领域模型PRC和通用-NL2SQL-为什么必须分轨画一下决策树" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A13. 领域模型（PRC）和通用 NL2SQL 为什么必须分轨？画一下决策树。 </a><a href="#104-上下文记忆检索" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.4 上下文、记忆、检索 </a><a href="#A14-Context-Engineering-你的原则是什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A14. Context Engineering 你的原则是什么？ </a><a href="#A15-记忆怎么分层才不会变成提示注入面" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A15. 记忆怎么分层，才不会变成提示注入面？ </a><a href="#A16-RAG-在-Agent-里应该是工具还是默认前置检索" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A16. RAG 在 Agent 里应该是工具还是默认前置检索？ </a><a href="#A17-多源融合库--文档的架构原则" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A17. 多源融合（库 + 文档）的架构原则？ </a><a href="#105-可靠性安全多租户" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.5 可靠性、安全、多租户 </a><a href="#A18-Agent-的失败模型怎么设计" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A18. Agent 的失败模型怎么设计？ </a><a href="#A19-SQL-Agent-的安全边界怎么画" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A19. SQL Agent 的安全边界怎么画？ </a><a href="#A20-Prompt-injection-从哪进来架构怎么防" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A20. Prompt injection 从哪进来，架构怎么防？ </a><a href="#A21-多租户你怎么切数据面" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A21. 多租户你怎么切数据面？ </a><a href="#A22-水平扩展时-Agent-平台最容易踩什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A22. 水平扩展时 Agent 平台最容易踩什么？ </a><a href="#106-模型评测可观测组织" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.6 模型、评测、可观测、组织 </a><a href="#A23-Model-Gateway-在架构里做什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A23. Model Gateway 在架构里做什么？ </a><a href="#A24-评测如何成为架构的一部分而不是上线后的脚本" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A24. 评测如何成为架构的一部分，而不是上线后的脚本？ </a><a href="#A25-Trace-里你必须能回答哪五个问题" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A25. Trace 里你必须能回答哪五个问题？ </a><a href="#A26-单-Lead--工具-vs-多-Subagent怎么选" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A26. 单 Lead + 工具 vs 多 Subagent，怎么选？ </a><a href="#A27-若让你为新业务加一条风险归因工作流架构步骤是什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A27. 若让你为新业务加一条「风险归因工作流」，架构步骤是什么？ </a><a href="#A28-你如何带一个-Agent-平台团队边界怎么拆" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A28. 你如何带一个 Agent 平台团队？边界怎么拆？ </a><a href="#A29-12-个月技术演进你怎么排" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A29. 12 个月技术演进你怎么排？ </a><a href="#A30-如果只能改-X-Agent-的三件事你改哪三件为什么" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A30. 如果只能改 X-Agent 的三件事，你改哪三件？为什么？ </a><a href="#107-架构师现场白板DCT-一分钟版" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.7 架构师现场白板：DCT 一分钟版 </a><a href="#108-追加题说明" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.8 追加题说明 </a><a href="#109-框架协议与-Build-vs-Buy" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.9 框架、协议与 Build vs Buy </a><a href="#A31-LangGraphTemporal自研状态机怎么选主编排" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A31. LangGraph、Temporal、自研状态机，怎么选主编排？ </a><a href="#A32-为什么不是-CrewAI--AutoGen--纯-OpenAI-Assistants-API" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A32. 为什么不是 CrewAI / AutoGen / 纯 OpenAI Assistants API？ </a><a href="#A33-MCP-在架构里扮演什么和-Function-CallingOpenAPI-Tool-的关系" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A33. MCP 在架构里扮演什么？和 Function Calling、OpenAPI Tool 的关系？ </a><a href="#A34-A2A--Agent-互调协议要不要上" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A34. A2A / Agent 互调协议要不要上？ </a><a href="#A35-继续用开源-DeerFlow-还是-fork-成内部框架" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A35. 继续用开源 DeerFlow 还是 fork 成内部框架？ </a><a href="#A36-Semantic-Kernel--ADK--自研-Python-agent-loop-呢" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A36. Semantic Kernel / ADK / 自研 Python agent loop 呢？ </a><a href="#1010-规划模式结构化输出与确定性" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.10 规划模式、结构化输出与确定性 </a><a href="#A37-ReActPlan-and-ExecuteReWOOLAT生产怎么配" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A37. ReAct、Plan-and-Execute、ReWOO、LAT，生产怎么配？ </a><a href="#A38-要不要强制模型先输出-JSON-计划再执行" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A38. 要不要强制模型先输出 JSON 计划再执行？ </a><a href="#A39-结构化输出JSON-Schema语法约束-SQL怎么用" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A39. 结构化输出、JSON Schema、语法约束 SQL，怎么用？ </a><a href="#A40-温度采样可复现性如何作为架构约束" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A40. 温度、采样、可复现性如何作为架构约束？ </a><a href="#A41-并行-tool-call-与依赖-tool-call-怎么调度" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A41. 并行 tool call 与依赖 tool call 怎么调度？ </a><a href="#A42-Code-Interpreter--写-Python-当万能工具行不行" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A42. Code Interpreter / 写 Python 当万能工具，行不行？ </a><a href="#A43-要不要-Fine-tune和-RAGSkillMDL-怎么排" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A43. 要不要 Fine-tune？和 RAG、Skill、MDL 怎么排？ </a><a href="#1011-可靠性一致性容量与发布" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.11 可靠性、一致性、容量与发布 </a><a href="#A44-Checkpoint-与-dct_-双写如何保证用户看到的一致" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A44. Checkpoint 与 dct_ 双写如何保证用户看到的一致？ </a><a href="#A45-同一-Thread-多-Tab--连发怎么设计" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A45. 同一 Thread 多 Tab / 连发，怎么设计？ </a><a href="#A46-客户端断开后-Run-继续还是取消" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A46. 客户端断开后 Run 继续还是取消？ </a><a href="#A47-幂等重试死信怎么做" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A47. 幂等、重试、死信怎么做？ </a><a href="#A48-给-Agent-定什么-SLISLO" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A48. 给 Agent 定什么 SLI/SLO？ </a><a href="#A49-限流配额吵闹邻居" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A49. 限流、配额、吵闹邻居？ </a><a href="#A50-缓存精确语义Prompt-cache各用在哪" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A50. 缓存：精确、语义、Prompt cache，各用在哪？ </a><a href="#A51-LLM-熔断降级hedged-request" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A51. LLM 熔断、降级、hedged request？ </a><a href="#A52-SkillPrompt-怎么做灰度与回滚" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A52. Skill/Prompt 怎么做灰度与回滚？ </a><a href="#A53-如何对非确定性系统做测试金字塔" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A53. 如何对非确定性系统做测试金字塔？ </a><a href="#1012-安全进阶身份药企合规" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.12 安全进阶、身份、药企合规 </a><a href="#A54-工具层的-Confused-Deputy--SSRF-怎么防" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A54. 工具层的 Confused Deputy / SSRF 怎么防？ </a><a href="#A55-Casbin-全局-RBAC-vs-工具级授权差在哪" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A55. Casbin 全局 RBAC vs 工具级授权，差在哪？ </a><a href="#A56-沙箱威胁模型K8s-provisioner-什么时候要" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A56. 沙箱威胁模型？K8s provisioner 什么时候要？ </a><a href="#A57-检查点对话SQL-结果里的-PII-怎么办" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A57. 检查点、对话、SQL 结果里的 PII 怎么办？ </a><a href="#A58-药企场景还要多说什么GxP--审计" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A58. 药企场景还要多说什么（GxP / 审计）？ </a><a href="#A59-连接串轮换MDL-变更embedding-升级如何做不停机" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A59. 连接串轮换、MDL 变更、embedding 升级如何做不停机？ </a><a href="#A60-密钥与配置拓扑" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A60. 密钥与配置拓扑？ </a><a href="#1013-语义层Text-to-SQL指标架构" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.13 语义层、Text-to-SQL、指标架构 </a><a href="#A61-WrenMDLdbt-metricsCubeLookML怎么放" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A61. Wren/MDL、dbt metrics、Cube、LookML，怎么放？ </a><a href="#A62-Text-to-SQL-为什么在生产远难于-SpiderBIRD" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A62. Text-to-SQL 为什么在生产远难于 Spider/BIRD？ </a><a href="#A63-Schema-linking值召回查询改写各放哪一层" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A63. Schema linking、值召回、查询改写，各放哪一层？ </a><a href="#A64-自修正-SQL-循环如何防止空转" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A64. 自修正 SQL 循环如何防止空转？ </a><a href="#A65-指标口径冲突两张表两个-titer谁说了算" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A65. 指标口径冲突（两张表两个 titer）谁说了算？ </a><a href="#A66-查询治理超时扫描上限只读副本" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A66. 查询治理：超时、扫描上限、只读副本？ </a><a href="#1014-RAG文档多模态进阶" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.14 RAG、文档、多模态进阶 </a><a href="#A67-长上下文能不能替代-RAG" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A67. 长上下文能不能替代 RAG？ </a><a href="#A68-GraphRAG知识图谱MDL-何时用哪个" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A68. GraphRAG、知识图谱、MDL 何时用哪个？ </a><a href="#A69-Embedding-模型换代分块策略父块展开的架构约束" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A69. Embedding 模型换代、分块策略、父块展开的架构约束？ </a><a href="#A70-图片表格视频在-Agent-里怎么成为一等证据" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A70. 图片、表格、视频在 Agent 里怎么成为一等证据？ </a><a href="#A71-OnlyOffice--预览-在安全架构里的位置" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A71. OnlyOffice / 预览 在安全架构里的位置？ </a><a href="#1015-产物前端体验即架构" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.15 产物、前端、体验即架构 </a><a href="#A72-Artifact-协议怎么设计" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A72. Artifact 协议怎么设计？ </a><a href="#A73-为什么问题树要轮询而不是只靠-SSE" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A73. 为什么问题树要轮询而不是只靠 SSE？ </a><a href="#A74-语言对齐单位时区是不是小事" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A74. 语言对齐、单位、时区是不是小事？ </a><a href="#A75-要不要给用户看置信度分数" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A75. 要不要给用户看置信度分数？ </a><a href="#1016-成本路由与小模型" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.16 成本、路由与小模型 </a><a href="#A76-如何做模型级联FrugalGPT" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A76. 如何做模型级联（FrugalGPT）？ </a><a href="#A77-成本归集怎么做才有管理意义" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A77. 成本归集怎么做才有管理意义？ </a><a href="#A78-内部小模型做意图识别替代-Skill-描述行不行" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A78. 内部小模型做意图识别，替代 Skill 描述行不行？ </a><a href="#1017-组织供应商与平台化" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.17 组织、供应商与平台化 </a><a href="#A79-Agent-平台-vs-嵌入业务的-Agent-产品团队怎么切" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A79. Agent 平台 vs 嵌入业务的 Agent 产品，团队怎么切？ </a><a href="#A80-供应商锁定模型框架向量库语义引擎" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A80. 供应商锁定：模型、框架、向量库、语义引擎？ </a><a href="#A81-要不要做内部-Skill-市场" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A81. 要不要做内部 Skill 市场？ </a><a href="#1018-现场设计题与事故题" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.18 现场设计题与事故题 </a><a href="#A82-白板设计支撑-1k-并发会话的企业-Agent" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A82. 白板：设计支撑 1k 并发会话的企业 Agent。 </a><a href="#A83-白板设计-Agent-评测平台" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A83. 白板：设计 Agent 评测平台。 </a><a href="#A84-事故SQL-把生产打满你怎么改架构" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A84. 事故：SQL 把生产打满。你怎么改架构？ </a><a href="#A85-事故文档投毒导致-Agent-泄露其他项目" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A85. 事故：文档投毒导致 Agent 泄露其他项目。 </a><a href="#A86-事故澄清死循环--用户骂一直问" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A86. 事故：澄清死循环 / 用户骂「一直问」。 </a><a href="#A87-事故有答案无报告架构视角" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A87. 事故：有答案无报告（架构视角）。 </a><a href="#A88-设计让-Agent-定时每天生成风险简报" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A88. 设计：让 Agent 定时每天生成风险简报。 </a><a href="#A89-设计Agent-触发创建偏差调查单" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A89. 设计：Agent 触发「创建偏差调查单」。 </a><a href="#A90-反问面试官的问题也是加分项" class="post-toc-link depth-4" data-astro-cid-7jjqptxk> A90. 反问面试官的问题（也是加分项）。 </a><a href="#1019-架构师速查题型对照" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.19 架构师速查：题型对照 </a><a href="#1020-架构师不该说的话" class="post-toc-link depth-3" data-astro-cid-7jjqptxk> 10.20 架构师不该说的话 </a><a href="#维护说明" class="post-toc-link depth-2" data-astro-cid-7jjqptxk> 维护说明 </a> </nav> </aside> <div class="post-main" data-astro-cid-7jjqptxk> <div class="post-prose prose" data-astro-cid-7jjqptxk><h1 id="X-Agent-平台全景">X-Agent 平台全景</h1>
+<pre><code>面向生物工艺数据 Agent 
+</code></pre>
+<p><strong>阅读地图</strong></p>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>§1–3</td>
+<td>业务、用户、PRD 目标 vs 现状 Scope、Wren / Skill / RAG 三条取数轨道</td>
+</tr>
+<tr>
+<td>§4</td>
+<td>四类数据面：业务表、MDL、<code>dct_*</code>、COS + Qdrant</td>
+</tr>
+<tr>
+<td>§5</td>
+<td>Nginx → Next 鉴权 BFF → Gateway <code>lead_agent</code>；Wren 已 in-process</td>
+</tr>
+<tr>
+<td>§6–7</td>
+<td>场景对照、技术债（共享 corpus、Gateway 管理面弱鉴权）</td>
+</tr>
+<tr>
+<td>§8</td>
+<td>项目向口述题 Q1–Q32</td>
+</tr>
+<tr>
+<td>§10</td>
+<td>Agent 架构师题 A1–A90（无 §9，目录从 8 跳到 10）</td>
+</tr>
+</tbody></table>
+<p><strong>面试提示</strong>：先声明讲的是 <strong>PRD 目标</strong> 还是 <strong>代码现状</strong>。Thread 问答闭环已有；Dashboard 闭环、ABCDE 规则化归因、Workspace 多租户 RAG 仍在演进或未落地。</p>
+<h2 id="1-一句话">1. 一句话</h2>
+<p><strong>X-Agent</strong> 是面向生物制药工艺数据的对话式 AI Agent 平台：用户用自然语言提出跨项目、跨批次问题，系统编排取数 → 分析 → 归因 → 建议 → 结构化报告，并把结果沉淀为可回看的问题树、章节与图表。</p>
+<p>不是从零自研的通用聊天机器人，而是把三套能力缝合成企业工作台：</p>
+<table>
+<thead>
+<tr>
+<th>底座</th>
+<th>来源</th>
+<th>在  中的角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DeerFlow 2.0</td>
+<td>开源 LangGraph Super Agent</td>
+<td>Agent Runtime：中间件、Skills、MCP、Subagent、Sandbox、SSE</td>
+</tr>
+<tr>
+<td>Wren（已内化）</td>
+<td>参考新版 WrenAI 重写进 harness</td>
+<td>语义层 NL2SQL、SQL dry-plan/执行、业务库连接、图表生成</td>
+</tr>
+<tr>
+<td>file-search-RAG</td>
+<td>自研</td>
+<td>PDF/Office/视频文档解析、混合检索、带引用的文档问答</td>
+</tr>
+</tbody></table>
+<h2 id="2-业务背景">2. 业务背景</h2>
+<h3 id="21-场景">2.1 场景</h3>
+<p>工艺管理中，<strong>Function Head / Function Lead</strong> 要在同一套态势里同时回答四类问题：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>典型关注点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>范围</td>
+<td>多个项目、多个批次、多个工艺阶段（NPP Upstream、cMFG 等）</td>
+</tr>
+<tr>
+<td>结果指标</td>
+<td>Titer（表达量）分布是否异常</td>
+</tr>
+<tr>
+<td>过程指标</td>
+<td>Lactate、VCD、VIA、pCO2、Glucose、pO2 等（常称 <strong>ABCDE</strong> 相关因子）</td>
+</tr>
+<tr>
+<td>决策</td>
+<td>是否出现风险批次、原因是什么、下一步如何调整</td>
+</tr>
+</tbody></table>
+<p>分析师的传统路径是：切报表 → 透视 → 画图 → 写结论。瓶颈不在「会不会分析」，而在 <strong>入口分散、口径靠人、链路断、结论难沉淀</strong>：</p>
+<ul>
+<li><strong>数据散</strong>：项目视图、批次视图、文档、培养时序表不在同一入口。</li>
+<li><strong>口径不统一</strong>：风险批次判定高度依赖个人经验。</li>
+<li><strong>链路长</strong>：从「看见异常」到「归因 + 建议 + 汇报材料」需反复切换工具。</li>
+<li><strong>难复盘</strong>：结论散落在聊天、PPT、个人笔记，无法按问题树回看。</li>
+</ul>
+<blockquote>
+<p>管理层需要的不是更多原始切片，而是 <strong>结论 + 风险 + 建议 + 图表 + 可追溯证据</strong> 的一体化输出。</p>
+</blockquote>
+<h3 id="22-产品要解决什么">2.2 产品要解决什么</h3>
+<p>产品目标是把一次提问从「听懂」到「可汇报」收成 <strong>一条 Agent 编排链路</strong>，而不是散落在多个工具里的手工步骤：</p>
+<pre><code class="language-text">意图识别 → 上下文构建 → 任务规划 → 能力执行 → 结果校验 → 管理输出
+</code></pre>
+<p>用户在 <strong>对话工作台（Thread）</strong> 内应能闭环完成以下能力（与 §2.1 的四类问题一一对应）：</p>
+<table>
+<thead>
+<tr>
+<th>用户要完成的事</th>
+<th>典型产出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>跨项目监控与报表问答</td>
+<td>KPI / 趋势 / 对比表与 Vega 图</td>
+</tr>
+<tr>
+<td>Titer / 工艺指标分析</td>
+<td>分布、分层、异常批次视图</td>
+</tr>
+<tr>
+<td>风险批次识别与因子归因</td>
+<td>风险等级、ABCDE 等因子解释</td>
+</tr>
+<tr>
+<td>改善建议与结构化报告</td>
+<td>行动项、章节化摘要、可导出报告区</td>
+</tr>
+<tr>
+<td>文档与库表证据并用</td>
+<td>方案/报告/视频纪要与 SQL 结果 <strong>分栏引用</strong>；冲突与缺失 <strong>显式标注</strong></td>
+</tr>
+</tbody></table>
+<p>编排层负责路由（Wren / RAG / 领域 Skill）、打断澄清与落库；体验层负责多轮推进与 <strong>问题树回看</strong>（<code>question</code> → section / chart）。</p>
+<h3 id="23-目标用户">2.3 目标用户</h3>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>关注点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Function Head</td>
+<td>跨项目态势、风险分布、可汇报摘要与图表</td>
+</tr>
+<tr>
+<td>Function Lead / 工艺科学家</td>
+<td>单项目、单批次、单指标深挖与调参建议</td>
+</tr>
+<tr>
+<td>Platform Admin</td>
+<td>登录鉴权、RBAC、建模配置、评测与审计</td>
+</tr>
+</tbody></table>
+<h3 id="24-明确不做非目标">2.4 明确不做（非目标）</h3>
+<p>不自动改生产系统参数、不闭环执行工艺调整</p>
+<p>不是通用 AutoML / 全自动实验设计平台</p>
+<p>不是无边界开放式闲聊助手</p>
+<p>不允许脱离业务规则与证据的自由结论</p>
+<h2 id="3-产品-Scope">3. 产品 Scope</h2>
+<p>产品有两层 Scope：PRD 目标态，以及当前代码已落地的工作台。面试或评审时先声明「讲目标还是讲现状」。</p>
+<h3 id="31-目标态能力地图PRD-V2">3.1 目标态能力地图（PRD V2）</h3>
+<p>PRD 按优先级分三档；<strong>P0 = 决策闭环必需</strong>，P1 = 汇报与建议增强，P2 = 平台化与治理。</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>能力</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>P0</strong></td>
+<td>跨项目数据报表查看</td>
+<td>多项目 KPI、趋势、对比</td>
+</tr>
+<tr>
+<td><strong>P0</strong></td>
+<td>Titer 分布分析</td>
+<td>项目/批次分布、分层、异常</td>
+</tr>
+<tr>
+<td><strong>P0</strong></td>
+<td>风险批次识别</td>
+<td>规则 + 多指标偏离，输出等级与标签</td>
+</tr>
+<tr>
+<td><strong>P0</strong></td>
+<td>风险原因 / 因子重要性</td>
+<td>Lactate、VCD、VIA、pCO2、Glucose、pO2 等单因子/多因子</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>AI 改善建议</td>
+<td>优先改善指标与行动建议</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>图表生成与导出</td>
+<td>管理汇报可用图 + 说明</td>
+</tr>
+<tr>
+<td><strong>P1</strong></td>
+<td>分析报告生成与导出</td>
+<td>摘要 + 图 + 归因 + 建议</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>定制工作流 / 专项模板</td>
+<td>周期报告、专项场景</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>历史记忆与案例复用</td>
+<td>已确认结论与规则沉淀</td>
+</tr>
+<tr>
+<td><strong>P2</strong></td>
+<td>评测与建议质量治理</td>
+<td>准确性、解释性、可接受度</td>
+</tr>
+</tbody></table>
+<p><strong>页面目标形态（PRD 收敛为三块）</strong></p>
+<table>
+<thead>
+<tr>
+<th>页面 / 区域</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Dashboard</strong></td>
+<td>跨项目/年度总览（KPI、反应器/规模分布、Titer overview）</td>
+</tr>
+<tr>
+<td><strong>Thread</strong></td>
+<td>唯一深度分析页：对话 + 多轮推进 + 结构化产物</td>
+</tr>
+<tr>
+<td><strong>Analysis Panel</strong></td>
+<td>图表、表格、结论、行动项、导出（产品上是报告区，<strong>不一定是独立路由</strong>）</td>
+</tr>
+</tbody></table>
+<h3 id="32-当前已落地-Scope工作台">3.2 当前已落地 Scope（工作台）</h3>
+<blockquote>
+<p><strong>现状一句话</strong>：默认体验更接近 <strong>「聊天流内嵌结构化报告」</strong>，而不是 PRD 里完整的三栏独立 Question Panel。</p>
+</blockquote>
+<h4 id="已具备">已具备</h4>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>能力要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>运行时</strong></td>
+<td>多轮 Thread、SSE 流式、可恢复流；可选 Plan Mode / Subagent</td>
+</tr>
+<tr>
+<td><strong>库表取数</strong></td>
+<td><code>database_query</code>（Wren 语义层，in-process）</td>
+</tr>
+<tr>
+<td><strong>文档问答</strong></td>
+<td><code>rag_file_search</code>（file-search-RAG）：PDF 页级解析、Office、视频转写</td>
+</tr>
+<tr>
+<td><strong>默认 Q&amp;A</strong></td>
+<td><code>question-and-answer</code> Skill：未指定来源时 <strong>库 + 文档双路</strong>；回答须标注库证、文档证、缺失与冲突</td>
+</tr>
+<tr>
+<td><strong>产物落库</strong></td>
+<td><code>thread</code> → <code>question</code> → <code>section</code> → <code>chart</code>；前端轮询问题树</td>
+</tr>
+<tr>
+<td><strong>图表契约</strong></td>
+<td>Vega-Lite enrichment（库表答案 <strong>禁止</strong> matplotlib 静图）</td>
+</tr>
+<tr>
+<td><strong>澄清</strong></td>
+<td>实体词典 + NL2SQL 澄清（歧义可打断；<strong>可见问句保持用户原文</strong>）</td>
+</tr>
+<tr>
+<td><strong>领域 Skill</strong>（与通用报表分轨）</td>
+<td><code>database-query</code> / <code>file-search</code>（Q&amp;A 子技能）</td>
+</tr>
+<tr>
+<td><strong>建模管理</strong></td>
+<td>Gateway <code>/api/dbquery/*</code>（数据源、模型、关系、知识、SQL-pair）</td>
+</tr>
+<tr>
+<td><strong>登录</strong></td>
+<td>JWT + 邮箱白名单 + Casbin RBAC（<strong>主鉴权在 Next.js</strong>）</td>
+</tr>
+<tr>
+<td><strong>评测</strong></td>
+<td>独立 <code>eval-service</code> + <code>eval_golden_set</code> / <code>eval_evidence</code></td>
+</tr>
+<tr>
+<td><strong>Office</strong></td>
+<td>OnlyOffice 预览/编辑</td>
+</tr>
+</tbody></table>
+<h4 id="部分落地--演进中">部分落地 / 演进中</h4>
+<ul>
+<li>Dashboard 看板与「风险行动项提交锁定」完整闭环</li>
+<li>ABCDE 归因与因子重要性的 <strong>细粒度规则化</strong></li>
+<li>报告 <strong>正式导出中心</strong>（现多在对话内 ReportCard / SectionCard）</li>
+</ul>
+<h4 id="明确未落地设计稿">明确未落地（设计稿）</h4>
+<ul>
+<li><strong>Workspace 多租户</strong>与按团队隔离的 RAG corpus（现状 <code>corpus_id=default</code> 全站共享）</li>
+<li><strong>自研 Workflow Orchestrator</strong>（已被 DeerFlow <code>lead_agent</code> 取代；<strong>勿按 V2 架构稿改编排层</strong>）</li>
+</ul>
+<h3 id="33-产品边界取数轨道库表--领域--文档">3.3 产品边界：取数轨道（库表 / 领域 / 文档）</h3>
+<p>核心原则：<strong>语义所有权分轨</strong>——汇总指标走 Wren，培养时序与模型走 Skill+沙箱，规程证据走 RAG；禁止跨轨「猜 JOIN」或从文档词推断库表字段。</p>
+<table>
+<thead>
+<tr>
+<th>轨道</th>
+<th>适用问题</th>
+<th>执行方式</th>
+<th>禁止事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语义层（Wren）</td>
+<td>项目/批次/年份等业务汇总：<code>total_titer</code>、<code>project_info</code>、排名、趋势</td>
+<td>Agent 调 <code>database_query</code></td>
+<td>不要用沙箱 Python 画静图</td>
+</tr>
+<tr>
+<td>领域 Skill + 沙箱</td>
+<td><code>cultureid</code> 时序、模型推荐</td>
+<td><code>python3</code> + 技能内 <code>db_config.yaml</code></td>
+<td><code>toolbox-*</code> 显式 <code>disallowed-tools: database_query</code>，避免两套语义打架</td>
+</tr>
+<tr>
+<td>文档 RAG</td>
+<td>上传 PDF/Office/视频、选定 references</td>
+<td><code>rag_file_search</code></td>
+<td>文档未写字段（如分子类型）<strong>不得</strong>从 titer 等词推断</td>
+</tr>
+</tbody></table>
+<p>路由契约见 <code>skills/public/question-and-answer/SKILL.md</code>：<strong>Skill 是决策合同</strong>，真正执行仍走子技能与工具。</p>
+<h2 id="4-数据">4. 数据</h2>
+<p>X-Agent 里至少有 <strong>四类数据平面</strong>，不要当成「一张库、一个向量库」：</p>
+<pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│ A. 业务事实数据（工艺/培养，给 NL2SQL 或 Skill 查询）         │
+│ B. 语义与建模元数据（Wren MDL、词典、SQL-pair、连接串）       │
+│ C. 对话与结构化产物（Thread / Question / Section / Chart）  │
+│ D. 非结构化文档与向量（上传件、Qdrant chunk、视频字幕）       │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>存储</th>
+<th>承载平面</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Postgres</strong></td>
+<td>A 部分汇总表、B 元数据、C 全量、D 文档元数据</td>
+<td>Prisma（前端/RBAC）、<code>wren_*</code> <strong>共库</strong>；后端 psycopg <strong>只读写、不擅自建表</strong></td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>D 文档 chunk</td>
+<td>dense + BM25；<code>collection ≈ {prefix}_{corpus_id}</code></td>
+</tr>
+<tr>
+<td><strong>LanceDB</strong></td>
+<td>B 侧 Wren 语义记忆</td>
+<td><strong>不与</strong> file-search 向量混 collection</td>
+</tr>
+<tr>
+<td><strong>COS</strong></td>
+<td>D 原件与转换件</td>
+<td>与 ingest / 预览 sidecar 配合</td>
+</tr>
+</tbody></table>
+<h3 id="41-A-业务事实数据">4.1 A. 业务事实数据</h3>
+<h4 id="411-业务汇总表Wren--database_query">4.1.1 业务汇总表（Wren / <code>database_query</code>）</h4>
+<p>语义层对接内部工艺汇总模型,实体词典默认扫描列包括 <code>project_base_info</code> 上的 <code>cell_bank</code>、<code>purpose</code> 等</p>
+<ul>
+<li><strong>典型问法</strong>：项目信息、批次汇总、年份分布、total titer / yield、部门/位点/分子类型维度。</li>
+<li><strong>SQL 约束</strong>：必须走 MDL 模型名与列名；PostgreSQL 数值用 <code>DOUBLE PRECISION</code>；批次号 JOIN 有 <strong>X/Y 后缀规范化</strong> 规则。</li>
+<li><strong>连接安全</strong>：Fernet 加密存储（<code>connection_security.py</code>），<strong>不与</strong>应用 JWT 密钥混用。</li>
+</ul>
+<h3 id="42-B-语义与建模元数据Wren">4.2 B. 语义与建模元数据（Wren）</h3>
+<p>由 Prisma / Gateway <code>dbquery</code> 管理，核心对象：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>表/模型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>项目</td>
+<td><code>wren_project</code></td>
+<td>数据源、catalog/schema、连接、语言</td>
+</tr>
+<tr>
+<td>模型</td>
+<td><code>wren_model</code> + columns</td>
+<td>MDL：逻辑表 ↔ 物理表</td>
+</tr>
+<tr>
+<td>关系 / 视图 / 指令 / SQL-pair</td>
+<td><code>wren_*</code></td>
+<td>少样本、业务指令、已知好 SQL</td>
+</tr>
+<tr>
+<td>实体词典</td>
+<td><code>entity_dictionary_entry</code></td>
+<td>项目/批次/细胞库等字面量消歧</td>
+</tr>
+<tr>
+<td>澄清选择</td>
+<td><code>nl2sql_clarification_choice</code></td>
+<td>跨会话「一人一票」澄清记忆</td>
+</tr>
+</tbody></table>
+<p><strong>运行时</strong>：LLM 做 NL2SQL → <code>WrenEngine.dry_plan</code> / <code>query</code> <strong>进程内</strong>执行；语义记忆用嵌入式 <strong>LanceDB</strong>（Wren 不再用 Qdrant 召回）。</p>
+<p><strong><code>database_query</code> 对外契约</strong>（内化 Wren 时不得破坏）：<code>status</code> / <code>sub_results</code> / <code>partial_failures</code> / <code>internal_metrics</code>。图表 enrichment、message parser、strict routing 均按此工具名硬编码。</p>
+<h3 id="43-C-对话与结构化产物Postgres--Prisma-dct_">4.3 C. 对话与结构化产物（Postgres / Prisma <code>dct_*</code>）</h3>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>thread</code></td>
+<td>与 LangGraph <code>thread_id</code> 对齐；<code>created_by</code> 为 owner</td>
+</tr>
+<tr>
+<td><code>question</code></td>
+<td>单轮问题：PENDING→完成/失败、短答、推荐追问、图表 enrichment 状态</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td>章节：标题、摘要、<code>table_sql</code>、<code>answer_detail</code> JSON</td>
+</tr>
+<tr>
+<td><code>chart</code></td>
+<td>Vega spec（<code>chart_detail</code>）+ 可选 SQL</td>
+</tr>
+<tr>
+<td><code>dashboard</code> / <code>dashboard_item</code></td>
+<td>图表钉看板</td>
+</tr>
+<tr>
+<td><code>runs</code> / <code>run_events</code></td>
+<td>Run 可恢复、跨 Pod lease、语义事件（非 SSE 镜像）</td>
+</tr>
+<tr>
+<td><code>eval_evidence</code></td>
+<td>评测原始 tool 证据（<strong>业务 HTTP 不得返回</strong>）</td>
+</tr>
+<tr>
+<td><code>eval_golden_set</code></td>
+<td>回归金标（问题 / 参考答案 / SQL）</td>
+</tr>
+</tbody></table>
+<p><strong>落库入口</strong>（内核均在 <code>deerflow.persistence</code>）</p>
+<ul>
+<li><strong>自动</strong>：<code>BootstrapMiddleware</code>（<code>before_agent</code> 建档，<code>after_agent</code> 解析）</li>
+<li><strong>显式</strong>：<code>POST /api/persistence</code></li>
+</ul>
+<p><strong>关键约束</strong></p>
+<ul>
+<li>LangGraph context <strong>缺 <code>user_id</code></strong> → 静默跳过落库（联调第一嫌疑）</li>
+<li>可见 <code>HumanMessage</code> 与 <code>database_query.query</code> <strong>保持用户原文</strong>；实体 glossary 只进 hidden system</li>
+<li>多步 SQL 的 compaction：<strong>不得</strong>把逐步原始 SQL / 全量 <code>sql_data</code> 塞进上下文</li>
+<li>失败重试后的失败结果 <strong>不得</strong>进入答案总结</li>
+</ul>
+<h3 id="44-D-文档与向量">4.4 D. 文档与向量</h3>
+<table>
+<thead>
+<tr>
+<th>存储</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Postgres <code>upload_document</code> 等</td>
+<td>文件名、COS key、ingest 状态、版本、视频字幕、费用</td>
+</tr>
+<tr>
+<td><strong>COS</strong></td>
+<td>原件、转换件、视频 sidecar（DOCX 转写 / PPTX 校正）</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>file-search：dense + 服务端 BM25</td>
+</tr>
+<tr>
+<td><strong>现状 corpus</strong></td>
+<td>默认 <code>&quot;default&quot;</code>，<strong>全登录用户共享检索</strong>（产品债）</td>
+</tr>
+</tbody></table>
+<p><strong>Ingest（简述）</strong>：Gateway 上传 → file-search 增量 skip → 按格式解析（PDF 文字页 / 图表页 Vision OCR、Office→PDF、XLSX、视频 Markdown）→ 切片 → embedding → upsert。</p>
+<p><strong>检索</strong>：混合召回，可选 rerank 与父块展开；返回带 <code>document_name</code> / <code>page_number</code> 的 evidence。</p>
+<h3 id="45-数据流主路径记住这一条">4.5 数据流主路径（记住这一条）</h3>
+<pre><code class="language-text">用户提问
+  → Next.js（JWT）注入 user_id
+  → Gateway 执行 lead_agent
+  → Bootstrap：dthread + question(PENDING)
+  → Skill 路由：database_query 和/或 rag_file_search（或沙箱 Skill）
+  → SSE 流式答案
+  → persist：section / chart
+  → 前端轮询 /api/frontend/thread-questions 刷新问题树
+</code></pre>
+<h2 id="5-技术架构">5. 技术架构</h2>
+<p><strong>主线</strong>：体验层只打 Next BFF → Gateway 跑 <code>lead_agent</code> → 能力面（Wren / file-search / 沙箱 Skill）→ 四类存储（§4）。</p>
+<h3 id="51-分层">5.1 分层</h3>
+<pre><code class="language-text">浏览器
+  → Nginx :2026（只分流，不做鉴权）
+  → Next.js UI + BFF（主鉴权：JWT / 白名单 / Casbin）
+      → /api/frontend/*   问题树、me、dashboard
+      → /api/backend/*    转 Gateway
+      → /api/langgraph/*  LangGraph 兼容协议（上游仍是 Gateway）
+  → FastAPI Gateway :8001 → lead_agent 图执行
+      （独立 LangGraph Server 已从主路径下线，以 compose/现状文档为准）
+  → harness：中间件 + tools + dct + community/wren_ai
+  → packages/wren：WrenEngine + LanceDB
+  → file-search-service :8008 → Qdrant
+  → Postgres / OnlyOffice / eval-service / 可选 sandbox provisioner
+</code></pre>
+<p>两条硬边界：</p>
+<ul>
+<li>浏览器只打 Next 同源路由；后端不对公网暴露。</li>
+<li>Harness（<code>deerflow.*</code>）禁止 <code>import app.*</code>，由 <code>test_harness_boundary.py</code> 守护。</li>
+</ul>
+<h3 id="52-技术栈">5.2 技术栈</h3>
+<table>
+<thead>
+<tr>
+<th>子系统</th>
+<th>运行时</th>
+<th>关键依赖</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>frontend/</code></td>
+<td>Node / TS</td>
+<td>Next.js 16、React 19、LangGraph SDK、TanStack Query、Prisma、Casbin、Vega</td>
+</tr>
+<tr>
+<td><code>backend/</code> Gateway + Harness</td>
+<td>Python 3.12+</td>
+<td>FastAPI、LangGraph/LangChain、sse-starlette、psycopg</td>
+</tr>
+<tr>
+<td><code>backend/packages/wren</code></td>
+<td>in-process</td>
+<td>wren-core-py（Rust wheel，锁 linux/amd64）、sqlglot、duckdb、LanceDB</td>
+</tr>
+<tr>
+<td><code>file-search-RAG/</code></td>
+<td>Python</td>
+<td>FastAPI、PyMuPDF、VLM OCR、Qdrant</td>
+</tr>
+<tr>
+<td><code>eval-service/</code></td>
+<td>Python</td>
+<td>独立评分服务</td>
+</tr>
+<tr>
+<td>模型</td>
+<td>统一网关</td>
+<td>LiteLLM / 公司 AI Gateway；可观测预留 Langfuse</td>
+</tr>
+</tbody></table>
+<p>本地/生产入口（根目录 Makefile）：<code>make config</code> / <code>install</code> / <code>dev</code> / <code>docker-start</code> / <code>up</code>。浏览器统一 <code>localhost:2026</code>（生产宿主机常映射 <code>12026</code>）。</p>
+<h3 id="53-Agent-运行时">5.3 Agent 运行时</h3>
+<p><code>make_lead_agent</code> 装配模型、工具与中间件。<strong>中间件是可 checkpoint 的图节点</strong>，不是 prompt 里的 if-else。</p>
+<table>
+<thead>
+<tr>
+<th>链路段</th>
+<th>中间件（节选）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>运行时段</strong></td>
+<td>ThreadData → Uploads → Sandbox → DanglingToolCall → StrictWrenRouting → ToolErrorHandling</td>
+</tr>
+<tr>
+<td><strong>业务段</strong></td>
+<td>DctBootstrap → Followup → NL2SQL 澄清 → EntityRewrite → Summarization → Todo（plan）→ Title → Memory → LoopDetection → LanguageAlignment → CitationEvidence → ContextTruncation → <strong>Clarification（链末拦截）</strong></td>
+</tr>
+</tbody></table>
+<p><strong>生产 Agent vs Demo</strong>：实体消歧不改可见 query；非法 tool call 可重试一次；多步 SQL <strong>按依赖 DAG</strong> 完成（非全局串行）；图表类型尊重用户显式请求。</p>
+<h3 id="54-Wren-内化架构迁移要点">5.4 Wren 内化（架构迁移要点）</h3>
+<p>原先 <strong>6 个容器</strong>（wren-ai-service / wren-ui / wren-engine / ibis-server / wren-bootstrap + Wren 用 Qdrant）已下线。能力迁移：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>backend/packages/wren</code></td>
+<td>引擎与记忆</td>
+</tr>
+<tr>
+<td><code>deerflow/community/wren_ai/*</code></td>
+<td>NL2SQL、聚合工具、护栏、图表</td>
+</tr>
+<tr>
+<td><code>app/gateway/dbquery/</code></td>
+<td>管理面 REST</td>
+</tr>
+</tbody></table>
+<p><strong>SQL 安全四层</strong>：单语句、SELECT-only、函数黑名单、行数 / <code>statement_timeout</code>。Apple Silicon 本地开发需注意 <strong>amd64 wheel</strong>。</p>
+<h3 id="55-鉴权与治理现状不要美化">5.5 鉴权与治理（现状，不要美化）</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>现状</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nginx</strong></td>
+<td>只分流，<strong>无鉴权</strong></td>
+</tr>
+<tr>
+<td><strong>Next.js</strong></td>
+<td><strong>主鉴权</strong>（JWT / 白名单 / Casbin）；Thread / Report / Persistence 绑 <strong>X-Agent owner</strong></td>
+</tr>
+<tr>
+<td><strong>RAG / 上传</strong></td>
+<td>默认 <strong>全局共享 corpus</strong>（产品例外，非私有隔离）</td>
+</tr>
+<tr>
+<td><strong>Gateway 管理面</strong></td>
+<td>Memory / MCP / Skills 安装等仍有「代码层弱鉴权」债；生产靠统一入口 + 内网不直连</td>
+</tr>
+</tbody></table>
+<p>Workspace 多租户见 <code>workspace多租户与文件权限设计.md</code>，<strong>尚未实现</strong>。面试勿包装成「已零信任」。</p>
+<h3 id="56-仓库拓扑找代码">5.6 仓库拓扑（找代码）</h3>
+<pre><code class="language-text">digital-control-tower/
+├── frontend/                 # UI + BFF + Prisma + Casbin
+├── backend/
+│   ├── app/gateway/          # FastAPI、dbquery、persistence
+│   └── packages/
+│       ├── harness/deerflow/ # Agent、dct、wren_ai、skills 运行时
+│       └── wren/             # in-process 引擎
+├── file-search-RAG/
+├── eval-service/
+├── skills/public/            # 产品 Skills（Q&amp;A、toolbox、host）
+├── docker/                   # compose + nginx
+└── docs/
+</code></pre>
+<p>wren-ai-service/、wren-ui/ 若仍出现在旧文档或残留目录中，视为历史世代，不以它们为运行时真相。</p>
+<h2 id="6-端到端场景对照">6. 端到端场景对照</h2>
+<p>典型问法与 §3.3 三轨取数、§4.5 主路径对照：</p>
+<table>
+<thead>
+<tr>
+<th>用户问题类型</th>
+<th>产品模块</th>
+<th>数据</th>
+<th>技术路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>「各项目今年 Titer 怎么样」</td>
+<td>跨项目报表 / Titer 分布</td>
+<td>Wren 业务汇总表</td>
+<td>Q&amp;A → <code>database_query</code> → Vega</td>
+</tr>
+<tr>
+<td>「这批为什么低，和 Lactate 有没有关」</td>
+<td>风险归因</td>
+<td>汇总表 + 可选文档</td>
+<td>双路检索 + 证据分栏</td>
+</tr>
+<tr>
+<td>「cultureid 3228FX059 建议怎么调」</td>
+<td>工艺推荐</td>
+<td>BioFoundry + PRC 模型</td>
+<td><code>toolbox-batch-process-recommendation</code> 沙箱</td>
+</tr>
+<tr>
+<td>「方案里 acceptance criteria 怎么写的」</td>
+<td>文档问答</td>
+<td>上传 PDF/Office</td>
+<td>file-search + 引用页码</td>
+</tr>
+<tr>
+<td>「把这张图钉到看板」</td>
+<td>Dashboard</td>
+<td><code>dct_chart</code> → dashboard_item</td>
+<td>前端 Prisma BFF</td>
+</tr>
+</tbody></table>
+<h2 id="7-风险技术债与后续方向">7. 风险、技术债与后续方向</h2>
+<ul>
+<li><strong>文档世代混乱</strong>：V2 PRD 的外部 Wren / 自研编排器已过时；改代码先信 <code>ARCHITECTURE_AND_JOURNEY.md</code> 与 compose 实际服务列表。</li>
+<li><strong>RAG 单租户共享</strong>：上传即全员可检索/删除风险；workspace 是下一阶段治理重点。</li>
+<li><strong>Gateway 管理面鉴权不均</strong>：Memory/MCP/Skills 写接口需管理员收口。</li>
+<li><strong>共库迁移</strong>：Prisma 与 Wren/X-Agent 表同库，禁止后端擅自 <code>CREATE TABLE</code>。</li>
+<li><strong>平台锁定</strong>：<code>wren-core-py</code> 仅 linux/amd64。</li>
+<li><strong>评测</strong>：金标 SQL + 证据冲突标注应一起演进，避免只优化「能跑出 SQL」。</li>
+</ul>
+<p><strong>建议建设顺序</strong>（产品 + 工程一致）：Gateway 二次校验与 workspace corpus 隔离 → 评测覆盖融合/冲突 → 再扩专项工作流模板。</p>
+<h2 id="8-会被问到什么项目向口述">8. 会被问到什么（项目向口述）</h2>
+<table>
+<thead>
+<tr>
+<th>小节</th>
+<th>题号</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8.1</td>
+<td>Q1–Q5</td>
+<td>开场与业务</td>
+</tr>
+<tr>
+<td>8.2</td>
+<td>Q6–Q12</td>
+<td>架构与系统设计</td>
+</tr>
+<tr>
+<td>8.3</td>
+<td>Q13–Q19</td>
+<td>Agent、中间件、Skills</td>
+</tr>
+<tr>
+<td>8.4</td>
+<td>Q20–Q26</td>
+<td>数据、NL2SQL、RAG、图表</td>
+</tr>
+<tr>
+<td>8.5</td>
+<td>Q27–Q32</td>
+<td>质量、评测、协同</td>
+</tr>
+<tr>
+<td>8.6</td>
+<td>—</td>
+<td>追问速查</td>
+</tr>
+<tr>
+<td>8.7</td>
+<td>—</td>
+<td>不该说的话</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>使用约定</strong>：这是多人协作平台。先讲系统理解，再用 1–2 个自己落地过的点（工艺推荐 Skill、早期 Wren 图表/追问）证明能力。答案按 <strong>结论 → 机制 → 代价/边界</strong> 口述约 45–90 秒；被追问再下钻到文件名。<strong>目标态（PRD）与现状（代码）务必分开说</strong>。</p>
+</blockquote>
+<h3 id="81-开场与业务">8.1 开场与业务</h3>
+<h4 id="Q1-用两分钟介绍这个项目">Q1. 用两分钟介绍这个项目。</h4>
+<p><strong>X-Agent</strong> 是工艺数据 Agent 工作台。Function Head / Lead 要用自然语言问跨项目、跨批次的问题，例如 Titer 分布、风险批次、过程指标归因、培养批次怎么调。我们不是做通用 Chatbot，而是把「取数 → 分析 → 归因 → 建议 → 结构化报告」编排起来，结果落成可回看的问题树、章节和 Vega 图。</p>
+<p>技术上是三套底座缝合：DeerFlow/LangGraph 做 Agent Runtime；Wren 语义层做 NL2SQL（已从外部服务收成进程内库）；自研 file-search 做 PDF/Office/视频 RAG。我个人主要落地过 BioFoundry 的 titer 查询 Skill，以及 PRC/PEV 工艺推荐 Skill（模型在沙箱里跑、库表取数、特征缓存挂可写卷），早期还改过 Wren 侧 titer 箱线图契约和追问推荐。</p>
+<h4 id="Q2-用户是谁他们原来怎么干活你们替代了什么">Q2. 用户是谁？他们原来怎么干活？你们替代了什么？</h4>
+<p>用户是工艺管理层和科学家。原来靠分析师切报表、透视、画图、写 PPT，口径靠经验，从「看见异常」到「可汇报材料」链路很长，结论难复盘。我们替代的是这条分析与汇报工作流的入口和沉淀，不是替代 LIMS/MES，也不自动改生产参数。输出必须带证据：库表、文档、缺失和冲突要分开写。</p>
+<h4 id="Q3-这个产品和-ChatGPT-挂个数据库有什么本质区别">Q3. 这个产品和 ChatGPT 挂个数据库有什么本质区别？</h4>
+<p>三点：① 语义层契约——不能让模型直接对业务库写任意 SQL，要走 MDL、dry_plan、SELECT-only 和列守卫；② 证据与落库——回答会解析成 dct_question/section/chart，刷新后还能回看，不是一过性 token；③ 领域分轨——通用报表走 Wren，培养时序和 PRC 模型走 Skill+沙箱，避免两套表语义打架。ChatGPT + DB 缺的是治理、可追溯和业务口径。</p>
+<h4 id="Q4-产品-Scope-里你认为最核心的-P0-是什么现在做到哪">Q4. 产品 Scope 里你认为最核心的 P0 是什么？现在做到哪？</h4>
+<p>P0 是跨项目报表、Titer 分布、风险批次识别和因子归因。现状是对话里能问汇总指标、双路检索（库+文档）、图表 enrichment、部分宿主对比和工艺推荐 Skill。Dashboard 完整看板、行动项提交锁定、细粒度 ABCDE 规则化归因还在演进。Workspace 多租户 RAG 是设计稿未落地。面试时主动说「Thread 问答闭环已有，管理看板和治理隔离还在补」。</p>
+<h4 id="Q5-为什么不做自动调工艺参数">Q5. 为什么不做自动调工艺参数？</h4>
+<p>这是药企合规边界。错误建议进生产风险不可逆。产品定位是决策支持：给结论、证据、建议，人来确认。Skill 里的 PRC/PEV 也是推荐摘要，不是下发执行指令。</p>
+<h3 id="82-架构与系统设计">8.2 架构与系统设计</h3>
+<h4 id="Q6-画一下整体架构">Q6. 画一下整体架构。</h4>
+<p>浏览器 → Nginx（只分流）→ Next.js BFF（JWT/白名单/Casbin，注入 user_id）→ FastAPI Gateway。Agent 是 lead_agent：中间件链 + 工具。取数走 database_query（LLM 生成 SQL，WrenEngine 进程内 dry_plan/query）。文档走 file-search → Qdrant。结构化结果写 Postgres 的 dct_。两条硬边界：浏览器不对 Gateway 直连；Harness（<code>deerflow.*</code>）禁止反向 import app.*。</p>
+<h4 id="Q7-为什么用-DeerFlow--LangGraph而不是自研一个-workflow-编排器">Q7. 为什么用 DeerFlow / LangGraph，而不是自研一个 workflow 编排器？</h4>
+<p>早期 V2 PRD 想自研 Orchestrator（意图→规划→门控→子流程）。后来用 DeerFlow，因为每轮要动态路由库/文档、打断澄清、多步 SQL、失败重试、SSE 与 checkpoint，固定 DAG 适合 ETL，不适合这种对话 Agent。代价是更难测，所以用大量契约测试锁行为（例如实体改写不得改可见 query）。面试加分：承认「编排器稿已过时，别照着改现有层」。</p>
+<h4 id="Q8-Wren-为什么要从独立服务收成-in-process代价是什么">Q8. Wren 为什么要从独立服务收成 in-process？代价是什么？</h4>
+<p>动机：少 6 个容器（ai-service/ui/engine/ibis/bootstrap + Wren 用 Qdrant），缩短 NL2SQL 往返，部署和排障简单。做法：引擎进 packages/wren，工具进 community/wren_ai，管理面改 Gateway /api/dbquery。对外仍叫 database_query 且 payload 契约不变，因为图表 enrichment 和 X-Agent parser 按工具名硬编码。</p>
+<p>代价：wren-core-py 锁 linux/amd64；SQL 必须四层护栏（单语句、SELECT-only、函数黑名单、行数/timeout）；本机 ARM 开发要踩镜像坑。这是「内化但不打破消费方」的企业改造。</p>
+<h4 id="Q9-Harness--App-为什么要防腐">Q9. Harness / App 为什么要防腐？</h4>
+<p>Harness 是可复用 Agent 框架，App 是 Gateway 和 IM。若 deerflow import app，框架就绑死药明网关，无法测试、无法演进。CI 有 test_harness_boundary.py。需要网关能力就依赖注入，而不是反向引用。这题在考察你有没有模块边界意识。</p>
+<h4 id="Q10-前端为什么做-BFF而不是浏览器直打-LangGraph">Q10. 前端为什么做 BFF，而不是浏览器直打 LangGraph？</h4>
+<p>鉴权、同源、用户上下文注入都在 Next。缺 <code>user_id</code> 时 X-Agent 落库会静默跳过，表现为「答案有了问题树没有」。生产 Nginx 不把 Gateway/Qdrant/Postgres 暴露到公网。这是企业 Agent 的标准形态：协议兼容层叫 langgraph，不等于独立公网 LangGraph Server。</p>
+<h4 id="Q11-鉴权你怎么评价如果面试官说你们安全吗">Q11. 鉴权你怎么评价？如果面试官说「你们安全吗」？</h4>
+<p>诚实讲：Thread/Report 等核心资源已绑 <strong>X-Agent owner</strong>，主鉴权在 Next。但上传/RAG 默认全站共享 corpus；Gateway 上 Memory/MCP/Skills 安装等管理面历史上代码层弱鉴权，生产靠统一入口+内网。这不是「已企业级零信任」。下一步应是 Gateway 二次校验和 workspace→独立 Qdrant collection。主动说债比吹已经完美更加分。</p>
+<h4 id="Q12-如果让你重新设计会改什么">Q12. 如果让你重新设计，会改什么？</h4>
+<p>优先级：① 租户级 corpus 与 Gateway 鉴权拉齐；② 评测从「SQL 对不对」扩到「冲突/缺失标注对不对」；③ Skill 与 Wren 路由门控再收紧，工艺脚本绝不误走语义层。不会先扩更多模型或更多 Skill 包装。</p>
+<h3 id="83-Agent中间件Skills">8.3 Agent、中间件、Skills</h3>
+<h4 id="Q13-Agent-的一次提问内部发生了什么">Q13. Agent 的一次提问内部发生了什么？</h4>
+<p>提交后 DctBootstrap 写入 dct_thread + dct_question(PENDING)。Followup/NL2SQL 澄清/实体改写可能打断让用户选义项，但屏幕上的问句和 tool 的 query 字段保持原文，glossary 只进 hidden system。Lead 按 Q&amp;A Skill 决定查库、查文档或双路。工具返回后 SSE 给前端；after_agent 解析章节和图表。前端用 React Query 轮询问题树，不只依赖 onFinish。</p>
+<h4 id="Q14-为什么用中间件而不是全写进-System-Prompt">Q14. 为什么用中间件而不是全写进 System Prompt？</h4>
+<p>Prompt 不可靠：澄清必须能挂起 run、写 checkpoint、恢复；落库必须有 user_id；非法 tool call 要剥掉重试；上下文截断不能改 checkpoint 里的真实消息。这些是图节点上的副作用和中断，Prompt 做不到幂等和可测。Prompt 负责风格和 Skill 契约，中间件负责机制。</p>
+<h4 id="Q15-Skill-和-Tool-有什么区别">Q15. Skill 和 Tool 有什么区别？</h4>
+<p>Tool 是可调用函数（database_query、rag_file_search、bash）。Skill 是给模型加载的决策与操作合同（何时用、禁止什么、如何融合证据）。例如 question-and-answer 自己不跑 SQL，只规定默认同查库和文档。toolbox-titer 则禁止 database_query，强制沙箱读 BioFoundry 表。面试官若问「Skill 是不是多包一层 Tool」——不是，是路由和约束。</p>
+<h4 id="Q16-为什么工艺推荐不走-Wren">Q16. 为什么工艺推荐不走 Wren？</h4>
+<p>PRC/PEV 依赖预训练模型和历史配对特征，不是「一张汇总表的 NL2SQL」。Wren 回答不了 cosine 相似对照和模型推理。所以 Skill + 沙箱 python3，依赖预装在镜像里的 pandas/psycopg，禁止运行时 pip。和 Wren 分轨是为了口径正确，不是炫技。</p>
+<h4 id="Q17-沙箱里你踩过什么坑STAR个人贡献">Q17. 沙箱里你踩过什么坑？（STAR，个人贡献）</h4>
+<p>技能目录在沙箱里常是只读；PEV 要给大量 lookup_id 建特征缓存，写进技能目录会失败，写 /tmp 换容器就没了。做法是宿主机目录挂到 /mnt/pev-cache，用环境变量指定缓存路径。另外解释器必须 python3，不能绑本机 conda。这是把离线数据科学资产接到 Agent 的典型工程问题。</p>
+<h4 id="Q18-多步-SQL--子问题怎么调度">Q18. 多步 SQL / 子问题怎么调度？</h4>
+<p>有 completion-driven 的顺序 DAG：子步骤在自己的依赖完成后就可以启动，不必等无关步骤。空上游有稳定错误码（upstream_empty 等）。compaction 只保留有界摘要，不能把逐步原始 SQL 和全量格子塞回上下文。失败重试后失败结果不能进最终总结。这些都是生产上「看起来会规划、实际会把脏数据编进答案」的坑。</p>
+<h4 id="Q19-模型乱调工具死循环怎么办">Q19. 模型乱调工具、死循环怎么办？</h4>
+<p>有 LoopDetection、非法 tool call 先 nudge 再失败、DanglingToolCall 补齐历史、StrictWrenRouting 把内部数据问题按到 database_query、Clarification 放在链末拦截。最终空答案且无合法证据时 persistence 会拒写。不是靠「再写一句 please use the tool」。</p>
+<h3 id="84-数据NL2SQLRAG图表">8.4 数据、NL2SQL、RAG、图表</h3>
+<h4 id="Q20-你们的数据在哪有几类">Q20. 你们的数据在哪？有几类？</h4>
+<p>四类：① 业务事实——Wren 连的工艺汇总表，以及 BioFoundry ev_dt / preprocessed_dt；② 语义元数据——MDL、词典、SQL-pair、加密连接串；③ 对话产物——dct_*；④ 文档——COS + Qdrant chunk。Postgres 被 Prisma、DCT、Wren 元数据共库，后端禁止擅自 CREATE TABLE。Wren 记忆在 LanceDB，文档向量在 Qdrant，不要说成一个向量库。</p>
+<h4 id="Q21-为什么不让-LLM-直接写-SQL">Q21. 为什么不让 LLM 直接写 SQL？</h4>
+<p>表多、同义字段多、批次号有 X/Y 后缀、Postgres 不接受 CAST(... AS DOUBLE)。裸 SQL 会选错表、错 JOIN、类型报错。MDL 提供业务名；生成后 dry_plan；列守卫对确定缺失失败、解析不确定则 fail-open；数值用 DOUBLE PRECISION。LLM 负责规划，引擎负责契约。</p>
+<h4 id="Q22-实体歧义怎么处理用户说那个细胞库怎么办">Q22. 实体歧义怎么处理？用户说「那个细胞库」怎么办？</h4>
+<p>词典扫描字面量，对不上就打断澄清。Resolved 标注只进最新 HumanMessage 的 hidden entity_context，不改可见内容和 tool query。这是为了归档与评测仍是用户原话，同时模型能看见 glossary。字典命中不能当成「只查这一张表」的授权。</p>
+<h4 id="Q23-库表答案和-PDF-冲突怎么办">Q23. 库表答案和 PDF 冲突怎么办？</h4>
+<p>Q&amp;A Skill 默认双路。回答必须分栏：数据库证据、文档证据、缺失、冲突。分子类型等禁止从 protein/titer 等词推断，文档没写就 N/A。引用带文件名和页码。这是管理层「可解释、可审计」的产品约束。</p>
+<h4 id="Q24-RAG-流水线怎么做的为什么-PDF-要页级混合解析">Q24. RAG 流水线怎么做的？为什么 PDF 要页级混合解析？</h4>
+<p>工艺 PDF 里文字页和图表页混排。文字页直出，图表页走 Vision OCR，否则检索要么丢图要么噪声极大。Office 转 PDF，视频走转写 Markdown，再切片进 Qdrant dense+BM25。现状单 corpus 共享是产品债。视频 ingest 有 COS 断点、sidecar（DOCX/PPTX）、单 worker 限制（分析限流是进程内的）。</p>
+<h4 id="Q25-图表为什么不用-matplotlib">Q25. 图表为什么不用 matplotlib？</h4>
+<p>数据库问答的图必须进  的 Vega enrichment，才能落 dct_chart、前端统一渲染、钉看板。静图 PNG 进沙箱输出既不可交互，也破坏契约。Skill 里若需要科学作图是另一条轨道，和 Wren 报表要分开。早期我改过 titer 的 BoxPlot+jitter schema 和 SQL 必带列，就是为了前后端口径一致、图不会空或错编码。</p>
+<h4 id="Q26-空数据失败-SQL-怎么展示">Q26. 空数据、失败 SQL 怎么展示？</h4>
+<p>空数据不应出 chart；图表类型若用户显式指定应尽量保留，多 section 时不要用硬编码指标别名乱推断；失败要警告并在自动 fallback 时排除失败类型，避免默默画出另一种图。失败重试结果不能混进总结。这些都是「看起来有图、其实在撒谎」的事故模式。</p>
+<h3 id="85-质量评测协同">8.5 质量、评测、协同</h3>
+<h4 id="Q27-怎么证明-Agent-变好了而不是-prompt-碰巧">Q27. 怎么证明 Agent 变好了而不是 prompt 碰巧？</h4>
+<p>有独立 eval-service、金标集 eval_golden_set、run 级 dct_eval_evidence（不回给业务 API）。后端有大量契约测试：实体改写、SQL 方言、列守卫、多步 binding、chart parity、harness 边界。好的指标不只是「SQL 能跑」，还包括证据是否 value-free、compaction 是否越界、冲突是否标注。</p>
+<h4 id="Q28-和开源-DeerFlow-的关系你们改了什么">Q28. 和开源 DeerFlow 的关系？你们改了什么？</h4>
+<p>DeerFlow 提供 super agent harness。DCT 加了：deerflow.dct 持久化内核、Wren 内化与 database_query 契约、Q&amp;A/工艺 Skills、实体/NL2SQL 澄清中间件、file-search 集成、前端问题树与 Vega、药明鉴权与部署。上游可吸收更新要单独评估，不能无脑 rebase。</p>
+<h4 id="Q29-你在项目里具体做什么和别人怎么分工">Q29. 你在项目里具体做什么？和别人怎么分工？</h4>
+<p>git 上我可见的提交集中在：Wren 时期 titer 图表/SQL 必带列与追问推荐；toolbox-titer 与 toolbox-batch-process-recommendation（PRC/PEV 脚本、db 配置、沙箱缓存、顺序执行与错误处理）。平台内核、Wren 内化、RAG、鉴权是团队同事为主。协作方式：Skill 契约与语义层契约先对齐，避免工艺脚本和 NL2SQL 抢同一张表。</p>
+<h4 id="Q30-最大的技术挑战是什么">Q30. 最大的技术挑战是什么？</h4>
+<p>选你真正做过的讲透。推荐两条：① 把 PRC/PEV 离线模型接到只读沙箱，解决缓存持久化与禁止 pip；② 语义层输出必须满足前端 Vega/SQL 列契约，而不是模型「看起来对」。若被问团队挑战，讲 Wren 内化时保持 database_query 契约、以及落库依赖 user_id 注入。</p>
+<h4 id="Q31-如果线上有回答但没有报告问题树你怎么查">Q31. 如果线上「有回答但没有报告/问题树」，你怎么查？</h4>
+<p>按顺序：① 这次 run 的 context 有没有 user_id（BFF 是否注入）；② dct_question 是否停在 PENDING、after_agent 是否走到 persist；③ 最终消息是否被 persistence 判为空/非法 tool call；④ 前端轮询的 thread_id 是否已从 onCreated 回填。不要先去调 prompt。</p>
+<h4 id="Q32-你还缺什么经验怎么补">Q32. 你还缺什么经验？怎么补？</h4>
+<p>可以说：多租户隔离还没落地，生产 Gateway 管理面鉴权我更多是读现状而非主导改造；评测体系参与有限。补法：把 workspace 设计稿讲清楚，并主张评测加上冲突标注。面试官听的是自知，不是谦虚套话。</p>
+<h3 id="86-可能的追问速查短答">8.6 可能的追问速查（短答）</h3>
+<table>
+<thead>
+<tr>
+<th>追问</th>
+<th>短答</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用的什么模型？</td>
+<td>走 LiteLLM/公司 AI Gateway，可配多模型；摘要用轻量且 nostream，避免污染用户 SSE。</td>
+</tr>
+<tr>
+<td>Checkpoint 存在哪？</td>
+<td>LangGraph checkpointer（配置决定）；Run 另有 runs 表做跨 Pod lease。</td>
+</tr>
+<tr>
+<td>记忆呢？</td>
+<td>会话 checkpoint + MemoryMiddleware；Wren 侧 LanceDB；全局 memory.json 仍是治理债。</td>
+</tr>
+<tr>
+<td>为什么 Vega 不是 ECharts？</td>
+<td>与 enrichment 产出的 Vega-Lite spec 对齐，便于校验、禁外链、前端统一编译。</td>
+</tr>
+<tr>
+<td>批次号 X/Y 是什么？</td>
+<td>JOIN 两侧规范化去掉末尾 X/Y，但不能当普通 filter 乱切。</td>
+</tr>
+<tr>
+<td>为什么 Gateway 还留 execution_mode=http？</td>
+<td>遗留旁路，默认 in_process，别当成现行架构。</td>
+</tr>
+<tr>
+<td>你能写 SQL 吗？</td>
+<td>能讲清 MDL 与物理表差异、DOUBLE PRECISION、禁止选错表；具体表以词典/SCHEMA 为准，不装成背全库。</td>
+</tr>
+</tbody></table>
+<h3 id="87-不该说的话">8.7 不该说的话</h3>
+<ul>
+<li>「Gateway 已经完整鉴权。」「文件按用户隔离了。」</li>
+<li>「LLM 直接查生产库，有 prompt 就行。」</li>
+<li>泄露内网 Gateway 地址、API Key、客户项目号细节。</li>
+<li>把 V2 外部 Wren 架构讲成当前实现。</li>
+</ul>
+<h2 id="10-Agent-架构师A1A90">10. Agent 架构师（A1–A90）</h2>
+<p><strong>本节目录</strong>：10.1–10.6（A1–A30）→ 10.7 白板 → 10.8 说明 → 10.9–10.18（A31–A90）→ 10.19 速查 → 10.20 雷区</p>
+<p>面向「Agent 架构师 / AI 平台架构 / 企业 Agent Runtime」岗位。面试官通常不满足于「我们用了 LangGraph」，而会追问：控制面与执行面如何切、契约如何版本化、失败如何成为状态机、自治与确定性如何配比、如何避免把 Prompt 当成架构。</p>
+<p>口述结构建议仍是：结论 → <strong>X-Agent 里</strong>怎么落地 → 代价与若重来会怎么改。第 8 节偏「这个项目」；本节偏「你作为架构师如何决策」。V2 文档里「不要整体上 LangGraph、自研 Orchestrator」是历史决策；现状主编排已是 DeerFlow lead_agent。面试时主动点破世代，避免被旧稿带偏。</p>
+<h3 id="101-架构定位与选型">10.1 架构定位与选型</h3>
+<h4 id="A1-什么是企业级-Agent-架构和做一个能调工具的-Chatbot差在哪">A1. 什么是企业级 Agent 架构？和「做一个能调工具的 Chatbot」差在哪？</h4>
+<p>企业级 Agent 是带状态的工作系统：有身份、有工具契约、有可中断的人机回路、有一等公民的产物（Artifact）、有评测与审计，而不是一次 HTTP 里把 function call 跑完。Chatbot 优化的是回复质量；平台优化的是 Run 生命周期（创建、挂起、恢复、取消、落库、计费）。DCT 用 Thread + Run + dct_question 把一次提问变成可回放对象，这才是架构差异。</p>
+<h4 id="A2-你会怎么给-Agent-平台分层">A2. 你会怎么给 Agent 平台分层？</h4>
+<p>四层，禁止混写：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>职责</th>
+<th>X-Agent 对应</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>体验 / BFF</td>
+<td>鉴权、注入身份、聚合问题树</td>
+<td>Next.js</td>
+</tr>
+<tr>
+<td>控制面</td>
+<td>Thread/Run/取消/lease、管理 API</td>
+<td>Gateway + <code>runs</code> 表</td>
+</tr>
+<tr>
+<td>执行面</td>
+<td>模型循环、中间件、工具、沙箱</td>
+<td>Harness <code>lead_agent</code></td>
+</tr>
+<tr>
+<td>能力面</td>
+<td>语义取数、RAG、领域 Skill</td>
+<td>Wren / file-search / <code>skills</code></td>
+</tr>
+</tbody></table>
+<p>架构师的工作是定义层间契约（谁拥有 user_id、谁拥有 SQL 真源、谁拥有图表 spec），而不是选一个框架名。Harness 禁止 import App，就是在用编译期约束守住这张图。</p>
+<h4 id="A3-ReAct-单循环固定-Workflow两者混合你怎么选">A3. ReAct 单循环、固定 Workflow、两者混合，你怎么选？</h4>
+<p>固定 DAG：步骤已知、要审计每步 I/O、失败可重放（ETL、批评分）。</p>
+<p>ReAct：路由未知、要澄清、工具集随 Skill 变化（DCT 主对话）。</p>
+<p>混合：外层 Agent 决定「要不要走库/文档/工艺 Skill」，内层对 SQL 用有依赖的多步计划（DCT 的 query plan / sequential DAG）。</p>
+<p>X-Agent 用混合是对的：完全固定 DAG 接不住实体澄清；完全自由 ReAct 接不住「图表必须是 Vega、SQL 必须过 MDL」。架构师要能说出哪一段必须确定性、哪一段允许模型探索。</p>
+<h4 id="A4-早期文档说不要整体迁-LangGraph现在却用了你如何评价这次架构转向">A4. 早期文档说不要整体迁 LangGraph，现在却用了。你如何评价这次架构转向？</h4>
+<p>当时缺口是 Thread/Artifact/审计，栈还在 Wren pipeline 上，整体换编排器风险是「三套编排并存」。后来产品变成真正的多轮 Agent，DeerFlow 提供了 checkpoint、SSE、中间件、沙箱，自研 Orchestrator 的 ROI 变差。正确叙事不是「选错了再推翻」，而是 编排器是手段，产物模型和治理才是目的；当执行面复杂度超过自研 workflow.py，就该换执行引擎，但 database_query 契约和 dct_ 模型要留下*。这题考你是否会为框架而框架。</p>
+<h4 id="A5-什么时候不该用-Agent">A5. 什么时候不该用 Agent？</h4>
+<p>口径稳定、输入输出 schema 固定、延迟要 &lt;300ms、必须比特级可复现：用普通 API + 规则/SQL 模板。Agent 适合路由不确定、需要工具组合、允许 10s–分钟级、失败可澄清的任务。DCT 的 Dashboard KPI 若能写死查询，就不该每刷一次都走 lead_agent。架构师要会砍 Agent 范围，这比会加 Agent 更重要。</p>
+<h3 id="102-控制面Run状态中断">10.2 控制面：Run、状态、中断</h3>
+<h4 id="A6-请设计-Agent-Run-的状态机">A6. 请设计 Agent Run 的状态机。</h4>
+<p>至少：pending → running → (interrupted | success | failed | cancelled)。interrupted 用于澄清/实体选择，必须可 resume，且 resume 不改用户可见原问句。取消与失败要解耦：cancel_requested_at 不是终态本身。跨 Pod 要有 owner_pod_id + lease，超时回收，避免双跑。DCT 的 runs 表已经在朝这个方向：operation_kind 区分真 run 与 checkpoint 预约，finalizing 窗口互斥。面试时补一句：SSE 断线策略（cancel vs 后台继续）是产品决策，必须写进契约，不能靠默认。</p>
+<h4 id="A7-Human-in-the-loop-在图里怎么放才不会把业务状态弄脏">A7. Human-in-the-loop 在图里怎么放，才不会把业务状态弄脏？</h4>
+<p>原则：打断是执行面事件，业务真源仍是用户原文 + 单独的 annotation。<strong>X-Agent</strong> 把 glossary 放进 additional_kwargs.entity_context，不改 HumanMessage.content，也不改 checkpoint 里的 tool 参数（对模型的 hidden 参数用深拷贝注入）。错误设计是直接 rewrite 用户问题再存档——评测、合规、落库会对不上。澄清中间件必须能 commit 到 checkpoint 再 suspend，顺序（NL2SQL 澄清在 EntityRewrite 前）是架构，不是风格。</p>
+<h4 id="A8-Checkpoint业务库向量库各存什么为什么不能只存一份">A8. Checkpoint、业务库、向量库各存什么？为什么不能只存一份？</h4>
+<table>
+<thead>
+<tr>
+<th>存储</th>
+<th>存什么</th>
+<th>不存什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Checkpointer</td>
+<td>消息、tool 轨迹、图位置</td>
+<td>权限源、报表真源</td>
+</tr>
+<tr>
+<td><code>dct_*</code></td>
+<td>UI/审计的结构化产物</td>
+<td>全部 SSE 帧镜像</td>
+</tr>
+<tr>
+<td>Qdrant</td>
+<td>文档 chunk</td>
+<td>业务指标库</td>
+</tr>
+<tr>
+<td>LanceDB</td>
+<td>Wren 语义记忆</td>
+<td>与 file RAG 混 collection</td>
+</tr>
+</tbody></table>
+<p>「单一存储简化架构」在 Agent 里通常是错的：恢复执行、展示报告、检索文档的一致性模型不同。架构师要定义 哪一份在冲突时说了算（指标以 SQL 结果为准，报告以 persist 后的 section 为准，聊天回放以 checkpoint 为准）。</p>
+<h4 id="A9-流式SSE在架构上的陷阱">A9. 流式（SSE）在架构上的陷阱？</h4>
+<p>三类流不能混：① 用户可见 token；② 工具/子图事件；③ 侧信道（摘要模型、内部 nudge）。DCT 给 summarization 打 nostream，就是防污染。可恢复流要有 thread_id 回填（onCreated）和 join。前端问题树不该只信 onFinish，因为图表 enrichment 是异步于文本结束的。架构上把「文本完成」和「产物就绪」做成不同信号（chart_enrichment_status），这是对的。</p>
+<h3 id="103-工具Skill契约">10.3 工具、Skill、契约</h3>
+<h4 id="A10-如何设计-Tool-契约让消费方不绑死模型">A10. 如何设计 Tool 契约，让消费方不绑死模型？</h4>
+<p>Tool 是平台 API：稳定的名字、JSON schema、错误码、幂等语义、体积上限。DCT 把细粒度 Wren 子能力聚合成 database_query，输出 status/sub_results/partial_failures，图表和 parser 只认这一层。内化 Wren 时引擎换了，契约没换——这是架构胜利。反面教材是让每个中间件去 parse 模型自然语言。版本策略：加字段要可忽略，删字段/改语义要新工具名或显式 version，因为 checkpoint 里躺着旧 call。</p>
+<h4 id="A11-工具是多了好还是少了好">A11. 工具是多了好还是少了好？</h4>
+<p>模型的工具选择错误率随数量和描述重叠上升。架构原则：对外少、对内可拆。 路由用 Skill 合同（Q&amp;A vs titer vs PRC），执行用少数量工具。disallowed-tools 是负向契约，比再写一段 prompt 更硬。超过阈值就做 tool search / deferred schema（DCT 已有 DeferredToolFilter 的位置），而不是一次 bind 80 个工具。</p>
+<h4 id="A12-Skill-在架构里是什么会不会变成又一套微服务">A12. Skill 在架构里是什么？会不会变成又一套微服务？</h4>
+<p>Skill 应是 策略与运行手册（何时用、数据源、禁令），不是新的 RPC 服务。它改变的是模型可见的指令和允许的工具集，执行仍走统一 Runtime（沙箱/Wren/RAG）。变成微服务的信号是：Skill 自己起端口、自己管鉴权、自己定义另一套 thread。DCT 的 toolbox Skill 走沙箱脚本，仍在同一 lead_agent 生命周期里，这是合适的。治理上要有安装鉴权、签名包、全局 vs 租户启用——现状偏弱，架构师面试要主动提。</p>
+<h4 id="A13-领域模型PRC和通用-NL2SQL-为什么必须分轨画一下决策树">A13. 领域模型（PRC）和通用 NL2SQL 为什么必须分轨？画一下决策树。</h4>
+<pre><code class="language-text">绑定 cultureid + 预训练响应模型？
+  是 → Skill/沙箱（禁 database_query）
+  否 → 问内部汇总表？
+         是 → Wren database_query（MDL + 护栏）
+         否 → 问文档/选定 references？
+                是 → RAG
+                都可能 → Q&amp;A 双路 + 冲突标注
+</code></pre>
+<p>分轨的本质是 语义所有权：MDL 拥有「项目 titer 汇总」；SCHEMA.md 拥有「培养时序列单位」；pkl 拥有「推荐策略」。让一个 LLM 跨过所有权去猜 JOIN，是架构失败。</p>
+<h3 id="104-上下文记忆检索">10.4 上下文、记忆、检索</h3>
+<h4 id="A14-Context-Engineering-你的原则是什么">A14. Context Engineering 你的原则是什么？</h4>
+<p>上下文是稀缺预算，不是日志桶。分层：① 系统契约（短、稳定）；② 本轮 Skill；③ 隐藏 glossary；④ 压缩后的工具结果（有界、无原始 SQL 格子）；⑤ 对话摘要。截断只切发给模型的副本，不改 checkpoint（DCT ContextTruncation）。多步 SQL 的 compaction 必须每步都有摘要，否则 Agent 会「遗忘自己刚查出的空结果」。架构师要规定 什么永远不准进模型上下文（PII 全量、原始单元格、密钥）。</p>
+<h4 id="A15-记忆怎么分层才不会变成提示注入面">A15. 记忆怎么分层，才不会变成提示注入面？</h4>
+<ul>
+<li><strong>工作记忆</strong>：checkpoint（本 thread）</li>
+<li><strong>过程记忆</strong>：todo/plan（可选）</li>
+<li><strong>语义记忆</strong>：Wren LanceDB / 词典（要租户范围）</li>
+<li><strong>长期偏好</strong>：per-user；不可被任意 tool 写入系统层</li>
+<li><strong>X-Agent 债</strong>：全局 <code>memory.json</code> 无 owner——任一写入可影响所有用户下一轮。方向：记忆 API 走 verified actor、按 user/workspace 分区、高危 import 要 RBAC。可归属、可撤销、可审计优先于「越大越好」。</li>
+</ul>
+<h4 id="A16-RAG-在-Agent-里应该是工具还是默认前置检索">A16. RAG 在 Agent 里应该是工具还是默认前置检索？</h4>
+<p>默认前置适合「每问必查文档」的产品；工具化适合「有时查库有时查文档」。DCT 用 Skill 把默认双路写成合同，但执行仍是工具调用，这样能被轨迹、评测、compaction 看见。纯前置检索的问题是：路由不可见、失败难标 partial。纯工具的问题是：模型偷懒不调。折中是 冻结本轮 route profile（DCT 在 make_lead_agent 里 freeze qa_execution_profile），运行中途不许模型改「这轮该不该查库」。这是架构级的确定性注入。</p>
+<h4 id="A17-多源融合库--文档的架构原则">A17. 多源融合（库 + 文档）的架构原则？</h4>
+<p>融合发生在回答层，不是检索层把分数加起来。两边检索独立、证据类型打标、冲突显式、禁止跨源推断（分子类型）。图表只允许数据库 enrichment 管线产出。评测要对「冲突是否标出」打分，否则优化会偏向哪边召回高就信哪边。这是产品约束上升为架构：融合策略属于 Q&amp;A Skill 合同，不属于某个模型的个人风格。</p>
+<h3 id="105-可靠性安全多租户">10.5 可靠性、安全、多租户</h3>
+<h4 id="A18-Agent-的失败模型怎么设计">A18. Agent 的失败模型怎么设计？</h4>
+<p>把失败分成：模型失败、工具失败、契约失败、业务空结果。工具失败应变为 ToolMessage 而不是撑爆图；契约失败（非法 tool call、空答案无证据）应拒写 dct 并给安全错误；业务空结果是合法终态，要有 subreason（upstream_empty），禁止用另一张表「找点东西回来」。重试预算要有上限（DCT：非法 call 一次 nudge，第二次 InvalidFinalAnswer）。部分成功用 partial_failures 而不是全盘 500。架构师要让「空」和「错」在 API 上可区分。</p>
+<h4 id="A19-SQL-Agent-的安全边界怎么画">A19. SQL Agent 的安全边界怎么画？</h4>
+<p>默认零信任：模型永远碰不到生产写权限。执行引擎只接受 SELECT、单语句、函数黑名单、行数与 timeout；dry_plan 先于 query。连接串加密、密钥不进 prompt。即使用户说「帮我 delete」，工具层无此 capability。沙箱轨同样：预装依赖、禁 pip、只读技能目录、可写卷白名单。Prompt 里的「你是只读助手」只是提示，能力面不存在的工具才是控制。</p>
+<h4 id="A20-Prompt-injection-从哪进来架构怎么防">A20. Prompt injection 从哪进来，架构怎么防？</h4>
+<p>来源：上传文档、工具返回、记忆、MCP 第三方。原则：检索内容当数据不当指令；引用要可追溯；高权限工具（bash、MCP 写配置）与不可信内容隔离。DCT 文档进 RAG、SQL 结果进 compact 摘要，都是降权。未完成的是：共享 corpus 意味着租户 A 的文档可污染租户 B 的检索——这是注入的产品级放大，要用 workspace collection 切开。面试官要听的是 信任边界图画得清。</p>
+<h4 id="A21-多租户你怎么切数据面">A21. 多租户你怎么切数据面？</h4>
+<p>至少四层命名空间：Tenant → Workspace → Corpus/Collection → Document。身份在 BFF 验证，Gateway 二次校验，检索带 corpus 强制过滤，禁止「默认 default」。对象存储 key 带租户前缀。评估：逻辑隔离够不够取决于数据敏感度；工艺文档通常要到 collection 级物理隔离。DCT 现状是单 corpus，设计稿已有路径。架构师落地顺序：先封共享删除/全局记忆，再迁 collection，最后才做漂亮的 Workspace UI。</p>
+<h4 id="A22-水平扩展时-Agent-平台最容易踩什么">A22. 水平扩展时 Agent 平台最容易踩什么？</h4>
+<p>① 进程内限流/缓存当全局（DCT 视频分析 limiter 要求 Gateway 单 worker）；② 沙箱与本地盘；③ 内存 mutation gate；④ checkpointer 与 lease 双跑；⑤ 单机 artifact 卷。扩展策略应按工作负载拆：无状态 Gateway 副本可以多，带本地状态的 ingest/sandbox 要 sticky 或外置状态。面试时主动提「哪些组件 fail-fast 禁止多副本」，比空谈 K8s 更像架构师。</p>
+<h3 id="106-模型评测可观测组织">10.6 模型、评测、可观测、组织</h3>
+<h4 id="A23-Model-Gateway-在架构里做什么">A23. Model Gateway 在架构里做什么？</h4>
+<p>统一：鉴权、路由、超时、降级、限流、成本标签、禁用思考模型误开 thinking。业务 Agent 只认逻辑模型名。侧信道调用（摘要、标题）用便宜模型且 nostream。Q&amp;A 的 lead 模型可按 profile 冻结，避免中途换模型导致工具风格漂移。不要让每个中间件自己 new 一个 SDK。</p>
+<h4 id="A24-评测如何成为架构的一部分而不是上线后的脚本">A24. 评测如何成为架构的一部分，而不是上线后的脚本？</h4>
+<p>金标问题进独立服务；raw evidence 进只读表且不进业务 API；契约测试锁「不该变的不变量」（query 字节不变、harness 不 import app）。评测维度要覆盖：SQL 正确、图表类型、冲突标注、拒答、延迟与成本。没有 eval 闸门的 Agent 迭代 = 随机游走。架构师应要求：改 Skill 合同和改 tool schema 必须带回归集。</p>
+<h4 id="A25-Trace-里你必须能回答哪五个问题">A25. Trace 里你必须能回答哪五个问题？</h4>
+<p>这轮 route profile 是什么；调了哪些工具、参数是否被 hidden 注入；在哪次 interrupt resume；persist 写了哪些 section/chart；花费多少 token。缺任何一项都无法做事故复盘。语义 run_events 优于保存全部 SSE。注意 value-free：trace 也不该把业务单元格打到日志中心。</p>
+<h4 id="A26-单-Lead--工具-vs-多-Subagent怎么选">A26. 单 Lead + 工具 vs 多 Subagent，怎么选？</h4>
+<p>默认单 Lead：延迟、一致性、调试成本都更低。Subagent 只用于可并行、上下文互不需要细粒度共享的子任务（大文档分片、独立调研），并硬限制并发（DCT SubagentLimit）。合成阶段必须回到 Lead，且引用/语言对齐要用用户原问而不是委派 prompt。多 Agent 不是高级，是成本；说不清共享状态就不许拆。</p>
+<h4 id="A27-若让你为新业务加一条风险归因工作流架构步骤是什么">A27. 若让你为新业务加一条「风险归因工作流」，架构步骤是什么？</h4>
+<p>不要先画新图框架。① 定义输入输出 Artifact（风险列表、因子表、建议章节）进 dct_section schema；② 决定数据所有权（Wren 还是 Skill）；③ 写成 Skill 合同 + 必要工具；④ 补澄清点（实体、阈值）；⑤ 金标与冲突用例；⑥ 权限与审计字段。只有当状态机比 ReAct 更简单时才抽固定子图。这是「平台可扩展」的检验。</p>
+<h4 id="A28-你如何带一个-Agent-平台团队边界怎么拆">A28. 你如何带一个 Agent 平台团队？边界怎么拆？</h4>
+<p>建议四队对齐四层：体验（BFF/问题树）、Runtime（中间件/Run）、Data 能力（MDL/RAG）、领域 Skill（工艺）。契约 Owner 必须唯一：database_query payload 不能三队各改一版。平台团队提供护栏与评测，领域团队不直接碰 harness 边界。这题看你会不会用康威定律，而不是堆人堆 prompt。</p>
+<h4 id="A29-12-个月技术演进你怎么排">A29. 12 个月技术演进你怎么排？</h4>
+<p>P0 治理：Gateway 二次鉴权、workspace corpus、记忆分区。P0 可靠性：多副本状态外置、ingest 与 Gateway 扩缩容策略写进 runbook。P1 质量：评测含融合/冲突、Skill 门控。P1 产物：报告导出与 Dashboard 真源仍走 dct_*。P2 才是更多模型、更多 Agent 角色。架构师的 roadmap 以风险和契约排序，不以 Demo 酷炫排序。</p>
+<h4 id="A30-如果只能改-X-Agent-的三件事你改哪三件为什么">A30. 如果只能改 X-Agent 的三件事，你改哪三件？为什么？</h4>
+<p>身份与租户贯穿执行面（user_id/workspace_id 进所有检索与落库，消除静默 skip 与共享 corpus）。</p>
+<p>把 Tool/Skill/产物 schema 当成公开 API 做版本与兼容测试（这是平台能活过一次引擎替换的原因，Wren 内化已经证明）。</p>
+<p>把「空/冲突/部分失败」提升为一等公民（错误码、UI、评测同一套）。</p>
+<p>不选「换更强模型」或「再写一个编排器」——那是能力幻觉，不是架构。</p>
+<h3 id="107-架构师现场白板DCT-一分钟版">10.7 架构师现场白板：DCT 一分钟版</h3>
+<pre><code class="language-text">Client → BFF(Auth) → Control Plane(Run/Thread)
+                          ↓
+              Execution (lead_agent middleware)
+                ├─ Policy: Skill + route profile
+                ├─ Tools: database_query | rag | sandbox
+                ├─ Interrupt: clarify / entity
+                └─ Persist: dct_question/section/chart
+                          ↓
+              Data: PG(MDL+dct) | Qdrant | LanceDB | COS
+</code></pre>
+<p>面试官让你「设计一个企业 Agent」时，先画这张，再往各框填 SLO、契约和失败码。先画模型圆圈的，通常不是架构师。</p>
+<h3 id="108-追加题说明">10.8 追加题说明</h3>
+<p>以下为架构师岗仍高频出现的追问（A31–A90），按主题追加。A1–A30 不重复；答题仍用「结论 → <strong>X-Agent 怎么落地</strong> → 代价 / 若重来」。</p>
+<h3 id="109-框架协议与-Build-vs-Buy">10.9 框架、协议与 Build vs Buy</h3>
+<h4 id="A31-LangGraphTemporal自研状态机怎么选主编排">A31. LangGraph、Temporal、自研状态机，怎么选主编排？</h4>
+<p>LangGraph 适合「模型循环 + 工具 + 可中断 HITL + checkpoint」的短中时延对话（秒到数分钟）。Temporal 适合「跨小时/天、要精确重试与补偿、活动是确定性代码」的长事务（审批、批次回算）。自研状态机只在步骤极少且不想引入依赖时。DCT 主路径是对话 Agent → LangGraph/DeerFlow；若以后做「报告定时生成 + 人工签字」，审批段可以 Temporal，不要把 LLM 循环塞进 Temporal activity 里当 Chat。混用标志：LLM 循环用图，业务长事务用工作流引擎，中间用 Run id 关联。</p>
+<h4 id="A32-为什么不是-CrewAI--AutoGen--纯-OpenAI-Assistants-API">A32. 为什么不是 CrewAI / AutoGen / 纯 OpenAI Assistants API？</h4>
+<p>多角色框架默认假设「多个 LLM 互相对话」，企业里会放大延迟、成本和不可复现性，且工具治理弱。Assistants API 把线程与工具锁在供应商控制面，checkpoint、落库、SQL 护栏、Casbin 都难插入。DeerFlow 的价值是 可自托管的执行面 + 中间件插入点。可以兼容 OpenAI 协议当接入层，但不能把控制面外包。</p>
+<h4 id="A33-MCP-在架构里扮演什么和-Function-CallingOpenAPI-Tool-的关系">A33. MCP 在架构里扮演什么？和 Function Calling、OpenAPI Tool 的关系？</h4>
+<p>Function Calling 是模型与运行时的调用约定。OpenAPI 是内部已有 HTTP 能力的描述。MCP 是跨进程工具总线（独立生命周期、可替换实现）。原则：核心、高敏、高 QPS 能力（database_query、RAG）留 in-process；外围、多语言、实验性工具走 MCP。DCT 已有 MCP 配置面，但配置全局无 owner——必须把 MCP 当代码执行面：安装、stdio、header 密钥都要 RBAC 和脱敏。协议热不等于核心路径都该 MCP。</p>
+<h4 id="A34-A2A--Agent-互调协议要不要上">A34. A2A / Agent 互调协议要不要上？</h4>
+<p>组织内多个 Agent 产品要协作时才需要；先共享 同一控制面（身份、trace、工具契约） 比上新协议重要。两个 lead_agent 互调很容易递归打爆预算。DCT 更合理的边界是：一个 Lead，子任务用受限 Subagent 或普通工具，而不是 Agent 网。</p>
+<h4 id="A35-继续用开源-DeerFlow-还是-fork-成内部框架">A35. 继续用开源 DeerFlow 还是 fork 成内部框架？</h4>
+<p>Harness 边界保持可同步上游；DCT 特有（deerflow.dct、wren_ai、Skills）放在明确扩展点，不要改到无法 rebase。Wren 内化已经是一次「吸收上游、冻结对外契约」。治理方式是 吸收清单 + 契约测试，而不是无脑跟版或彻底分叉。</p>
+<h4 id="A36-Semantic-Kernel--ADK--自研-Python-agent-loop-呢">A36. Semantic Kernel / ADK / 自研 Python agent loop 呢？</h4>
+<p>能插入中间件、可中断、可 checkpoint、工具 schema 一等公民，就可以。DCT 选 LangGraph 生态是因为 SSE/协议/前端 SDK 已对齐。换框架的成本在迁移 checkpoint 与工具契约，不在「循环怎么写」。</p>
+<h3 id="1010-规划模式结构化输出与确定性">10.10 规划模式、结构化输出与确定性</h3>
+<h4 id="A37-ReActPlan-and-ExecuteReWOOLAT生产怎么配">A37. ReAct、Plan-and-Execute、ReWOO、LAT，生产怎么配？</h4>
+<p>ReAct：工具结果强依赖、要澄清。Plan-and-Execute：步骤可预告（plan mode + Todo）。ReWOO：先规划证据需求再并行取证，适合  双路检索。LAT/辩论：成本高，留给评测或高价值归因，不进默认路径。DCT 已是 冻结 route profile + 可选 todo + 多步 SQL DAG，不必再套一个论文名。</p>
+<h4 id="A38-要不要强制模型先输出-JSON-计划再执行">A38. 要不要强制模型先输出 JSON 计划再执行？</h4>
+<p>对「必须审计步骤」的流程（风险报告章节）值得；对「先澄清实体」的流程会增加一轮延迟且计划常过期。更好的是 平台生成计划骨架（路由/依赖），模型填参数。SQL 侧  已有 query planner；对话侧不要让模型同时发明章节结构和 SQL。</p>
+<h4 id="A39-结构化输出JSON-Schema语法约束-SQL怎么用">A39. 结构化输出、JSON Schema、语法约束 SQL，怎么用？</h4>
+<p>图表 spec、section 列表、工具参数：用 schema / constrained decoding，失败可重试一次。自然语言结论：不要塞进同一个 JSON，以免模型为了凑 schema 牺牲证据。SQL：文法约束减少语法错，语义错仍要 MDL + dry_plan。约束解码不是语义层的替代品。</p>
+<h4 id="A40-温度采样可复现性如何作为架构约束">A40. 温度、采样、可复现性如何作为架构约束？</h4>
+<p>取数、路由、工具参数：低温度或冻结 profile。措辞可略高。评测与金标回放：固定 seed/模型版本。把「本轮 execution profile」写入 runs.metadata，事故才能复现。不要承诺比特级可复现 LLM，但要承诺 工具入参与 SQL 可复现。</p>
+<h4 id="A41-并行-tool-call-与依赖-tool-call-怎么调度">A41. 并行 tool call 与依赖 tool call 怎么调度？</h4>
+<p>无依赖（库 + 文档）可并行。有依赖（先批次列表再下钻）必须 DAG，完成驱动而不是全局 barrier。DCT 多步 SQL 已按依赖完成调度。错误是用 prompt 写「你可以并行」而不在运行时做依赖检查。并行度要有上限。</p>
+<h4 id="A42-Code-Interpreter--写-Python-当万能工具行不行">A42. Code Interpreter / 写 Python 当万能工具，行不行？</h4>
+<p>沙箱代码是逃生舱，不是默认取数平面。一默认「模型写 pandas」，MDL、权限、审计、Vega 契约全部失效。DCT 分轨：Wren 报表禁 matplotlib；工艺 Skill 才允许预装环境里的 Python。规定：代码执行的输入必须是已授权数据快照，输出必须过体积与类型门。</p>
+<h4 id="A43-要不要-Fine-tune和-RAGSkillMDL-怎么排">A43. 要不要 Fine-tune？和 RAG、Skill、MDL 怎么排？</h4>
+<p>优先顺序：契约与护栏 → Skill/MDL 口径 → RAG 证据 → 路由小模型 → 最后才 SFT。工艺推荐已经用 pkl 模型当工具，比微调聊天模型更可审计。微调适合稳定分类/路由，不适合把「哪张表」背进权重——表会变。</p>
+<h3 id="1011-可靠性一致性容量与发布">10.11 可靠性、一致性、容量与发布</h3>
+<h4 id="A44-Checkpoint-与-dct_-双写如何保证用户看到的一致">A44. Checkpoint 与 dct_ 双写如何保证用户看到的一致？</h4>
+<p>双写问题：SSE 已把答案推到浏览器，persist 可能失败。策略：① persist 失败则 question 保持非 READY，前端显示「报告生成中/失败」；② persist 必须幂等（同一 run_id 重建 section）；③ 不以 checkpoint 当报表真源。DCT 已有 enrichment 状态机，要把「文本完成 ≠ 产物就绪」当成 UX 契约。更强方案：outbox（run_events 已是雏形）+ 补偿任务。</p>
+<h4 id="A45-同一-Thread-多-Tab--连发怎么设计">A45. 同一 Thread 多 Tab / 连发，怎么设计？</h4>
+<p>必须有 multitask 策略：reject / interrupt / enqueue。DCT runs.multitask_strategy 默认 reject 合理，避免两套工具轨迹交叉污染 checkpoint。排队要有公平性：交互优先于 eval 批量。不要靠前端 debounce 当互斥。</p>
+<h4 id="A46-客户端断开后-Run-继续还是取消">A46. 客户端断开后 Run 继续还是取消？</h4>
+<p>产品选项，必须显式：on_disconnect=cancel | continue。长报告可能 continue；澄清等待应 cancel 或超时回收 lease。断开 ≠ 失败终态，要有 reaper。计费与沙箱占用按 continue 计算，否则漏账。</p>
+<h4 id="A47-幂等重试死信怎么做">A47. 幂等、重试、死信怎么做？</h4>
+<p>工具按语义分类：只读可重试；写操作不可自动重试除非幂等键。LLM 可 hedged/降级，但要防双计费。ingest、视频转写用 checkpoint_attempt / execution_epoch。死信进可重放队列。Poison 消息要熔断该 Skill，而不是打满重试。</p>
+<h4 id="A48-给-Agent-定什么-SLISLO">A48. 给 Agent 定什么 SLI/SLO？</h4>
+<p>不要只定「可用性 99.9%」。建议：交互首 token 时延；端到端 P95（含工具）；工具错误率（契约失败 vs 业务空）；persist 成功率；幻觉投诉率；单问成本 P95；澄清率。空结果只要错误码正确可计成功。Agent 不确定性下 SLO 是区间不是幻数。</p>
+<h4 id="A49-限流配额吵闹邻居">A49. 限流、配额、吵闹邻居？</h4>
+<p>按 tenant/user/skill 三维 token 桶；危险工具单独 bulkhead；RAG ingest 与交互查询隔离队列。DCT 视频分析进程内限流导致单 worker——扩展必须先外置计数器。成本硬顶比软提示重要：超预算应 interrupt 并写可见原因。</p>
+<h4 id="A50-缓存精确语义Prompt-cache各用在哪">A50. 缓存：精确、语义、Prompt cache，各用在哪？</h4>
+<p>精确缓存：同一 SQL、同一文档版本检索。语义缓存：只用于非关键闲聊，工艺数字禁止。Prompt/前缀缓存：系统提示 + Skill 稳定前缀。缓存键必须含：模型版本、MDL 版本、corpus 版本、locale。按租户隔离防投毒。</p>
+<h4 id="A51-LLM-熔断降级hedged-request">A51. LLM 熔断、降级、hedged request？</h4>
+<p>超时 → 备用模型（工具 schema 必须兼容）。连续错误 → 熔断该 provider。Hedged 只对只读且能去重的调用。降级路径预定义：仅 RAG、仅缓存报表、或「系统繁忙请缩小问题」。禁止降级成「解除 SQL 护栏」。</p>
+<h4 id="A52-SkillPrompt-怎么做灰度与回滚">A52. Skill/Prompt 怎么做灰度与回滚？</h4>
+<p>Skill 当配置发布：版本号、签名、比例放量、一键 kill switch。Shadow mode（DCT NL2SQL 澄清已有）：新策略只记日志不打断。Prompt 变更走评审 + 金标闸门。执行面只拉「已发布版本」，禁止无人知晓地热改生产提示词。</p>
+<h4 id="A53-如何对非确定性系统做测试金字塔">A53. 如何对非确定性系统做测试金字塔？</h4>
+<p>底层：契约测试（字节级不变量、harness 边界、SQL 方言）。中层：固定轨迹 replay。上层：小金标 + LLM-as-judge（只评冲突标注/格式，不评文采）。禁止用 judge 给自己的 SQL 打满分当回归。Eval 集要防泄漏进 prompt/记忆。</p>
+<h3 id="1012-安全进阶身份药企合规">10.12 安全进阶、身份、药企合规</h3>
+<h4 id="A54-工具层的-Confused-Deputy--SSRF-怎么防">A54. 工具层的 Confused Deputy / SSRF 怎么防？</h4>
+<p>Agent 拿着服务身份去调内部网：必须 audience 分离（file-search、OnlyOffice、RAG rebuild 不能互冒）。禁止模型指定任意 URL 给抓取工具。沙箱无出站或出站 allowlist。上传回调验签。经典 deputy：用户话术驱动高权身份。</p>
+<h4 id="A55-Casbin-全局-RBAC-vs-工具级授权差在哪">A55. Casbin 全局 RBAC vs 工具级授权，差在哪？</h4>
+<p>页面能进工作台 ≠ 能跑 bash 或装 MCP。应 RBAC + 工具 capability：每类工具声明所需 permission，middleware 在 bind 前过滤。DCT 前端 Casbin 较强、Gateway 管理面较弱，缺口在「执行面未复用同一策略引擎」。Workspace 设计要把 Casbin 升到 domain=workspace_id，而不是抄 RAGFlow 的 tenant==user。</p>
+<h4 id="A56-沙箱威胁模型K8s-provisioner-什么时候要">A56. 沙箱威胁模型？K8s provisioner 什么时候要？</h4>
+<p>本地沙箱：文件系统逃逸、吃光磁盘/CPU、读技能目录密钥。缓解：只读挂载、seccomp、cpu/mem/pid 限额、禁 pip、密钥注入。多租户不信任代码时上 K8s provisioner（DCT 已有可选 profile）。工艺 pkl 推理也应视为不可信二进制，限制网络。</p>
+<h4 id="A57-检查点对话SQL-结果里的-PII-怎么办">A57. 检查点、对话、SQL 结果里的 PII 怎么办？</h4>
+<p>分类：标识、工艺参数、客户名。策略：进模型前脱敏或截断；trace value-free；落库最小必要；导出水印与权限。删除权：thread + checkpoint + 向量点 + 记忆都要能按 user/thread 擦除。「遗忘」是跨存储事务，不是删 UI 行。</p>
+<h4 id="A58-药企场景还要多说什么GxP--审计">A58. 药企场景还要多说什么（GxP / 审计）？</h4>
+<p>计算机化系统要 变更控制：Skill、MDL、Prompt、模型版本进变更记录。决策用报告需要审计追踪（谁、何时、哪次 run、哪版 SQL）。persist 后的 section/chart 应视为快照，重跑是新版本。DCT 结构化落库是合规友好点；缺口是导出签名、不可篡改日志。明确：当前不是已认证 GxP 系统，但架构要能长出审计。</p>
+<h4 id="A59-连接串轮换MDL-变更embedding-升级如何做不停机">A59. 连接串轮换、MDL 变更、embedding 升级如何做不停机？</h4>
+<p>连接：Fernet 密钥轮换要批处理重加密。MDL：版本化部署，in-flight run 钉住开始时的 schema 版本。Embedding：双写或别名 collection，检索双路直到回填完成。任何全局单文件 config 热更新都要定义 in-flight 行为。</p>
+<h4 id="A60-密钥与配置拓扑">A60. 密钥与配置拓扑？</h4>
+<p>模型 key 只在 Gateway/LiteLLM；业务库密钥只在 Wren 连接加密列；沙箱只拿短时凭证。config.yaml / extensions_config.json gitignore 是对的，生产应用配置中心 + 审计。架构师要画 secret 流向图。</p>
+<h3 id="1013-语义层Text-to-SQL指标架构">10.13 语义层、Text-to-SQL、指标架构</h3>
+<h4 id="A61-WrenMDLdbt-metricsCubeLookML怎么放">A61. Wren/MDL、dbt metrics、Cube、LookML，怎么放？</h4>
+<p>语义层解决「业务名 → 可执行查询」。dbt 更偏转换与治理仓；Cube/LookML 偏 BI 查询加速。Agent 需要 可被工具调用的、带关系与同义词的模型，Wren 更贴 Text-to-SQL。不要让 Agent 直接扫 information_schema。DCT 选 Wren 是因为 NL2SQL + 关系 + 知识指令；内化是为了运行时，不是否定语义层。</p>
+<h4 id="A62-Text-to-SQL-为什么在生产远难于-SpiderBIRD">A62. Text-to-SQL 为什么在生产远难于 Spider/BIRD？</h4>
+<p>生产有同名列、脏值、权限、方言、批次号规则、空结果也是答案。Benchmark 假设 schema 小而干净。所以投资在 词典、澄清、列守卫、方言测试、JOIN 规范化，而不是更大模型。能讲「唯一高置信词典命中只做可见性、不授权锁表」，说明你懂 false precision。</p>
+<h4 id="A63-Schema-linking值召回查询改写各放哪一层">A63. Schema linking、值召回、查询改写，各放哪一层？</h4>
+<p>Schema linking：MDL + 检索（LanceDB 记忆）+ 本轮词典。值召回：实体词典/澄清，禁止把全表 distinct 灌进 prompt。查询改写：followup 中间件可改写内部问法，归档仍用原文。分层错误是全塞进一条 super prompt。</p>
+<h4 id="A64-自修正-SQL-循环如何防止空转">A64. 自修正 SQL 循环如何防止空转？</h4>
+<p>dry_plan 错误结构化、value-free、有预算（次数与 token）。同一错误签名第二次应停并澄清或失败。DCT 强调 generation/correction/eval 共用契约。禁止「再试一遍」无记忆。</p>
+<h4 id="A65-指标口径冲突两张表两个-titer谁说了算">A65. 指标口径冲突（两张表两个 titer）谁说了算？</h4>
+<p>语义层 Owner（MDL + 指令 + SQL-pair）说了算，Skill 文档写清例外（BioFoundry 轨道）。Agent 不得平均两个口径。冲突时返回冲突标注，让人改 MDL。这是数据治理问题，不是模型问题。</p>
+<h4 id="A66-查询治理超时扫描上限只读副本">A66. 查询治理：超时、扫描上限、只读副本？</h4>
+<p>Agent 流量与人用 BI 隔离：只读副本、statement_timeout、行数上限、禁止无过滤全表。高峰时拒收新 Agent SQL 并排队。WrenEngine.query 的护栏是产品特性不是实现细节。</p>
+<h3 id="1014-RAG文档多模态进阶">10.14 RAG、文档、多模态进阶</h3>
+<h4 id="A67-长上下文能不能替代-RAG">A67. 长上下文能不能替代 RAG？</h4>
+<p>不能作为默认：成本、缓存失效、引用页码、权限过滤都变差。长上下文适合「用户本轮选定的少量文件」。DCT 的 selected_references 就是这个口子。架构：默认检索，显式引用可跳过广搜或收窄 filter。</p>
+<h4 id="A68-GraphRAG知识图谱MDL-何时用哪个">A68. GraphRAG、知识图谱、MDL 何时用哪个？</h4>
+<p>MDL：表格指标与关系。RAG：非结构化规程/报告。图谱：多跳实体关系且边是一等公民。工艺控制塔先把 MDL+RAG 做好；图谱是第三数据面，需要主数据质量。不要用 GraphRAG 名字回避建语义层。</p>
+<h4 id="A69-Embedding-模型换代分块策略父块展开的架构约束">A69. Embedding 模型换代、分块策略、父块展开的架构约束？</h4>
+<p>chunk 与 parent 必须一起版本化（pipeline_version 写入 uploaded_document）。换 embedding 等于新 collection 或双向量。DCT 已把 parent_text 放 payload、混合 dense+BM25。权重与 rerank 是可配置策略，要进评测。</p>
+<h4 id="A70-图片表格视频在-Agent-里怎么成为一等证据">A70. 图片、表格、视频在 Agent 里怎么成为一等证据？</h4>
+<p>图片：视觉模型中间件（ViewImage）或页级 OCR。表格：尽量结构化进 SQL/XLSX 解析。视频：转写+时间戳引用，ingest 与问答限流隔离。引用必须能定位（页、时间）。多模态按需，不要默认进 lead 每次调用。</p>
+<h4 id="A71-OnlyOffice--预览-在安全架构里的位置">A71. OnlyOffice / 预览 在安全架构里的位置？</h4>
+<p>预览是独立信任域：短时 scoped token、DocumentServer JWT 与 Gateway 服务断言分离。不要把编辑器当 RAG 写入口。共享上传意味着 token 持有者能读文件——产品例外要写进威胁模型。</p>
+<h3 id="1015-产物前端体验即架构">10.15 产物、前端、体验即架构</h3>
+<h4 id="A72-Artifact-协议怎么设计">A72. Artifact 协议怎么设计？</h4>
+<p>统一块类型：text、table、chart、citation、clarification、action_item，带 schema 版本。DCT 用 section + chart_detail（Vega）。前端只消费协议，不 parse 模型 Markdown 当真源。导出 = 序列化同一协议。这正是 V2「Analysis Panel」要的东西，现状用 dct_* 部分满足。</p>
+<h4 id="A73-为什么问题树要轮询而不是只靠-SSE">A73. 为什么问题树要轮询而不是只靠 SSE？</h4>
+<p>产物异步（图表 enrichment）、刷新页面、多端。SSE 管对话；资源 GET 管报告。这是 CQRS：写在执行面，读在 BFF/Prisma。代价是短暂不一致，用 status 字段表达。强行一条 SSE 塞所有终态会让 enrichment 阻塞首屏。</p>
+<h4 id="A74-语言对齐单位时区是不是小事">A74. 语言对齐、单位、时区是不是小事？</h4>
+<p>不是。回答语言跟本轮用户问题走，不跟文档语言（LanguageAlignment）。单位在 SCHEMA/MDL，Agent 不得擅自换算。时区影响批次日界。评测要覆盖中英问句。</p>
+<h4 id="A75-要不要给用户看置信度分数">A75. 要不要给用户看置信度分数？</h4>
+<p>谨慎。校准极差的分数会制造过度信任。更好的是 证据类型 + 冲突 + 缺失。若要分数，只能来自可定义规则（检索分、是否唯一词典命中），并注明非概率。</p>
+<h3 id="1016-成本路由与小模型">10.16 成本、路由与小模型</h3>
+<h4 id="A76-如何做模型级联FrugalGPT">A76. 如何做模型级联（FrugalGPT）？</h4>
+<p>分类/路由用小模型或规则；复杂归因用大模型；摘要用便宜模型且 nostream。DCT 已有 Q&amp;A profile 冻结 lead 模型。关键是 工具 schema 兼容的模型才能降级，否则级联会破坏 function call。</p>
+<h4 id="A77-成本归集怎么做才有管理意义">A77. 成本归集怎么做才有管理意义？</h4>
+<p>按 user、workspace、thread、skill、模型、阶段（生成 SQL / 嵌入 / VLM）打点。DCT 文档 ingest 已有 token/人民币字段，对话侧 TokenUsageMiddleware 应对齐同一账本。Showback 给业务部门，才能反向约束「什么问题不该进 Agent」。</p>
+<h4 id="A78-内部小模型做意图识别替代-Skill-描述行不行">A78. 内部小模型做意图识别，替代 Skill 描述行不行？</h4>
+<p>可以做前置分类器降低 tool 误选，但要可回退到 Lead。训练集要覆盖工艺术语。不要让分类器直接触发写操作。DCT 更稳的是 UI 显式选 Skill + 合同，分类器作为辅助。</p>
+<h3 id="1017-组织供应商与平台化">10.17 组织、供应商与平台化</h3>
+<h4 id="A79-Agent-平台-vs-嵌入业务的-Agent-产品团队怎么切">A79. Agent 平台 vs 嵌入业务的 Agent 产品，团队怎么切？</h4>
+<p>平台：Runtime、护栏、评测、身份、可观测。产品：DCT 工艺口径、Skill、MDL、报告。产品团队通过契约扩展，不 fork 中间件链。若只有一个团队，用目录边界模拟，否则三个月后 Prompt 里会长出私有 SQL。</p>
+<h4 id="A80-供应商锁定模型框架向量库语义引擎">A80. 供应商锁定：模型、框架、向量库、语义引擎？</h4>
+<p>模型：OpenAI 兼容网关（LiteLLM 方向）。框架：状态导出能力。向量：标准 embedding 维度与重建剧本。语义引擎：database_query 契约是抗锁定层（Wren 内化已验证）。锁得最死的往往是 checkpoint 格式和前端协议，迁移预算要算这里。</p>
+<h4 id="A81-要不要做内部-Skill-市场">A81. 要不要做内部 Skill 市场？</h4>
+<p>先做允许列表 + 评审 + 评测，再做市场。没有沙箱签名和数据分级就是影子 IT。DCT toolbox 已经是「领域插件」，治理应先于货架 UI。</p>
+<h3 id="1018-现场设计题与事故题">10.18 现场设计题与事故题</h3>
+<h4 id="A82-白板设计支撑-1k-并发会话的企业-Agent">A82. 白板：设计支撑 1k 并发会话的企业 Agent。</h4>
+<p>先拆交互与 ingest；Gateway 无状态可水平扩；checkpointer/Postgres/Qdrant 是瓶颈；Run lease 防双跑；沙箱池化；LLM 网关限流与排队；按租户配额；单 worker 组件（视频）单独服务化。给出 P95 时延预算：网关、模型 TTFT、SQL、检索、persist。不先画 20 个 Agent 角色。</p>
+<h4 id="A83-白板设计-Agent-评测平台">A83. 白板：设计 Agent 评测平台。</h4>
+<p>数据集版本、离线 replay、在线采样、维度（正确/接地/安全/成本）、LLM-as-judge 只评子集、人审队列、发布门禁、污染防护。DCT 已有 eval-service 与 evidence 表，补融合冲突维度和 Skill 回归。</p>
+<h4 id="A84-事故SQL-把生产打满你怎么改架构">A84. 事故：SQL 把生产打满。你怎么改架构？</h4>
+<p>立刻：网关熔断 database_query、杀查询、只读副本。根因：缺超时/扫描上限/并发。长期：查询准入、解释计划预算、租户配额、dry_plan 拒绝无过滤。复盘写入 SLI。这不是「提示词加一句小心」。</p>
+<h4 id="A85-事故文档投毒导致-Agent-泄露其他项目">A85. 事故：文档投毒导致 Agent 泄露其他项目。</h4>
+<p>立即禁用 RAG 或切到 allowlist corpus；审计近期 thread。根因：共享 default corpus。长期：workspace collection、检索强制过滤、跨租户红队。对照设计稿承认未落地。</p>
+<h4 id="A86-事故澄清死循环--用户骂一直问">A86. 事故：澄清死循环 / 用户骂「一直问」。</h4>
+<p>指标：澄清率、同一 term 重复次数。DCT 有 ask-once 与跨会话 choice。架构修复：词典质量、默认双路少问源、UI 选 references。把澄清当失败预算，不是越多越负责。</p>
+<h4 id="A87-事故有答案无报告架构视角">A87. 事故：有答案无报告（架构视角）。</h4>
+<p>上升为：身份不在执行面、双写失败、非法终态拒写。加告警：PENDING 超时、persist error rate。不要只教同事「看日志」。排查顺序见第 8 节 Q31。</p>
+<h4 id="A88-设计让-Agent-定时每天生成风险简报">A88. 设计：让 Agent 定时每天生成风险简报。</h4>
+<p>这是批处理：调度器创建 Run，身份用服务账号 + 模拟 workspace，产物写入 dct_dashboard 或邮件，失败进死信，不占用交互配额。不要让用户 Thread 里挂着 24h checkpoint。可用 Temporal 调度 + 短 LangGraph Run。</p>
+<h4 id="A89-设计Agent-触发创建偏差调查单">A89. 设计：Agent 触发「创建偏差调查单」。</h4>
+<p>写操作：分步确认（HITL）、幂等键、最小权限系统用户、审计、补偿。默认只生成草稿，人提交。能力面单独 tool，不进通用 bash。</p>
+<h4 id="A90-反问面试官的问题也是加分项">A90. 反问面试官的问题（也是加分项）。</h4>
+<p>执行面与控制面谁 owner？Tool 契约谁审批？评测是否挡发布？租户隔离做到哪一层？LLM 预算谁买单？断线策略？这些问不出来说明对方可能没有 Agent 平台，只有 Demo。</p>
+<h3 id="1019-架构师速查题型对照">10.19 架构师速查：题型对照</h3>
+<table>
+<thead>
+<tr>
+<th>面试官题型</th>
+<th>先答哪几条</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>画架构</td>
+<td>§10.7 白板 + A2 四层</td>
+</tr>
+<tr>
+<td>为什么 LangGraph</td>
+<td>A3、A4、A31</td>
+</tr>
+<tr>
+<td>如何保证正确</td>
+<td>A10、A18、A24、A62</td>
+</tr>
+<tr>
+<td>如何保证安全</td>
+<td>A19、A20、A54–A58</td>
+</tr>
+<tr>
+<td>如何规模化</td>
+<td>A22、A48–A51、A82</td>
+</tr>
+<tr>
+<td>如何演进</td>
+<td>A29、A35、A52、A80</td>
+</tr>
+<tr>
+<td>你如何决策</td>
+<td>A5、A13、A30、A42</td>
+</tr>
+</tbody></table>
+<h3 id="1020-架构师不该说的话">10.20 架构师不该说的话</h3>
+<ul>
+<li>「LangGraph 就是架构。」「换 Multi-Agent 就更智能。」</li>
+<li>「安全靠 System Prompt。」「评测上线后再说。」</li>
+<li>「记忆越多越好。」「工具越多越好。」</li>
+<li>「上了 MCP/A2A 就是平台。」「Fine-tune 一下就准。」</li>
+<li>「置信度 0.9 所以可自动下发工单。」</li>
+<li>把 V2「不要迁 LangGraph」和现状「已经是 lead_agent」混成一套时间线还假装始终正确——要会讲 <strong>决策反转的条件</strong>。</li>
+<li>把未落地的 workspace 多租户讲成已上线。</li>
+</ul>
+<hr>
+<h2 id="维护说明">维护说明</h2>
+<ul>
+<li>真源以仓库 <code>ARCHITECTURE_AND_JOURNEY.md</code>、<code>docker-compose</code> 实际服务列表为准；V2 PRD 中的外部 Wren / 自研 Orchestrator <strong>勿当作现行架构</strong>。</li>
+<li>若 compose、鉴权链或 <code>dct_*</code> / Wren 表结构变更，请同步修订本节与仓库内 <code>docs/DCT项目全景梳理.md</code>（若存在）。</li>
+</ul>
+</div> <footer class="post-end" data-astro-cid-7jjqptxk> <p data-astro-cid-7jjqptxk> <strong data-page-zh="读到这里了？" data-page-en="Made it this far?" data-astro-cid-7jjqptxk>读到这里了？</strong> <span data-page-zh="如果这篇文章对你有帮助，欢迎分享或交流。" data-page-en="If this article helped, feel free to share it or get in touch." data-astro-cid-7jjqptxk>如果这篇文章对你有帮助，欢迎分享或交流。</span> </p> <div class="post-end-links" data-astro-cid-7jjqptxk> <a href="/blog/" data-page-zh="返回博客" data-page-en="Back to blog" data-astro-cid-7jjqptxk>返回博客</a> <a href="/about/#contact" data-page-zh="与我交流 ↗" data-page-en="Get in touch ↗" data-astro-cid-7jjqptxk>与我交流 ↗</a> </div> </footer> </div> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"><span>© 2026 Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const h=[...document.querySelectorAll("[data-page-zh][data-page-en]")],d=s=>{h.forEach(o=>{o.textContent=s==="en"?o.dataset.pageEn??"":o.dataset.pageZh??""})};d(document.documentElement.lang);window.addEventListener("language-change",s=>{d(s.detail)});const a=[...document.querySelectorAll(".post-toc-link")];if(a.length>0){const s=new Map(a.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),o=e=>{a.forEach(c=>{const t=decodeURIComponent(c.hash.slice(1))===e;c.classList.toggle("is-active",t),t?c.setAttribute("aria-current","location"):c.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>s.has(e.id));if(n.length>0){o(n[0].id);const e=()=>{const i=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((l,r)=>r.getBoundingClientRect().top<=112?r:l,n[0]);o(i.id)},c=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>c.observe(t)),window.addEventListener("scroll",e,{passive:!0}),a.forEach(t=>t.addEventListener("click",()=>o(decodeURIComponent(t.hash.slice(1)))))}}</script> 
