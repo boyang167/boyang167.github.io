@@ -17,18 +17,32 @@ const { html, toc } = renderMarkdownDocument(entry.body);
 const categoryLabel = entry.category.replace(/-/g, ' ');
 ---
 <BaseLayout title={`${entry.title} · 知识库`} description={entry.summary || entry.title}>
-  <article class="wrap detail-page">
+  <article
+    class="wrap detail-page"
+    data-page-title-zh={`${entry.title} · 知识库`}
+    data-page-title-en={`${entry.title} · Knowledge base`}
+  >
     <header class="detail-hero">
-      <a class="back-link" href="/knowledge/">← 返回知识库</a>
+      <a
+        class="back-link"
+        href="/knowledge/"
+        data-page-zh="← 返回知识库"
+        data-page-en="← Back to knowledge base"
+      >← 返回知识库</a>
       <div class="hero-banner" aria-hidden="true"><span>KB</span></div>
       <div><span class="tag">{categoryLabel}</span></div>
       <h1>{entry.title}</h1>
       {entry.summary && <p class="hero-summary">{entry.summary}</p>}
-      <p class="hero-meta"><span>Published wiki</span>{entry.updated && <><span>·</span><span>{entry.updated}</span></>}</p>
+      <p class="hero-meta"><span data-page-zh="发布于 Wiki" data-page-en="Published wiki">发布于 Wiki</span>{entry.updated && <><span>·</span><span>{entry.updated}</span></>}</p>
     </header>
     <div class:list={['detail-layout', { 'detail-layout--no-toc': toc.length === 0 }]}>
-      {toc.length > 0 && <aside class="detail-toc" aria-label="本文目录">
-        <p class="toc-title">本文目录</p>
+      {toc.length > 0 && <aside
+        class="detail-toc"
+        aria-label="本文目录"
+        data-page-aria-zh="本文目录"
+        data-page-aria-en="On this page"
+      >
+        <p class="toc-title" data-page-zh="本文目录" data-page-en="On this page">本文目录</p>
         <nav class="toc-nav">{toc.map((item) => <a href={`#${item.id}`} class={`toc-link depth-${item.depth}`}>{item.text}</a>)}</nav>
       </aside>}
       <main class="detail-main">
@@ -47,10 +61,18 @@ const categoryLabel = entry.category.replace(/-/g, ' ');
 </BaseLayout>
 <script>
   const localizedText = [...document.querySelectorAll<HTMLElement>('[data-page-zh][data-page-en]')];
+  const localizedAria = [...document.querySelectorAll<HTMLElement>('[data-page-aria-zh][data-page-aria-en]')];
+  const pageRoot = document.querySelector<HTMLElement>('[data-page-title-zh][data-page-title-en]');
   const syncPageLanguage = (lang: string) => {
     localizedText.forEach((element) => {
       element.textContent = lang === 'en' ? element.dataset.pageEn ?? '' : element.dataset.pageZh ?? '';
     });
+    localizedAria.forEach((element) => {
+      const label = lang === 'en' ? element.dataset.pageAriaEn : element.dataset.pageAriaZh;
+      if (label) element.setAttribute('aria-label', label);
+    });
+    const title = lang === 'en' ? pageRoot?.dataset.pageTitleEn : pageRoot?.dataset.pageTitleZh;
+    if (title) document.title = title;
   };
   syncPageLanguage(document.documentElement.lang);
   window.addEventListener('language-change', (event) => {

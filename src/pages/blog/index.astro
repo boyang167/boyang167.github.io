@@ -441,9 +441,10 @@ let order = 0;
     border-color: color-mix(in srgb, var(--blue) 22%, var(--line));
   }
   .blog-card:focus-visible {
-    outline: none;
+    outline: 3px solid color-mix(in srgb, var(--blue) 55%, transparent);
+    outline-offset: 3px;
     box-shadow:
-      var(--shadow),
+      var(--shadow-sm),
       0 0 0 3px color-mix(in srgb, var(--blue) 40%, transparent);
   }
   .blog-card-head {

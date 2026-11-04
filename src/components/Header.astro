@@ -19,7 +19,7 @@ const links = [
   </nav>
   <div class="header-actions">
     <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言">EN</button>
-    <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题">◐</button>
+    <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false">◐</button>
     <a class="contact-pill" href="/about/#contact">联系我 <span>↗</span></a>
     <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false">☰</button>
   </div>
@@ -28,11 +28,23 @@ const links = [
   const languageButton = document.querySelector('#language-toggle');
   const themeButton = document.querySelector('#theme-toggle');
   const menuButton = document.querySelector('#menu-toggle');
+  const syncThemeButton = (lang = document.documentElement.lang) => {
+    const dark = document.documentElement.classList.contains('dark');
+    const english = lang === 'en';
+    const action = english
+      ? (dark ? 'Switch to light mode' : 'Switch to dark mode')
+      : (dark ? '切换浅色模式' : '切换深色模式');
+    themeButton?.setAttribute('aria-pressed', String(dark));
+    themeButton?.setAttribute('aria-label', action);
+    themeButton?.setAttribute('title', action);
+  };
   themeButton?.addEventListener('click', () => {
     const dark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('theme', dark ? 'dark' : 'light');
+    syncThemeButton();
+    window.dispatchEvent(new CustomEvent('theme-change', { detail: dark ? 'dark' : 'light' }));
   });
-  if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+  syncThemeButton();
   const setLanguageLabel = () => {
     const english = document.documentElement.lang === 'en';
     if (languageButton) languageButton.textContent = english ? 'ZH' : 'EN';
@@ -45,6 +57,7 @@ const links = [
     setLanguageLabel();
     setMenuState(header?.classList.contains('menu-open') ?? false);
   });
+  window.addEventListener('language-change', (event) => syncThemeButton(event.detail));
   setLanguageLabel();
   const header = document.querySelector('.site-header');
   const setMenuState = (isOpen: boolean) => {

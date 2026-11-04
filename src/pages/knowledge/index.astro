@@ -37,19 +37,19 @@ const categoryIcons: Record<string, string> = {
   general: '✳',
 };
 
-function categoryTitle(id: string) {
-  const labels: Record<string, string> = {
-    'big-data': '数据工程',
-    biological: '生信与数据',
-    database: '数据库',
-    infrastructure: '基础设施',
-    kg: '知识图谱',
-    ml: '机器学习',
-    programming: '编程',
-    tech: '技术分享',
-    general: '综合',
+function categoryTitle(id: string, lang: 'zh' | 'en' = 'zh') {
+  const labels: Record<string, { zh: string; en: string }> = {
+    'big-data': { zh: '数据工程', en: 'Data engineering' },
+    biological: { zh: '生信与数据', en: 'Bioinformatics and data' },
+    database: { zh: '数据库', en: 'Databases' },
+    infrastructure: { zh: '基础设施', en: 'Infrastructure' },
+    kg: { zh: '知识图谱', en: 'Knowledge graphs' },
+    ml: { zh: '机器学习', en: 'Machine learning' },
+    programming: { zh: '编程', en: 'Programming' },
+    tech: { zh: '技术分享', en: 'Technical notes' },
+    general: { zh: '综合', en: 'General' },
   };
-  return labels[id] ?? id.replace(/-/g, ' ');
+  return labels[id]?.[lang] ?? id.replace(/-/g, ' ');
 }
 
 const byCategory = new Map<string, typeof entries>();
@@ -60,9 +60,13 @@ for (const entry of entries) {
 }
 ---
 <BaseLayout title="技术知识库 · Boyang Wang">
-  <section class="wrap page-hero">
+  <section
+    class="wrap page-hero"
+    data-page-title-zh="技术知识库 · Boyang Wang"
+    data-page-title-en="Knowledge base · Boyang Wang"
+  >
     <div class="eyebrow">A MAP OF WHAT I'M LEARNING</div>
-    <h1>技术知识库</h1>
+    <h1 data-page-zh="技术知识库" data-page-en="Knowledge base">技术知识库</h1>
     <p
       data-page-zh="将经过整理与审核的技术内容，组织成可持续导航的公开知识地图。"
       data-page-en="Reviewed technical material organized as a durable, navigable knowledge map."
@@ -73,15 +77,25 @@ for (const entry of entries) {
   <section class="wrap knowledge-layout">
     <aside class="knowledge-sidebar card">
       <p class="sidebar-kicker" data-page-zh="按主题浏览" data-page-en="Browse by topic">按主题浏览</p>
-      <b>知识目录</b>
-      <a class="selected" href="#articles">⌂　总览</a>
+      <b data-page-zh="知识目录" data-page-en="Knowledge directory">知识目录</b>
+      <a class="selected" href="#articles" data-page-zh="⌂　总览" data-page-en="⌂ Overview">⌂　总览</a>
       {[...byCategory.keys()].map((cat) => (
-        <a href={`#cat-${cat}`}>{categoryIcons[cat] ?? '◈'}　{categoryTitle(cat)}</a>
+        <a
+          href={`#cat-${cat}`}
+          data-page-zh={`${categoryIcons[cat] ?? '◈'}　${categoryTitle(cat, 'zh')}`}
+          data-page-en={`${categoryIcons[cat] ?? '◈'} ${categoryTitle(cat, 'en')}`}
+        >{categoryIcons[cat] ?? '◈'}　{categoryTitle(cat, 'zh')}</a>
       ))}
       <div class="sidebar-note">
         <span>✦</span>
-        <b>{submoduleReady ? '已关联 wiki' : '未初始化 submodule'}</b>
-        <small>
+        <b
+          data-page-zh={submoduleReady ? '已关联 wiki' : '未初始化 submodule'}
+          data-page-en={submoduleReady ? 'Wiki linked' : 'Submodule not initialized'}
+        >{submoduleReady ? '已关联 wiki' : '未初始化 submodule'}</b>
+        <small
+          data-page-zh={submoduleReady ? `${entries.length} 篇已发布笔记` : '运行 git submodule update --init'}
+          data-page-en={submoduleReady ? `${entries.length} published notes` : 'Run git submodule update --init'}
+        >
           {submoduleReady
             ? `${entries.length} 篇已发布笔记`
             : '运行 git submodule update --init'}
@@ -91,10 +105,14 @@ for (const entry of entries) {
     <div class="knowledge-main" id="articles">
       <div class="knowledge-heading">
         <div>
-          <h2>已发布笔记</h2>
-          <p class="muted">仅展示经审核的 publish 副本，与 Agent 用的 wiki 主库分离。</p>
+          <h2 data-page-zh="已发布笔记" data-page-en="Published notes">已发布笔记</h2>
+          <p
+            class="muted"
+            data-page-zh="仅展示经审核的 publish 副本，与 Agent 用的 wiki 主库分离。"
+            data-page-en="Only reviewed publish copies are shown, separate from the Agent-facing wiki."
+          >仅展示经审核的 publish 副本，与 Agent 用的 wiki 主库分离。</p>
         </div>
-        <span class="tag">公开内容</span>
+        <span class="tag" data-page-zh="公开内容" data-page-en="Public content">公开内容</span>
       </div>
       {entries.length === 0 ? (
         <div class="empty-card">
@@ -122,7 +140,7 @@ for (const entry of entries) {
         <>
           {[...byCategory.entries()].map(([cat, list]) => (
             <div class="category-block" id={`cat-${cat}`}>
-              <h3>{categoryTitle(cat)}</h3>
+              <h3 data-page-zh={categoryTitle(cat, 'zh')} data-page-en={categoryTitle(cat, 'en')}>{categoryTitle(cat, 'zh')}</h3>
               <div class="grid-2">
                 {list.map((item) => (
                   <a class="card knowledge-card" href={`/knowledge/${item.slug}/`}>
@@ -159,21 +177,34 @@ for (const entry of entries) {
       <div class="knowledge-banner">
         <div class="card-icon">✧</div>
         <div>
-          <b>仓库关联</b>
-          <p class="muted">Submodule：<code>external/personal-knowledge-wiki</code>。push publish/ 触发门户 Actions 重建。</p>
+          <b data-page-zh="仓库关联" data-page-en="Repository connection">仓库关联</b>
+          <p class="muted">
+            <span data-page-zh="Submodule：" data-page-en="Submodule: ">Submodule：</span><code>external/personal-knowledge-wiki</code><span
+              data-page-zh="。push publish/ 触发门户 Actions 重建。"
+              data-page-en=". Pushing publish/ triggers a portal rebuild in Actions."
+            >。push publish/ 触发门户 Actions 重建。</span>
+          </p>
         </div>
-        <a href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">Wiki 仓库 ↗</a>
+        <a
+          href="https://github.com/boyang167/personal-knowledge-wiki"
+          rel="noopener"
+          data-page-zh="Wiki 仓库 ↗"
+          data-page-en="Wiki repo ↗"
+        >Wiki 仓库 ↗</a>
       </div>
     </div>
   </section>
 </BaseLayout>
 <script>
   const localizedText = [...document.querySelectorAll('[data-page-zh][data-page-en]')];
+  const pageRoot = document.querySelector('[data-page-title-zh][data-page-title-en]');
   const syncPageLanguage = (lang) => {
     localizedText.forEach((element) => {
       const text = lang === 'en' ? element.dataset.pageEn : element.dataset.pageZh;
       if (text) element.textContent = text;
     });
+    const title = lang === 'en' ? pageRoot?.dataset.pageTitleEn : pageRoot?.dataset.pageTitleZh;
+    if (title) document.title = title;
   };
   syncPageLanguage(document.documentElement.lang);
   window.addEventListener('language-change', (event) => syncPageLanguage(event.detail));
