@@ -28,15 +28,6 @@ export const BLOG_CATEGORY_ORDER = [
   '个人开源产品',
 ] as const;
 
-export const BLOG_CATEGORY_LABELS: Record<(typeof BLOG_CATEGORY_ORDER)[number], string> = {
-  'AI Agent': 'AI Agent',
-  '数据工程': 'Data engineering',
-  '机器学习': 'Machine learning',
-  '知识管理': 'Knowledge management',
-  '产品与方案': 'Products and solutions',
-  '个人开源产品': 'Personal open-source products',
-};
-
 /** 从已发布文章收集 category，用于列表页筛选（与 frontmatter 联动） */
 export function collectBlogCategories(posts: BlogEntry[]): string[] {
   const seen = new Set<string>();
