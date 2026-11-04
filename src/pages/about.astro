@@ -34,38 +34,40 @@ const skillAreas = [
     n: '01',
     layout: 'agent',
     title: 'Agent Engineering & Harness & Open-Source Ecosystem',
-    summary:
-      '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。',
+    summary: '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。',
     groups: [
       {
-        label: '架构设计与推理范式 · Architecture & Reasoning',
+        label: '01. Architecture & Reasoning · 架构设计与推理范式',
         items:
-          'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+          'Single / Multi-Agent Architecture · ReAct · Plan-and-Solve · Planning & Reasoning · Supervisor Pattern',
       },
       {
-        label: '运行时与工具编排 · Runtime & Orchestration',
+        label: '02. Agent Runtime & Harness · 运行时与执行控制',
         items:
-          'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+          'Agent Harness · Execution Loop · State Management · Tool Calling · Execution Control · Observability & Evaluation',
       },
       {
-        label: '检索与上下文工程 · Retrieval & Context Engineering',
+        label: '03. Context & Knowledge Engineering · 上下文与知识工程',
         items:
-          'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+          'Context Engineering · RAG / GraphRAG · Memory Management · Retrieval & Reranking · Knowledge Graph · Context Compression',
       },
       {
-        label: '开源 Agent 项目研究 · Open-Source Agent Projects',
+        label: '04. Integration & Orchestration · 系统集成与任务编排',
+        items:
+          'MCP / A2A · Agent Skills · Workflow Orchestration · Event-driven Execution · Human-in-the-loop · API Integration',
+      },
+      {
+        label: 'Open-Source Ecosystem · 开源项目生态',
+        note: '按产品定位和工程职责分类，而非按技术名称分类。',
         projects: [
-          { category: 'Personal Agent', items: 'OpenClaw · Hermes Agent' },
-          { category: 'General-Purpose Agent', items: 'DeerFlow' },
-          { category: 'Code Agent', items: 'Pi · Codex · Claude Code · Cursor' },
-          { category: 'Multi-Agent Collaboration', items: 'Multica · Orca' },
-          { category: 'Data Agent', items: 'DB-GPT · Wren' },
+          { category: 'Agent Frameworks', items: 'LangGraph · Vercel AI SDK' },
+          { category: 'General-purpose Agents', items: 'DeerFlow' },
+          { category: 'Personal Agents', items: 'OpenClaw · Hermes Agent' },
+          { category: 'Coding Agents', items: 'Codex · Claude Code · Cursor · Pi' },
+          { category: 'Multi-Agent Systems', items: 'Multica · ORCA' },
+          { category: 'Data Agents', items: 'DB-GPT · Wren AI' },
           {
-            category: 'Agent Development Framework',
-            items: 'Vercel AI SDK · LangGraph',
-          },
-          {
-            category: 'Workflow Orchestration',
+            category: 'Workflow & Agent Platforms',
             items: 'Dify · n8n',
             layout: 'rail',
           },
@@ -75,20 +77,44 @@ const skillAreas = [
   },
   {
     n: '02',
+    layout: 'agent',
     title: 'Data Engineering & AI for BI',
-    summary: '数据接入、平台治理与面向分析场景的智能问数能力。',
+    summary:
+      '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。',
     groups: [
       {
-        label: '数据计算与接入',
-        items: 'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+        label: '01. Data Integration · 数据集成',
+        items:
+          'SeaTunnel · Flink CDC · Kafka · API / File Ingestion · Multi-source Sync',
       },
       {
-        label: '平台与数据治理',
-        items: 'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层',
+        label: '02. Lakehouse & Compute · 湖仓与计算',
+        items:
+          'Apache Iceberg · Spark · Flink · Doris / StarRocks · Hive Metastore · Batch & Stream',
       },
       {
-        label: '智能分析与问数',
-        items: 'Data Agent · Text-to-SQL · 自然语言数据分析',
+        label: '03. DataOps & Governance · 开发与治理',
+        items:
+          'DolphinScheduler · DataHub · OpenLineage · Great Expectations · Ranger / SSO · Metadata-driven',
+      },
+      {
+        label: '04. Data Serving & AI Ready · 数据服务与智能分析',
+        items:
+          'Data API · Semantic Layer · Data Agent · Text-to-SQL · MCP · BI / Dashboard',
+      },
+      {
+        label: 'Cloud Data Platform · 云数据中台',
+        note: '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。',
+        projects: [
+          { category: 'Warehouse & Serving', items: 'MaxCompute · Hologres' },
+          { category: 'Dev & Governance', items: 'DataWorks · Data Map · Quality' },
+          { category: 'Stream & Storage', items: 'Flink · DataHub · OSS Lake' },
+          {
+            category: 'Landing Zone',
+            items: 'Multi-account · RAM · VPC / CEN · Cost Governance',
+            layout: 'rail',
+          },
+        ],
       },
     ],
   },
@@ -210,18 +236,56 @@ const skillAreas = [
   },
   {
     n: '04',
-    title: 'Full-Stack Engineering',
-    summary: '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。',
+    layout: 'agent',
+    summaryOneLine: true,
+    title: 'Full-Stack Engineering & Product Delivery',
+    summary:
+      '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。',
     groups: [
-      { label: '前端工程', items: 'React · Vue · TypeScript · HTML · CSS' },
       {
-        label: '后端与服务架构',
-        items: 'Go · Python · Java · Microservices · Serverless',
+        label: '01. Frontend Engineering · 前端工程',
+        note: '前端架构、应用开发与交互体验',
+        items:
+          'Vue 3 · React · Next.js · TypeScript · Element Plus · Ant Design · Component Architecture · Monorepo',
       },
-      { label: '持久化与缓存', items: 'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ' },
       {
-        label: '集成与交付质量',
-        items: 'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付',
+        label: '02. Backend & API Engineering · 后端与接口工程',
+        note: '服务架构、API 设计与业务逻辑实现',
+        items:
+          'Go · Gin · go-kit · Python · FastAPI · Flask · RESTful API · OpenAPI / Swagger · Microservices · BFF · Middleware',
+      },
+      {
+        label: '03. Data Access & Persistence · 数据访问与持久化',
+        note: '数据建模、存储抽象与持久化架构',
+        items:
+          'PostgreSQL · Redis · GORM · SQLAlchemy · NebulaGraph ORM · Alembic · Database Migration',
+      },
+      {
+        label: '04. Security & Engineering Governance · 安全与工程治理',
+        note: '身份认证、权限控制、接口规范与质量保障',
+        items:
+          'JWT · OIDC · LDAP · Casbin RBAC · Multi-tenancy · License Management · API Governance · Automated Testing · Tracing · Observability',
+      },
+      {
+        label: 'Engineering Practices · 工程方法与交付能力',
+        projects: [
+          {
+            category: '01. Architecture & Design · 架构设计',
+            items:
+              'Modular Architecture · Domain Modeling · Service Decomposition · BFF · Multi-tenancy · RBAC',
+          },
+          {
+            category: '02. Engineering & Integration · 工程实现与系统集成',
+            items:
+              'API Design · MCP Integration · Middleware · Workflow Orchestration · Cloud-Native Integration',
+          },
+          {
+            category: '03. Production & Delivery · 生产级交付',
+            items:
+              'Automated Testing · Observability · Security · CI/CD · Deployment · Maintainability',
+            layout: 'rail',
+          },
+        ],
       },
     ],
   },
@@ -367,7 +431,7 @@ const splitSkillItems = (items: string) =>
       <div class="eyebrow">CAPABILITIES</div>
       <h2>技术能力与研究方向</h2>
       <p class="muted capabilities-intro">
-        覆盖 Harness Engineer、数据平台、建模方法、全栈实现与云原生交付，侧重可扩展、可审计、可运维的生产级实践。
+        覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。
       </p>
     </div>
     <div class="capability-stack">
@@ -376,7 +440,7 @@ const splitSkillItems = (items: string) =>
           class:list={[
             'capability-card',
             index < 4 ? 'capability-card-primary' : 'capability-card-supporting',
-            area.layout === 'agent' && 'capability-card-featured',
+            (area.layout === 'agent' || area.layout === 'ml') && 'capability-card-featured',
             area.layout === 'agent' && 'skill-area-agent',
             area.layout === 'ml' && 'skill-area-ml',
           ]}
@@ -386,7 +450,14 @@ const splitSkillItems = (items: string) =>
               <span class="skill-area-badge" aria-hidden="true">{area.badge ?? area.n}</span>
               <div>
                 <h3 class="skill-area-title">{area.title}</h3>
-                <p class="skill-area-summary">{area.summary}</p>
+                <p
+                  class:list={[
+                    'skill-area-summary',
+                    area.summaryOneLine && 'skill-area-summary-oneline',
+                  ]}
+                >
+                  {area.summary}
+                </p>
               </div>
             </div>
           </header>
@@ -403,9 +474,13 @@ const splitSkillItems = (items: string) =>
               >
                 <dt>
                   <span class="skill-group-label">{group.label}</span>
+                  {group.note && !('projects' in group && group.projects) && (
+                    <p class="skill-group-note">{group.note}</p>
+                  )}
                 </dt>
                 {'projects' in group && group.projects ? (
                   <dd class="skill-project-list">
+                    {group.note && <p class="skill-group-note">{group.note}</p>}
                     {group.projects.map((row) => (
                       <div
                         class:list={[
@@ -429,7 +504,6 @@ const splitSkillItems = (items: string) =>
                         <span class="skill-chip">{item}</span>
                       ))}
                     </div>
-                    {group.note && <p class="skill-group-note">{group.note}</p>}
                   </dd>
                 )}
               </div>
@@ -740,7 +814,7 @@ const splitSkillItems = (items: string) =>
     font-size: 12px;
   }
   .capabilities-header {
-    max-width: 720px;
+    max-width: none;
     margin-bottom: 32px;
   }
   .capabilities-header h2 {
@@ -750,6 +824,7 @@ const splitSkillItems = (items: string) =>
     margin: 0;
     font-size: 13px;
     line-height: 1.7;
+    white-space: nowrap;
   }
   .capability-stack {
     display: grid;
@@ -782,11 +857,14 @@ const splitSkillItems = (items: string) =>
     max-width: 52rem;
   }
   .skill-area-agent .skill-area-summary {
-    max-width: 52rem;
+    max-width: none;
     font-size: 12.5px;
   }
+  .skill-area-summary-oneline {
+    white-space: nowrap;
+  }
   .skill-area-agent .skill-groups {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
     padding: 18px 20px 22px;
   }
@@ -805,6 +883,15 @@ const splitSkillItems = (items: string) =>
   .skill-area-agent .skill-group-label {
     display: block;
   }
+  .skill-area-agent .skill-group-section .skill-group-note {
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--muted);
+  }
   .skill-area-agent .skill-group-projects {
     grid-column: 1 / -1;
     grid-template-columns: 1fr;
@@ -819,6 +906,15 @@ const splitSkillItems = (items: string) =>
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     align-items: stretch;
+  }
+  .skill-area-agent .skill-project-list > .skill-group-note {
+    grid-column: 1 / -1;
+    margin: 0 0 4px;
+    padding: 0;
+    border: 0;
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--muted);
   }
   .skill-area-agent .skill-project-row {
     grid-template-columns: 1fr;
@@ -860,6 +956,9 @@ const splitSkillItems = (items: string) =>
     text-transform: uppercase;
     color: var(--muted);
   }
+  .skill-area-ml {
+    grid-column: 1 / -1;
+  }
   .skill-area-ml .skill-groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
@@ -872,6 +971,9 @@ const splitSkillItems = (items: string) =>
     align-content: stretch;
     min-height: 100%;
     padding: 14px 16px;
+  }
+  .skill-area-ml .skill-group-projects {
+    grid-column: 1 / -1;
   }
   .skill-area-ml .skill-group dt {
     margin: 0 0 12px;
@@ -892,18 +994,18 @@ const splitSkillItems = (items: string) =>
     line-height: 1.6;
   }
   .skill-area-ml .skill-group-projects dt {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--line);
   }
   .skill-area-ml .skill-project-list {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 18px;
   }
   .skill-area-ml .skill-project-row {
-    grid-template-columns: minmax(64px, 76px) 1fr;
-    gap: 6px 8px;
+    grid-template-columns: minmax(88px, 110px) 1fr;
+    gap: 6px 10px;
     padding: 0;
     border: none;
     border-radius: 0;
@@ -1035,14 +1137,20 @@ const splitSkillItems = (items: string) =>
     border: 1px solid var(--line);
     box-shadow: 0 1px 0 color-mix(in srgb, var(--line) 80%, transparent);
   }
-  @media (min-width: 901px) {
-    .skill-area-ml .skill-groups {
-      grid-template-columns: 1fr;
+  @media (max-width: 1280px) {
+    .skill-area-summary-oneline {
+      white-space: normal;
     }
   }
   @media (max-width: 1100px) {
-    .skill-area-agent .skill-groups {
+    .skill-area-ml .skill-groups {
       grid-template-columns: 1fr;
+    }
+    .skill-area-ml .skill-project-list {
+      grid-template-columns: 1fr;
+    }
+    .skill-area-agent .skill-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .skill-area-agent .skill-project-list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1191,6 +1299,11 @@ const splitSkillItems = (items: string) =>
     }
     .focus-item:nth-child(-n + 2) {
       border-bottom: 1px solid var(--about-border);
+    }
+  }
+  @media (max-width: 1100px) {
+    .capabilities-intro {
+      white-space: normal;
     }
   }
   @media (max-width: 760px) {
