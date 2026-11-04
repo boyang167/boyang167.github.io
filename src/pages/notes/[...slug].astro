@@ -17,25 +17,25 @@ const { entry } = Astro.props;
 const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
 ---
 <BaseLayout title={`${entry.title} · 笔记`} description={entry.summary || entry.title}>
-  <article class="wrap article-page">
-    <a class="back-link" href="/notes/">← 返回笔记</a>
-    <header class="article-header">
-      <span class="tag">{noteCategoryLabel(entry.category)}</span>
-      {entry.status && <span class="tag tag-muted">{entry.status}</span>}
-      <h1>{entry.title}</h1>
-      {entry.summary && <p class="article-intro">{entry.summary}</p>}
-      <div class="byline">
-        <span class="byline-avatar">NT</span>
-        <span>
-          <b>raw/1-Note</b>
-          {entry.updated && <small>{entry.updated}</small>}
-        </span>
+  <article class="wrap detail-page">
+    <header class="detail-hero">
+      <a class="back-link" href="/notes/">← 返回笔记</a>
+      <div class="hero-banner" aria-hidden="true"><span>NT</span></div>
+      <div class="hero-tags">
+        <span class="tag">{noteCategoryLabel(entry.category)}</span>
+        {entry.status && <span class="tag tag-muted">{entry.status}</span>}
       </div>
+      <h1>{entry.title}</h1>
+      {entry.summary && <p class="hero-summary">{entry.summary}</p>}
+      <p class="hero-meta">
+        <span>raw/1-Note</span>
+        {entry.updated && <><span aria-hidden="true">·</span><span>{entry.updated}</span></>}
+      </p>
     </header>
-    <div class:list={['article-layout', { 'article-layout--no-toc': toc.length === 0 }]}>
+    <div class:list={['detail-layout', { 'detail-layout--no-toc': toc.length === 0 }]}>
       {toc.length > 0 && (
-        <aside class="toc" aria-label="本文目录">
-          <b>本文目录</b>
+        <aside class="detail-toc" aria-label="本文目录">
+          <p class="toc-title">本文目录</p>
           <nav class="toc-nav">
             {toc.map((item) => (
               <a href={`#${item.id}`} class={`toc-link depth-${item.depth}`}>
@@ -45,208 +45,298 @@ const { html, toc } = renderMarkdownDocument(entry.body, rewriteNoteMediaUrls);
           </nav>
         </aside>
       )}
-      <div class="article-body-content knowledge-md" set:html={html} />
+      <main class="detail-main">
+        <div class="prose" set:html={html} />
+        <footer class="detail-cta">
+          <p><strong>继续探索</strong><span>经审核的对外副本收录在知识库中。</span></p>
+          <div class="cta-links">
+            <a href="/notes/">返回笔记</a>
+            <a href="/knowledge/">查看知识库 ↗</a>
+          </div>
+        </footer>
+      </main>
     </div>
-    <p class="note-crosslink muted">
-      经审核的对外副本见 <a href="/knowledge/">知识库</a>（<code>publish/</code>，路径与 wiki 主题对应）。
-    </p>
   </article>
   <MermaidInit />
 </BaseLayout>
 <style>
-  .article-page {
-    padding-top: 28px;
+  .detail-page {
+    padding: 48px 0 80px;
+    overflow-x: clip;
   }
   .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
     font-size: 12px;
     color: var(--muted);
   }
-  .article-header {
-    max-width: 820px;
-    margin: 48px auto 32px;
+  .back-link:hover { color: var(--blue); }
+  .detail-hero {
+    max-width: var(--reading-max);
+    margin: 0 auto 40px;
   }
-  .article-header h1 {
-    font-size: clamp(28px, 4vw, 42px);
-    margin: 18px 0;
-  }
-  .article-intro {
-    font-size: 17px;
-    color: var(--muted);
-    max-width: 760px;
-  }
-  .tag-muted {
-    margin-left: 6px;
-    opacity: 0.85;
-  }
-  .byline {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 25px;
-  }
-  .byline-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--blue-soft);
-    color: var(--blue);
+  .hero-banner {
+    height: 132px;
+    margin: 10px 0 28px;
+    border: 1px solid color-mix(in srgb, var(--blue) 18%, var(--line));
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--blue) 22%, transparent), transparent 34%),
+      linear-gradient(135deg, var(--surface-raised), var(--blue-soft));
     display: grid;
     place-items: center;
+    overflow: hidden;
+  }
+  .hero-banner span {
+    color: var(--blue);
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: .08em;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag-muted { opacity: .78; }
+  .detail-hero h1 {
+    margin: 12px 0 14px;
+    font-size: clamp(30px, 3.5vw, 42px);
+    line-height: 1.2;
+    letter-spacing: -.03em;
+  }
+  .hero-summary {
+    margin: 0 0 16px;
+    max-width: var(--reading-max);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .detail-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, var(--reading-max));
+    gap: 64px;
+    justify-content: center;
+    align-items: start;
+  }
+  .detail-layout--no-toc {
+    grid-template-columns: minmax(0, var(--reading-max));
+  }
+  .detail-main { min-width: 0; }
+  .detail-toc {
+    position: sticky;
+    top: 96px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+  .toc-title {
+    margin: 0 0 10px;
+    color: var(--text);
     font-size: 11px;
     font-weight: 800;
+    letter-spacing: .04em;
   }
-  .byline > span:last-child {
-    display: grid;
-  }
-  .byline b {
-    font-size: 12px;
-  }
-  .byline small {
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .article-layout {
-    display: grid;
-    grid-template-columns: 200px minmax(0, 720px);
-    gap: 48px;
-    justify-content: center;
-    margin: 0 auto 24px;
-    max-width: 980px;
-  }
-  .article-layout--no-toc {
-    grid-template-columns: minmax(0, 720px);
-    max-width: 720px;
-  }
-  .toc {
-    position: sticky;
-    top: 24px;
-    align-self: start;
-    font-size: 11px;
-    color: var(--muted);
-    max-height: calc(100vh - 48px);
-    overflow-y: auto;
-    padding-right: 8px;
-  }
-  .toc b {
-    display: block;
-    color: var(--text);
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-  .toc-nav {
-    display: grid;
-    gap: 8px;
-  }
+  .toc-nav { display: grid; gap: 2px; }
   .toc-link {
-    color: var(--muted);
-    line-height: 1.45;
-    text-decoration: none;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 8px;
     border-left: 2px solid transparent;
-    padding-left: 0;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .toc-link:hover {
-    color: var(--blue);
-  }
-  .toc-link.depth-2 {
-    padding-left: 0;
-  }
-  .toc-link.depth-3 {
-    padding-left: 12px;
-    font-size: 10px;
-  }
-  .toc-link.depth-4 {
-    padding-left: 22px;
-    font-size: 10px;
-    opacity: 0.92;
-  }
-  .toc-link.depth-5 {
-    padding-left: 32px;
-    font-size: 10px;
-    opacity: 0.85;
-  }
-  @media (max-width: 860px) {
-    .article-layout {
-      display: block;
-      max-width: 720px;
-      padding: 0;
-    }
-    .toc {
-      position: static;
-      max-height: none;
-      margin-bottom: 28px;
-      padding: 16px 18px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-    }
-  }
-  .knowledge-md :global(h2),
-  .knowledge-md :global(h3),
-  .knowledge-md :global(h4),
-  .knowledge-md :global(h5) {
-    scroll-margin-top: 28px;
-  }
-  .knowledge-md :global(h2) {
-    font-size: 22px;
-    margin: 28px 0 12px;
-  }
-  .knowledge-md :global(h3) {
-    font-size: 18px;
-    margin: 22px 0 10px;
-  }
-  .knowledge-md :global(p) {
     color: var(--muted);
-    line-height: 1.85;
+    font-size: 12px;
+    line-height: 1.4;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .toc-link:hover,
+  .toc-link:focus-visible {
+    color: var(--blue);
+    border-left-color: var(--blue);
+    background: var(--blue-soft);
+  }
+  .toc-link.depth-3 { padding-left: 18px; }
+  .toc-link.depth-4,
+  .toc-link.depth-5 { padding-left: 28px; font-size: 11px; }
+  .prose {
+    max-width: var(--reading-max);
+    min-width: 0;
     font-size: 15px;
+    line-height: 1.82;
   }
-  .knowledge-md :global(ul) {
-    color: var(--muted);
-    padding-left: 1.2em;
-    line-height: 1.75;
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4),
+  .prose :global(h5) {
+    scroll-margin-top: 96px;
+    color: var(--text);
+    line-height: 1.3;
+    letter-spacing: -.02em;
   }
-  .knowledge-md :global(a) {
+  .prose :global(h2) { margin: 46px 0 14px; font-size: 22px; }
+  .prose :global(h3) { margin: 32px 0 10px; font-size: 18px; }
+  .prose :global(h4),
+  .prose :global(h5) { margin: 26px 0 8px; font-size: 15px; }
+  .prose :global(p) { margin: 0 0 18px; color: var(--text); }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 18px;
+    padding-left: 1.3em;
+    color: var(--text);
+  }
+  .prose :global(li) { margin-bottom: 6px; }
+  .prose :global(a) {
     color: var(--blue);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--blue) 38%, transparent);
+    text-underline-offset: 3px;
   }
-  .knowledge-md :global(img) {
+  .prose :global(blockquote) {
+    margin: 24px 0;
+    padding: 4px 0 4px 18px;
+    border-left: 3px solid var(--blue);
+    color: var(--muted);
+  }
+  .prose :global(blockquote p) { margin: 0; color: inherit; }
+  .prose :global(hr) {
+    margin: 40px 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+  .prose :global(pre),
+  .prose :global(.math-display),
+  .prose :global(.mermaid-wrap),
+  .prose :global(table) {
     max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 16px 0;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-  }
-  .knowledge-md :global(.math-display) {
-    margin: 20px 0;
     overflow-x: auto;
-    padding: 4px 0;
+    overscroll-behavior-inline: contain;
   }
-  .knowledge-md :global(.math-inline) {
-    display: inline;
+  .prose :global(pre) {
+    margin: 22px 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface-muted);
+    font-size: 12px;
+    line-height: 1.6;
   }
-  .knowledge-md :global(.math-fallback) {
-    font-size: 13px;
-    white-space: pre-wrap;
+  .prose :global(:not(pre) > code) {
+    padding: 2px 6px;
+    border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+    border-radius: 6px;
+    background: var(--surface-raised);
+    font-size: .9em;
   }
-  .knowledge-md :global(table) {
+  .prose :global(table) {
+    display: block;
     width: 100%;
+    margin: 22px 0;
     border-collapse: collapse;
     font-size: 13px;
-    margin: 16px 0;
+    line-height: 1.55;
   }
-  .knowledge-md :global(th),
-  .knowledge-md :global(td) {
+  .prose :global(th),
+  .prose :global(td) {
+    min-width: 120px;
+    padding: 10px 12px;
     border: 1px solid var(--line);
-    padding: 8px 10px;
     text-align: left;
+    vertical-align: top;
   }
-  .note-crosslink {
-    max-width: 720px;
-    margin: 0 auto 55px;
-    font-size: 12px;
-  }
-  .note-crosslink a {
-    color: var(--blue);
+  .prose :global(th) {
+    position: sticky;
+    top: 0;
+    background: var(--surface-muted);
     font-weight: 700;
+  }
+  .prose :global(tr:nth-child(even) td) { background: var(--surface-raised); }
+  .prose :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 24px auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .prose :global(figure) { margin: 24px 0; }
+  .prose :global(figure img) { margin-bottom: 10px; }
+  .prose :global(figcaption) {
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .prose :global(.math-display) { margin: 22px 0; padding: 4px 0; }
+  .prose :global(.mermaid-wrap) {
+    margin: 24px 0;
+    padding: 20px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-raised);
+  }
+  .prose :global(.mermaid-wrap pre.mermaid) {
+    min-width: max-content;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 0;
+  }
+  .prose :global(.mermaid-wrap svg) {
+    display: block;
+    max-width: none;
+    height: auto;
+    margin: 0 auto;
+  }
+  .detail-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 48px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-raised);
+  }
+  .detail-cta p { display: grid; gap: 4px; margin: 0; font-size: 13px; }
+  .detail-cta p span { color: var(--muted); }
+  .cta-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cta-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .cta-links a:hover { border-color: var(--blue); background: var(--blue-soft); }
+  @media (max-width: 900px) {
+    .detail-page { padding-top: 32px; }
+    .detail-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .detail-toc {
+      position: static;
+      max-height: none;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-raised);
+    }
+    .toc-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .toc-link.depth-3,
+    .toc-link.depth-4,
+    .toc-link.depth-5 { padding-left: 12px; }
+  }
+  @media (max-width: 600px) {
+    .hero-banner { height: 108px; }
+    .toc-nav { grid-template-columns: 1fr; }
+    .detail-cta { align-items: flex-start; flex-direction: column; }
   }
 </style>
