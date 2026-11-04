@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
+  BLOG_CATEGORY_LABELS,
   BLOG_LIST_PAGE_SIZE,
   collectBlogCategories,
   formatBlogDate,
@@ -12,11 +13,6 @@ import {
 
 const posts = await getPublishedBlogPosts();
 const filterCategories = collectBlogCategories(posts);
-const filterCategoryLabels = new Map([
-  ['机器学习', 'Machine learning'],
-  ['知识管理', 'Knowledge management'],
-  ['个人开源产品', 'Personal open-source products'],
-]);
 const postCount = posts.length;
 const yearGroups = groupBlogPostsByYear(posts);
 const showYearGroups = postCount >= 6;
@@ -71,7 +67,7 @@ let order = 0;
             class="filter"
             data-filter={cat}
             data-page-zh={cat}
-            data-page-en={filterCategoryLabels.get(cat) ?? cat}
+            data-page-en={BLOG_CATEGORY_LABELS[cat as keyof typeof BLOG_CATEGORY_LABELS] ?? cat}
             aria-pressed="false"
           >
             {cat}
