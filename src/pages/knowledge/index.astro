@@ -2,10 +2,21 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { loadPublishEntries, wikiPublishAvailable } from '../../lib/knowledge-publish';
 
-function formatDisplayDate(value: string): string {
-  const match = value.trim().match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
-  if (!match) return '';
-  return `${match[1]}.${match[2].padStart(2, '0')}.${match[3].padStart(2, '0')}`;
+function formatDisplayDate(value: Date | string): { label: string; iso: string } | null {
+  if (typeof value === 'string') {
+    const match = value.trim().match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?:\D|$)/);
+    if (match) {
+      const month = match[2].padStart(2, '0');
+      const day = match[3].padStart(2, '0');
+      return { label: `${match[1]}.${month}.${day}`, iso: `${match[1]}-${month}-${day}` };
+    }
+  }
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return { label: `${year}.${month}.${day}`, iso: `${year}-${month}-${day}` };
 }
 
 const entries = loadPublishEntries().map((entry) => ({
@@ -52,11 +63,16 @@ for (const entry of entries) {
   <section class="wrap page-hero">
     <div class="eyebrow">A MAP OF WHAT I'M LEARNING</div>
     <h1>技术知识库</h1>
-    <p>将经过整理与审核的技术内容，组织成可持续导航的公开知识地图。</p>
+    <p
+      data-page-zh="将经过整理与审核的技术内容，组织成可持续导航的公开知识地图。"
+      data-page-en="Reviewed technical material organized as a durable, navigable knowledge map."
+    >
+      将经过整理与审核的技术内容，组织成可持续导航的公开知识地图。
+    </p>
   </section>
   <section class="wrap knowledge-layout">
     <aside class="knowledge-sidebar card">
-      <p class="sidebar-kicker">按主题浏览</p>
+      <p class="sidebar-kicker" data-page-zh="按主题浏览" data-page-en="Browse by topic">按主题浏览</p>
       <b>知识目录</b>
       <a class="selected" href="#articles">⌂　总览</a>
       {[...byCategory.keys()].map((cat) => (
@@ -82,9 +98,25 @@ for (const entry of entries) {
       </div>
       {entries.length === 0 ? (
         <div class="empty-card">
-          <strong>暂无公开内容</strong>
-          <p class="muted">在 wiki 仓库复制内容到 <code>publish/</code> 并 push，门户会在重建后显示文章。</p>
-          <a class="text-link" href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">前往 Wiki 仓库 ↗</a>
+          <strong data-page-zh="暂无公开内容" data-page-en="No public entries yet">暂无公开内容</strong>
+          <p class="muted">
+            <span
+              data-page-zh="将内容复制到 Wiki 仓库的"
+              data-page-en="Copy reviewed content into the Wiki repo’s"
+            >将内容复制到 Wiki 仓库的</span>
+            <code>publish/</code>
+            <span
+              data-page-zh="并推送，门户会在重建后显示文章。"
+              data-page-en="folder and push; entries appear after the portal rebuilds."
+            >并推送，门户会在重建后显示文章。</span>
+          </p>
+          <a
+            class="text-link"
+            href="https://github.com/boyang167/personal-knowledge-wiki"
+            rel="noopener"
+            data-page-zh="前往 Wiki 仓库 ↗"
+            data-page-en="Open Wiki repo ↗"
+          >前往 Wiki 仓库 ↗</a>
         </div>
       ) : (
         <>
@@ -99,10 +131,20 @@ for (const entry of entries) {
                       <span class="knowledge-card-arrow" aria-hidden="true">↗</span>
                     </div>
                     <h3>{item.title}</h3>
-                    <p class="muted">{item.summary || '暂未添加摘要。'}</p>
+                    {item.summary ? (
+                      <p class="muted">{item.summary}</p>
+                    ) : (
+                      <p
+                        class="muted"
+                        data-page-zh="暂未添加摘要。"
+                        data-page-en="No summary yet."
+                      >
+                        暂未添加摘要。
+                      </p>
+                    )}
                     <div class="knowledge-bottom">
                       {item.displayDate ? (
-                        <time datetime={item.updated}>{item.displayDate}</time>
+                        <time datetime={item.displayDate.iso}>{item.displayDate.label}</time>
                       ) : (
                         <span>{item.tags.slice(0, 2).join(' · ') || 'publish'}</span>
                       )}
@@ -125,6 +167,17 @@ for (const entry of entries) {
     </div>
   </section>
 </BaseLayout>
+<script>
+  const localizedText = [...document.querySelectorAll('[data-page-zh][data-page-en]')];
+  const syncPageLanguage = (lang) => {
+    localizedText.forEach((element) => {
+      const text = lang === 'en' ? element.dataset.pageEn : element.dataset.pageZh;
+      if (text) element.textContent = text;
+    });
+  };
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => syncPageLanguage(event.detail));
+</script>
 <style>
   .knowledge-layout {
     display: grid;

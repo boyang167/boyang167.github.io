@@ -70,12 +70,18 @@ function clipSummary(text: string, max = 120): string {
       <div class="skills-main" id="skills-list">
         {entries.length === 0 ? (
           <div class="skills-empty">
-            <strong>暂无可用 Skill</strong>
+            <strong data-page-zh="暂无可用 Skill" data-page-en="No Skills available yet">暂无可用 Skill</strong>
             <p class="muted">
               暂无 Skill。在 wiki 仓库
               <code>raw/4-Skill/&lt;skill-name&gt;/SKILL.md</code> 下添加文件，保存后重新构建站点即可出现在此。
             </p>
-            <a class="text-link" href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">
+            <a
+              class="text-link"
+              href="https://github.com/boyang167/personal-knowledge-wiki"
+              rel="noopener"
+              data-page-zh="前往 Wiki 仓库 ↗"
+              data-page-en="Open Wiki repo ↗"
+            >
               前往 Wiki 仓库 ↗
             </a>
           </div>
@@ -122,6 +128,18 @@ function clipSummary(text: string, max = 120): string {
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const localizedText = [...document.querySelectorAll('[data-page-zh][data-page-en]')];
+  const syncPageLanguage = (lang) => {
+    localizedText.forEach((element) => {
+      const text = lang === 'en' ? element.dataset.pageEn : element.dataset.pageZh;
+      if (text) element.textContent = text;
+    });
+  };
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => syncPageLanguage(event.detail));
+</script>
 
 <style>
   .skills-page {

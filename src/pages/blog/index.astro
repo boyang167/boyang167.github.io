@@ -21,7 +21,13 @@ let order = 0;
   <section class="wrap page-hero blog-hero">
     <div class="eyebrow">NOTES FROM BUILDING</div>
     <h1>技术博客</h1>
-    <p class="blog-lead">记录工程实践、Agent 工作流与持续学习中的关键判断。</p>
+    <p
+      class="blog-lead"
+      data-page-zh="记录工程实践、Agent 工作流与持续学习中的关键判断。"
+      data-page-en="Notes on engineering practice, Agent workflows, and the decisions behind continuous learning."
+    >
+      记录工程实践、Agent 工作流与持续学习中的关键判断。
+    </p>
     <p class="blog-stat muted">
       <span id="blog-stat-total">{postCount}</span> 篇已发布
       <span class="blog-stat-sep" id="blog-stat-sep" hidden> · </span>
@@ -88,8 +94,13 @@ let order = 0;
       ))}
     </div>
     <div class="empty-state" id="empty-state" hidden>
-      <strong>没有匹配的文章</strong>
-      <p>换一个关键词，或选择“全部”分类继续浏览。</p>
+      <strong data-page-zh="没有匹配的文章" data-page-en="No matching posts">没有匹配的文章</strong>
+      <p
+        data-page-zh="换一个关键词，或选择“全部”分类继续浏览。"
+        data-page-en="Try another keyword or choose “All” to keep browsing."
+      >
+        换一个关键词，或选择“全部”分类继续浏览。
+      </p>
     </div>
     <div class="blog-list-footer" id="blog-list-footer" hidden={postCount <= BLOG_LIST_PAGE_SIZE}>
       <button type="button" class="button-secondary blog-load-more" id="blog-load-more">
@@ -110,6 +121,14 @@ let order = 0;
   const loadMore = document.querySelector('#blog-load-more');
   const statSep = document.querySelector('#blog-stat-sep');
   const statRange = document.querySelector('#blog-stat-range');
+  const localizedText = [...document.querySelectorAll('[data-page-zh][data-page-en]')];
+
+  function syncPageLanguage(lang) {
+    localizedText.forEach((element) => {
+      const text = lang === 'en' ? element.dataset.pageEn : element.dataset.pageZh;
+      if (text) element.textContent = text;
+    });
+  }
 
   const PAGE_SIZE = Number(feed?.dataset.pageSize || pageSize) || 10;
   let active = '全部';
@@ -212,6 +231,8 @@ let order = 0;
     applyListState();
   });
 
+  syncPageLanguage(document.documentElement.lang);
+  window.addEventListener('language-change', (event) => syncPageLanguage(event.detail));
   resetAndApply();
 </script>
 
