@@ -295,6 +295,7 @@ let order = 0;
     margin-bottom: 12px;
   }
   .blog-lead {
+    max-width: 680px;
     margin-bottom: 14px;
   }
   .blog-stat {
@@ -540,15 +541,6 @@ let order = 0;
   }
   [hidden] {
     display: none !important;
-  }
-
-  @media (min-width: 1180px) {
-    .blog-toolbar,
-    .blog-hero {
-      max-width: 920px;
-      margin-inline: auto;
-      width: min(var(--content-max), calc(100% - var(--page-gutter) * 2));
-    }
   }
 
   @media (max-width: 980px) {
