@@ -69,11 +69,15 @@ function clipSummary(text: string, max = 120): string {
 
       <div class="skills-main" id="skills-list">
         {entries.length === 0 ? (
-          <div class="card skills-empty">
+          <div class="skills-empty">
+            <strong>暂无可用 Skill</strong>
             <p class="muted">
               暂无 Skill。在 wiki 仓库
               <code>raw/4-Skill/&lt;skill-name&gt;/SKILL.md</code> 下添加文件，保存后重新构建站点即可出现在此。
             </p>
+            <a class="text-link" href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">
+              前往 Wiki 仓库 ↗
+            </a>
           </div>
         ) : (
           displayCategories.map((cat) => {
@@ -121,11 +125,11 @@ function clipSummary(text: string, max = 120): string {
 
 <style>
   .skills-page {
-    padding: 56px 0 72px;
+    padding: clamp(64px, 7vw, 96px) 0 72px;
   }
 
   .skills-hero {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
 
   .skills-hero .eyebrow {
@@ -133,8 +137,8 @@ function clipSummary(text: string, max = 120): string {
   }
 
   .skills-hero h1 {
-    font-size: clamp(32px, 3.5vw, 44px);
-    margin: 0;
+    font-size: clamp(38px, 4vw, 58px);
+    margin: 12px 0 0;
     letter-spacing: -0.03em;
   }
 
@@ -164,9 +168,10 @@ function clipSummary(text: string, max = 120): string {
     gap: 2px;
     padding: 12px 16px;
     border-radius: 12px;
-    background: var(--surface);
+    background: var(--surface-raised);
     border: 1px solid var(--line);
-    min-width: 7rem;
+    min-width: 8rem;
+    box-shadow: var(--shadow-sm);
   }
 
   .skills-count {
@@ -194,18 +199,19 @@ function clipSummary(text: string, max = 120): string {
 
   .skills-body--with-nav {
     display: grid;
-    grid-template-columns: 168px minmax(0, 1fr);
-    gap: 28px;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 32px;
     align-items: start;
   }
 
   .skills-nav {
     position: sticky;
     top: 96px;
-    padding: 14px;
+    padding: 16px;
     display: grid;
     gap: 4px;
     height: max-content;
+    background: var(--surface-raised);
   }
 
   .skills-nav-title {
@@ -219,6 +225,9 @@ function clipSummary(text: string, max = 120): string {
   }
 
   .skills-nav-link {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
     padding: 8px 10px;
     border-radius: 8px;
     font-size: 12px;
@@ -233,12 +242,13 @@ function clipSummary(text: string, max = 120): string {
   }
 
   .skills-section {
-    margin-bottom: 8px;
+    margin-bottom: 36px;
+    scroll-margin-top: 100px;
   }
 
   .skills-section-title {
     margin: 0 0 14px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -250,8 +260,8 @@ function clipSummary(text: string, max = 120): string {
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
 
   .skill-card {
@@ -259,8 +269,8 @@ function clipSummary(text: string, max = 120): string {
     grid-template-columns: auto 1fr auto;
     align-items: start;
     gap: 14px;
-    padding: 16px 18px;
-    border-radius: 14px;
+    padding: 18px;
+    border-radius: var(--radius-md);
     background: var(--surface);
     border: 1px solid var(--line);
     box-shadow: 0 1px 0 rgba(34, 55, 100, 0.04);
@@ -321,7 +331,23 @@ function clipSummary(text: string, max = 120): string {
   }
 
   .skills-empty {
-    padding: 28px;
+    padding: 36px 24px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    text-align: center;
+    background: color-mix(in srgb, var(--surface) 62%, transparent);
+  }
+
+  .skills-empty strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+
+  .skills-empty p {
+    max-width: 44rem;
+    margin: 0 auto 10px;
+    font-size: 13px;
   }
 
   .skills-foot {
@@ -335,6 +361,7 @@ function clipSummary(text: string, max = 120): string {
     border-top: 1px solid var(--line);
     font-size: 11px;
     line-height: 1.6;
+    opacity: 0.82;
   }
 
   .skills-foot code {
@@ -349,7 +376,7 @@ function clipSummary(text: string, max = 120): string {
 
   @media (max-width: 760px) {
     .skills-page {
-      padding-top: 40px;
+      padding-top: 48px;
     }
 
     .skills-meta {
@@ -372,11 +399,23 @@ function clipSummary(text: string, max = 120): string {
 
     .skills-nav {
       position: static;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      display: flex;
+      overflow-x: auto;
+      padding: 10px;
+      scrollbar-width: thin;
     }
 
     .skills-nav-title {
-      grid-column: 1 / -1;
+      display: none;
+    }
+
+    .skills-nav-link {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .skills-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

@@ -10,7 +10,16 @@ import {
   wikiNotesAvailable,
 } from '../../lib/wiki-notes';
 
-const entries = loadWikiNotes();
+function formatDisplayDate(value: string): string {
+  const match = value.trim().match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (!match) return '';
+  return `${match[1]}.${match[2].padStart(2, '0')}.${match[3].padStart(2, '0')}`;
+}
+
+const entries = loadWikiNotes().map((entry) => ({
+  ...entry,
+  displayDate: formatDisplayDate(entry.updated),
+}));
 const categories = listNoteCategories();
 const submoduleReady = wikiNotesAvailable();
 
@@ -30,10 +39,11 @@ for (const entry of entries) {
   <section class="wrap page-hero">
     <div class="eyebrow">MARKDOWN NOTES</div>
     <h1>学习笔记</h1>
+    <p>按主题沉淀原始思考、学习路径与可复用的技术记录。</p>
   </section>
   <section class="wrap knowledge-layout">
     <aside class="knowledge-sidebar card">
-      <div class="search-fake">⌕ <span>按主题浏览</span></div>
+      <p class="sidebar-kicker">按主题浏览</p>
       <b>笔记目录</b>
       <a class="selected" href="#articles">⌂　总览</a>
       {categories.map((cat) => (
@@ -69,12 +79,18 @@ for (const entry of entries) {
               <div class="grid-2">
                 {list.map((item) => (
                   <a class="card knowledge-card" href={`/notes/${item.slug}/`}>
-                    <div class="card-icon">{NOTE_CATEGORY_ICONS[cat] ?? '◈'}</div>
+                    <div class="knowledge-card-top">
+                      <div class="card-icon">{NOTE_CATEGORY_ICONS[cat] ?? '◈'}</div>
+                      <span class="knowledge-card-arrow" aria-hidden="true">↗</span>
+                    </div>
                     <h3>{item.title}</h3>
-                    <p class="muted">{item.summary || '—'}</p>
+                    <p class="muted">{item.summary || '暂未添加摘要。'}</p>
                     <div class="knowledge-bottom">
-                      <span>{item.updated || item.tags.slice(0, 2).join(' · ') || item.status}</span>
-                      <span>→</span>
+                      {item.displayDate ? (
+                        <time datetime={item.updated}>{item.displayDate}</time>
+                      ) : (
+                        <span>{item.tags.slice(0, 2).join(' · ') || item.status}</span>
+                      )}
                     </div>
                   </a>
                 ))}
@@ -100,29 +116,37 @@ for (const entry of entries) {
 <style>
   .knowledge-layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 25px;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+    padding-bottom: 72px;
   }
   .knowledge-sidebar {
+    position: sticky;
+    top: 96px;
     padding: 16px;
     height: max-content;
     display: grid;
     gap: 6px;
+    background: var(--surface-raised);
   }
-  .search-fake {
-    padding: 10px;
-    border: 1px solid var(--line);
-    border-radius: 9px;
+  .sidebar-kicker {
+    margin: 0 8px 10px;
     color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .knowledge-sidebar > b {
     font-size: 11px;
     padding: 0 8px 6px;
   }
   .knowledge-sidebar > a {
-    padding: 9px;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 10px;
     border-radius: 8px;
     color: var(--muted);
     font-size: 11px;
@@ -154,7 +178,7 @@ for (const entry of entries) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 24px;
   }
   .knowledge-heading h2 {
     font-size: 22px;
@@ -165,50 +189,77 @@ for (const entry of entries) {
     margin: 0;
   }
   .category-block {
-    margin-bottom: 28px;
+    margin-bottom: 36px;
+    scroll-margin-top: 100px;
   }
-  .category-block h3 {
+  .category-block > h3 {
     font-size: 14px;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
   .category-empty {
-    font-size: 12px;
-    margin: 0 0 8px;
-    padding: 14px 16px;
+    font-size: 13px;
+    margin: 0;
+    padding: 24px;
     border: 1px dashed var(--line);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface) 62%, transparent);
   }
   .knowledge-card {
-    padding: 22px;
-    transition: transform 0.2s;
+    display: flex;
+    min-width: 0;
+    min-height: 196px;
+    flex-direction: column;
+    padding: 18px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
   .knowledge-card:hover {
     transform: translateY(-3px);
   }
+  .knowledge-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
   .knowledge-card .card-icon {
-    margin-bottom: 15px;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+  .knowledge-card-arrow {
+    color: var(--muted);
+    font-size: 13px;
   }
   .knowledge-card h3 {
     margin: 0 0 8px;
-    font-size: 15px;
+    font-size: 16px;
   }
   .knowledge-card p {
-    font-size: 11px;
-    min-height: 40px;
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0 0 16px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.6;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
   .knowledge-bottom {
     display: flex;
     justify-content: space-between;
     border-top: 1px solid var(--line);
+    margin-top: auto;
     padding-top: 12px;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
   }
-  .knowledge-bottom span:last-child {
-    color: var(--blue);
+  .knowledge-bottom time {
+    font-variant-numeric: tabular-nums;
   }
   .empty-card {
     padding: 24px;
@@ -221,7 +272,8 @@ for (const entry of entries) {
     padding: 18px;
     border: 1px solid var(--line);
     border-radius: 15px;
-    background: var(--surface);
+    background: transparent;
+    color: var(--muted);
   }
   .knowledge-banner .card-icon {
     margin: 0;
@@ -238,7 +290,10 @@ for (const entry of entries) {
     margin: 4px 0 0;
   }
   .knowledge-banner > a {
-    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 11px;
     color: var(--blue);
     font-weight: 700;
     white-space: nowrap;
@@ -251,14 +306,28 @@ for (const entry of entries) {
       grid-template-columns: 1fr;
     }
     .knowledge-sidebar {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      padding: 10px;
+      gap: 6px;
+      scrollbar-width: thin;
+    }
+    .sidebar-kicker,
+    .knowledge-sidebar > b,
+    .sidebar-note {
       display: none;
+    }
+    .knowledge-sidebar > a {
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
     .knowledge-banner {
       align-items: flex-start;
       flex-wrap: wrap;
     }
     .knowledge-banner > a {
-      margin-left: 55px;
+      margin-left: 0;
     }
   }
 </style>

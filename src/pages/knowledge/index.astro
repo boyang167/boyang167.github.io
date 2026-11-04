@@ -2,7 +2,16 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { loadPublishEntries, wikiPublishAvailable } from '../../lib/knowledge-publish';
 
-const entries = loadPublishEntries();
+function formatDisplayDate(value: string): string {
+  const match = value.trim().match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (!match) return '';
+  return `${match[1]}.${match[2].padStart(2, '0')}.${match[3].padStart(2, '0')}`;
+}
+
+const entries = loadPublishEntries().map((entry) => ({
+  ...entry,
+  displayDate: formatDisplayDate(entry.updated),
+}));
 const submoduleReady = wikiPublishAvailable();
 
 const categoryIcons: Record<string, string> = {
@@ -43,10 +52,11 @@ for (const entry of entries) {
   <section class="wrap page-hero">
     <div class="eyebrow">A MAP OF WHAT I'M LEARNING</div>
     <h1>技术知识库</h1>
+    <p>将经过整理与审核的技术内容，组织成可持续导航的公开知识地图。</p>
   </section>
   <section class="wrap knowledge-layout">
     <aside class="knowledge-sidebar card">
-      <div class="search-fake">⌕ <span>按主题浏览</span></div>
+      <p class="sidebar-kicker">按主题浏览</p>
       <b>知识目录</b>
       <a class="selected" href="#articles">⌂　总览</a>
       {[...byCategory.keys()].map((cat) => (
@@ -71,8 +81,10 @@ for (const entry of entries) {
         <span class="tag">公开内容</span>
       </div>
       {entries.length === 0 ? (
-        <div class="card empty-card">
-          <p class="muted">暂无 publish 文章。在 wiki 仓库复制内容到 <code>publish/</code> 并 push 后，门户会自动重新部署。</p>
+        <div class="empty-card">
+          <strong>暂无公开内容</strong>
+          <p class="muted">在 wiki 仓库复制内容到 <code>publish/</code> 并 push，门户会在重建后显示文章。</p>
+          <a class="text-link" href="https://github.com/boyang167/personal-knowledge-wiki" rel="noopener">前往 Wiki 仓库 ↗</a>
         </div>
       ) : (
         <>
@@ -82,12 +94,18 @@ for (const entry of entries) {
               <div class="grid-2">
                 {list.map((item) => (
                   <a class="card knowledge-card" href={`/knowledge/${item.slug}/`}>
-                    <div class="card-icon">{categoryIcons[cat] ?? '◈'}</div>
+                    <div class="knowledge-card-top">
+                      <div class="card-icon">{categoryIcons[cat] ?? '◈'}</div>
+                      <span class="knowledge-card-arrow" aria-hidden="true">↗</span>
+                    </div>
                     <h3>{item.title}</h3>
-                    <p class="muted">{item.summary || '—'}</p>
+                    <p class="muted">{item.summary || '暂未添加摘要。'}</p>
                     <div class="knowledge-bottom">
-                      <span>{item.updated || item.tags.slice(0, 2).join(' · ') || 'publish'}</span>
-                      <span>→</span>
+                      {item.displayDate ? (
+                        <time datetime={item.updated}>{item.displayDate}</time>
+                      ) : (
+                        <span>{item.tags.slice(0, 2).join(' · ') || 'publish'}</span>
+                      )}
                     </div>
                   </a>
                 ))}
@@ -108,35 +126,163 @@ for (const entry of entries) {
   </section>
 </BaseLayout>
 <style>
-.knowledge-layout{display:grid;grid-template-columns:220px 1fr;gap:25px}
-.knowledge-sidebar{padding:16px;height:max-content;display:grid;gap:6px}
-.search-fake{padding:10px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px;margin-bottom:12px}
-.knowledge-sidebar>b{font-size:11px;padding:0 8px 6px}
-.knowledge-sidebar>a{padding:9px;border-radius:8px;color:var(--muted);font-size:11px}
-.knowledge-sidebar>a.selected,.knowledge-sidebar>a:hover{background:var(--blue-soft);color:var(--blue)}
-.sidebar-note{margin-top:20px;padding:14px;background:var(--surface-2);border-radius:10px;display:grid;gap:4px}
-.sidebar-note span{color:var(--blue)}
-.sidebar-note b{font-size:11px}
-.sidebar-note small{font-size:10px;color:var(--muted)}
-.knowledge-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.knowledge-heading h2{font-size:22px;margin:0 0 5px}
-.knowledge-heading p{font-size:11px;margin:0}
-.category-block{margin-bottom:28px}
-.category-block h3{font-size:14px;margin:0 0 12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.knowledge-card{padding:22px;transition:transform .2s}
-.knowledge-card:hover{transform:translateY(-3px)}
-.knowledge-card .card-icon{margin-bottom:15px}
-.knowledge-card h3{margin:0 0 8px;font-size:15px}
-.knowledge-card p{font-size:11px;min-height:40px}
-.knowledge-bottom{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;font-size:10px;color:var(--muted)}
-.knowledge-bottom span:last-child{color:var(--blue)}
-.empty-card{padding:24px}
-.knowledge-banner{display:flex;align-items:center;gap:14px;margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
-.knowledge-banner .card-icon{margin:0;flex-shrink:0}
-.knowledge-banner>div:nth-child(2){flex:1}
-.knowledge-banner b{font-size:12px}
-.knowledge-banner p{font-size:10px;margin:4px 0 0}
-.knowledge-banner>a{font-size:10px;color:var(--blue);font-weight:700;white-space:nowrap}
-.page-hero code{font-size:.9em}
-@media(max-width:760px){.knowledge-layout{grid-template-columns:1fr}.knowledge-sidebar{display:none}.knowledge-banner{align-items:flex-start;flex-wrap:wrap}.knowledge-banner>a{margin-left:55px}}
+  .knowledge-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+    padding-bottom: 72px;
+  }
+  .knowledge-sidebar {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    height: max-content;
+    gap: 6px;
+    padding: 16px;
+    background: var(--surface-raised);
+  }
+  .sidebar-kicker {
+    margin: 0 8px 10px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .knowledge-sidebar > b { padding: 0 8px 6px; font-size: 11px; }
+  .knowledge-sidebar > a {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .knowledge-sidebar > a.selected,
+  .knowledge-sidebar > a:hover { color: var(--blue-strong); background: var(--blue-soft); }
+  .sidebar-note {
+    display: grid;
+    gap: 4px;
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--surface-muted);
+  }
+  .sidebar-note span { color: var(--blue); }
+  .sidebar-note b { font-size: 11px; }
+  .sidebar-note small { color: var(--muted); font-size: 10px; }
+  .knowledge-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .knowledge-heading h2 { margin: 0 0 5px; font-size: 22px; }
+  .knowledge-heading p { margin: 0; font-size: 11px; }
+  .category-block { margin-bottom: 36px; scroll-margin-top: 100px; }
+  .category-block > h3 {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .knowledge-card {
+    display: flex;
+    min-width: 0;
+    min-height: 196px;
+    flex-direction: column;
+    padding: 18px;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .knowledge-card:hover { transform: translateY(-3px); }
+  .knowledge-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .knowledge-card .card-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+  .knowledge-card-arrow { color: var(--muted); font-size: 13px; }
+  .knowledge-card h3 { margin: 0 0 8px; font-size: 16px; }
+  .knowledge-card p {
+    display: -webkit-box;
+    min-height: 0;
+    margin: 0 0 16px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.6;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+  .knowledge-bottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .knowledge-bottom time { font-variant-numeric: tabular-nums; }
+  .empty-card {
+    padding: 36px 24px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    text-align: center;
+    background: color-mix(in srgb, var(--surface) 62%, transparent);
+  }
+  .empty-card strong { display: block; margin-bottom: 6px; font-size: 15px; }
+  .empty-card p { margin: 0 auto 10px; max-width: 42rem; font-size: 13px; }
+  .knowledge-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--muted);
+    background: transparent;
+  }
+  .knowledge-banner .card-icon { flex-shrink: 0; margin: 0; }
+  .knowledge-banner > div:nth-child(2) { flex: 1; }
+  .knowledge-banner b { font-size: 12px; }
+  .knowledge-banner p { margin: 4px 0 0; font-size: 10px; }
+  .knowledge-banner > a {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) {
+    .knowledge-layout { grid-template-columns: 1fr; }
+    .knowledge-sidebar {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 10px;
+      scrollbar-width: thin;
+    }
+    .sidebar-kicker,
+    .knowledge-sidebar > b,
+    .sidebar-note { display: none; }
+    .knowledge-sidebar > a { flex: 0 0 auto; white-space: nowrap; }
+    .knowledge-heading { align-items: flex-start; }
+    .knowledge-banner { align-items: flex-start; flex-wrap: wrap; }
+    .knowledge-banner > a { margin-left: 0; }
+  }
 </style>
