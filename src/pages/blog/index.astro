@@ -12,6 +12,11 @@ import {
 
 const posts = await getPublishedBlogPosts();
 const filterCategories = collectBlogCategories(posts);
+const filterCategoryLabels = new Map([
+  ['机器学习', 'Machine learning'],
+  ['知识管理', 'Knowledge management'],
+  ['个人开源产品', 'Personal open-source products'],
+]);
 const postCount = posts.length;
 const yearGroups = groupBlogPostsByYear(posts);
 const showYearGroups = postCount >= 6;
@@ -29,20 +34,46 @@ let order = 0;
       记录工程实践、Agent 工作流与持续学习中的关键判断。
     </p>
     <p class="blog-stat muted">
-      <span id="blog-stat-total">{postCount}</span> 篇已发布
+      <span id="blog-stat-total">{postCount}</span>
+      <span data-page-zh="篇已发布" data-page-en="published">篇已发布</span>
       <span class="blog-stat-sep" id="blog-stat-sep" hidden> · </span>
       <span id="blog-stat-range" hidden></span>
     </p>
   </section>
 
-  <section class="wrap blog-toolbar" aria-label="筛选与搜索">
+  <section
+    class="wrap blog-toolbar"
+    aria-label="筛选与搜索"
+    data-page-aria-zh="筛选与搜索"
+    data-page-aria-en="Filters and search"
+  >
     <div class="blog-toolbar-panel">
-      <div class="filter-row" role="group" aria-label="按分类筛选">
-        <button type="button" class="filter active" data-filter="全部" aria-pressed="true">
+      <div
+        class="filter-row"
+        role="group"
+        aria-label="按分类筛选"
+        data-page-aria-zh="按分类筛选"
+        data-page-aria-en="Filter by category"
+      >
+        <button
+          type="button"
+          class="filter active"
+          data-filter="全部"
+          data-page-zh="全部"
+          data-page-en="All"
+          aria-pressed="true"
+        >
           全部
         </button>
         {filterCategories.map((cat) => (
-          <button type="button" class="filter" data-filter={cat} aria-pressed="false">
+          <button
+            type="button"
+            class="filter"
+            data-filter={cat}
+            data-page-zh={cat}
+            data-page-en={filterCategoryLabels.get(cat) ?? cat}
+            aria-pressed="false"
+          >
             {cat}
           </button>
         ))}
@@ -122,11 +153,16 @@ let order = 0;
   const statSep = document.querySelector('#blog-stat-sep');
   const statRange = document.querySelector('#blog-stat-range');
   const localizedText = [...document.querySelectorAll('[data-page-zh][data-page-en]')];
+  const localizedAria = [...document.querySelectorAll('[data-page-aria-zh][data-page-aria-en]')];
 
   function syncPageLanguage(lang) {
     localizedText.forEach((element) => {
       const text = lang === 'en' ? element.dataset.pageEn : element.dataset.pageZh;
       if (text) element.textContent = text;
+    });
+    localizedAria.forEach((element) => {
+      const label = lang === 'en' ? element.dataset.pageAriaEn : element.dataset.pageAriaZh;
+      if (label) element.setAttribute('aria-label', label);
     });
   }
 
@@ -148,7 +184,12 @@ let order = 0;
     return rows
       .filter((row) => {
         const okCategory = active === '全部' || row.dataset.category === active;
-        const haystack = [row.dataset.title, row.dataset.description].filter(Boolean).join(' ');
+        const haystack = [
+          row.dataset.title,
+          row.dataset.description,
+          row.querySelector('.blog-card-title')?.textContent,
+          row.querySelector('.blog-card-desc')?.textContent,
+        ].filter(Boolean).join(' ').toLowerCase();
         const okQuery = !q || haystack.includes(q);
         return okCategory && okQuery;
       })
@@ -191,8 +232,10 @@ let order = 0;
     if (loadMore) {
       loadMore.hidden = !hasMore;
       const rest = totalMatched - limit;
-      loadMore.textContent =
-        rest > 0 ? `加载更多（还有 ${rest} 篇）` : '加载更多';
+      const english = document.documentElement.lang === 'en';
+      loadMore.textContent = english
+        ? (rest > 0 ? `Load more (${rest} remaining)` : 'Load more')
+        : (rest > 0 ? `加载更多（还有 ${rest} 篇）` : '加载更多');
     }
 
     syncYearBlocks();
@@ -205,7 +248,9 @@ let order = 0;
       } else if (totalMatched > PAGE_SIZE || active !== '全部' || (search?.value || '').trim()) {
         statSep.hidden = false;
         statRange.hidden = false;
-        statRange.textContent = `当前显示 ${shown} / ${totalMatched} 篇`;
+        statRange.textContent = document.documentElement.lang === 'en'
+          ? `Showing ${shown} / ${totalMatched}`
+          : `当前显示 ${shown} / ${totalMatched} 篇`;
       } else {
         statSep.hidden = true;
         statRange.hidden = true;
@@ -232,7 +277,10 @@ let order = 0;
   });
 
   syncPageLanguage(document.documentElement.lang);
-  window.addEventListener('language-change', (event) => syncPageLanguage(event.detail));
+  window.addEventListener('language-change', (event) => {
+    syncPageLanguage(event.detail);
+    queueMicrotask(resetAndApply);
+  });
   resetAndApply();
 </script>
 
