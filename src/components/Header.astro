@@ -11,7 +11,7 @@ const links = [
 ---
 <header class="site-header wrap">
   <a class="brand" href="/" aria-label="返回首页"><span class="brand-mark">B</span><span>Boyang Wang<span class="brand-sub">PERSONAL TECH HUB</span></span></a>
-  <nav aria-label="主导航">
+  <nav id="primary-navigation" aria-label="主导航">
     {links.map((link) => {
       const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
       return <a class:list={["nav-link", { active: isActive }]} href={link.href} aria-current={isActive ? 'page' : undefined}>{link.label}</a>;
@@ -21,7 +21,7 @@ const links = [
     <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言">EN</button>
     <button class="icon-button" id="theme-toggle" aria-label="切换深色模式" title="切换主题">◐</button>
     <a class="contact-pill" href="/about/#contact">联系我 <span>↗</span></a>
-    <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-expanded="false">☰</button>
+    <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false">☰</button>
   </div>
 </header>
 <script>
@@ -43,16 +43,20 @@ const links = [
     const next = document.documentElement.lang === 'en' ? 'zh' : 'en';
     window.dispatchEvent(new CustomEvent('language-change', { detail: next }));
     setLanguageLabel();
+    setMenuState(header?.classList.contains('menu-open') ?? false);
   });
   setLanguageLabel();
   const header = document.querySelector('.site-header');
-  const closeMenu = () => {
-    header?.classList.remove('menu-open');
-    menuButton?.setAttribute('aria-expanded', 'false');
+  const setMenuState = (isOpen: boolean) => {
+    header?.classList.toggle('menu-open', isOpen);
+    menuButton?.setAttribute('aria-expanded', String(isOpen));
+    const english = document.documentElement.lang === 'en';
+    menuButton?.setAttribute('aria-label', english ? (isOpen ? 'Close navigation' : 'Open navigation') : (isOpen ? '关闭导航' : '打开导航'));
   };
+  const closeMenu = () => setMenuState(false);
+  setMenuState(false);
   menuButton?.addEventListener('click', () => {
-    const isOpen = header?.classList.toggle('menu-open') ?? false;
-    menuButton.setAttribute('aria-expanded', String(isOpen));
+    setMenuState(!header?.classList.contains('menu-open'));
   });
   header?.querySelectorAll('nav a').forEach((link) => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', (event) => {
