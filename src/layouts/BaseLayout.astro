@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import '../styles/prose-task-lists.css';
 const { title = 'Boyang Wang · Personal Tech Hub', description = 'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。' } = Astro.props;
 ---
 <!doctype html>
@@ -31,7 +32,12 @@ const { title = 'Boyang Wang · Personal Tech Hub', description = 'Agent、数�
   <body>
     <Header />
     <main><slot /></main>
-    <footer class="site-footer wrap"><span>© {new Date().getFullYear()} Boyang Wang</span><span>用好奇心构建，用工程落地。</span><a href="#top">回到顶部 ↑</a></footer>
+    <footer class="site-footer wrap">
+      <span>© {new Date().getFullYear()} Boyang Wang</span>
+      <span>用好奇心构建，用工程落地。</span>
+      <a class="footer-wechat-link" href="/about/#wechat">微信公众号 ↗</a>
+      <a href="#top">回到顶部 ↑</a>
+    </footer>
   </body>
 </html>
 <script is:inline>
@@ -61,6 +67,10 @@ const { title = 'Boyang Wang · Personal Tech Hub', description = 'Agent、数�
     '不只关注技术是什么，':'I care not only about what technology is,',
     '更关注它如何真正发挥作用。':'but how it creates real value.',
     '与我交流 ↗':'Let’s connect ↗',
+    '微信公众号':'WeChat Official Account',
+    '微信公众号 ↗':'WeChat Official Account ↗',
+    '微信搜一搜或扫码关注，阅读技术文章与工程实践':'Follow via WeChat Search or scan for articles and engineering notes',
+    '也可通过微信公众号获取更新；扫码或微信搜一搜即可关注。':'Follow on WeChat for updates—search or scan to subscribe.',
     '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
     '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
     '把数据建模应用到实际问题':'Applying data modeling to real problems',
@@ -582,7 +592,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 body {
   margin: 0;
   min-width: 320px;
-  overflow-x: clip;
   background: var(--bg);
   color: var(--text);
   font-size: 16px;
@@ -602,6 +611,23 @@ input, textarea, select {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   transition: border-color .16s ease, box-shadow .16s ease;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  min-height: unset;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  flex-shrink: 0;
+  accent-color: var(--blue);
+  cursor: default;
+}
+input[type="radio"] {
+  border-radius: 50%;
 }
 input::placeholder, textarea::placeholder { color: var(--subtle); }
 input:hover, textarea:hover, select:hover { border-color: color-mix(in srgb, var(--blue) 24%, var(--line)); }
@@ -633,29 +659,58 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .nav-link:hover { color: var(--text); background: var(--surface-muted); }
 .nav-link.active { color: var(--blue-strong); background: var(--blue-soft); }
 .nav-link.active::after { content: ''; position: absolute; right: 14px; bottom: 5px; left: 14px; height: 2px; background: currentColor; border-radius: 999px; }
-.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+}
 .icon-button, .menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
   width: 44px;
   height: 44px;
+  min-height: 44px;
   padding: 0;
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
+  line-height: 1;
   cursor: pointer;
   transition: color .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+a.icon-button {
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.icon-button svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
 }
 .icon-button:hover, .menu-toggle:hover { color: var(--blue-strong); background: var(--blue-soft); border-color: color-mix(in srgb, var(--blue) 24%, var(--line)); }
 .menu-toggle { display: none; }
 
 .contact-pill, .button-primary, .button-secondary {
+  height: 44px;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  padding: 10px 18px;
+  gap: 8px;
+  padding: 0 18px;
+  box-sizing: border-box;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-size: 13px;
@@ -668,8 +723,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .button-secondary { color: var(--text); background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-sm); }
 .button-secondary:hover { color: var(--blue-strong); border-color: color-mix(in srgb, var(--blue) 24%, var(--line)); box-shadow: var(--shadow-md); transform: translateY(-1px); }
 
-.site-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 72px; padding: 12px 0; color: var(--muted); border-top: 1px solid var(--line); font-size: 11px; }
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-top: 72px;
+  padding: 12px 0;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+}
 .site-footer a { display: inline-flex; align-items: center; min-height: 40px; }
+.footer-wechat-link {
+  margin-inline: auto;
+  color: var(--blue-strong);
+  font-weight: 700;
+}
+.footer-wechat-link:hover { color: var(--blue); }
 .footer-dot { color: var(--blue); }
 .eyebrow { color: var(--blue-strong); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
 h1, h2, h3, p { margin-top: 0; }
@@ -725,7 +797,7 @@ p { color: var(--muted); }
   .site-header { gap: 16px; }
   .site-header nav { gap: 0; }
   .nav-link { padding-inline: 9px; }
-  .contact-pill { display: none; }
+  .header-cta { display: none; }
   .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 650px) {

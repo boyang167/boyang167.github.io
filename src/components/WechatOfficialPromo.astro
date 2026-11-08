@@ -1,0 +1,97 @@
+---
+interface Props {
+  variant?: 'about' | 'footer';
+}
+
+const { variant = 'about' } = Astro.props;
+const imageSrc = '/images/wechat-official-account.png';
+---
+<aside
+  class:list={['wechat-promo', `wechat-promo--${variant}`]}
+  id="wechat"
+  aria-labelledby="wechat-promo-title"
+>
+  <div class="wechat-promo-head">
+    <p class="wechat-promo-eyebrow" id="wechat-promo-title">微信公众号</p>
+    <p
+      class="wechat-promo-desc"
+      data-page-zh="微信搜一搜或扫码关注，阅读技术文章与工程实践"
+      data-page-en="Follow on WeChat Search or scan for articles and engineering notes"
+    >
+      微信搜一搜或扫码关注，阅读技术文章与工程实践
+    </p>
+  </div>
+  <figure class="wechat-promo-figure">
+    <img
+      src={imageSrc}
+      alt="微信公众号搜一搜与扫码关注指引"
+      width={640}
+      height={200}
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+</aside>
+
+<style>
+  .wechat-promo {
+    --wechat-border: color-mix(in srgb, var(--line) 88%, transparent);
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+
+  .wechat-promo-head {
+    display: grid;
+    gap: 6px;
+  }
+
+  .wechat-promo-eyebrow {
+    margin: 0;
+    color: var(--blue-strong);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .wechat-promo-desc {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .wechat-promo-figure {
+    margin: 0;
+    padding: 10px;
+    border: 1px solid var(--wechat-border);
+    border-radius: var(--radius-md);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .wechat-promo-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--radius-md) - 4px);
+  }
+
+  .wechat-promo--about .wechat-promo-figure {
+    padding: 8px;
+  }
+
+  .wechat-promo--footer {
+    gap: 8px;
+  }
+
+  .wechat-promo--footer .wechat-promo-desc {
+    font-size: 11px;
+  }
+
+  .wechat-promo--footer .wechat-promo-figure {
+    max-width: 280px;
+    padding: 8px;
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+import TocNav from './TocNav.astro';
+import { buildTocTree } from '../lib/toc-tree';
+import type { TocItem } from '../lib/markdown-toc';
+import '../styles/article-toc.css';
+
+interface Props {
+  items: TocItem[];
+  variant?: 'detail' | 'blog';
+  ariaLabel?: string;
+  ariaZh?: string;
+  ariaEn?: string;
+  titleZh?: string;
+  titleEn?: string;
+  titleBilingual?: boolean;
+}
+
+const {
+  items,
+  variant = 'detail',
+  ariaLabel = '本文目录',
+  ariaZh,
+  ariaEn,
+  titleZh = '本文目录',
+  titleEn = 'On this page',
+  titleBilingual = false,
+} = Astro.props;
+
+const asideClass = variant === 'blog' ? 'post-toc' : 'detail-toc';
+const titleClass = variant === 'blog' ? 'post-toc-title' : 'toc-title';
+const navClass = variant === 'blog' ? 'post-toc-nav' : 'toc-nav';
+const linkClass = variant === 'blog' ? 'post-toc-link' : 'toc-link';
+const titleAttrs = titleBilingual
+  ? ({ 'data-page-zh': titleZh, 'data-page-en': titleEn } as const)
+  : {};
+---
+<aside
+  class:list={[asideClass, 'article-toc-panel']}
+  aria-label={ariaLabel}
+  {...ariaZh && ariaEn ? { 'data-page-aria-zh': ariaZh, 'data-page-aria-en': ariaEn } : {}}
+>
+  <div class="toc-panel-head">
+    <p class={titleClass} {...titleAttrs}>{titleZh}</p>
+    <button
+      type="button"
+      class="toc-panel-hide"
+      aria-expanded="true"
+      aria-controls="article-toc-nav"
+      data-i18n-label-zh="隐藏目录"
+      data-i18n-label-en="Hide table of contents"
+    >
+      <span class="toc-panel-hide-icon" aria-hidden="true" />
+    </button>
+  </div>
+  <nav id="article-toc-nav" class={navClass}>
+    <TocNav nodes={buildTocTree(items)} linkClass={linkClass} />
+  </nav>
+</aside>
+
+<script>
+  const STORAGE_KEY = 'portal-article-toc-hidden';
+
+  const panelLang = () => document.documentElement.lang;
+
+  const syncPanelChromeI18n = () => {
+    const lang = panelLang();
+    const zh = lang !== 'en';
+    document.querySelectorAll<HTMLButtonElement>('.toc-panel-hide').forEach((btn) => {
+      btn.setAttribute('aria-label', zh ? btn.dataset.i18nLabelZh ?? '' : btn.dataset.i18nLabelEn ?? '');
+    });
+    document.querySelectorAll<HTMLButtonElement>('.toc-panel-restore').forEach((btn) => {
+      btn.textContent = zh ? btn.dataset.i18nTextZh ?? '' : btn.dataset.i18nTextEn ?? '';
+      btn.setAttribute('aria-label', zh ? btn.dataset.i18nAriaZh ?? '' : btn.dataset.i18nAriaEn ?? '');
+    });
+  };
+
+  const getLayout = (panel: HTMLElement) =>
+    panel.closest<HTMLElement>('.detail-layout, .post-layout');
+
+  let activeLayout: HTMLElement | null = null;
+
+  const ensureRestoreButton = (layout: HTMLElement) => {
+    activeLayout = layout;
+    let btn = document.body.querySelector<HTMLButtonElement>('.toc-panel-restore');
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'toc-panel-restore';
+      btn.hidden = true;
+      btn.dataset.i18nTextZh = '目录';
+      btn.dataset.i18nTextEn = 'TOC';
+      btn.dataset.i18nAriaZh = '显示目录';
+      btn.dataset.i18nAriaEn = 'Show table of contents';
+      btn.textContent = '目录';
+      document.body.appendChild(btn);
+      btn.addEventListener('click', () => {
+        if (activeLayout) setTocPanelHidden(activeLayout, false);
+      });
+    }
+    return btn;
+  };
+
+  const setTocPanelHidden = (layout: HTMLElement, hidden: boolean) => {
+    const panel = layout.querySelector<HTMLElement>('.article-toc-panel');
+    const hideBtn = panel?.querySelector<HTMLButtonElement>('.toc-panel-hide');
+    const restoreBtn = ensureRestoreButton(layout);
+    layout.classList.toggle('layout--toc-hidden', hidden);
+    layout.classList.toggle('post-layout--solo', hidden && layout.classList.contains('post-layout'));
+    layout.classList.toggle('detail-layout--no-toc', hidden && layout.classList.contains('detail-layout'));
+    hideBtn?.setAttribute('aria-expanded', String(!hidden));
+    if (restoreBtn) restoreBtn.hidden = !hidden;
+    try {
+      localStorage.setItem(STORAGE_KEY, hidden ? '1' : '0');
+    } catch {
+      /* ignore */
+    }
+    syncPanelChromeI18n();
+  };
+
+  const initArticleTocPanel = () => {
+    document.querySelectorAll<HTMLElement>('.article-toc-panel').forEach((panel) => {
+      const layout = getLayout(panel);
+      if (!layout || panel.dataset.tocPanelBound === '1') return;
+      panel.dataset.tocPanelBound = '1';
+
+      const hideBtn = panel.querySelector<HTMLButtonElement>('.toc-panel-hide');
+      ensureRestoreButton(layout);
+      hideBtn?.addEventListener('click', () => setTocPanelHidden(layout, true));
+
+      let hidden = false;
+      try {
+        hidden = localStorage.getItem(STORAGE_KEY) === '1';
+      } catch {
+        hidden = false;
+      }
+      setTocPanelHidden(layout, hidden);
+    });
+    syncPanelChromeI18n();
+  };
+
+  const revealActiveTocInPanel = () => {
+    const layout = document.querySelector<HTMLElement>(
+      '.detail-layout:not(.layout--toc-hidden), .post-layout:not(.layout--toc-hidden)',
+    );
+    const panel = layout?.querySelector<HTMLElement>('.article-toc-panel');
+    const active = panel?.querySelector<HTMLElement>('.toc-link.is-active, .post-toc-link.is-active');
+    if (!panel || !active || panel.scrollHeight <= panel.clientHeight + 1) return;
+
+    const panelRect = panel.getBoundingClientRect();
+    const linkRect = active.getBoundingClientRect();
+    const padding = 12;
+    if (linkRect.top < panelRect.top + padding) {
+      panel.scrollTop -= panelRect.top + padding - linkRect.top;
+    } else if (linkRect.bottom > panelRect.bottom - padding) {
+      panel.scrollTop += linkRect.bottom - panelRect.bottom + padding;
+    }
+  };
+
+  const bindActiveTocAutoScroll = () => {
+    const layout = document.querySelector('.detail-layout, .post-layout');
+    const nav = layout?.querySelector('.toc-nav, .post-toc-nav');
+    if (!nav || nav.dataset.tocAutoscrollBound === '1') return;
+    nav.dataset.tocAutoscrollBound = '1';
+    nav.addEventListener('click', () => requestAnimationFrame(revealActiveTocInPanel));
+    const observer = new MutationObserver(() => revealActiveTocInPanel());
+    observer.observe(nav, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    let raf = 0;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          revealActiveTocInPanel();
+        });
+      },
+      { passive: true },
+    );
+  };
+
+  initArticleTocPanel();
+  bindActiveTocAutoScroll();
+  window.addEventListener('language-change', () => syncPanelChromeI18n());
+</script>
+
+<style is:global>
+  .toc-panel-hide-icon {
+    position: relative;
+    display: block;
+    width: 12px;
+    height: 12px;
+    opacity: 0.75;
+  }
+
+  .toc-panel-hide-icon::before,
+  .toc-panel-hide-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .toc-panel-hide-icon::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+</style>

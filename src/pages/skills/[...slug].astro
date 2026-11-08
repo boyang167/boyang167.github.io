@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MermaidInit from '../../components/MermaidInit.astro';
+import ArticleTocAside from '../../components/ArticleTocAside.astro';
 import { renderMarkdownDocument } from '../../lib/render-markdown';
 import { loadWikiSkills, skillCategoryLabel, skillDisplayTitle } from '../../lib/wiki-skills';
 import 'katex/dist/katex.min.css';
@@ -28,16 +29,7 @@ const { html, toc } = renderMarkdownDocument(entry.body);
     </header>
     <div class:list={['detail-layout', { 'detail-layout--no-toc': toc.length === 0 }]}>
       {toc.length > 0 && (
-        <aside class="detail-toc" aria-label="本文目录">
-          <p class="toc-title">本文目录</p>
-          <nav class="toc-nav">
-            {toc.map((item) => (
-              <a href={`#${item.id}`} class={`toc-link depth-${item.depth}`}>
-                {item.text}
-              </a>
-            ))}
-          </nav>
-        </aside>
+        <ArticleTocAside items={toc} />
       )}
       <main class="detail-main">
         <div class="prose" set:html={html} />
@@ -68,12 +60,16 @@ const { html, toc } = renderMarkdownDocument(entry.body);
   const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc-link')];
   if (tocLinks.length > 0) {
     const linkById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const expandBranch = (window as Window & { expandTocBranchForLink?: (link: HTMLAnchorElement) => void })
+      .expandTocBranchForLink;
     const setActiveToc = (id: string) => {
       tocLinks.forEach((link) => {
         const active = decodeURIComponent(link.hash.slice(1)) === id;
         link.classList.toggle('is-active', active);
-        if (active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
+        if (active) {
+          link.setAttribute('aria-current', 'location');
+          expandBranch?.(link);
+        } else link.removeAttribute('aria-current');
       });
     };
     const headings = [...document.querySelectorAll<HTMLElement>('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]')]
@@ -101,7 +97,6 @@ const { html, toc } = renderMarkdownDocument(entry.body);
 <style>
   .detail-page {
     padding: 48px 0 80px;
-    overflow-x: clip;
   }
   .detail-hero {
     max-width: var(--reading-max);
@@ -170,45 +165,6 @@ const { html, toc } = renderMarkdownDocument(entry.body);
     grid-template-columns: minmax(0, var(--reading-max));
   }
   .detail-main { min-width: 0; }
-  .detail-toc {
-    position: sticky;
-    top: 96px;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-  }
-  .toc-title {
-    margin: 0 0 10px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .04em;
-  }
-  .toc-nav {
-    display: grid;
-    gap: 2px;
-  }
-  .toc-link {
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 6px 8px;
-    border-left: 2px solid transparent;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.4;
-  }
-  .toc-link:hover,
-  .toc-link:focus-visible,
-  .toc-link.is-active {
-    color: var(--blue);
-    border-left-color: var(--blue);
-    background: var(--blue-soft);
-  }
-  .toc-link.depth-3 { padding-left: 18px; }
-  .toc-link.depth-4,
-  .toc-link.depth-5 {
-    padding-left: 28px;
-    font-size: 11px;
-  }
   .prose {
     max-width: var(--reading-max);
     min-width: 0;
@@ -363,22 +319,9 @@ const { html, toc } = renderMarkdownDocument(entry.body);
       grid-template-columns: minmax(0, 1fr);
       gap: 28px;
     }
-    .detail-toc {
-      position: static;
-      max-height: none;
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--surface-raised);
-    }
-    .toc-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .toc-link.depth-3,
-    .toc-link.depth-4,
-    .toc-link.depth-5 { padding-left: 12px; }
   }
   @media (max-width: 600px) {
     .hero-banner { height: 108px; }
-    .toc-nav { grid-template-columns: 1fr; }
     .detail-cta {
       align-items: flex-start;
       flex-direction: column;

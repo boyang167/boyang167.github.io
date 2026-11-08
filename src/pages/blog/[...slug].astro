@@ -1,13 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MermaidInit from '../../components/MermaidInit.astro';
+import ArticleTocAside from '../../components/ArticleTocAside.astro';
 import { renderMarkdownDocument } from '../../lib/render-markdown';
 import {
   blogPostMediaDir,
   blogPostSlug,
+  buildBlogSlugHrefMap,
   formatBlogDate,
   getPublishedBlogPosts,
-  rewriteBlogMediaUrls,
+  preprocessBlogMarkdown,
 } from '../../lib/blog';
 import type { BlogEntry } from '../../lib/blog';
 import 'katex/dist/katex.min.css';
@@ -27,7 +29,9 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, category, date, readTime, icon } = post.data;
 const mediaDir = blogPostMediaDir(post);
-const preprocess = (md: string) => rewriteBlogMediaUrls(md, mediaDir);
+const allPosts = await getPublishedBlogPosts();
+const slugHref = buildBlogSlugHrefMap(allPosts);
+const preprocess = (md: string) => preprocessBlogMarkdown(md, mediaDir, slugHref);
 const { html, toc } = renderMarkdownDocument(post.body ?? '', preprocess);
 const dateLabel = formatBlogDate(date);
 ---
@@ -54,16 +58,7 @@ const dateLabel = formatBlogDate(date);
 
     <div class:list={['post-layout', { 'post-layout--solo': toc.length === 0 }]}>
       {toc.length > 0 && (
-        <aside class="post-toc" aria-label="本文目录">
-          <p class="post-toc-title">本文目录</p>
-          <nav class="post-toc-nav">
-            {toc.map((item) => (
-              <a href={`#${item.id}`} class={`post-toc-link depth-${item.depth}`}>
-                {item.text}
-              </a>
-            ))}
-          </nav>
-        </aside>
+        <ArticleTocAside items={toc} variant="blog" />
       )}
 
       <div class="post-main">
@@ -98,12 +93,16 @@ const dateLabel = formatBlogDate(date);
   const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.post-toc-link')];
   if (tocLinks.length > 0) {
     const linkById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const expandBranch = (window as Window & { expandTocBranchForLink?: (link: HTMLAnchorElement) => void })
+      .expandTocBranchForLink;
     const setActiveToc = (id: string) => {
       tocLinks.forEach((link) => {
         const active = decodeURIComponent(link.hash.slice(1)) === id;
         link.classList.toggle('is-active', active);
-        if (active) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
+        if (active) {
+          link.setAttribute('aria-current', 'location');
+          expandBranch?.(link);
+        } else link.removeAttribute('aria-current');
       });
     };
     const headings = [...document.querySelectorAll<HTMLElement>('.prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]')]
@@ -202,50 +201,6 @@ const dateLabel = formatBlogDate(date);
   }
   .post-layout--solo {
     grid-template-columns: minmax(0, var(--reading-max));
-  }
-  .post-toc {
-    position: sticky;
-    top: 96px;
-    padding-top: 4px;
-  }
-  .post-toc-title {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--muted);
-    margin: 0 0 14px;
-    letter-spacing: 0.04em;
-  }
-  .post-toc-nav {
-    display: grid;
-    gap: 10px;
-  }
-  .post-toc-link {
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 6px 8px;
-    border-left: 2px solid transparent;
-    font-size: 12px;
-    line-height: 1.45;
-    color: var(--muted);
-    transition: color 0.15s ease;
-  }
-  .post-toc-link:hover,
-  .post-toc-link:focus-visible,
-  .post-toc-link.is-active {
-    color: var(--blue);
-    border-left-color: var(--blue);
-    background: var(--blue-soft);
-  }
-  .post-toc-link.depth-3 {
-    padding-left: 14px;
-    font-size: 11px;
-  }
-  .post-toc-link.depth-4,
-  .post-toc-link.depth-5 {
-    padding-left: 24px;
-    font-size: 11px;
-    opacity: 0.88;
   }
   .post-main {
     min-width: 0;
@@ -440,15 +395,8 @@ const dateLabel = formatBlogDate(date);
       gap: 0;
     }
     .post-toc {
-      position: static;
-      margin-bottom: 32px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
     }
-    .post-toc-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
-    .post-toc-link.depth-3,
-    .post-toc-link.depth-4,
-    .post-toc-link.depth-5 { padding-left: 12px; }
     .post-end {
       flex-direction: column;
       align-items: flex-start;
@@ -456,6 +404,5 @@ const dateLabel = formatBlogDate(date);
   }
   @media (max-width: 600px) {
     .post-banner { height: 108px; }
-    .post-toc-nav { grid-template-columns: 1fr; }
   }
 </style>

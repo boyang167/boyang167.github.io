@@ -1,0 +1,18 @@
+/* GFM task lists: avoid double bullets + full-width checkbox from form input reset */
+.prose ul:has(> li > input[type="checkbox"]) {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose li:has(> input[type="checkbox"]) {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  line-height: 1.65;
+}
+
+.prose li:has(> input[type="checkbox"]) > input[type="checkbox"] {
+  margin-top: 0.2em;
+  flex-shrink: 0;
+}

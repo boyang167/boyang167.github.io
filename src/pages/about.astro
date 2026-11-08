@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import WechatOfficialPromo from '../components/WechatOfficialPromo.astro';
 
 const highlights = [
   { n: '01', title: 'Agent Engineering', desc: 'Architecture · Harness · Runtime · Orchestration' },
@@ -567,7 +568,11 @@ const splitSkillItems = (items: string) =>
       <p class="muted">
         持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。
       </p>
+      <p class="muted about-cta-wechat-hint">
+        也可通过微信公众号获取更新；扫码或微信搜一搜即可关注。
+      </p>
     </div>
+    <WechatOfficialPromo variant="about" />
     <nav class="about-cta-links" aria-label="内容与联系">
       <a href="/blog/">
         <span>技术博客</span>
@@ -1269,8 +1274,8 @@ const splitSkillItems = (items: string) =>
     margin-bottom: 20px;
     padding: clamp(30px, 5vw, 54px);
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
-    gap: clamp(38px, 6vw, 80px);
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 240px) minmax(260px, 0.95fr);
+    gap: clamp(28px, 4vw, 56px);
     align-items: center;
     border: 1px solid var(--about-border);
     border-radius: var(--radius-lg);
@@ -1290,6 +1295,11 @@ const splitSkillItems = (items: string) =>
     font-size: 13px;
     line-height: 1.75;
     max-width: 500px;
+  }
+
+  .about-cta-wechat-hint {
+    margin-top: 12px !important;
+    font-size: 12px !important;
   }
   .about-cta-links {
     display: grid;

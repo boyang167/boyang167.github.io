@@ -1,0 +1,92 @@
+---
+import type { TocTreeNode } from '../lib/toc-tree';
+import TocNav from './TocNav.astro';
+import '../styles/toc-tree.css';
+
+interface Props {
+  nodes: TocTreeNode[];
+  linkClass?: string;
+}
+
+const { nodes, linkClass = 'toc-link' } = Astro.props;
+---
+{
+  nodes.map((node) => (
+    <div class:list={['toc-branch', { 'toc-branch--parent': node.children.length > 0 }]}>
+      {node.children.length > 0 ? (
+        <>
+          <div class="toc-branch-head">
+            <button
+              type="button"
+              class="toc-branch-toggle"
+              aria-expanded="false"
+              aria-label="展开子目录"
+              data-i18n-aria-zh="折叠子目录"
+              data-i18n-aria-en="Collapse subsection"
+              data-i18n-expand-zh="展开子目录"
+              data-i18n-expand-en="Expand subsection"
+            >
+              <span class="toc-branch-chevron" aria-hidden="true" />
+            </button>
+            <a href={`#${node.item.id}`} class:list={[linkClass, `depth-${node.item.depth}`]}>
+              {node.item.text}
+            </a>
+          </div>
+          <div class="toc-branch-children is-collapsed">
+            <TocNav nodes={node.children} linkClass={linkClass} />
+          </div>
+        </>
+      ) : (
+        <a href={`#${node.item.id}`} class:list={[linkClass, `depth-${node.item.depth}`, 'toc-branch-leaf']}>
+          {node.item.text}
+        </a>
+      )}
+    </div>
+  ))
+}
+
+<script>
+  const syncToggleLabels = (lang: string) => {
+    document.querySelectorAll<HTMLButtonElement>('.toc-branch-toggle').forEach((btn) => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const zh = expanded ? btn.dataset.i18nAriaZh : btn.dataset.i18nExpandZh;
+      const en = expanded ? btn.dataset.i18nAriaEn : btn.dataset.i18nExpandEn;
+      btn.setAttribute('aria-label', lang === 'en' ? en ?? '' : zh ?? '');
+    });
+  };
+
+  const initTocCollapse = () => {
+    document.querySelectorAll<HTMLButtonElement>('.toc-branch-toggle').forEach((btn) => {
+      if (btn.dataset.tocCollapseBound === '1') return;
+      btn.dataset.tocCollapseBound = '1';
+      btn.addEventListener('click', () => {
+        const branch = btn.closest('.toc-branch');
+        const children = branch?.querySelector(':scope > .toc-branch-children');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        children?.classList.toggle('is-collapsed', expanded);
+        syncToggleLabels(document.documentElement.lang);
+      });
+    });
+    syncToggleLabels(document.documentElement.lang);
+  };
+
+  initTocCollapse();
+  window.addEventListener('language-change', (event) => {
+    syncToggleLabels((event as CustomEvent<string>).detail);
+  });
+
+  (window as Window & { expandTocBranchForLink?: (link: HTMLAnchorElement) => void }).expandTocBranchForLink = (
+    link: HTMLAnchorElement,
+  ) => {
+    let branch = link.closest('.toc-branch');
+    while (branch) {
+      const children = branch.querySelector(':scope > .toc-branch-children');
+      const toggle = branch.querySelector<HTMLButtonElement>(':scope > .toc-branch-head .toc-branch-toggle');
+      children?.classList.remove('is-collapsed');
+      toggle?.setAttribute('aria-expanded', 'true');
+      branch = branch.parentElement?.closest('.toc-branch') ?? null;
+    }
+    syncToggleLabels(document.documentElement.lang);
+  };
+</script>

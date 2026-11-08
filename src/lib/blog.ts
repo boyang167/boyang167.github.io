@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type BlogEntry = CollectionEntry<'blog'>;
@@ -81,6 +82,49 @@ export function rewriteBlogMediaUrls(markdown: string, mediaDir: string): string
     .replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (_, alt, rel) => `![${alt}](${base}/${rel})`)
     .replace(/src="\.\.\/img\//g, 'src="/blog-media/img/')
     .replace(/src="\.\/([^"]+)"/g, `src="${base}/$1"`);
+}
+
+/** slug（小写、相对 raw/3-blog）→ 站点路径，供文内 `./foo.md` 链接触发 */
+export function buildBlogSlugHrefMap(posts: BlogEntry[]): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const post of posts) {
+    const key = blogPostSlug(post).replace(/\\/g, '/').toLowerCase();
+    map.set(key, blogPostHref(post));
+  }
+  return map;
+}
+
+/**
+ * 将文内相对 Markdown 链接改为 `/blog/.../`。
+ * 避免在 `/blog/data/当前文/` 下点击 `./Other.md` 变成 404。
+ */
+export function rewriteBlogInternalLinks(
+  markdown: string,
+  mediaDir: string,
+  slugHref: Map<string, string>,
+): string {
+  const dir = mediaDir.replace(/\\/g, '/');
+  return markdown.replace(
+    /\]\((\.\.?\/[^)\s]+?\.md)(#[^)]*)?\)/gi,
+    (full, rel: string, hash?: string) => {
+      const resolved = path.posix
+        .normalize(path.posix.join(dir || '.', rel))
+        .replace(/\.md$/i, '')
+        .replace(/^\.\//, '');
+      const href = slugHref.get(resolved.toLowerCase());
+      if (!href) return full;
+      return `](${href}${hash ?? ''})`;
+    },
+  );
+}
+
+/** 图片 URL + 站内博客互链 */
+export function preprocessBlogMarkdown(
+  markdown: string,
+  mediaDir: string,
+  slugHref: Map<string, string>,
+): string {
+  return rewriteBlogInternalLinks(rewriteBlogMediaUrls(markdown, mediaDir), mediaDir, slugHref);
 }
 
 export function blogPostHref(entry: BlogEntry): string {
