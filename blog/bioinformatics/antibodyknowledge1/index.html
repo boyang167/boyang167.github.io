@@ -1,0 +1,1479 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="梳理抗体序列分析四层框架、经典 IgG 重轻链与 Fab/Fc 功能分区、CDR/FR 编号体系、二硫键与多链拓扑推断，以及 CDR Hotspot 与 Fc 工程开发风险分析。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>基础知识-抗体序列 Annotation Engine · Boyang Wang</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.t04Za6ld.css">
+<link rel="stylesheet" href="/_astro/_slug_.BBHBVTRi.css">
+<link rel="stylesheet" href="/_astro/_slug_.B3BXc7_W.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link active" href="/blog/" aria-current="page" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="icon-button github-link" href="https://github.com/boyang167" target="_blank" rel="noopener noreferrer" aria-label="GitHub：boyang167" title="GitHub · boyang167" data-astro-cid-3ef6ksr2> <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" data-astro-cid-3ef6ksr2> <path fill="currentColor" d="M12 0C5.37 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.565 22.092 24 17.592 24 12c0-6.627-5.373-12-12-12z" data-astro-cid-3ef6ksr2></path> </svg> </a> <div class="header-cta" aria-label="联系与社交" data-astro-cid-3ef6ksr2> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span aria-hidden="true" data-astro-cid-3ef6ksr2>↗</span></a> </div> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap post-page" data-astro-cid-7jjqptxk> <header class="post-top" data-astro-cid-7jjqptxk> <a class="text-link post-back" href="/blog/" data-astro-cid-7jjqptxk>← 返回技术博客</a> <div class="post-banner" data-astro-cid-7jjqptxk> <span class="post-banner-icon" aria-hidden="true" data-astro-cid-7jjqptxk>🧬</span> </div> <div class="post-head" data-astro-cid-7jjqptxk> <div class="eyebrow" data-astro-cid-7jjqptxk>生物制药</div> <h1 data-astro-cid-7jjqptxk>基础知识-抗体序列 Annotation Engine</h1> <p class="post-lead" data-astro-cid-7jjqptxk>梳理抗体序列分析四层框架、经典 IgG 重轻链与 Fab/Fc 功能分区、CDR/FR 编号体系、二硫键与多链拓扑推断，以及 CDR Hotspot 与 Fc 工程开发风险分析。</p> <p class="post-meta muted" data-astro-cid-7jjqptxk> <span data-astro-cid-7jjqptxk>Boyang Wang</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>2026-11-20</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>阅读 22 分钟</span> </p> </div> </header> <div class="post-layout" data-astro-cid-7jjqptxk> <aside class="post-toc article-toc-panel" aria-label="本文目录"> <div class="toc-panel-head"> <p class="post-toc-title">本文目录</p> <button type="button" class="toc-panel-hide" aria-expanded="true" aria-controls="article-toc-nav" data-i18n-label-zh="隐藏目录" data-i18n-label-en="Hide table of contents"> <span class="toc-panel-hide-icon" aria-hidden="true"></span> </button> </div> <nav id="article-toc-nav" class="post-toc-nav"> <div class="toc-branch"><a href="#1-抗体序列分析的四层问题" class="post-toc-link depth-2 toc-branch-leaf">1. 抗体序列分析的四层问题</a></div><div class="toc-branch toc-branch--parent"><script type="module">const n=t=>{document.querySelectorAll(".toc-branch-toggle").forEach(e=>{const c=e.getAttribute("aria-expanded")==="true",a=c?e.dataset.i18nAriaZh:e.dataset.i18nExpandZh,o=c?e.dataset.i18nAriaEn:e.dataset.i18nExpandEn;e.setAttribute("aria-label",t==="en"?o??"":a??"")})},r=()=>{document.querySelectorAll(".toc-branch-toggle").forEach(t=>{t.dataset.tocCollapseBound!=="1"&&(t.dataset.tocCollapseBound="1",t.addEventListener("click",()=>{const c=t.closest(".toc-branch")?.querySelector(":scope > .toc-branch-children"),a=t.getAttribute("aria-expanded")==="true";t.setAttribute("aria-expanded",String(!a)),c?.classList.toggle("is-collapsed",a),n(document.documentElement.lang)}))}),n(document.documentElement.lang)};r();window.addEventListener("language-change",t=>{n(t.detail)});window.expandTocBranchForLink=t=>{let e=t.closest(".toc-branch");for(;e;){const c=e.querySelector(":scope > .toc-branch-children"),a=e.querySelector(":scope > .toc-branch-head .toc-branch-toggle");c?.classList.remove("is-collapsed"),a?.setAttribute("aria-expanded","true"),e=e.parentElement?.closest(".toc-branch")??null}n(document.documentElement.lang)};</script><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#2-经典-IgG-抗体的结构组成" class="post-toc-link depth-2">2. 经典 IgG 抗体的结构组成</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#21-四链-Y-形结构与重链--轻链分区" class="post-toc-link depth-3 toc-branch-leaf">2.1 四链 Y 形结构与重链 / 轻链分区</a></div><div class="toc-branch"><a href="#22-功能片段Fab-与-Fc" class="post-toc-link depth-3 toc-branch-leaf">2.2 功能片段：Fab 与 Fc</a></div><div class="toc-branch"><a href="#23-天然-IgG-重链层级N-端--C-端" class="post-toc-link depth-3 toc-branch-leaf">2.3 天然 IgG 重链层级（N 端 → C 端）</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#3-可变区细化V-区CDRFR-与编号体系" class="post-toc-link depth-2">3. 可变区细化：V 区、CDR、FR 与编号体系</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#31-FR-与-CDR-的交替排列" class="post-toc-link depth-3 toc-branch-leaf">3.1 FR 与 CDR 的交替排列</a></div><div class="toc-branch"><a href="#32-抗体编号体系Numbering-Schemes" class="post-toc-link depth-3 toc-branch-leaf">3.2 抗体编号体系（Numbering Schemes）</a></div></div></div><div class="toc-branch"><a href="#4-Sequence-Annotation-Engine序列注释引擎" class="post-toc-link depth-2 toc-branch-leaf">4. Sequence Annotation Engine（序列注释引擎）</a></div><div class="toc-branch"><a href="#5-真实工程序列为什么不能假设完整天然-IgG" class="post-toc-link depth-2 toc-branch-leaf">5. 真实工程序列：为什么不能假设完整天然 IgG</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#6-引擎设计要点与延伸阅读" class="post-toc-link depth-2">6. 引擎设计要点与延伸阅读</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#核心设计原则" class="post-toc-link depth-3 toc-branch-leaf">核心设计原则</a></div><div class="toc-branch"><a href="#延伸方向" class="post-toc-link depth-3 toc-branch-leaf">延伸方向</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Sequence-Annotation" class="post-toc-link depth-2">Sequence Annotation</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#常用序列注释工具对比" class="post-toc-link depth-3 toc-branch-leaf">常用序列注释工具对比</a></div><div class="toc-branch"><a href="#多工具结果如何融合" class="post-toc-link depth-3 toc-branch-leaf">多工具结果如何融合？</a></div><div class="toc-branch"><a href="#核心算法与工程概念速查" class="post-toc-link depth-3 toc-branch-leaf">核心算法与工程概念速查</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Sequence-Alignment精细重比对与突变识别" class="post-toc-link depth-2">Sequence Alignment：精细重比对与突变识别</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#要回答什么" class="post-toc-link depth-3 toc-branch-leaf">要回答什么</a></div><div class="toc-branch"><a href="#输入--输出概念" class="post-toc-link depth-3 toc-branch-leaf">输入 / 输出（概念）</a></div><div class="toc-branch"><a href="#Germline-是什么为何不能照搬参考序列" class="post-toc-link depth-3 toc-branch-leaf">Germline 是什么？为何不能「照搬」参考序列</a></div><div class="toc-branch"><a href="#比对算法选型" class="post-toc-link depth-3 toc-branch-leaf">比对算法选型</a></div><div class="toc-branch"><a href="#EU-NumberingFc-恒定区编号" class="post-toc-link depth-3 toc-branch-leaf">EU Numbering（Fc 恒定区编号）</a></div><div class="toc-branch"><a href="#局限" class="post-toc-link depth-3 toc-branch-leaf">局限</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Disulfide-Inference二硫键推断" class="post-toc-link depth-2">Disulfide Inference：二硫键推断</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#化学基础" class="post-toc-link depth-3 toc-branch-leaf">化学基础</a></div><div class="toc-branch"><a href="#两类二硫键与经典分布" class="post-toc-link depth-3 toc-branch-leaf">两类二硫键与经典分布</a></div><div class="toc-branch"><a href="#不同-IgG-亚型的链间二硫键差异" class="post-toc-link depth-3 toc-branch-leaf">不同 IgG 亚型的链间二硫键差异</a></div><div class="toc-branch"><a href="#游离半胱氨酸与非经典二硫键CMC-风险" class="post-toc-link depth-3 toc-branch-leaf">游离半胱氨酸与非经典二硫键（CMC 风险）</a></div><div class="toc-branch"><a href="#算法与工程实现规则--表驱动" class="post-toc-link depth-3 toc-branch-leaf">算法与工程实现（规则 + 表驱动）</a></div><div class="toc-branch"><a href="#局限-2" class="post-toc-link depth-3 toc-branch-leaf">局限</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Molecular-Topology多链拓扑推断与分子形式分类" class="post-toc-link depth-2">Molecular Topology：多链拓扑推断与分子形式分类</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#输入--输出" class="post-toc-link depth-3 toc-branch-leaf">输入 / 输出</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#1-什么是分子拓扑-Graph-Modeling图建模" class="post-toc-link depth-3">1. 什么是分子拓扑？—— Graph Modeling（图建模）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#节点Node" class="post-toc-link depth-4 toc-branch-leaf">节点（Node）</a></div><div class="toc-branch"><a href="#边Edge与语义区分" class="post-toc-link depth-4 toc-branch-leaf">边（Edge）与语义区分</a></div></div></div><div class="toc-branch"><a href="#2-为什么要做组合搜索链错配问题" class="post-toc-link depth-3 toc-branch-leaf">2. 为什么要做组合搜索？（链错配问题）</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#3-核心生物学约束与工程改造标签" class="post-toc-link depth-3">3. 核心生物学约束与工程改造标签</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#重点案例Knob-in-Hole-与-CrossMab" class="post-toc-link depth-4 toc-branch-leaf">重点案例：Knob-in-Hole 与 CrossMab</a></div></div></div><div class="toc-branch"><a href="#4-启发式打分与约束优化" class="post-toc-link depth-3 toc-branch-leaf">4. 启发式打分与约束优化</a></div><div class="toc-branch"><a href="#5-分子形式分类Format-Classification" class="post-toc-link depth-3 toc-branch-leaf">5. 分子形式分类（Format Classification）</a></div><div class="toc-branch"><a href="#6-要点与局限" class="post-toc-link depth-3 toc-branch-leaf">6. 要点与局限</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#开发风险与-Fc-工程Developability-amp-Fc-Engineering" class="post-toc-link depth-2">开发风险与 Fc 工程（Developability &amp;amp; Fc Engineering）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#1-CDR-Hotspot序列理化风险识别" class="post-toc-link depth-3">1. CDR Hotspot：序列理化风险识别</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#算法实现" class="post-toc-link depth-4 toc-branch-leaf">算法实现</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#2-Fc-工程类型识别词典覆盖匹配" class="post-toc-link depth-3">2. Fc 工程类型识别（词典覆盖匹配）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#算法要点词典集合包含匹配--最长组合优先" class="post-toc-link depth-4 toc-branch-leaf">算法要点：词典集合包含匹配 + 最长组合优先</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#3-ADCC-文献对照与变体检索" class="post-toc-link depth-3">3. ADCC 文献对照与变体检索</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#生物学机制简介" class="post-toc-link depth-4 toc-branch-leaf">生物学机制简介</a></div><div class="toc-branch"><a href="#检索与类比算法非从头预测" class="post-toc-link depth-4 toc-branch-leaf">检索与类比算法（非从头预测）</a></div><div class="toc-branch"><a href="#判读边界与局限" class="post-toc-link depth-4 toc-branch-leaf">判读边界与局限</a></div></div></div></div></div><div class="toc-branch"><a href="#参考资料" class="post-toc-link depth-2 toc-branch-leaf">参考资料</a></div> </nav> </aside> <script type="module">const u="portal-article-toc-hidden",y=()=>document.documentElement.lang,i=()=>{const t=y()!=="en";document.querySelectorAll(".toc-panel-hide").forEach(o=>{o.setAttribute("aria-label",t?o.dataset.i18nLabelZh??"":o.dataset.i18nLabelEn??"")}),document.querySelectorAll(".toc-panel-restore").forEach(o=>{o.textContent=t?o.dataset.i18nTextZh??"":o.dataset.i18nTextEn??"",o.setAttribute("aria-label",t?o.dataset.i18nAriaZh??"":o.dataset.i18nAriaEn??"")})},p=e=>e.closest(".detail-layout, .post-layout");let l=null;const d=e=>{l=e;let t=document.body.querySelector(".toc-panel-restore");return t||(t=document.createElement("button"),t.type="button",t.className="toc-panel-restore",t.hidden=!0,t.dataset.i18nTextZh="目录",t.dataset.i18nTextEn="TOC",t.dataset.i18nAriaZh="显示目录",t.dataset.i18nAriaEn="Show table of contents",t.textContent="目录",document.body.appendChild(t),t.addEventListener("click",()=>{l&&r(l,!1)})),t},r=(e,t)=>{const n=e.querySelector(".article-toc-panel")?.querySelector(".toc-panel-hide"),a=d(e);e.classList.toggle("layout--toc-hidden",t),e.classList.toggle("post-layout--solo",t&&e.classList.contains("post-layout")),e.classList.toggle("detail-layout--no-toc",t&&e.classList.contains("detail-layout")),n?.setAttribute("aria-expanded",String(!t)),a&&(a.hidden=!t);try{localStorage.setItem(u,t?"1":"0")}catch{}i()},g=()=>{document.querySelectorAll(".article-toc-panel").forEach(e=>{const t=p(e);if(!t||e.dataset.tocPanelBound==="1")return;e.dataset.tocPanelBound="1";const o=e.querySelector(".toc-panel-hide");d(t),o?.addEventListener("click",()=>r(t,!0));let n=!1;try{n=localStorage.getItem(u)==="1"}catch{n=!1}r(t,n)}),i()},s=()=>{const t=document.querySelector(".detail-layout:not(.layout--toc-hidden), .post-layout:not(.layout--toc-hidden)")?.querySelector(".article-toc-panel"),o=t?.querySelector(".toc-link.is-active, .post-toc-link.is-active");if(!t||!o||t.scrollHeight<=t.clientHeight+1)return;const n=t.getBoundingClientRect(),a=o.getBoundingClientRect(),c=12;a.top<n.top+c?t.scrollTop-=n.top+c-a.top:a.bottom>n.bottom-c&&(t.scrollTop+=a.bottom-n.bottom+c)},h=()=>{const t=document.querySelector(".detail-layout, .post-layout")?.querySelector(".toc-nav, .post-toc-nav");if(!t||t.dataset.tocAutoscrollBound==="1")return;t.dataset.tocAutoscrollBound="1",t.addEventListener("click",()=>requestAnimationFrame(s)),new MutationObserver(()=>s()).observe(t,{subtree:!0,attributes:!0,attributeFilter:["class"]});let n=0;window.addEventListener("scroll",()=>{n||(n=requestAnimationFrame(()=>{n=0,s()}))},{passive:!0})};g();h();window.addEventListener("language-change",()=>i());</script>  <div class="post-main" data-astro-cid-7jjqptxk> <div class="post-prose prose" data-astro-cid-7jjqptxk><h2 id="1-抗体序列分析的四层问题">1. 抗体序列分析的四层问题</h2>
+<p>在抗体与融合蛋白研发中，序列分析系统需要逐层回答以下四个核心问题：</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart LR
+  A[Sequence Annotation&lt;br/&gt;序列分区] --&gt; B[Sequence Alignment&lt;br/&gt;精细比对与突变]
+  B --&gt; C[Disulfide Inference&lt;br/&gt;二硫键连接推断]
+  C --&gt; D[Molecular Topology&lt;br/&gt;多链分子拓扑]</pre></div>
+<table>
+<thead>
+<tr>
+<th>分析层次</th>
+<th>核心问题</th>
+<th>关键概念与输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sequence Annotation</strong> 识别序列</td>
+<td>每个氨基酸属于什么区域？</td>
+<td><code>VH</code>、<code>VL</code>、<code>CH</code>、<code>CL</code>、<code>CDR</code>、<code>FR</code>、<code>Hinge</code>、<code>Linker</code>、<code>Tag</code></td>
+</tr>
+<tr>
+<td><strong>Sequence Alignment</strong> 比较序列</td>
+<td>相对于参考抗体发生了什么变化？</td>
+<td>Germline 亚型、Mutation（突变）、EU Numbering、Fc Engineering</td>
+</tr>
+<tr>
+<td><strong>Disulfide Inference</strong> 推断结构连接</td>
+<td>哪些区域应通过二硫键连接？</td>
+<td>Cysteine 配对、Intra-chain（链内）、Inter-chain（链间）</td>
+</tr>
+<tr>
+<td><strong>Molecular Topology</strong> 推断分子组装</td>
+<td>多条蛋白链如何组成完整分子？</td>
+<td>Chain Pairing（链配对）、Stoichiometry（化学计量）、Mab / BsAb / Fc-fusion</td>
+</tr>
+</tbody></table>
+<p>其中最底层的基石是 <strong>Sequence Annotation Engine（序列注释引擎）</strong>：</p>
+<blockquote>
+<p><strong>核心问题</strong>：一条氨基酸序列里，哪些位置是 <code>VH</code>、<code>VL</code>，哪些是 <code>CH</code>、<code>CL</code>，哪些是 <code>Linker</code>、<code>Tag</code> 或未知片段？<code>CDR</code>、<code>FR</code> 的边界在哪？</p>
+</blockquote>
+<p>引擎输出的本质是对输入序列做<strong>结构域与功能区分段注释</strong>（domain + region + 起止坐标），而不是只做一次性的粗粒度 BLAST 比对。抗体分析系统不仅要识别氨基酸字符，还要理解各区域之间的生物学关系。（注释任务类似NLP 中的命名实体识别，HMM，CRF， BiLSTM ）</p>
+<hr>
+<h2 id="2-经典-IgG-抗体的结构组成">2. 经典 IgG 抗体的结构组成</h2>
+<h3 id="21-四链-Y-形结构与重链--轻链分区">2.1 四链 Y 形结构与重链 / 轻链分区</h3>
+<p>经典 IgG 抗体呈对称的 <strong>Y 字形结构</strong>，主要由四条多肽链组成：</p>
+<ul>
+<li><strong>两条重链</strong>（Heavy Chain，HC）</li>
+<li><strong>两条轻链</strong>（Light Chain，LC）</li>
+</ul>
+<p><img src="/blog-media/img/bioinformatics/antibody-drug-delivery-overview.png" alt="经典 IgG 抗体结构与药物形式总览（MDPI 示意）"></p>
+<p align="center"><em>图 1：经典 IgG 结构域划分与常见抗体工程</em></p>
+
+<p><strong>每条重链（HC）从 N 端到 C 端通常包含：</strong></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>英文全称</th>
+<th>主要功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>VH</strong></td>
+<td>Heavy Variable</td>
+<td>重链可变区，参与抗原识别</td>
+</tr>
+<tr>
+<td><strong>CH1</strong></td>
+<td>Heavy Constant 1</td>
+<td>重链恒定区 1，构成 Fab 结构支撑</td>
+</tr>
+<tr>
+<td><strong>Hinge</strong></td>
+<td>Hinge Region（铰链区）</td>
+<td>连接 CH1 与 CH2，提供空间柔性与链间二硫键连接</td>
+</tr>
+<tr>
+<td><strong>CH2</strong></td>
+<td>Heavy Constant 2</td>
+<td>重链恒定区 2，介导 Fc 效应功能、含保守糖基化位点</td>
+</tr>
+<tr>
+<td><strong>CH3</strong></td>
+<td>Heavy Constant 3</td>
+<td>重链恒定区 3，介导 Fc 同源二聚及分子稳定性</td>
+</tr>
+</tbody></table>
+<p><strong>每条轻链（LC）从 N 端到 C 端通常包含：</strong></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>英文全称</th>
+<th>主要功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>VL</strong></td>
+<td>Light Variable</td>
+<td>轻链可变区，参与抗原识别</td>
+</tr>
+<tr>
+<td><strong>CL</strong></td>
+<td>Light Constant</td>
+<td>轻链恒定区，与 CH1 配对稳定 Fab 结构</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>协同识别</strong>：<code>VH + VL</code> 共同组成一个抗原结合位点——两者并非独立发挥作用的识别单元，而在空间上协同折叠形成抗原结合界面。</p>
+</blockquote>
+<h3 id="22-功能片段Fab-与-Fc">2.2 功能片段：Fab 与 Fc</h3>
+<p>按酶切与功能分工，完整 IgG 常划分为两大功能模块：</p>
+<table>
+<thead>
+<tr>
+<th>功能模块</th>
+<th>全称</th>
+<th>包含结构域</th>
+<th>核心生物学功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Fab</strong></td>
+<td>Fragment antigen-binding</td>
+<td><code>VH</code>、<code>CH1</code>、<code>VL</code>、<code>CL</code></td>
+<td>特异性识别并结合目标抗原</td>
+</tr>
+<tr>
+<td><strong>Fc</strong></td>
+<td>Fragment crystallizable</td>
+<td>两条重链的 <code>CH2</code>、<code>CH3</code>（含 Hinge 下游）</td>
+<td>参与 FcγR 受体结合、ADCC 等免疫效应功能、FcRn 介导的循环半衰期调节，以及维持抗体整体稳定性</td>
+</tr>
+</tbody></table>
+<h3 id="23-天然-IgG-重链层级N-端--C-端">2.3 天然 IgG 重链层级（N 端 → C 端）</h3>
+<p>理想化天然重链的一维序列层级关系如下：</p>
+<pre><code class="language-text">N 端
+ │
+ ├── VH（FR1 → CDR1 → FR2 → CDR2 → FR3 → CDR3 → FR4）
+ ├── CH1
+ ├── Hinge
+ ├── CH2
+ └── CH3
+ │
+C 端
+</code></pre>
+<p><img src="/blog-media/img/bioinformatics/antibody-igg-heavy-chain-domains.png" alt="天然 IgG 重链结构域示意图"></p>
+<p align="center"><em>图 2：天然 IgG 重链中可变区（含 FR/CDR）、铰链区与恒定区的层级关系。</em></p>
+
+<hr>
+<h2 id="3-可变区细化V-区CDRFR-与编号体系">3. 可变区细化：V 区、CDR、FR 与编号体系</h2>
+<h3 id="31-FR-与-CDR-的交替排列">3.1 FR 与 CDR 的交替排列</h3>
+<p><strong>V 区（Variable Region，含 VH 与 VL</strong>负责识别抗原，其内部由高度保守的骨架区与高变环区交替组成：</p>
+<pre><code class="language-text">FR1 ──▶ CDR1 ──▶ FR2 ──▶ CDR2 ──▶ FR3 ──▶ CDR3 ──▶ FR4
+</code></pre>
+<p><img src="/blog-media/img/bioinformatics/antibody-v-region-cdr-fr.png" alt="V 区、C 区、CDR 与 FR 结构示意"></p>
+<p align="center"><em>图 3：可变区（V 区）、恒定区（C 区）以及 CDR 环与 FR 骨架的空间对应关系。</em></p>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>英文全称</th>
+<th>生物学作用</th>
+<th>结构类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>FR（1–4）</strong></td>
+<td>Framework Region</td>
+<td>维持可变区 β-折叠桶状基本结构，托举高变环</td>
+<td>稳定骨架</td>
+</tr>
+<tr>
+<td><strong>CDR（1–3）</strong></td>
+<td>Complementarity Determining Region</td>
+<td>形成互补决定环，直接参与抗原表位结合</td>
+<td>识别界面</td>
+</tr>
+</tbody></table>
+<p>其中 <strong>CDR3</strong>（尤其是重链 HCDR3）跨越 V-D-J 重排连接区，通常具有最高的序列与长度多样性，是决定抗原识别特异性的最关键区域。</p>
+<h3 id="32-抗体编号体系Numbering-Schemes">3.2 抗体编号体系（Numbering Schemes）</h3>
+<p><strong>CDR 的具体起止边界取决于所采用的编号体系</strong>，常见体系包括 <strong>Kabat</strong>、<strong>Chothia</strong>、<strong>IMGT</strong>、<strong>AHo</strong>（以及联合方案如 North / Contact）等。同一条序列在不同编号体系下切出的 CDR 区间可能存在数个残基的差异：</p>
+<p><img src="/blog-media/img/bioinformatics/antibody-cdr-numbering-schemes.png" alt="CDR/FR 编号体系示意（Kabat、Chothia、IMGT、AHo 等）"></p>
+<p align="center"><em>图 4：不同抗体编号体系对 FR 与 CDR 边界划分的差异示意。</em></p>
+
+<blockquote>
+<p><strong>工程约束</strong>：序列注释引擎必须明确声明当前使用的编号方案，或支持多方案切换，以保证下游突变比对与申报资料口径一致。</p>
+</blockquote>
+<hr>
+<h2 id="4-Sequence-Annotation-Engine序列注释引擎">4. Sequence Annotation Engine（序列注释引擎）</h2>
+<p><img src="/blog-media/img/bioinformatics/antibody-sequence-annotation-engine.png" alt="抗体序列注释引擎示意：VH/VL、CH/CL、Linker、Tag 与 CDR/FR 边界"></p>
+<p align="center"><em>图 5：Sequence Annotation Engine 对单条输入序列执行多区域分段与 CDR/FR 边界标注。</em></p>
+
+<p>概念层面的标准处理流水线：</p>
+<ol>
+<li><strong>序列输入</strong>：接收单条或多条氨基酸序列（FASTA 或纯文本）。</li>
+<li><strong>结构域粗分（Domain Segmentation）</strong>：识别并定位 <code>VH</code>、<code>VL</code>、<code>CH1–CH3</code>、<code>CL</code>、<code>Hinge</code>、<code>Linker</code>、<code>Tag</code>、融合蛋白段及未知区段。</li>
+<li><strong>可变区细化（Sub-region Numbering）</strong>：在已识别的 <code>VH</code> / <code>VL</code> 内对齐参考编号体系，精准切出 <code>FR1–FR4</code> 与 <code>CDR1–CDR3</code>。</li>
+<li><strong>结构化输出</strong>：生成有序区间坐标表与可视化图谱，供下游种系比对、二硫键推断、多链拓扑组装及 LIMS / 注册台账使用。</li>
+</ol>
+<hr>
+<h2 id="5-真实工程序列为什么不能假设完整天然-IgG">5. 真实工程序列：为什么不能假设完整天然 IgG</h2>
+<p>在实际生物药研发与蛋白工程中，输入序列<strong>往往不是</strong>标准的天然四链 IgG</p>
+<table>
+<thead>
+<tr>
+<th>工程分子场景</th>
+<th>典型序列特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>单域或片段表达</strong></td>
+<td>仅含 <code>VH</code>（如 VHH 纳米抗体）、仅 <code>VL</code>，或 Fab 截短链</td>
+</tr>
+<tr>
+<td><strong>单链抗体（scFv）</strong></td>
+<td>人工串联为 <code>VH — Linker — VL</code>（或 <code>VL — Linker — VH</code>）</td>
+</tr>
+<tr>
+<td><strong>双特异性 / 多特异性抗体</strong></td>
+<td>单条链上串联多套 <code>VH</code>/<code>VL</code>，或含异源配对改造（如 Knob-in-Hole、CrossMab）</td>
+</tr>
+<tr>
+<td><strong>亲和纯化与检测标签</strong></td>
+<td>N 端或 C 端带有 <code>His-tag</code>、<code>Flag-tag</code>、<code>Strep-tag</code>、信号肽等短肽</td>
+</tr>
+<tr>
+<td><strong>Fc / 细胞因子融合蛋白</strong></td>
+<td>抗体片段与受体胞外域、细胞因子、酶或毒素拼接</td>
+</tr>
+<tr>
+<td><strong>人工设计 Linker</strong></td>
+<td>如 <code>(G4S)n</code>、<code>EAAAK</code> 等柔性或刚性连接肽，长度与序列高度可变</td>
+</tr>
+</tbody></table>
+<p>因此，注释算法<strong>绝不能硬编码位置假设</strong>（例如假定 <code>N 端 = VH → CH1 → Hinge → CH2 → CH3</code>），而必须结合同源 Profile HMM、种系比对、序列基序（motif）与补集规则<strong>逐段独立识别</strong>，并将未命中区域显式标记为 <code>Linker</code>、<code>Tag</code> 或 <code>Unknown</code>。</p>
+<hr>
+<h2 id="6-引擎设计要点与延伸阅读">6. 引擎设计要点与延伸阅读</h2>
+<h3 id="核心设计原则">核心设计原则</h3>
+<ul>
+<li><strong>分域优先于切 CDR</strong>：先稳健框定 <code>VH</code> / <code>VL</code> 完整边界，再在可变区内部做编号对齐与 CDR/FR 切分。</li>
+<li><strong>原生支持非天然拓扑</strong>：兼容 scFv、串联双抗、Fc 融合蛋白与截短片段等任意域排列顺序。</li>
+<li><strong>显式剥离 Linker 与 Tag</strong>：避免人工连接肽或纯化标签被误吸收入首尾的 <code>FR1</code> / <code>FR4</code>。</li>
+<li><strong>可复现、可审计</strong>：输出精确的 1-based/0-based 起止坐标、参考库版本与编号体系，便于序列变更比对与申报核查。</li>
+</ul>
+<h3 id="延伸方向">延伸方向</h3>
+<ul>
+<li><strong>主流注释与数据库工具</strong>：<code>ANARCI</code>（HMM 种系编号）、<code>HMMER</code>、<code>abYsis</code>、<code>SAbDab</code> / <code>IMGT</code> 参考库。</li>
+<li><strong>多源融合实现细节</strong>：关于如何将 <code>ANARCI + HMMER + BLASTp + 启发式 Motif</code> 融合为生产级注释流水线</li>
+</ul>
+<h2 id="Sequence-Annotation">Sequence Annotation</h2>
+<p>输入一条完整蛋白质序列：拆成有生物学意义的片段。</p>
+<p><strong>原始序列</strong></p>
+<p>一条连续的氨基酸序列</p>
+<p>QVQLVESGGGLVQPGGSLRLSCAASGFTF...</p>
+<p>↓</p>
+<p><strong>分区结果</strong></p>
+<p><strong>VH</strong> <strong>CH1</strong> <strong>Hinge</strong> <strong>CH2</strong> <strong>CH3</strong></p>
+<p>示意：实际区域及顺序取决于链类型和具体序列。</p>
+<p>它本质上是一个<strong>序列片段识别与坐标注释问题</strong>。</p>
+<h3 id="常用序列注释工具对比">常用序列注释工具对比</h3>
+<p>单一工具难以覆盖完整工程序列的所有片段，实际注释引擎通常将以下四类工具组合使用：</p>
+<table>
+<thead>
+<tr>
+<th>工具 / 方法</th>
+<th>核心原理</th>
+<th>擅长解决什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ANARCI</strong></td>
+<td>HMM Profile 匹配及编号</td>
+<td>可变区（<code>VH</code> / <code>VL</code>）识别、链型判定、标准残基编号</td>
+</tr>
+<tr>
+<td><strong>HMMER</strong></td>
+<td>Profile HMM（隐马尔可夫模型）</td>
+<td><code>FR</code> 框架区与恒定区（<code>CH</code> / <code>CL</code>）结构域边界识别</td>
+</tr>
+<tr>
+<td><strong>BLASTp</strong></td>
+<td>局部序列相似性搜索</td>
+<td>同源片段比对、Hinge / Fc 亚型及融合蛋白参考序列检索</td>
+</tr>
+<tr>
+<td><strong>Motif</strong></td>
+<td>固定序列模式 / 正则匹配</td>
+<td>人工 <code>Linker</code>、纯化标签（Tag）及特殊功能基序识别</td>
+</tr>
+</tbody></table>
+<h3 id="多工具结果如何融合">多工具结果如何融合？</h3>
+<p>不同工具的命中区间可能存在重叠、偏移甚至冲突，因此需要设计统一的<strong>区间融合策略</strong>：</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart LR
+  S1[1. 可信度优先级] --&gt; S2[2. 重叠比例比较]
+  S2 --&gt; S3[3. 边界偏差判断]
+  S3 --&gt; S4[4. 冲突区间裁决]
+  S4 --&gt; S5[5. 残余补集标 U]
+  S5 --&gt; Out([统一 Region Annotation])</pre></div>
+<ol>
+<li><strong>设置优先级</strong>：根据各工具在特定结构域上的可信度划分优先顺序。</li>
+<li><strong>比较重叠比例</strong>：计算不同工具命中区间的覆盖度与交并比。</li>
+<li><strong>判断边界偏差</strong>：对齐并校正首尾残基的起止偏移。</li>
+<li><strong>冲突区间裁决</strong>：按得分、长度与规则消解互斥标注。</li>
+<li><strong>未知片段兜底</strong>：将任何模型均无法确定的残基补集标记为 <code>U</code>（Unknown）。</li>
+</ol>
+<p>最终输出无重叠、连续覆盖全长的统一 <strong>Region Annotation</strong>。</p>
+<h3 id="核心算法与工程概念速查">核心算法与工程概念速查</h3>
+<table>
+<thead>
+<tr>
+<th>英文术语</th>
+<th>中文名称</th>
+<th>在注释引擎中的作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sequence Alignment</strong></td>
+<td>序列比对</td>
+<td>评估查询序列与种系/参考库之间的局部或全局相似性</td>
+</tr>
+<tr>
+<td><strong>HMM</strong></td>
+<td>隐马尔可夫模型</td>
+<td>建模生物序列状态转移概率的基础统计模型</td>
+</tr>
+<tr>
+<td><strong>Profile HMM</strong></td>
+<td>序列家族概率模型</td>
+<td>刻画保守结构域（如 <code>V</code> 区、<code>CH</code>/<code>CL</code>）多位点保守性与插入缺失分布</td>
+</tr>
+<tr>
+<td><strong>Motif Matching</strong></td>
+<td>模式匹配</td>
+<td>识别 <code>Linker</code>、纯化标签（Tag）或特定短肽基序</td>
+</tr>
+<tr>
+<td><strong>Interval Merge</strong></td>
+<td>区间合并</td>
+<td>处理多源命中坐标的去重、拼接、重叠比较与补集计算</td>
+</tr>
+<tr>
+<td><strong>Rule Engine</strong></td>
+<td>规则引擎</td>
+<td>执行优先级排序、边界微调与冲突区间裁决逻辑</td>
+</tr>
+</tbody></table>
+<h2 id="Sequence-Alignment精细重比对与突变识别">Sequence Alignment：精细重比对与突变识别</h2>
+<p>在上一节 <strong>Region Annotation</strong> 之后，第二层问题是：<strong>这条序列相对参考抗体发生了什么变化？</strong> 这是序列层的精准注释，不是 3D 结构叠合。</p>
+<h3 id="要回答什么">要回答什么</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>典型问题</th>
+<th>工程用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Germline 归属</strong></td>
+<td>可变区最接近哪条胚系基因（如 <code>IGHV3-23</code>）？</td>
+<td>人源化评估、免疫原性粗判、序列注册</td>
+</tr>
+<tr>
+<td><strong>点突变</strong></td>
+<td>相对参考在哪些位点发生了替换？</td>
+<td>CDR 优化记录、可开发性 hotspot</td>
+</tr>
+<tr>
+<td><strong>Indel</strong></td>
+<td>FR / CL 等保守区是否存在插入或缺失？</td>
+<td>序列合法性检查、表达风险</td>
+</tr>
+<tr>
+<td><strong>Fc 工程</strong></td>
+<td>恒定区相对野生型有哪些突变？</td>
+<td>LALA、YTE、Knob-Hole 等命名与 ADCC 检索</td>
+</tr>
+<tr>
+<td><strong>编号对齐</strong></td>
+<td>突变落在哪套编号坐标上？</td>
+<td>与文献、专利、申报资料口径一致</td>
+</tr>
+</tbody></table>
+<h3 id="输入--输出概念">输入 / 输出（概念）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>输入</strong></td>
+<td>已分区的区段图（含 <code>VH</code>/<code>VL</code>、<code>FR1–4</code>/<code>CDR1–3</code>、<code>CH</code>/<code>CL</code> 坐标）</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>各 <code>FR</code>/恒定区与参考序列的比对结果；可变区 <strong>germline subtype</strong>；恒定区 <strong>EU 风格突变表</strong>（位点、参考氨基酸、实际氨基酸）</td>
+</tr>
+</tbody></table>
+<h3 id="Germline-是什么为何不能照搬参考序列">Germline 是什么？为何不能「照搬」参考序列</h3>
+<p><strong>Germline（种系/胚系）序列</strong>是免疫球蛋白基因座中、尚未经过 B 细胞成熟重组与突变的<strong>参考模板</strong>（如人源 <code>IGHV</code>、<code>IGKV</code>、<code>IGLV</code> 各家族成员）。抗体在发育中会经历：</p>
+<ol>
+<li><strong>V(D)J 重组</strong>：从基因库中组合出功能性可变区；</li>
+<li><strong>体细胞高频突变（SHM）</strong>：在抗原刺激下可变区进一步多样化；</li>
+<li><strong>人工改造</strong>：人源化、亲和力成熟、Fc 工程等叠加突变。</li>
+</ol>
+<p>因此，实验或药物序列<strong>通常不是</strong>某一条 Germline 的逐字复制，而是「最接近某 germline + 一堆差异」。比对的目标是<strong>定量描述差异</strong>，而非断言唯一生物学来源。</p>
+<blockquote>
+<p><strong>注意</strong>：与某条 Germline 相似度最高，<strong>不能</strong>单独证明亲本克隆或真实发育路径；只能作为序列登记与相似性分析的工程参照。</p>
+</blockquote>
+<h3 id="比对算法选型">比对算法选型</h3>
+<p>在已按结构域切好的片段上，常对 <code>FR1–3</code> 等区段向两侧略延伸后做<strong>全局比对</strong>，以便逐位扫描替换与 gap。实现上可采用 <strong><a href="https://github.com/jeffdaily/parasail">Parasail</a></strong>（高性能序列比对库），配合 <strong>BLOSUM62</strong> 替换矩阵。</p>
+<p><strong>BLOSUM62</strong>：根据天然蛋白家族中氨基酸共现频率统计得到的<strong>替换评分矩阵</strong>——保守替换（如 Leu↔Ile）得分较高，性质悬殊的替换得分低甚至为负，从而引导动态规划找到更「生物学合理」的最优比对路径。</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>类型</th>
+<th>特点</th>
+<th>典型应用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Needleman–Wunsch</strong></td>
+<td>全局比对</td>
+<td>强制两序列首尾对齐，全长参与计分</td>
+<td>等长或整体对应的 <code>FR</code>、恒定区逐位 diff</td>
+</tr>
+<tr>
+<td><strong>Smith–Waterman</strong></td>
+<td>局部比对</td>
+<td>只保留得分最高的局部片段</td>
+<td>在长序列中找短同源块、<code>BLAST</code> 式 hit</td>
+</tr>
+<tr>
+<td><strong>Semi-global</strong></td>
+<td>半全局</td>
+<td>一端自由延伸、另一端对齐</td>
+<td>一条为另一条的局部延伸或截短链</td>
+</tr>
+</tbody></table>
+<p><strong>亚型选择（可变区）</strong>：对 <code>FR1–3</code> 分别与多条 germline 参考比对并打分，按总分与种属优先级（常见为<strong>人源优先</strong>）选出唯一或最可信的 germline 亚型；再汇总可变区与恒定区的突变列表。</p>
+<h3 id="EU-NumberingFc-恒定区编号">EU Numbering（Fc 恒定区编号）</h3>
+<p>抗体药物文献与 Fc 工程命名（如 LALA、YTE、LS、Knob/Hole）普遍采用 <strong>EU numbering</strong>（源自 Edelman 等人对人 IgG1 的编号惯例），与 Kabat / IMGT 在可变区上的编号<strong>并行存在</strong>：可变区常用 IMGT/Kabat，<strong>Fc 突变表与业界沟通常用 EU 位点</strong>。</p>
+<p><img src="/blog-media/img/bioinformatics/antibody-eu-numbering.png" alt="Fc 区 EU 编号示意"></p>
+<p align="center"><em>图 6：Fc 区 EU 编号示意，用于恒定区突变 calling 与工程别名对照。</em></p>
+
+<p>恒定区与 <code>CH</code>/<code>CL</code> 野生型参考序列全局比对后，将 diff 映射为 <strong>EU 位点 + 参考残基 → 突变残基</strong>，即可对接 Fc 工程词典与 ADCC 文献检索模块（详见 <a href="./study.md">算法模块学习笔记 · 二、精细重比对</a>）。</p>
+<h3 id="局限">局限</h3>
+<ul>
+<li>参考库未收录的罕见等位基因会被迫贴近「最近邻」germline，突变 calling 带<strong>系统性偏差</strong>。</li>
+<li>仅序列层比对，不推断结构可容性或表达水平。</li>
+</ul>
+<h2 id="Disulfide-Inference二硫键推断">Disulfide Inference：二硫键推断</h2>
+<p>在完成序列分区与精细比对后，第三层问题是：<strong>一条或多条链中的所有半胱氨酸（Cys，C），哪些形成链内二硫键？哪些形成链间二硫键？哪些是游离未配对的？</strong></p>
+<h3 id="化学基础">化学基础</h3>
+<p>蛋白质中的半胱氨酸（Cysteine，C）侧链含有特殊的活性巯基（thiol group）：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord">−</span><span class="mord"><span class="mord mathrm">C</span><span class="mord"><span class="mord mathrm">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathrm mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm">SH</span></span></span></span></span></span></div>
+
+
+
+<p>在氧化性环境（如内质网腔）中，两个空间邻近的半胱氨酸巯基脱氢氧化，形成共价的<strong>二硫键（Disulfide Bond）</strong>：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathrm">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathrm">SH</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟶</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathrm">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathrm">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathrm">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathrm">R</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9047em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathrm">H</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8213em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8213em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8213em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span></span></span></span></span></span></span></span></span></div>
+
+
+
+<p>二硫键是抗体维持三维折叠稳定性和四链共价组装的关键“分子铆钉”。</p>
+<p><img src="/blog-media/img/bioinformatics/antibody-disulfide-bonds.png" alt="抗体链内/链间二硫键配对示意"></p>
+<p align="center"><em>图 7：经典 IgG 抗体的链内二硫键（稳定各免疫球蛋白结构域）与链间二硫键（连接 HC–LC 与 HC–HC）分布示意。</em></p>
+
+<h3 id="两类二硫键与经典分布">两类二硫键与经典分布</h3>
+<p>按连接范围，抗体二硫键分为两类：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>英文</th>
+<th>生物学作用</th>
+<th>典型位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>链内二硫键</strong></td>
+<td>Intra-chain</td>
+<td>锁紧单个免疫球蛋白折叠（Ig-fold）的 β-折叠双层结构</td>
+<td>每个 <code>VH</code>、<code>VL</code>、<code>CH1</code>、<code>CH2</code>、<code>CH3</code>、<code>CL</code> 内部各 1 对高度保守的经典二硫键（如可变区 IMGT 编号 <strong>C23–C104</strong>）</td>
+</tr>
+<tr>
+<td><strong>链间二硫键</strong></td>
+<td>Inter-chain</td>
+<td>将重链与轻链、两条重链共价连接为完整四链分子</td>
+<td><strong>HC–LC 之间</strong>（<code>CL</code> C 端 Cys 与重链配对）；<strong>HC–HC 之间</strong>（两条重链的 <code>Hinge</code> 核心区配对）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>以经典人源 IgG1 为例</strong>：完整四链分子通常共含 <strong>16 对二硫键</strong>——其中 <strong>12 对链内二硫键</strong>（每条重链 4 个结构域 × 2 + 每条轻链 2 个结构域 × 2）和 <strong>4 对链间二硫键</strong>（2 对 HC–LC + 2 对 Hinge 区 HC–HC）。</p>
+</blockquote>
+<h3 id="不同-IgG-亚型的链间二硫键差异">不同 IgG 亚型的链间二硫键差异</h3>
+<p>实际工程中，<strong>人源 IgG1–IgG4 的链内二硫键高度保守，但链间二硫键数量与连接位点存在明显亚型差异</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>亚型</th>
+<th>HC–HC 链间（Hinge 区）</th>
+<th>HC–LC 连接位点（重链侧）</th>
+<th>工程与 CMC 关注点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IgG1</strong></td>
+<td>2 对</td>
+<td>Hinge 上端（EU C220）</td>
+<td>结构最经典、链间连接稳定，治疗性单抗最常用模板</td>
+</tr>
+<tr>
+<td><strong>IgG2</strong></td>
+<td>4 对</td>
+<td>CH1 上端（EU C131）</td>
+<td>易发生天然二硫键异构（IgG2-A / A/B / B 异构体）</td>
+</tr>
+<tr>
+<td><strong>IgG3</strong></td>
+<td>最多（常见 11 对）</td>
+<td>CH1 上端（EU C131）</td>
+<td>铰链区极长，易受蛋白酶解，成药性应用较少</td>
+</tr>
+<tr>
+<td><strong>IgG4</strong></td>
+<td>2 对</td>
+<td>CH1 上端（EU C131）</td>
+<td>易发生链间→链内重排与 <strong>Fab-arm exchange</strong>；工程上常引入 <strong>S228P</strong> 突变稳定铰链区</td>
+</tr>
+</tbody></table>
+<h3 id="游离半胱氨酸与非经典二硫键CMC-风险">游离半胱氨酸与非经典二硫键（CMC 风险）</h3>
+<p>并非所有半胱氨酸都会按经典模板完美配对，注释系统显式检出<strong>未配对（游离）Cys</strong> 具有重要价值：</p>
+<ul>
+<li><strong>CDR 区引入的额外 Cys</strong>：偶数个可能形成额外的非经典链内环（部分羊驼 VHH、牛源抗体或长 HCDR3 中常见）；奇数个则留下游离巯基。</li>
+<li><strong>游离巯基风险</strong>：容易引发分子间错配交联（聚体/二聚体）、半胱氨酸化（cysteinylation）或谷胱甘肽化修饰，影响纯度、均一性与货架期稳定性。</li>
+<li><strong>定向工程设计</strong>：部分定点偶联 <strong>ADC</strong>（如 THIOMAB）会刻意引入游离 Cys 作为载荷偶联位点；此类位点需在注释中准确标记，避免与天然骨架 Cys 混淆。</li>
+</ul>
+<h3 id="算法与工程实现规则--表驱动">算法与工程实现（规则 + 表驱动）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>输入</strong></td>
+<td>已分区的区段图（含链类型、结构域边界、物种/亚型）+ 氨基酸序列</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>每个 <code>C</code> 的配对状态（<code>intra</code> / <code>inter</code> / <code>unpaired</code>）及配对目标位点</td>
+</tr>
+</tbody></table>
+<p>核心推断步骤（不依赖 3D 折叠）：</p>
+<ol>
+<li><strong>表驱动定位（Template Lookup）</strong>：根据链类型（<code>VH</code>/<code>VK</code>/<code>VL</code>）、结构域（<code>CH1</code>/<code>CH2</code>/<code>CH3</code>/<code>CL</code>）与物种，查经典保守配对位点表（源于 IMGT / 文献与内部整理）。</li>
+<li><strong>Hinge 核心规则</strong>：依据识别出的 IgG 亚型，将 <code>Hinge core</code> 中的保守 <code>C</code> 标记为链间配对候选。</li>
+<li><strong>局部容错窗口</strong>：若表定位坐标处因插入/缺失或边界微偏不是 <code>C</code>，则在邻近小窗口内搜索最近邻 <code>C</code> 兜底对齐。</li>
+<li><strong>约束下游拓扑</strong>：推断出的链间二硫键连接关系直接传递给下一层的 <strong>Molecular Topology</strong> 模块，作为“哪些结构域必须共价相连”的强约束。</li>
+</ol>
+<h3 id="局限-2">局限</h3>
+<ul>
+<li><strong>不做能量最小化或 3D 几何判定</strong>：仅基于序列规则与已知模板推断“表观应配对关系”。</li>
+<li><strong>难以覆盖非经典重排</strong>：如 IgG2 异构、二硫键错配（scrambling）、复杂多特异性改造或化学定点偶联分子，往往超出经典 IgG 模板范围，需结合质谱（肽图/非还原酶切）等实验表征验证。</li>
+</ul>
+<h2 id="Molecular-Topology多链拓扑推断与分子形式分类">Molecular Topology：多链拓扑推断与分子形式分类</h2>
+<p>在前三层（序列分区、精细比对、二硫键推断）的基础上，第四层要回答的是多链场景下的核心问题：<strong>给定多条蛋白链及每条链的拷贝数（化学计量，Stoichiometry），它们如何组装成一个完整的抗体或融合蛋白分子？最终属于哪种分子形式？</strong></p>
+<h3 id="输入--输出">输入 / 输出</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>输入</strong></td>
+<td>多链区段图（每条链已完成分区、突变/工程标签识别与二硫键候选推断）+ 可选链拷贝数比例</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>最优分子拓扑图（链间配对与二硫键连接）、分子形式标签（<code>Mab</code> / <code>BsAb</code> / <code>Fc-fusion</code> / <code>Nanobody</code> / <code>Others</code>）、简易卡通拓扑示意（非 3D 结构）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="1-什么是分子拓扑-Graph-Modeling图建模">1. 什么是分子拓扑？—— Graph Modeling（图建模）</h3>
+<p>这里的<strong>拓扑（Topology）不是三维空间中的全原子坐标，而是描述结构域级别的连接与组装关系</strong>：</p>
+<ul>
+<li>哪些结构域属于同一条多肽链？</li>
+<li>哪些结构域之间相互配对（如 <code>VH–VL</code>、<code>CH1–CL</code>、<code>CH3–CH3</code>）？</li>
+<li>哪些结构域通过二硫键共价相连？</li>
+<li>组装后共有几个 Fab、是否含完整 Fc？</li>
+<li>是否存在缺链、多余游离链或链错配？</li>
+</ul>
+<p>在算法上，这是一个典型的 <strong>图建模（Graph Modeling）</strong> 问题，将每个结构域抽象为节点，将结构域之间的生物化学关系抽象为带语义的边：</p>
+<h4 id="节点Node">节点（Node）</h4>
+<p>每个节点代表一个已注释的结构域或功能区段（例如 <code>VH_1</code>、<code>CH1_1</code>、<code>Hinge_1</code>、<code>CH2_1</code>、<code>CH3_1</code>、<code>VL_1</code>、<code>CL_1</code> 等），节点上挂载上游模块产出的关键属性：</p>
+<ul>
+<li>所属链 ID 与区域类型（<code>V</code> / <code>C</code> / <code>H</code> / <code>L</code> / <code>P</code> 等）</li>
+<li>氨基酸序列与净电荷粗分类（正 / 负 / 中性，用于电荷互补评估）</li>
+<li>Fc / Fab 工程改造突变标签（如 <code>Knob</code>、<code>Hole</code>、<code>CrossMab</code> 等）</li>
+<li>候选链间二硫键位点及潜在配对列表</li>
+</ul>
+<h4 id="边Edge与语义区分">边（Edge）与语义区分</h4>
+<p>必须显式区分不同类型的边，避免把序列连续、共价键与非共价相互作用混为一谈：</p>
+<table>
+<thead>
+<tr>
+<th>边类型</th>
+<th>英文</th>
+<th>生物学含义</th>
+<th>典型示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>序列连接</strong></td>
+<td><code>Sequential</code></td>
+<td>同一条多肽链上相邻结构域的肽键串联</td>
+<td><code>VH_1 — CH1_1 — Hinge_1 — CH2_1 — CH3_1</code></td>
+</tr>
+<tr>
+<td><strong>二硫键连接</strong></td>
+<td><code>Disulfide</code></td>
+<td>半胱氨酸之间形成的共价二硫键（强连接约束）</td>
+<td><code>CH1_1 — CL_1</code>、<code>Hinge_1 — Hinge_2</code></td>
+</tr>
+<tr>
+<td><strong>结构域关联</strong></td>
+<td><code>Domain Association</code></td>
+<td>结构域之间依赖疏水/氢键/静电形成的非共价稳定配对</td>
+<td><code>CH3_1 — CH3_2</code>、<code>VH_1 — VL_1</code></td>
+</tr>
+<tr>
+<td><strong>功能配对</strong></td>
+<td><code>Functional Pairing</code></td>
+<td>协同构成完整功能单元的组合关系</td>
+<td><code>(VH_1 + VL_1 + CH1_1 + CL_1)</code> → 完整 Fab</td>
+</tr>
+</tbody></table>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+  subgraph LC1[&quot;轻链 LC1&quot;]
+    VL1[VL_1] --- CL1[CL_1]
+  end
+  subgraph HC1[&quot;重链 HC1 · Knob&quot;]
+    VH1[VH_1] --- CH1_1[CH1_1] --- H1[Hinge_1] --- CH2_1[CH2_1] --- CH3_1[&quot;CH3_1 · Knob&quot;]
+  end
+  subgraph HC2[&quot;重链 HC2 · Hole&quot;]
+    VH2[VH_2] --- CH1_2[CH1_2] --- H2[Hinge_2] --- CH2_2[CH2_2] --- CH3_2[&quot;CH3_2 · Hole&quot;]
+  end
+  subgraph LC2[&quot;轻链 LC2&quot;]
+    VL2[VL_2] --- CL2[CL_2]
+  end
+
+  VL1 -.-|Domain Association| VH1
+  CL1 ===|Disulfide| CH1_1
+  H1 ===|Disulfide| H2
+  CH3_1 -.-|Knob-Hole Pairing| CH3_2
+  CH1_2 ===|Disulfide| CL2
+  VH2 -.-|Domain Association| VL2</pre></div>
+<hr>
+<h3 id="2-为什么要做组合搜索链错配问题">2. 为什么要做组合搜索？（链错配问题）</h3>
+<p>以典型的非对称双特异性抗体输入（两条不同重链 + 两条不同轻链：<code>HC1</code>、<code>HC2</code>、<code>LC1</code>、<code>LC2</code>）为例，系统必须决策：</p>
+<ul>
+<li><code>HC1</code> 应该配 <code>LC1</code> 还是 <code>LC2</code>？<code>HC2</code> 同理；</li>
+<li>两条重链是否倾向异源二聚（<code>HC1–HC2</code>），还是会发生同源错配（<code>HC1–HC1</code>、<code>HC2–HC2</code>）？</li>
+<li>是否存在结构域缺失或未能配对的孤立链？</li>
+</ul>
+<p>在无工程约束的自由共表达中，2 种重链 + 2 种轻链理论上可产生多达 <strong>10 种组装产物</strong>（其中仅 1 种是目标双抗，其余均为错配副产物）。随着候选链数和拷贝数增加，配对矩阵的组合空间呈指数级膨胀，因此必须引入<strong>领域先验约束</strong>来剪枝搜索空间。</p>
+<hr>
+<h3 id="3-核心生物学约束与工程改造标签">3. 核心生物学约束与工程改造标签</h3>
+<p>在枚举/递归构造“区域–区域”配对矩阵时，算法依据抗体生物化学常识施加以下约束：</p>
+<table>
+<thead>
+<tr>
+<th>约束类型</th>
+<th>生物学与工程含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>VH–VL</code></td>
+<td>协同组成 Fab 可变区抗原结合界面（相邻匹配，避免跨臂交叉错乱）</td>
+</tr>
+<tr>
+<td><code>CH1–CL</code></td>
+<td>组成 Fab 恒定区配对，并通常伴随链间二硫键连接</td>
+</tr>
+<tr>
+<td><code>CH2–CH2</code> <strong>/</strong> <code>CH3–CH3</code></td>
+<td>构成 Fc 区域的二聚界面（<code>CH3–CH3</code> 承担主要非共价驱动力）</td>
+</tr>
+<tr>
+<td><code>Hinge C–Hinge C</code></td>
+<td>两条重链铰链区半胱氨酸形成链间共价二硫键</td>
+</tr>
+<tr>
+<td><code>Knob–Hole</code> <strong>/ 电荷互补</strong></td>
+<td>Fc 端 CH3 异源二聚改造标签（奖励互补配对，重罚同源冲突）</td>
+</tr>
+<tr>
+<td><strong>域互换 / 共同轻链</strong></td>
+<td>如 <code>CrossMab</code>（CH1–CL 或 VH–VL 互换）或 <code>Common LC</code> 解决轻重链错配</td>
+</tr>
+<tr>
+<td><code>Chain Stoichiometry</code></td>
+<td>根据用户指定的投料/化学计量比限制每种链在分子中的出现次数</td>
+</tr>
+<tr>
+<td><strong>局部序列相似性</strong></td>
+<td>辅助判断非标准域或融合段之间的局部配对兼容性</td>
+</tr>
+</tbody></table>
+<h4 id="重点案例Knob-in-Hole-与-CrossMab">重点案例：Knob-in-Hole 与 CrossMab</h4>
+<p>普通 IgG 的两条重链完全相同，天然发生同源二聚；而双特异性抗体往往同时面临<strong>重链异源配对</strong>与<strong>轻重链正确配对</strong>两大难题：</p>
+<ol>
+<li><strong>重链异源二聚——Knob-in-Hole（KiH）</strong>：通过在一条重链的 <code>CH3</code> 界面引入大侧链突变（如经典 EU 位点 <code>T366Y</code> 或 <code>T366W</code>，称为 <strong>Knob</strong>），在另一条重链对应位置引入小侧链突变（如 <code>Y407T</code> 或 <code>T366S/L368A/Y407V</code>，称为 <strong>Hole</strong>），利用空间位阻促进 <code>Knob ↔ Hole</code> 互补配对，抑制 <code>Knob ↔ Knob</code> 与 <code>Hole ↔ Hole</code> 同源二聚。</li>
+<li><strong>轻重链正确配对——CrossMab（如 <span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathrm mtight">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathrm">1–</span><span class="mord"><span class="mord mathrm">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathrm mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></span> Crossover）</strong>：将其中一侧 Fab 的 <code>CH1</code> 与 <code>CL</code> 结构域互换，使该侧重链携带 <code>CL</code>、轻链携带 <code>CH1</code>，从而在结构域配对层面阻止轻链错配到另一条重链上。</li>
+</ol>
+<p><img src="/blog-media/img/bioinformatics/antibody-knob-hole-crossmab.png" alt="Knob-in-Hole 与 CrossMab CH1-CL 双特异性抗体配对拓扑示意"></p>
+<p align="center"><em>图 8：双特异性抗体中通过 CH3 区 Knob-in-Hole（T366Y / Y407T）驱动重链异源二聚，并结合 CrossMab（CH1–CL 互换）防止轻重链错配的拓扑示意图。</em></p>
+
+<p>因此，拓扑引擎只需读取上游识别出的 <code>Knob</code> / <code>Hole</code> 突变标签及域排列顺序（如 <code>VH–CL</code> 搭配 <code>VL–CH1</code>），即可通过约束与打分自然还原复杂双抗组装。</p>
+<hr>
+<h3 id="4-启发式打分与约束优化">4. 启发式打分与约束优化</h3>
+<p>对组合搜索生成的每个候选拓扑图 <span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span></span>，系统汇总各类惩罚项与奖励项进行定量比较。例如针对三种候选组装方式：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>组装结果描述</th>
+<th>综合惩罚分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>方案 A</strong></td>
+<td><code>Knob–Hole</code> 正确互补，双侧 Fab 与 Fc 结构完整</td>
+<td><code>0</code>（最优）</td>
+</tr>
+<tr>
+<td><strong>方案 B</strong></td>
+<td>发生 <code>Knob–Knob</code> 重链同源错配</td>
+<td><code>100</code></td>
+</tr>
+<tr>
+<td><strong>方案 C</strong></td>
+<td>一条轻链未能配对（游离链）</td>
+<td><code>200</code></td>
+</tr>
+</tbody></table>
+<p>定义目标打分函数（分数越低越优）：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0278em;">cor</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">G</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">unpaired</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">mismatch</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">disconnected</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">valid</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+
+
+
+<p>其中：</p>
+<ul>
+<li><span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">unpaired</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span>：<strong>未配对惩罚</strong>（应配对的 <code>CH1</code>/<code>CL</code>、<code>Hinge</code>、<code>VH</code>/<code>VL</code> 落单时施以高惩罚）；</li>
+<li><span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">mismatch</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>：<strong>错误配对惩罚</strong>（如双 <code>Knob</code>/双 <code>Hole</code> 冲突、同一对链上区域配对顺序错乱等）；</li>
+<li><span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">disconnected</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>：<strong>不连通惩罚</strong>（分子裂成多个互不相连的独立子图时施以极大惩罚）；</li>
+<li><span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">valid</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>：<strong>合理配对奖励</strong>（<code>Knob–Hole</code> 正确互补、界面电荷互补、满足经典二硫键与结构域配对约束时给予奖励）。</li>
+</ul>
+<p>最优拓扑通过最小化目标函数选出：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7387em;"></span><span class="mord"><span class="mord mathnormal">G</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.4943em;vertical-align:-0.7443em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3557em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">G</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7443em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0278em;">cor</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">G</span><span class="mclose">)</span></span></span></span></span></div>
+
+
+
+<blockquote>
+<p><strong>工程细节提醒</strong>：并非所有真实生物药都必须构成“单一完全连通的二硫键共价图”（例如去除了铰链二硫键但靠 <code>CH3–CH3</code> 非共价二聚维持的分子，或 scFv 与非共价复合物）。因此连通性检查应区分<strong>共价边（</strong><code>Disulfide</code><strong>）与非共价关联边（</strong><code>Domain Association</code><strong>）</strong>，不能将两者混为一谈。</p>
+</blockquote>
+<hr>
+<h3 id="5-分子形式分类Format-Classification">5. 分子形式分类（Format Classification）</h3>
+<p>在得到最优拓扑图 <span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal">G</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span> 后，统计图中的组件计数——包括 <strong>Fab 数量、Fc 数量、不同抗原结合特异性（独特 VH/VL 组合）数量、单域抗体（VHH）及融合蛋白段（P）数量</strong>——再结合显式规则将分子归类：</p>
+<table>
+<thead>
+<tr>
+<th>分子形式</th>
+<th>典型拓扑特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Mab</strong>（经典单抗）</td>
+<td>两条相同 <code>HC</code> + 两条相同 <code>LC</code>，含 2 个相同 Fab 与 1 个完整 Fc</td>
+</tr>
+<tr>
+<td><strong>BsAb</strong>（双特异性抗体）</td>
+<td>存在 <strong>2 种不同的抗原结合特异性</strong>（如不对称 KiH+CrossMab、DVD-Ig、IgG-scFv 等）</td>
+</tr>
+<tr>
+<td><strong>Fc-fusion</strong>（Fc 融合蛋白）</td>
+<td><code>Fc</code>（<code>CH2–CH3</code>）与非抗体功能蛋白段（受体胞外域、细胞因子、酶等）融合</td>
+</tr>
+<tr>
+<td><strong>Nanobody / VHH</strong></td>
+<td>存在重链单域可变区（如 VHH）且无传统配对轻链</td>
+</tr>
+<tr>
+<td><strong>scFv / Fragment</strong></td>
+<td>单链可变区（<code>VH–Linker–VL</code>）、独立 Fab 或截短片段</td>
+</tr>
+<tr>
+<td><strong>Others</strong></td>
+<td>非标准多特异性拓扑、缺链错配产物或无法归入上述规则的结构</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>关键判别原则</strong>：<strong>仅仅发现两条不同的重链，并不能直接证明它是双抗（BsAb）。</strong> 例如某些分子仅在 Fc 端引入不对称突变（如不对称糖基化或单侧标签/载荷修饰），而两个 Fab 臂的 <code>VH</code>/<code>VL</code> 序列完全一致，此时它仍是单特异性抗体。分类必须综合<strong>抗原结合域序列差异、链组成与最终拓扑配对关系</strong>共同判定。</p>
+</blockquote>
+<hr>
+<h3 id="6-要点与局限">6. 要点与局限</h3>
+<ul>
+<li><strong>本质是约束满足 + 领域启发式</strong>：不依赖分子力场或 X 射线晶体结构，计算轻量，适合高通量序列注册、副产物组合枚举与可视化卡通图渲染。</li>
+<li><strong>局限</strong>：对于高度对称的多价分子、含非标准人工 linker 的异型融合蛋白，或用户输入的链化学计量比例本身有误时，可能出现<strong>多个等价最优解</strong>或退化归类为 <code>Others</code>；输出结果只代表基于序列先验“最可信的组装假设”，复杂新分子仍需配合 SEC-MALS、Native MS 等理化表征确认。</li>
+</ul>
+<hr>
+<h2 id="开发风险与-Fc-工程Developability-amp-Fc-Engineering">开发风险与 Fc 工程（Developability &amp; Fc Engineering）</h2>
+<p>前四层解决了“序列长什么样、相对参考变了什么、如何形成二硫键并组装成完整分子”；本节进一步从<strong>序列结构分析走向药物开发属性（Developability）与效应功能工程分析</strong>，对应实际研发中最常关注的三类下游检查：CDR 理化风险、Fc 工程命名识别与 ADCC 文献对照。</p>
+<hr>
+<h3 id="1-CDR-Hotspot序列理化风险识别">1. CDR Hotspot：序列理化风险识别</h3>
+<p>CDR 是直接参与抗原识别的关键环区。若 CDR 中存在化学性质不稳定的氨基酸组合，在表达纯化、制剂储存或体内循环期间发生化学降解，可能导致<strong>结合亲和力下降、电荷异质性增加或稳定性变差</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>风险类别</th>
+<th>典型序列 Motif</th>
+<th>化学变化与潜在影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Asp 异构化</strong></td>
+<td><code>DG</code>、<code>DS</code>、<code>DD</code>、<code>DT</code>、<code>DH</code></td>
+<td>天冬氨酸（Asp）环化形成琥珀酰亚胺中间体并异构化为 iso-Asp，改变局部主链构象</td>
+</tr>
+<tr>
+<td><strong>Asn 脱酰胺</strong></td>
+<td><code>NG</code>、<code>NS</code>、<code>NP</code>、<code>NN</code>、<code>NT</code>、<code>NR</code></td>
+<td>天冬酰胺（Asn）脱去氨基转为 Asp / iso-Asp，产生酸性电荷变体</td>
+</tr>
+<tr>
+<td><strong>氨基酸氧化</strong></td>
+<td>单残基 <code>W</code>（Trp）、<code>M</code>（Met）</td>
+<td>色氨酸或甲硫氨酸氧化，可能直接削弱抗原结合界面或加速聚集</td>
+</tr>
+<tr>
+<td><strong>其他常见延伸检查</strong></td>
+<td><code>N-X-S/T</code>（X≠P）、未配对 <code>C</code>、<code>DP</code></td>
+<td>潜在 CDR N-糖基化位点、游离巯基交联风险、酸性水解断裂位点</td>
+</tr>
+</tbody></table>
+<h4 id="算法实现">算法实现</h4>
+<p>在上游切分出的每个 <code>CDR1–CDR3</code> 肽段上执行<strong>滑动窗口扫描 / 正则子串匹配与计数</strong>即可（纯 motif 规则，无需机器学习模型）。</p>
+<blockquote>
+<p><strong>重要提醒</strong>：序列层面的 Hotspot 扫描<strong>只是风险预警，不代表实验中一定会发生显著修饰</strong>。某位点是否真正降解，还强烈取决于其在三维结构中的<strong>溶剂暴露度（SASA）</strong>、<strong>局部环区柔性</strong>，以及制剂 <strong>pH、温度、光照、辅料配方</strong> 等工艺条件，通常需配合强制降解实验与质谱（LC-MS 肽图）定量确认。</p>
+</blockquote>
+<hr>
+<h3 id="2-Fc-工程类型识别词典覆盖匹配">2. Fc 工程类型识别（词典覆盖匹配）</h3>
+<p>在精细比对阶段，系统已经输出恒定区相对野生型参考的 <strong>EU 编号突变集合</strong>。为了便于研发人员快速理解分子的功能设计意图，需要将散在的 EU 突变映射为业界通用的 <strong>Fc 工程别名</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>工程名称</th>
+<th>代表突变（EU 编号）</th>
+<th>主要设计目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LALA</strong></td>
+<td><code>L234A / L235A</code></td>
+<td>大幅削弱 FcγR 与 C1q 结合，降低 ADCC / CDC 效应功能（Silent Fc）</td>
+</tr>
+<tr>
+<td><strong>LALA-PG</strong></td>
+<td><code>L234A / L235A / P329G</code></td>
+<td>在 LALA 基础上进一步消除残余 FcγR 结合，实现更彻底的效应沉默</td>
+</tr>
+<tr>
+<td><strong>YTE</strong></td>
+<td><code>M252Y / S254T / T256E</code></td>
+<td>增强酸性内体环境下的 <strong>FcRn</strong> 亲和力，显著延长体内循环半衰期</td>
+</tr>
+<tr>
+<td><strong>LS</strong></td>
+<td><code>M428L / N434S</code></td>
+<td>增强 FcRn 结合并延长半衰期，同时尽量减少对热稳定性的负面影响</td>
+</tr>
+<tr>
+<td><strong>Knob-in-Hole</strong></td>
+<td><code>T366W</code>（Knob） / <code>T366S / L368A / Y407V</code>（Hole）等</td>
+<td>通过 CH3 界面空间互补促进双抗异源重链配对</td>
+</tr>
+<tr>
+<td><strong>S228P（IgG4）</strong></td>
+<td><code>S228P</code></td>
+<td>稳定 IgG4 铰链区，防止体内发生 Fab-arm exchange</td>
+</tr>
+<tr>
+<td><strong>DE / DLE</strong></td>
+<td><code>S239D / I332E</code>（或加 <code>A330L</code>）</td>
+<td>增强 FcγRIIIa 结合，显著提升 ADCC 靶细胞杀伤能力</td>
+</tr>
+</tbody></table>
+<h4 id="算法要点词典集合包含匹配--最长组合优先">算法要点：词典集合包含匹配 + 最长组合优先</h4>
+<ol>
+<li><strong>输入</strong>：恒定区 EU 编号突变集合（如 <code>{L234A, L235A, P329G, M252Y, S254T, T256E}</code>）。</li>
+<li><strong>集合包含匹配</strong>：与预定义的 <code>突变组合 → 工程名</code> 词典逐项比对；当某工程所需的全部位点均出现在查询集合中，即判定命中。</li>
+<li><strong>最长组合优先剥离</strong>：优先匹配并剥离突变数更多的复合标签（例如先匹配 <code>LALA-PG</code> 而不是拆分成 <code>LALA</code> + 孤立 <code>P329G</code>），避免重复或碎片化命名。</li>
+</ol>
+<p><strong>局限</strong>：仅能命名词典内已知的经典工程组合；对于文献未收录的新颖突变组合，系统只保留原始 EU 突变列表而不强行归类。</p>
+<hr>
+<h3 id="3-ADCC-文献对照与变体检索">3. ADCC 文献对照与变体检索</h3>
+<h4 id="生物学机制简介">生物学机制简介</h4>
+<p><strong>ADCC</strong> 全称为 <strong>Antibody-Dependent Cellular Cytotoxicity</strong>（抗体依赖的细胞介导的细胞毒作用），是肿瘤靶向单抗发挥杀伤疗效的核心免疫效应机制之一：</p>
+<ol>
+<li>抗体通过 <strong>Fab 段</strong>特异性结合靶细胞表面的抗原决定基；</li>
+<li>自然杀伤细胞（<strong>NK 细胞</strong>）等效应细胞借助表面的 <strong>FcγRIIIa（CD16）</strong> 受体识别并结合靶细胞上抗体的 <strong>Fc 段</strong>；</li>
+<li>活化的 NK 细胞释放**穿孔素（Perforin）、颗粒酶（Granzyme）**等细胞毒性颗粒；</li>
+<li>诱导靶细胞发生裂解与<strong>凋亡</strong>。</li>
+</ol>
+<p><img src="/blog-media/img/bioinformatics/antibody-adcc-mechanism.png" alt="ADCC 抗体依赖的细胞介导细胞毒作用机制示意"></p>
+<p align="center"><em>图 9：ADCC 作用机制四步流程——IgG Fab 结合靶细胞抗原、NK 细胞经 FcγRIII（CD16）识别 Fc、释放穿孔素/颗粒酶并导致靶细胞凋亡。</em></p>
+
+<h4 id="检索与类比算法非从头预测">检索与类比算法（非从头预测）</h4>
+<p>序列平台通常<strong>不是</strong>直接从氨基酸序列物理计算 ADCC 活性，而是基于已整理的 <strong>Fc 变体实验数据库</strong>执行<strong>突变相似度检索与文献类比</strong>：</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart LR
+  M[1. 提取 Fc EU 突变集合] --&gt; Q[2. 检索 Fc 变体实验库]
+  Q --&gt; S[3. 计算位点重合与残基一致度]
+  S --&gt; F[4. 严格子集过滤防过度泛化]
+  F --&gt; R[5. 返回最相似文献案例与 ADCC 趋势]</pre></div>
+<ol>
+<li><strong>获取突变集合</strong>：读取上游恒定区比对产出的 Fc EU 突变列表。</li>
+<li><strong>检索变体库</strong>：遍历收录有实验效应值的已知 Fc 工程变体数据库（<code>突变组合 ↔ 相对 WT 效应值</code>）。</li>
+<li><strong>计算混合相似度</strong>：综合考量两部分——突变<strong>位点是否重合</strong> + 具体<strong>替换氨基酸是否一致</strong>（支持可调权重）。</li>
+<li><strong>严格子集过滤（防过度泛化）</strong>：要求候选库变体不能包含“查询序列里并不存在的额外突变位点”。</li>
+<li><strong>效应映射</strong>：取最相似实验案例的相对活性，按相对野生型（<code>1.0</code>）的阈值映射为 <code>increase</code> / <code>decrease</code> / <code>no change</code>。</li>
+</ol>
+<blockquote>
+<p><strong>为什么需要子集过滤？举例说明</strong><br>假设查询序列的 Fc 突变为 <code>{S239D, I332E}</code>，而数据库中存在一条记录为 <code>{S239D, I332E, M428L}</code>。虽然前两个位点完全一致，但如果系统采用<strong>严格子集匹配</strong>，这条库记录就不能直接作为完全匹配结果——因为它额外多出了 <code>M428L</code>，额外突变可能引入协同或抵消效应，直接套用文献结论容易导致过度泛化。</p>
+</blockquote>
+<h4 id="判读边界与局限">判读边界与局限</h4>
+<p>在解读 ADCC 检索结果时，必须严格区分以下三个层面：</p>
+<table>
+<thead>
+<tr>
+<th>层面</th>
+<th>含义与注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>相似度高</strong></td>
+<td>仅表示查询分子与文献变体在 Fc 序列突变位点上工程相似</td>
+</tr>
+<tr>
+<td><strong>实验效果一致</strong></td>
+<td>突变效应可能受重链亚型背景与表位构象影响，仍需湿实验数据支持</td>
+</tr>
+<tr>
+<td><strong>ADCC 增强或降低</strong></td>
+<td>绝对幅度高度依赖具体实验体系（如 PBMC vs 报告基因法、靶细胞抗原密度、效应细胞 FcγRIIIa <code>V158/F158</code> 多态性，以及 <strong>CH2 N297 糖型 / 去岩藻糖基化修饰</strong>）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://www.ben-air.cn/01.%E7%9F%A5%E8%AF%86-40.%E8%9B%8B%E7%99%BD%E5%B7%A5%E7%A8%8B-%E6%8A%97%E4%BD%93/%E6%8A%97%E4%BD%93-04.%E5%B7%A5%E5%85%B7-04.ANARCI-%E6%8A%97%E4%BD%93%E7%BB%93%E6%9E%84%E6%B3%A8%E9%87%8A%E5%B7%A5%E5%85%B7%E7%A7%91%E6%99%AE/">ANARCI 抗体结构注释工具科普</a></li>
+<li><a href="https://www.ben-air.cn/01.%E7%9F%A5%E8%AF%86-40.%E8%9B%8B%E7%99%BD%E5%B7%A5%E7%A8%8B-%E6%8A%97%E4%BD%93/%E6%8A%97%E4%BD%93-04.%E5%B7%A5%E5%85%B7-02.%E6%8A%97%E4%BD%93%E4%BB%8E%E5%A4%B4%E7%90%86%E6%80%A7%E8%AE%BE%E8%AE%A1%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7%E7%BB%BC%E8%BF%B0/">抗体从头理性设计开源工具综述</a></li>
+<li><a href="https://www.betterenzyme.com/book/chapter2.html">蛋白质工程基础 · Chapter 2（BetterEnzyme）</a></li>
+</ul>
+</div> <footer class="post-end" data-astro-cid-7jjqptxk> <p data-astro-cid-7jjqptxk> <strong data-page-zh="读到这里了？" data-page-en="Made it this far?" data-astro-cid-7jjqptxk>读到这里了？</strong> <span data-page-zh="如果这篇文章对你有帮助，欢迎分享或交流。" data-page-en="If this article helped, feel free to share it or get in touch." data-astro-cid-7jjqptxk>如果这篇文章对你有帮助，欢迎分享或交流。</span> </p> <div class="post-end-links" data-astro-cid-7jjqptxk> <a href="/blog/" data-page-zh="返回博客" data-page-en="Back to blog" data-astro-cid-7jjqptxk>返回博客</a> <a href="/about/#contact" data-page-zh="与我交流 ↗" data-page-en="Get in touch ↗" data-astro-cid-7jjqptxk>与我交流 ↗</a> </div> </footer> </div> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"> <span>© 2026 Boyang Wang</span> <span>用好奇心构建，用工程落地。</span> <a class="footer-wechat-link" href="/about/#wechat">微信公众号 ↗</a> <a href="#top">回到顶部 ↑</a> </footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '微信公众号':'WeChat Official Account',
+    '微信公众号 ↗':'WeChat Official Account ↗',
+    '微信搜一搜或扫码关注，阅读技术文章与工程实践':'Follow via WeChat Search or scan for articles and engineering notes',
+    '也可通过微信公众号获取更新；扫码或微信搜一搜即可关注。':'Follow on WeChat for updates—search or scan to subscribe.',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const g=[...document.querySelectorAll("[data-page-zh][data-page-en]")],i=c=>{g.forEach(a=>{a.textContent=c==="en"?a.dataset.pageEn??"":a.dataset.pageZh??""})};i(document.documentElement.lang);window.addEventListener("language-change",c=>{i(c.detail)});const s=[...document.querySelectorAll(".post-toc-link")];if(s.length>0){const c=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),a=window.expandTocBranchForLink,r=e=>{s.forEach(n=>{const t=decodeURIComponent(n.hash.slice(1))===e;n.classList.toggle("is-active",t),t?(n.setAttribute("aria-current","location"),a?.(n)):n.removeAttribute("aria-current")})},o=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>c.has(e.id));if(o.length>0){r(o[0].id);const e=()=>{const l=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?o[o.length-1]:o.reduce((h,d)=>d.getBoundingClientRect().top<=112?d:h,o[0]);r(l.id)},n=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});o.forEach(t=>n.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>r(decodeURIComponent(t.hash.slice(1)))))}}</script> 

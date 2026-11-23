@@ -1,0 +1,1235 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content=">《从项目到产品》读书笔记"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>项目管理笔记 · 笔记</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.t04Za6ld.css">
+<link rel="stylesheet" href="/_astro/_slug_.BBHBVTRi.css">
+<link rel="stylesheet" href="/_astro/_slug_.Cc6mwHdw.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link" href="/blog/" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link active" href="/notes/" aria-current="page" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="icon-button github-link" href="https://github.com/boyang167" target="_blank" rel="noopener noreferrer" aria-label="GitHub：boyang167" title="GitHub · boyang167" data-astro-cid-3ef6ksr2> <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" data-astro-cid-3ef6ksr2> <path fill="currentColor" d="M12 0C5.37 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.565 22.092 24 17.592 24 12c0-6.627-5.373-12-12-12z" data-astro-cid-3ef6ksr2></path> </svg> </a> <div class="header-cta" aria-label="联系与社交" data-astro-cid-3ef6ksr2> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span aria-hidden="true" data-astro-cid-3ef6ksr2>↗</span></a> </div> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap detail-page" data-astro-cid-5eggoaxc> <header class="detail-hero" data-astro-cid-5eggoaxc> <a class="back-link" href="/notes/" data-astro-cid-5eggoaxc>← 返回笔记</a> <div class="hero-banner" aria-hidden="true" data-astro-cid-5eggoaxc><span data-astro-cid-5eggoaxc>NT</span></div> <div class="hero-tags" data-astro-cid-5eggoaxc> <span class="tag" data-astro-cid-5eggoaxc>17-PM</span> <span class="tag tag-muted" data-astro-cid-5eggoaxc>raw</span> </div> <h1 data-astro-cid-5eggoaxc>项目管理笔记</h1> <p class="hero-summary" data-astro-cid-5eggoaxc>&gt;《从项目到产品》读书笔记</p> <p class="hero-meta" data-astro-cid-5eggoaxc> <span data-astro-cid-5eggoaxc>raw/1-Note</span>  </p> </header> <div class="detail-layout" data-astro-cid-5eggoaxc> <aside class="detail-toc article-toc-panel" aria-label="本文目录"> <div class="toc-panel-head"> <p class="toc-title">本文目录</p> <button type="button" class="toc-panel-hide" aria-expanded="true" aria-controls="article-toc-nav" data-i18n-label-zh="隐藏目录" data-i18n-label-en="Hide table of contents"> <span class="toc-panel-hide-icon" aria-hidden="true"></span> </button> </div> <nav id="article-toc-nav" class="toc-nav"> <div class="toc-branch"><a href="#目录" class="toc-link depth-2 toc-branch-leaf">目录</a></div><div class="toc-branch toc-branch--parent"><script type="module">const n=t=>{document.querySelectorAll(".toc-branch-toggle").forEach(e=>{const c=e.getAttribute("aria-expanded")==="true",a=c?e.dataset.i18nAriaZh:e.dataset.i18nExpandZh,o=c?e.dataset.i18nAriaEn:e.dataset.i18nExpandEn;e.setAttribute("aria-label",t==="en"?o??"":a??"")})},r=()=>{document.querySelectorAll(".toc-branch-toggle").forEach(t=>{t.dataset.tocCollapseBound!=="1"&&(t.dataset.tocCollapseBound="1",t.addEventListener("click",()=>{const c=t.closest(".toc-branch")?.querySelector(":scope > .toc-branch-children"),a=t.getAttribute("aria-expanded")==="true";t.setAttribute("aria-expanded",String(!a)),c?.classList.toggle("is-collapsed",a),n(document.documentElement.lang)}))}),n(document.documentElement.lang)};r();window.addEventListener("language-change",t=>{n(t.detail)});window.expandTocBranchForLink=t=>{let e=t.closest(".toc-branch");for(;e;){const c=e.querySelector(":scope > .toc-branch-children"),a=e.querySelector(":scope > .toc-branch-head .toc-branch-toggle");c?.classList.remove("is-collapsed"),a?.setAttribute("aria-expanded","true"),e=e.parentElement?.closest(".toc-branch")??null}n(document.documentElement.lang)};</script><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#敏捷Agile" class="toc-link depth-2">敏捷（Agile）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#敏捷的定义" class="toc-link depth-3 toc-branch-leaf">敏捷的定义</a></div><div class="toc-branch"><a href="#敏捷价值观Scrum" class="toc-link depth-3 toc-branch-leaf">敏捷价值观（Scrum）</a></div><div class="toc-branch"><a href="#价值观-1个体与互动" class="toc-link depth-3 toc-branch-leaf">价值观 1：个体与互动</a></div><div class="toc-branch"><a href="#价值观-2工作的软件" class="toc-link depth-3 toc-branch-leaf">价值观 2：工作的软件</a></div><div class="toc-branch"><a href="#价值观-3客户合作" class="toc-link depth-3 toc-branch-leaf">价值观 3：客户合作</a></div></div></div><div class="toc-branch"><a href="#Flow-Framework-与价值流指标" class="toc-link depth-2 toc-branch-leaf">Flow Framework 与价值流指标</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#从项目到产品Project-to-Product" class="toc-link depth-2">从项目到产品（Project to Product）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#引言Introduce" class="toc-link depth-3 toc-branch-leaf">引言（Introduce）</a></div><div class="toc-branch"><a href="#转折点The-Turning-Point" class="toc-link depth-3 toc-branch-leaf">转折点（The Turning Point）</a></div><div class="toc-branch"><a href="#全书结构目录摘要" class="toc-link depth-3 toc-branch-leaf">全书结构（目录摘要）</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#第一部分流框架Part-I" class="toc-link depth-2">第一部分：流框架（Part I）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#流程框架The-Flow-Framework" class="toc-link depth-3 toc-branch-leaf">流程框架（The Flow Framework）</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Chapter-1" class="toc-link depth-3">Chapter 1</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#The-age-of-software" class="toc-link depth-4 toc-branch-leaf">The age of software</a></div><div class="toc-branch"><a href="#No-sector-ls-Safe" class="toc-link depth-4 toc-branch-leaf">No sector ls Safe</a></div><div class="toc-branch"><a href="#Types-of-Disruption-" class="toc-link depth-4 toc-branch-leaf">**Types of Disruption **</a></div><div class="toc-branch"><a href="#Unbundling-of-every-industry" class="toc-link depth-4 toc-branch-leaf">Unbundling of every industry</a></div><div class="toc-branch"><a href="#We-Are-entering-the-deployment-Priod" class="toc-link depth-4 toc-branch-leaf">We Are entering the deployment Priod</a></div><div class="toc-branch"><a href="#Three-Epiphanies" class="toc-link depth-4 toc-branch-leaf">Three Epiphanies</a></div><div class="toc-branch"><a href="#结论" class="toc-link depth-4 toc-branch-leaf">结论</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Chapter-2" class="toc-link depth-3">Chapter 2</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#From-project-to-product" class="toc-link depth-4 toc-branch-leaf">From project to product</a></div><div class="toc-branch"><a href="#BMW-TrIP-Discovering-the-plant-architecture" class="toc-link depth-4 toc-branch-leaf">BMW TrIP Discovering the plant architecture</a></div><div class="toc-branch"><a href="#Agile-Transformation-Failure-at-Nokia" class="toc-link depth-4 toc-branch-leaf">Agile Transformation Failure at Nokia</a></div><div class="toc-branch"><a href="#Lesson-one--to-avoid-the-pitfall-of-local-optimization--focun-on" class="toc-link depth-4 toc-branch-leaf">Lesson one : to avoid the pitfall of local optimization , focun on the end-to-end value stream</a></div><div class="toc-branch"><a href="#Devops-to-the-Rescue" class="toc-link depth-4 toc-branch-leaf">Devops to the Rescue</a></div><div class="toc-branch"><a href="#Failing-to-Transform--the-story-of-largeBank" class="toc-link depth-4 toc-branch-leaf">Failing to Transform : the story of largeBank</a></div><div class="toc-branch"><a href="#A-disconnect-betwen-the-businss-and-it" class="toc-link depth-4 toc-branch-leaf">A disconnect betwen the businss and it</a></div><div class="toc-branch"><a href="#Failling-into-the-cost-center-trap" class="toc-link depth-4 toc-branch-leaf">Failling into the cost center trap</a></div><div class="toc-branch"><a href="#From-Puzzles-to-planes" class="toc-link depth-4 toc-branch-leaf">From Puzzles to planes</a></div><div class="toc-branch"><a href="#Toward-Product-Development-Flow" class="toc-link depth-4 toc-branch-leaf">Toward Product Development Flow</a></div><div class="toc-branch"><a href="#Projects-versus-Products" class="toc-link depth-4 toc-branch-leaf">Projects versus Products</a></div><div class="toc-branch"><a href="#Budgeting" class="toc-link depth-4 toc-branch-leaf">Budgeting</a></div><div class="toc-branch"><a href="#成功" class="toc-link depth-4 toc-branch-leaf">成功</a></div><div class="toc-branch"><a href="#Risk" class="toc-link depth-4 toc-branch-leaf">Risk</a></div><div class="toc-branch"><a href="#Teams" class="toc-link depth-4 toc-branch-leaf">Teams</a></div><div class="toc-branch"><a href="#Visibility" class="toc-link depth-4 toc-branch-leaf">Visibility</a></div><div class="toc-branch"><a href="#Conclusion" class="toc-link depth-4 toc-branch-leaf">Conclusion</a></div></div></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#Chapter-3" class="toc-link depth-3">Chapter 3</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#Walk-the-lines" class="toc-link depth-4 toc-branch-leaf">Walk the lines</a></div><div class="toc-branch"><a href="#why-we-need-a-New-Fremework" class="toc-link depth-4 toc-branch-leaf">why we need a New Fremework</a></div><div class="toc-branch"><a href="#Focus-on-End-to-End-Results" class="toc-link depth-4 toc-branch-leaf">Focus on End-to-End Results</a></div><div class="toc-branch"><a href="#Lean-Thinking-Requried" class="toc-link depth-4 toc-branch-leaf">Lean Thinking Requried</a></div><div class="toc-branch"><a href="#What-is-value-Stream-" class="toc-link depth-4 toc-branch-leaf">What is value Stream ?</a></div><div class="toc-branch"><a href="#From-Mapping-to-Architecture" class="toc-link depth-4 toc-branch-leaf">From Mapping to Architecture</a></div><div class="toc-branch"><a href="#Finding-Flow-in-Software-Delivery" class="toc-link depth-4 toc-branch-leaf">Finding Flow in Software Delivery</a></div><div class="toc-branch"><a href="#The-four-flow-items" class="toc-link depth-4 toc-branch-leaf">The four flow items</a></div><div class="toc-branch"><a href="#结论-2" class="toc-link depth-4 toc-branch-leaf">结论</a></div></div></div></div></div><div class="toc-branch"><a href="#第一部分小结" class="toc-link depth-2 toc-branch-leaf">第一部分小结</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#第二部分价值流指标Part-II" class="toc-link depth-2">第二部分：价值流指标（Part II）</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#Chapter-4" class="toc-link depth-3 toc-branch-leaf">Chapter 4</a></div></div></div> </nav> </aside> <script type="module">const u="portal-article-toc-hidden",y=()=>document.documentElement.lang,i=()=>{const t=y()!=="en";document.querySelectorAll(".toc-panel-hide").forEach(o=>{o.setAttribute("aria-label",t?o.dataset.i18nLabelZh??"":o.dataset.i18nLabelEn??"")}),document.querySelectorAll(".toc-panel-restore").forEach(o=>{o.textContent=t?o.dataset.i18nTextZh??"":o.dataset.i18nTextEn??"",o.setAttribute("aria-label",t?o.dataset.i18nAriaZh??"":o.dataset.i18nAriaEn??"")})},p=e=>e.closest(".detail-layout, .post-layout");let l=null;const d=e=>{l=e;let t=document.body.querySelector(".toc-panel-restore");return t||(t=document.createElement("button"),t.type="button",t.className="toc-panel-restore",t.hidden=!0,t.dataset.i18nTextZh="目录",t.dataset.i18nTextEn="TOC",t.dataset.i18nAriaZh="显示目录",t.dataset.i18nAriaEn="Show table of contents",t.textContent="目录",document.body.appendChild(t),t.addEventListener("click",()=>{l&&r(l,!1)})),t},r=(e,t)=>{const n=e.querySelector(".article-toc-panel")?.querySelector(".toc-panel-hide"),a=d(e);e.classList.toggle("layout--toc-hidden",t),e.classList.toggle("post-layout--solo",t&&e.classList.contains("post-layout")),e.classList.toggle("detail-layout--no-toc",t&&e.classList.contains("detail-layout")),n?.setAttribute("aria-expanded",String(!t)),a&&(a.hidden=!t);try{localStorage.setItem(u,t?"1":"0")}catch{}i()},g=()=>{document.querySelectorAll(".article-toc-panel").forEach(e=>{const t=p(e);if(!t||e.dataset.tocPanelBound==="1")return;e.dataset.tocPanelBound="1";const o=e.querySelector(".toc-panel-hide");d(t),o?.addEventListener("click",()=>r(t,!0));let n=!1;try{n=localStorage.getItem(u)==="1"}catch{n=!1}r(t,n)}),i()},s=()=>{const t=document.querySelector(".detail-layout:not(.layout--toc-hidden), .post-layout:not(.layout--toc-hidden)")?.querySelector(".article-toc-panel"),o=t?.querySelector(".toc-link.is-active, .post-toc-link.is-active");if(!t||!o||t.scrollHeight<=t.clientHeight+1)return;const n=t.getBoundingClientRect(),a=o.getBoundingClientRect(),c=12;a.top<n.top+c?t.scrollTop-=n.top+c-a.top:a.bottom>n.bottom-c&&(t.scrollTop+=a.bottom-n.bottom+c)},h=()=>{const t=document.querySelector(".detail-layout, .post-layout")?.querySelector(".toc-nav, .post-toc-nav");if(!t||t.dataset.tocAutoscrollBound==="1")return;t.dataset.tocAutoscrollBound="1",t.addEventListener("click",()=>requestAnimationFrame(s)),new MutationObserver(()=>s()).observe(t,{subtree:!0,attributes:!0,attributeFilter:["class"]});let n=0;window.addEventListener("scroll",()=>{n||(n=requestAnimationFrame(()=>{n=0,s()}))},{passive:!0})};g();h();window.addEventListener("language-change",()=>i());</script>  <main class="detail-main" data-astro-cid-5eggoaxc> <div class="prose" data-astro-cid-5eggoaxc><blockquote>
+<p>《从项目到产品》读书笔记</p>
+</blockquote>
+<h1 id="项目管理笔记">项目管理笔记</h1>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#%E6%95%8F%E6%8D%B7agile">敏捷（Agile）</a></li>
+<li><a href="#flow-framework-%E4%B8%8E%E4%BB%B7%E5%80%BC%E6%B5%81%E6%8C%87%E6%A0%87">Flow Framework 与价值流指标</a></li>
+<li><a href="#%E4%BB%8E%E9%A1%B9%E7%9B%AE%E5%88%B0%E4%BA%A7%E5%93%81project-to-product">从项目到产品 — 引言与 Flow Framework 概述</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E6%B5%81%E6%A1%86%E6%9E%B6part-i">第一部分：流框架（Part I）</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%B0%8F%E7%BB%93">第一部分小结</a></li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E4%BB%B7%E5%80%BC%E6%B5%81%E6%8C%87%E6%A0%87part-ii">第二部分：价值流指标（Part II）</a></li>
+</ul>
+<hr>
+<h2 id="敏捷Agile">敏捷（Agile）</h2>
+<h3 id="敏捷的定义">敏捷的定义</h3>
+<ol>
+<li><strong>敏捷开发（Agile Development）</strong>： 在软件开发领域，&quot;Agile&quot;指的是一种以人为核心、迭代、循序渐进的开发方法。敏捷开发强调适应性、协作和快速响应变化。敏捷方法论包括Scrum、Kanban、极限编程（XP）等。</li>
+<li><strong>敏捷性（Agility）</strong>： 在体育和运动领域，&quot;Agile&quot;指的是快速、灵活和协调地移动的能力，通常与反应速度和身体协调性相关。</li>
+<li><strong>敏捷思维（Agile Mindset）</strong>： 在商业和组织管理中，&quot;Agile&quot;可以指一种思维方式，它鼓励快速适应变化、持续改进和跨部门合作。</li>
+<li><strong>敏捷供应链（Agile Supply Chain）</strong>： 在供应链管理中，&quot;Agile&quot;指的是能够快速响应市场变化和客户需求的供应链，这种供应链具有高度的灵活性和适应性。</li>
+<li><strong>敏捷企业（Agile Enterprise）</strong>： 指那些能够迅速适应市场变化、客户需求和竞争环境的企业，它们通常采用敏捷方法来提高效率和竞争力。</li>
+<li><strong>敏捷制造（Agile Manufacturing）</strong>： 在制造业中，&quot;Agile&quot;指的是能够快速适应产品需求变化和市场动态的生产系统。</li>
+</ol>
+<h3 id="敏捷价值观Scrum">敏捷价值观（Scrum）</h3>
+<p>身体力行的同时也帮助他人：</p>
+<ul>
+<li>个体和互动  高于 流程和工具</li>
+<li>工作的软件 高于详尽的文档</li>
+<li>客户合作高于合同的谈判</li>
+<li>响应变化高于遵循</li>
+</ul>
+<h3 id="价值观-1个体与互动">价值观 1：个体与互动</h3>
+<p>个体是个体的积极主动，互动是人们合作共赢</p>
+<p>个体互动需要以<strong>平等</strong> 的文化为基础。 个体互动的障碍是命令与控制文化 </p>
+<p>在命令与控制文化下，人们处于压抑的状态，聪明才智无法发挥。</p>
+<p>场景：</p>
+<p>​	这事leader 说了算，我对大局毫无影响，所以就不说了</p>
+<p>实践指导：</p>
+<p>​	协助个体互动在scrum 中发生</p>
+<ul>
+<li>story故事点估算促进每个人都说话的强制作用</li>
+<li>每日站会 可用加1个练习，随机1人复述大家讲的要点</li>
+<li>在每日站会： 随机 1人 充当pm. 总结迭代目标，完成的趋势，风险，士气</li>
+<li>轮流1人主持会议计划，包括会前准备，会中引导， 会后跟进</li>
+<li>在梳理会，计划会，评审会，回顾会结束时，现场快速调查反馈大家对会议的满意度</li>
+</ul>
+<h3 id="价值观-2工作的软件">价值观 2：工作的软件</h3>
+<p>​	可能的冲突</p>
+<p>工作的软件背后是全局的优化， 详尽的文档背后很可能是部门墙，文档形成过程漫长，而且花了很多时间拿来推卸责任的</p>
+<p>scrum 中保证工作的软件有关的模式有：</p>
+<ul>
+<li>每个迭代都要有输出的潜在可交互的产品增量</li>
+<li>通过DoD 保证质量</li>
+<li>开发与测试融合， 缩短反馈周期</li>
+<li>开发与测试融合，目标一致，减少考核上的冲突，减少bug 记录，传递，扯皮上的时间</li>
+<li>PO 与团队融合，即时验收反馈</li>
+<li>支持XP 实际，加速反馈，提升质量</li>
+</ul>
+<h3 id="价值观-3客户合作">价值观 3：客户合作</h3>
+<p>client 合作的障碍是不信任，以至于花太多时间在工作量的计算上，反而无暇顾及价值和质量</p>
+<p>show:</p>
+<ol>
+<li>每次迭代演示可工作的软件</li>
+<li>产品列表，迭代列表等工作透明</li>
+<li>产品列表梳理，迭代计划会，每日站会，迭代评审会，迭代回顾等事件的透明</li>
+</ol>
+<h2 id="Flow-Framework-与价值流指标">Flow Framework 与价值流指标</h2>
+<p>大规模敏捷实践原则</p>
+<p>首要原则： First rule of scaling agile Don’t do it . </p>
+<p>aim:  用尽可能好的方式巩固多个scrum 团队的成功 outcome, 来扩大过程迭代 iteration 和产品增量increment 交互的规模</p>
+<p>Project Manger：</p>
+<p>aim &gt; task &gt; time &gt; 责任人&gt; cost </p>
+<p>WBS :</p>
+<p><strong>一体化研发效能平台:</strong></p>
+<p>​		从需求管理、项目管理、代码配置、CI/CD/CT甚至监控运维等各种工具全部集成在一起，客户的思维逐渐开始从工具的单点最佳转变为全局优化</p>
+<p><strong>基础理论框架 - 流框架 （Flow Framework）:</strong></p>
+<p><strong>该框架包括</strong>三大模型（即集成模型、活动模型和产品模型）**</p>
+<p>完成了<strong>两层映射（从数据到活动以及从活动到产品）</strong></p>
+<p>集成模型向下对接各种单点最佳（best of breed）工具，产品模型向上衍生出<strong>四大流动度量指标（流动时间、流动速度、流动效率和流动负载）<strong>和</strong>四类业务成果（价值、成本、质量、幸福度）</strong></p>
+<p>流框架还定义了软件研发中的活动或者事项的<strong>四种属性（特性、缺陷、风险、债务）</strong>，从而利用第五大流度量指标流分布来辨识产品研发价值流中的不同属性的工作的分布，直观地帮助产品经理或者组织识别价值本身</p>
+<p>业务分析师或产品经理的职责是根据客户的需求和吸引力来定义特定功能是否 对客户有价值。</p>
+<p><strong>flow velocity :</strong> </p>
+<p>需要一个更具体的衡量标准来衡量向客户交付了多少商业价值</p>
+<p>测量在单位 时间内完成的每个流项的数量</p>
+<p>编写的代码行数、添加的功能点、每 天的部署量或从代码提交到代码部署所需的时间。这些代理指标对于了解价值 流的不同部分至关重要</p>
+<p><strong>flow time :</strong></p>
+<p>流时间：流项目从被接受工作进入价值流到完成所需的时间，包括活动时 间和等待时间。</p>
+<p>交付周期和周期时间</p>
+<p>提交代码以部署交付时间 ,，如果您从以客户和价值流为中心的角度 （而不是以开发人员为中心的角度）来看，它不是交付时间的度量，而是开发 周期时间的度量。</p>
+<p>流时间基于流项目在四种不同流状态中进行的转换。四种流状态为：new、 waiting、active 和 done</p>
+<p>单个流项目的提前期是通过比较从项目以“新建”状态开始与从项目进 入“完成”状态的时间来衡量的</p>
+<p>平均修复时间 （MTTR） 是通过比较 与中断相对应的缺陷从“新”到“完成”的时间来衡量的，该缺陷可能已作为 事件开始其生命周期。</p>
+<p>在价值流中，周期时间变得非常重要;例如，确定价值流的特定阶段是否存在瓶 颈，例如用户体验设计 （UX） 或质量保证 （QA）。但是，在测量端到端价值 流时，最重要的指标是流时间。</p>
+<p>监控工具或支持团队识别的高严重性事件可能是软件缺 陷的结果s</p>
+<p><strong>flow load</strong> </p>
+<p>流荷载的目标是为影响流速和流动时间的任何问题提供领先指标。流负载是给定 值流中正在进行的所有活动流项目的度量</p>
+<p>Flow Load （流负载）：价值流中正在积极处理的流项目的数量，表示 WIP （正在进行的工作） 的数量。</p>
+<p>flow <strong>efficiency</strong>（流效率）</p>
+<p>流效率的目的是确定流项 目主动处理的时间与价值流中花费的总时间的比例</p>
+<p><img src="/notes-media/img/image-20250112111342259.png" alt="image-20250112111342259"></p>
+<p>软件产品和价值流与它们在生产线中一样可见。</p>
+<p>DevOps 团队知道要显示的确切遥测数据，例如每天的部署数和更 改成功率。或者将其与开发团队进行对比，开发团队使用 Scrum 或看板使正在 进行的工作对整个团队可见</p>
+<p>DevOps 三种方式：</p>
+<ol>
+<li>flow  end to 2 end </li>
+<li>Feedback</li>
+</ol>
+<p>反馈。反馈使我们能够将软件 生产结果与业务联系起来。</p>
+<p>产品管理使用完善的标准来跟踪成功完成项目所需的阶段、流程、资源和依赖关系</p>
+<p>Flow Framework 的 一个关键目标是为您提供一组核心指标来衡量您的每个价值流。虽然可能需要更 广泛的特定于您的业务的指标集，但 Flow Framework 要求您拥有每个产品的 价值、成本、质量和满意度的指标.</p>
+<p><strong>业务价值：Business Result</strong> </p>
+<p>衡量每个价值流的收入的一个重要方面是跟踪收入的系统，例如会计和客户关 系管理 （CRM）</p>
+<p><strong>Cost</strong> </p>
+<p>Quality：</p>
+<p>Happiness：</p>
+<p>在软件交付中，增值活动由承担业务分析、 设计、架构、编码、测试自动化、站点可靠性工程和支持等任务的人员完成</p>
+<p>我们还发现，必须确保将人才分配到他们茁壮成长的视野中。例如，我们一些 最优秀的开发人员在解决平台深处非常困难的规模和性能问题时茁壮成长。这 些开发人员往往在具有明确指定约束的环境中茁壮成长。相比之下，其他开发 人员在模糊前端、快速原型设计和 MVP 的领域中蓬勃发展。与许多其他出色的 工程主管一样，我们的工程副总裁已经掌握了将开发人员分配到他们可能最有 可能实现自主性、掌握和目标的价值流中。</p>
+<p>价值流仪表板</p>
+<p>将流指标与业务结果相关联为我们提供了一个仪表板，它将每个价值流中完成的 工作与价值流产生的业务结果联系起来。</p>
+<p><img src="/notes-media/img/image-20250112113528097.png" alt="image-20250112113528097"></p>
+<p>企业大规模软件交互的时期： 安装期 ，部署期</p>
+<p>首先关注流程，然后关注自动化</p>
+<p>流分配的一个重要特性是它从交付团队到业务战略都是向上级联的;我们可以衡 量一个价值流的流量分配，也可以考虑组合流量分配对组织所有价值流的影 响。</p>
+<p>定义流程项：每个流程项都可以通过观察工具网络来衡量。通过流程项目，我 们可以衡量通过工具网络的业务价值流，并将其与业务结果相关联。</p>
+<p> 设置流分配：这是 Flow Framework 最重要的方面，因为所有其他指标都依 赖于它。我们需要跟踪每个产品价值流的目标流分布，以确定正在交付的业务 价值类型。 </p>
+<p>测量流速：我们需要能够测量交付给客户的每个流项目随时间的变化量级。这 就是流速，它改编自敏捷软件开发中的速度概念。</p>
+<p> 跟踪流时间：流分布和流速提供了在一段时间内完成了多少工作的经验测量， 但它们并不表示该工作在系统中循环的速度。流动时间定义了我们向市场提供 业务价值的速度。 </p>
+<p>测量流负荷：为了优化价值流中的流量，我们需要避免因正在进行的工作 （WIP） 过多而过度利用价值流。流负载指标允许我们在价值流级别跟踪这 一点（例如，通过指示正在并行处理的功能数量）。</p>
+<p> 跟踪流程效率：在每个产品的价值流中，流程项目要么正在处理，要么正在等 待工作完成或需要解决依赖关系。流程效率衡量的是生产时间与等待时间的比 率，从而能够调整我们的价值流以提高生产力。</p>
+<p> 连接到业务结果：价值、成本、质量和幸福感是业务结果的四个桶，需要作为 Flow Framework 的一部分进行跟踪，以便将软件投资与业务绩效相关联，并 提供一组通用的面向结果的指标来连接业务与 IT。</p>
+<p>价值流指标：</p>
+<p>旨在弥合业务和 IT 之间的差距。通过流程 指标将价值流中的流程与业务成果联系起来</p>
+<ul>
+<li>定义流程项：每个流程项都可以通过观察工具网络来衡量。通过流程项目，我 们可以衡量通过工具网络的业务价值流，并将其与业务结果相关联。 </li>
+<li>设置流分配：这是 Flow Framework 最重要的方面，因为所有其他指标都依 赖于它。我们需要跟踪每个产品价值流的目标流分布，以确定正在交付的业务 价值类型。</li>
+<li>测量流速：我们需要能够测量交付给客户的每个流项目随时间的变化量级。这 就是流速，它改编自敏捷软件开发中的速度概念。 </li>
+<li>跟踪流时间：流分布和流速提供了在一段时间内完成了多少工作的经验测量， 但它们并不表示该工作在系统中循环的速度。流动时间定义了我们向市场提供 业务价值的速度。</li>
+<li>测量流负荷：为了优化价值流中的流量，我们需要避免因正在进行的工作 （WIP） 过多而过度利用价值流。流负载指标允许我们在价值流级别跟踪这 一点（例如，通过指示正在并行处理的功能数量）。</li>
+<li>跟踪流程效率：在每个产品的价值流中，流程项目要么正在处理，要么正在等 待工作完成或需要解决依赖关系。流程效率衡量的是生产时间与等待时间的比 率，从而能够调整我们的价值流以提高生产力。</li>
+<li>连接到业务结果：价值、成本、质量和幸福感是业务结果的四个桶，需要作为 Flow Framework 的一部分进行跟踪，以便将软件投资与业务绩效相关联，并 提供一组通用的面向结果的指标来连接业务与 IT。</li>
+</ul>
+<p>Value Stream Network ：</p>
+<h2 id="从项目到产品Project-to-Product">从项目到产品（Project to Product）</h2>
+<h3 id="引言Introduce">引言（Introduce）</h3>
+<h3 id="转折点The-Turning-Point">转折点（The Turning Point）</h3>
+<p>转折点
+		或者对于我们职业生涯的大多数时间来说，那些从事企业IT的我们一直在以疯狂的速度应对变化。技术平台、软件开发方法论以及供应商格局一直在以很少组织能够跟上的速度变化。那些设法跟上的公司，比如亚马逊和阿里巴巴，正在通过重新定义围绕其软件平台的技术格局来进一步推动变化，导致其他公司进一步落后。</p>
+<p>​		这种令人生畏且持续不断的变化速度被视为数字颠覆的标志。但如果我们退后一步，观察之前的进展模式，我们开始看到之前工业和技术革命中巨大变革和发展浪潮的涟漪。</p>
+<p>​		在三个世纪的过程中，一个模式浮现出来。从工业革命开始，大约每五十年就会有一次新的技术浪潮与创新和融资的生态系统结合，从而转变世界经济。 1 每一次这些技术浪潮都从根本上重新定义了生产方式，以至于引发了新业务的爆炸性增长，随后是那些在前一次浪潮高潮中蓬勃发展的企业的大规模灭绝。每一次浪潮都是由生产的关键因素变得便宜而触发的。然后，新的基础设施被建立，而金融资本推动着企业家和创新者的生态系统，他们利用新的技术系统来颠覆和取代上一个时代的既得利益者。</p>
+<p>​		这段文字讨论了技术革命如何周期性地重塑经济和产业，以及这些变革是如何由生产成本的降低和新基础设施的建设所驱动的。每一次技术革命都带来了新的商业机会，同时也导致了那些未能适应新环境的企业的消亡。</p>
+<p>每一次技术革命都要求现有企业掌握一种新的生产方式，比如蒸汽机或流水线。对于数字革命而言，新的生产方式是软件。如果你的组织已经掌握了大规模的软件交付，那么这本书不适合你。这本书的目标是为其他人提供一个全新的管理框架，以促进向软件时代的过渡。</p>
+<p>解释过去四次技术革命和这一次革命前半部分周期的理论是由卡洛塔·佩雷斯在《技术革命与金融资本：泡沫与黄金时代的动态》中提出的，以及克里斯·弗里曼和弗朗西斯科·洛萨在《时光流转：从工业革命到信息革命》中提出的。佩雷斯扩展了“长波”或康德拉季耶夫经济模型，明确了每个周期内的两个不同阶段（图0.1）。第一个阶段是安装期，当新技术和金融资本结合，创造出“寒武纪爆发”式的初创企业，颠覆了前一个时代的整个行业。安装期结束时，是技术扩散的部署期，新的工业巨头的生产资本开始接管。这两个阶段之间是佩雷斯所说的转折点，历史上以金融危机和复苏为标志。这时，企业要么掌握新的生产方式，要么衰退并成为上一个时代的遗迹。</p>
+<p>这段文字讨论了技术革命的周期性模式，特别是卡洛塔·佩雷斯对于技术革命周期的“长波”理论，以及每个周期内的不同阶段，包括安装期、转折点和部署期，以及这些阶段对企业和社会经济的影响。</p>
+<p><img src="/notes-media/img/image-20241222103556203.png" alt="image-20241222103556203"></p>
+<p>这张图片展示了技术革命的时间线，以及它们与软件时代的关系。以下是图片中的信息整理：</p>
+<ol>
+<li><p><strong>工业革命 (Industrial Revolution)</strong></p>
+<ul>
+<li>时间：1771年</li>
+<li>特点：运河狂热 (Canal Mania) 于英国 (UK)，大不列颠的飞跃 (Great British Leap)</li>
+</ul>
+</li>
+<li><p><strong>蒸汽与铁路时代 (Age of Steam &amp; Railways)</strong></p>
+<ul>
+<li>时间：1829年</li>
+<li>特点：铁路狂热 (Railway Mania) 于英国，维多利亚时代的繁荣 (The Victorian Boom)</li>
+</ul>
+</li>
+<li><p><strong>钢铁与重型工程时代 (Age of Steel &amp; Heavy Engineering)</strong></p>
+<ul>
+<li>时间：1875年</li>
+<li>特点：伦敦资助的全球市场基础设施建设，美好时代 (Belle Epoque) 于欧洲，进步时代 (Progressive Era) 于美国 (USA)</li>
+</ul>
+</li>
+<li><p><strong>石油与大规模生产时代 (Age of Oil &amp; Mass Production)</strong></p>
+<ul>
+<li>时间：1908年</li>
+<li>特点：咆哮的二十年代 (The Roaring Twenties)，战后黄金时代 (Post-War Golden Age)</li>
+</ul>
+</li>
+<li><p><strong>软件与数字时代 (Age of Software &amp; Digital)</strong></p>
+<ul>
+<li>时间：1971年</li>
+<li>特点：网络泡沫和互联网狂热 (Dotcom and Internet Mania)，全球金融和房地产泡沫 (Global finance and housing bubbles)</li>
+<li>安装期 (Installation Period)：1971年</li>
+<li>转折点 (Turning Point)：2000年左右</li>
+<li>部署期 (Deployment Period)：2000年之后，具体结束时间未知</li>
+</ul>
+</li>
+</ol>
+<p>这张图表明，每个技术革命都经历了安装期和部署期，而转折点通常伴随着金融崩溃和恢复。软件时代似乎也遵循这一模式，2000年左右的网络泡沫可能是转折点，之后进入了部署期。</p>
+<p>自从1968年北约举行第一次软件工程会议并正式开启软件时代以来，已经过去了五十年。我们目前正处在一个不断变化的时代，这种变化的速度之所以感觉如此之快，是因为我们正在经历转折点。在当前的变革和衰退速度下，预计在未来十年内，标准普尔500指数中的一半公司将被替换。</p>
+<p>这些企业中有许多是在软件时代之前成立的，它们开始意识到越来越多的支出正在转向技术，因为它们的市场成功越来越依赖于软件。然而，<strong>企业组织在软件交付方</strong>面的生产力远远落后于科技巨头**，本应扭转局面的数字化转型未能带来预期的业务成果。</p>
+<p>问题不在于我们的组织没有意识到需要转型；问题在于，组织正在使用过去革命的管理框架和基础设施模型来管理这个软件时代的业务。管理会计、组织层级和精益制造在以前的革命中至关重要。但在软件时代，这些管理框架已不足以成功指导和保护企业。</p>
+<p>此外，自工业革命以来，大约每五十年就会有一次新的技术浪潮与创新和融资的生态系统结合，从而转变世界经济。每一次技术革命都要求现有企业掌握一种新的生产方式，比如蒸汽机或流水线。对于数字革命而言，新的生产方式是软件。如果企业已经掌握了大规模的软件交付，那么它们可能已经准备好迎接软件时代的挑战。然而，对于那些尚未掌握这一点的企业，它们需要一个新的管理框架来促进向软件时代的过渡。</p>
+<p>我有机会亲眼目睹了这个陷阱的缺陷。在诺基亚工作期间，我注意到管理层是通过有多少人接受了敏捷软件开发方法论的培训，以及有多少人开始使用敏捷工具，来衡量其数字化转型的成功。这些基于活动的代理指标与业务成果无关。正如我将在第一部分中总结的，诺基亚的转型努力未能解决核心平台问题，这些问题使得公司难以适应不断变化的市场。尽管看似是一个精心策划的转型，管理层直到为时已晚才意识到这一点。我怀着沮丧的心情看着诺基亚失去了它所创造的移动市场，尽管我的同事们做出了英勇的努力，尽他们所能去挽救公司。</p>
+<p>几年后，我被邀请与一家全球性银行的IT领导们进行交流。这家银行正在进行第三次数字化转型尝试，这次他们加入了DevOps工具，期望这些工具能够扭转局面。转型的预算大约为10亿美元，但令人震惊的是，我意识到他们的转型计划在方法上甚至比诺基亚的更加有缺陷。转型的每一个方面都被项目管理为仅仅为了降低成本，而不是为了实现整体业务成果，其中降低成本只是一个关键指标。随着我了解更多，我开始直观地感受到，世界上数十亿美元的财富将会化为乌有，而不产生任何价值。距离转型结束还有十八个月，但我知道，如果仅以成本作为转型的基础，那么改变航向已经太晚了。诺基亚留给我的印象是一个燃烧的移动平台，它摧毁了大量的财富和繁荣。现在我有一个生动的形象，即这家银行的数字化转型在其各个层级点燃了浪费的火焰。</p>
+<p>就在那一天，我开始写这本书。商业人士和技术人员的工作方式和沟通方式存在一些根本性的问题，即使是怀着最好意图的领导者，也仍然可能带领他们的公司走向可预见的衰退。</p>
+<p>当我们现在拥有五十年的软件实践经验时，这怎么可能呢？敏捷（Agile）和DevOps运动在将大规模生产时代的关键是生产技术适应于构建软件的技术实践中取得了巨大的进步。例如，持续交付流水线允许组织利用自动化生产线的最佳实践。敏捷技术捕捉了精益制造的一些最佳技术管理实践，并将其适应于软件交付。</p>
+<p>问题在于，除了一些由前软件工程师运营的科技巨头之外，这些技术与业务的管理、预算和规划方式完全脱节。对技术人员来说非常重要和亲切的软件交付概念，如技术债务和技术故事点，对大多数将IT计划作为项目来管理并根据它们是否按时按预算完成来衡量的商业领袖来说毫无意义。以项目为导向的管理框架在建造桥梁和数据中心方面效果很好，但对于在软件时代的转折点生存来说，它们是远远不够的。</p>
+<p>这段文字强调了在软件时代，需要一种新的管理框架来适应技术发展和业务需求的融合，以避免企业在转折点上走向衰退。</p>
+<p>在这本书中，我们将审视几个数字化转型失败的案例，这些失败导致组织失去了在市场上的地位。然后，我们将通过研究我与Tasktop共同进行的一项研究——“挖掘企业工具链的真相”（Mining the Ground Truth of Enterprise Toolchains），进一步深入理解当前企业软件交付的状态。这项研究分析了308个组织的敏捷（Agile）和DevOps工具链，以揭示业务与技术之间脱节的原因。</p>
+<p>接着，《项目到产品》（Project to Product）将为你提供一个全新的管理框架和基础设施模型，称为“流动框架”（Flow Framework），用于弥合业务与技术之间的鸿沟。这个框架旨在帮助组织更有效地管理软件交付，确保<strong>技术实践与业务目标和市场需求相一致</strong>，从而提高数字化转型的成功率。</p>
+<p>流动框架（Flow Framework）是一种新的视角和衡量交付的方法，它根据定义将商业价值通过软件产品或软件即服务（SaaS）带给市场的一系列活动的价值流（value streams）来调整你所有的IT投资。流动框架取代了以项目为导向的管理、成本中心预算和组织结构图作为衡量软件计划的主要方法。这些被流动指标（flowmetrics）所取代，流动指标用于将技术投资与业务结果相连接。</p>
+<p>流动框架允许你将<strong>DevOps的三种方式——流动（flow）、反馈（feedback）和持续学习（continual learning）</strong>（在《DevOps手册：如何在技术组织中创建世界级的敏捷性、可靠性和安全性》中概述）——扩展到你的技术组织之外，覆盖到整个业务。</p>
+<p>这个框架的核心在于优化价值流，确保软件交付的过程能够快速、高效地响应市场变化，并且与企业的商业目标紧密对齐。通过这种方式，组织可以更好地实现技术投资的回报，提高软件交付的业务价值。</p>
+<p>随着每一次技术革命，都会建立一种新型的基础设施，以支持新的生产方式。运河、铁路、电网和装配线是前几个周期技术生态系统的关键基础设施组成部分。许多数字化转型之所以出现问题，是因为过度应用了上一次革命的基础设施概念。生产和装配线在减少变异性和可靠地生产相似产品方面表现出色，但<strong>软件交付本质上是一种充满变异性和创造性的努力</strong>，它跨越了一个由人员、流程和工具组成的复杂网络。与制造业不同，在现代软件交付中，产品开发和设计过程与软件发布制造过程完全交织在一起。试图以管理生产线的方式管理软件交付，是另一个在当前技术革命中，我们正在失败的、使用前一次技术革命框架的例子。流动框架（Flow Framework）指向了一种新的、更好的方法。</p>
+<p>流动框架认识到软件交付的这些独特特性，并提供了一种新的管理方法，这种方法更加注重价值流、流动性和反馈，而不是传统的项目和生产线管理。这种方法有助于组织更好地适应软件交付的复杂性和创造性，从而提高其在数字经济中的竞争力。</p>
+<p>如果我们能够在组织内部实时地看到商业价值的流动，从战略计划到运行中的软件，就像上一个时代的大师们确保他们能够看到并收集装配线上每一步的遥测数据一样，会怎么样？我们会看到线性流动还是一个复杂的依赖和反馈循环网络？正如我们将在第8章中检查的308个企业IT工具链的数据集所展示的，我们看到的是后者。这种在组织内部和跨组织之间的商业价值流动被称为价值流网络（Value Stream Network）。在软件时代，价值流网络是创新的新基础设施。</p>
+<p>一个连接良好的价值流网络将允许你实时测量所有的软件交付投资和活动，并且它将允许你将这些流动指标与业务成果相连接。它将使你的团队能够做他们喜欢做的事情，即为他们的价值流中的特定专业领域提供价值。</p>
+<p>这种视角强调了在软件驱动的商业环境中，理解和优化价值流的重要性。通过实时监控和测量价值流，组织可以更有效地管理软件交付，确保技术投资与业务目标一致，并且能够快速响应市场变化。这样的网络不仅提高了软件交付的效率，还促进了创新，因为它允许团队专注于他们最擅长的领域，同时确保他们的工作与整个组织的战略目标相一致。</p>
+<p>开发者的主要职能和专长是编码，然而本书中总结的研究表明，由于价值流网络（Value Stream Network）中的脱节，开发者们花费了超过一半的时间在手动流程上。这些脱节是两个技术革命时期遗留下来的问题的结果：泰勒主义（Taylorism），它将工人视为机器中的齿轮；以及功能型组织结构中形成的孤岛。</p>
+<p>在大规模生产时代成功的企业，它们将组织结构与向客户交付产品的价值流对齐，而不是限制自己于刚性的功能孤岛，这些孤岛使得专家之间以及与业务脱节。例如，波音公司（Boeing），作为大规模生产时代的领军企业，如果公司的结构像今天的企业IT组织那样，它就不可能将极具创新性的787梦想飞机（787 Dreamliner）推向市场，并扩大生产以满足需求的增长。那些将IT交付作为项目管理而不是产品管理的组织，正在使用两个时代前的管理原则，不能期望这些方法在当前时代仍然有效。有远见的组织正在创建和管理他们的价值流网络和产品组合，以便在软件时代超越竞争对手。</p>
+<p>这段文字强调了在软件时代，组织需要重新考虑和设计其结构和管理原则，以适应快速变化的技术和市场。通过优化价值流网络，组织可以减少开发者在非核心活动上的时间浪费，提高软件交付的效率和创新能力。</p>
+<p>软件交付的未来已经到来，只是分布尚不均匀。软件初创企业和数字原生企业已经创建了完全连接的价值流网络（Value Stream Networks），这些网络与他们的产品交付相一致，专注于流程而非孤立的专业领域，并将所有软件交付活动与可衡量的业务成果相连接。他们的领导者说开发者的语言，通常因为他们曾经是开发者，这使得他们能够有效地指导他们的软件战略。这对其他公司的命运意味着什么？我们如何弥合技术和商业领导之间的鸿沟，创造一种通用语言，让世界上其他组织在软件时代蓬勃发展？</p>
+<p>价值流网络是组织内部和跨组织之间业务价值流动的体现，它是软件时代创新的新基础设施。一个连接良好的价值流网络将允许你实时测量所有软件交付投资和活动，并将这些流动指标与业务成果相连接。这将使你的团队能够做他们喜欢做的事情，即为他们的价值流中的特定专业领域提供价值。</p>
+<p>然而，许多组织在思考这些问题的同时，已经掌握了大规模软件交付的科技巨头正在扩展到传统业务领域，如金融和汽车行业。科技巨头比世界上既有的公司更快地掌握传统业务，他们正在积累越来越多的世界财富和技术基础设施。他们创造的产品为商业和消费者提供了基本价值，而市场对这种价值的需求只会增长。</p>
+<p>试图阻止进步或需求是愚蠢的；但是，让我们的经济任由少数数字垄断企业控制，将对我们的公司、员工和社会系统产生问题。如果我们不扭转这一趋势——科技巨头手中的财富日益增加，以及使有效政府监管变得困难的技术网络效应——后果可能比我们在过去四个时代所见证的大规模公司灭绝更为严重。</p>
+<p>在软件时代，**价值流网络是创新的新基础设施，**它们允许组织实时测量软件交付投资和活动，并将这些活动与业务成果相连接。这为组织提供了一种新的方法，以确保技术投资与业务目标一致，从而在竞争激烈的市场中保持领先。</p>
+<p>我们可以创造另一个未来。我们可以使我们的组织具有竞争力。我们可以利用科技巨头和初创企业的经验教训，并将其适应于我们现有业务的复杂性。我们可以将IT的黑匣子转变为一个透明的价值流网络，并像软件时代的数字原生企业那样管理它们。为了实现这一点，我们需要将注意力从转型活动转移到可衡量的业务成果上。我们需要一个新的框架，将我们的组织从项目导向转变为产品导向，从而确保我们在数字未来中的地位。</p>
+<p>这个新的框架应该是以价值流为中心的，它强调以下几个关键点：</p>
+<ol>
+<li><p><strong>价值流网络的透明度</strong>：确保价值流的每个环节都是可见的，这样组织可以实时监控和优化软件交付过程。</p>
+</li>
+<li><p><strong>从项目到产品的转变</strong>：将组织的关注点从完成特定项目转移到持续交付价值的产品上，这要求组织在文化、结构和流程上进行调整。</p>
+</li>
+<li><p><strong>业务结果的衡量</strong>：将所有的技术活动与具体的业务成果相联系，确保技术投资能够带来明确的商业价值。</p>
+</li>
+<li><p><strong>持续学习和适应</strong>：鼓励组织内的持续学习和适应，以便快速响应市场变化和技术进步。</p>
+</li>
+<li><p><strong>跨部门协作</strong>：打破传统的功能孤岛，促进不同部门和团队之间的协作，以实现更流畅的价值流。</p>
+</li>
+</ol>
+<p>通过实施这样的框架，组织可以更好地利用软件的力量来推动创新和增长，同时确保技术投资与业务目标紧密对齐。这不仅有助于组织在竞争激烈的市场中保持竞争力，而且还能确保它们能够适应并引领数字时代的变化。</p>
+<p>Summary：</p>
+<pre><code class="language-markdown">在软件时代，企业面临着前所未有的挑战和变革。技术平台、软件开发方法论和供应商格局的变化速度之快，使得许多组织难以跟上步伐。像亚马逊和阿里巴巴这样的公司通过重新定义技术格局来推动变化，而其他公司则可能因此落后。这种快速变化被视为数字颠覆的标志，但它也遵循着历史上技术革命的周期性模式。
+
+自工业革命以来，大约每五十年就会有一次新的技术浪潮，这些浪潮与创新和融资的生态系统结合，转变世界经济。每一次技术革命都重新定义了生产方式，引发了新业务的增长和旧业务的衰退。这些变革由生产成本的降低和新基础设施的建设所驱动。
+
+在软件时代，新的生产方式是软件。企业需要掌握大规模的软件交付，以适应这一时代。然而，许多企业在软件交付方面的生产力远远落后于科技巨头，数字化转型未能带来预期的业务成果。这是因为它们仍然使用过去革命的管理框架和基础设施模型来管理业务。
+
+**为了在软件时代保持竞争力，企业需要一个新的管理框架，如“流动框架”（Flow Framework），以促进向软件时代的过渡。这个框架强调价值流网络的透明度，从项目到产品的转变，业务结果的衡量，持续学习和适应，以及跨部门协作。它允许组织实时测量软件交付投资和活动，并将这些活动与业务成果相连接。**
+
+开发者的主要职能是编码，但他们在价值流网络中的脱节导致他们花费了大量时间在手动流程上。这些脱节源于泰勒主义和功能型组织结构中形成的孤岛。成功的企业在大规模生产时代通过与价值流对齐的组织结构来满足客户需求。在软件时代，企业需要创建和管理他们的价值流网络和产品组合，以超越竞争对手。
+
+软件初创企业和数字原生企业已经创建了完全连接的价值流网络，这些网络与他们的产品交付相一致，专注于流程而非孤立的专业领域。他们的领导者通常具有技术背景，这使得他们能够有效地指导软件战略。这为其他公司提出了挑战：如何弥合技术和商业领导之间的鸿沟，创造一种通用语言，让世界上其他组织在软件时代蓬勃发展。
+
+科技巨头正在扩展到传统业务领域，如金融和汽车行业，并且比世界上既有的公司更快地掌握传统业务。他们正在积累越来越多的世界财富和技术基础设施。如果不扭转这一趋势，后果可能比过去四个时代所见证的大规模公司灭绝更为严重。企业需要采取行动，确保技术投资与业务目标一致，从而在竞争激烈的市场中保持领先。
+</code></pre>
+<p><img src="/notes-media/img/image-20241228112515818.png" alt="image-20241228112515818"></p>
+<h3 id="全书结构目录摘要">全书结构（目录摘要）</h3>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>章节</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一部分：流框架</td>
+<td>第 1 章 软件时代；第 2 章 从项目到产品；第 3 章 流框架</td>
+</tr>
+<tr>
+<td>第二部分：价值流指标</td>
+<td>第 4–6 章 流指标、业务成果、中断</td>
+</tr>
+<tr>
+<td>第三部分：价值流网络</td>
+<td>第 7–9 章 工具链、专业工具、价值流管理</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>下文 <strong>第一部分</strong> 起为正文笔记（含宝马工厂案例、三章精读与 Part 1 小结）；<strong>第二部分</strong> 起为第 4 章笔记。</p>
+</blockquote>
+<hr>
+<h2 id="第一部分流框架Part-I">第一部分：流框架（Part I）</h2>
+<h3 id="流程框架The-Flow-Framework">流程框架（The Flow Framework）</h3>
+<p>2017 年春天，勒内・特斯特罗特邀请我参观德国莱比锡的宝马集团工厂。我与勒内的合作始于几年前，当时我们在一个关于<strong>应用生命周期管理</strong>的行业会议上相遇。勒内负责汽车电子控制单元的电子 / 电气信息技术，宝马集团正在寻找**基础设施工具来整合并扩展其软件交付工具链。**这些工具是为了支持新 i3 和 i8 电动汽车项目所要求的软件组件创新不断加快的步伐而需要的。</p>
+<p>和会议上的其他人一样，勒内希望将敏捷和 DevOps 工具及方法引入企业 IT 环境。但让我着迷的是勒内试图解决的问题的范围。他不仅需要连接数千名内部专家 —— 包括开发人员、测试人员和运营人员 —— 他还需要将<strong>数十家软件供应商整合到同一个工具链中</strong>。每个供应商都为在现代环境中运行的超过一亿行代码做出了贡献。</p>
+<p>所有的软件，以及各种内部的软件交付团队，都必须连接起来。例如，如果宝马集团的持续集成环境在供应商的软件中发现了一个缺陷，那么这个缺陷需要流入供应商的价值流，然后修复后的软件需要流回宝马集团。以宝马集团将 i 系列推向市场的速度，在像 i 系列这样的新事物上进行迭代，不可能通过传输电子表格和报告来实现。</p>
+<p>在我们解决这个问题的整个过程中，我偶尔会和雷内开玩笑说，如果我们成功了，他应该带我去 i 系列工厂，让我从生产线上开走一辆车。结果，雷内把我的话当真了。</p>
+<p>雷内职业生涯的第一阶段是在莱比锡工厂从事大规模生产工作。该工厂是世界上先进大规模生产和制造的终极范例之一。由此产生的参观。</p>
+<p>对宝马集团莱比锡工厂的参观是我职业生涯中最具教育意义和启发性的经历之一。在整整两天的时间里，我在工厂车间里四处走动，看到了大规模生产时代最先进的价值流的实际情况，我所看到和学到的东西让我对我们在软件时代成熟曲线中的位置有了新的认识。</p>
+<p>在这本书中，我将带你了解我在工厂车间的感悟，因为它们说明了我们在企业软件交付方法上的错误。在我的记忆中，我已尽最大努力在本书每一章开头的宝马故事中为你重现参观莱比锡工厂的体验。</p>
+<p>想象一下勒内，他从一个每七十秒就有一辆完美无瑕的汽车下线的世界，被抛进了我们所熟知的企业 IT 世界。这种对比再鲜明不过了，在那一刻我意识到，这个巨大的差距正是勒内想让我看到的。这个差距远远超出了我们从敏捷思想领袖那里听到的内容，他们试图向 IT 专业人员传授精益方法，比如丰田生产系统（TPS）开创的那些方法。这个差距表明企业 IT 组织与生产方式之间的脱节程度。在莱比锡工厂，最让我惊叹的是业务线和生产线从生产线一直到反映在建筑群架构中的业务需求之间无缝连接的方式。</p>
+<p>考虑当今的企业 IT 世界。<strong>企业通过组织结构图和成本中心来衡量 IT</strong>。绝大多数企业 IT 组织没有正式的价值流概念，也没有衡量业务价值如何交付。也许最令人震惊的是，他们甚至对生产单位是什么都没有达成一致。敏捷转型不断失败，无法扩大规模，人们本能地将“文化”归咎于此。一开始试图提供 DevOps 的端到端好处的努力被局限于只涉及“<strong>代码提交到生产环境”的转型——这只是价值流的一个狭窄部分</strong>，以至于企业很少看到好处或注意到。</p>
+<p>底线是，企业 IT 组织及其所处的企业尚未跟上宝马集团等公司已经掌握的上一次技术革命的基础设施和管理技术。领导层坚持泰勒主义观点，这种观点是在钢铁时代确立的，在那个时代，IT 组织与…… 相隔离。</p>
+<p>企业、功能专业化且彼此脱节。然而，随着数字化颠覆的威胁不断增长，这些专业人员却被期望提供越来越多的成果。许多信息技术专业人员知道这是灾难的根源，但技术语言和商业语言之间的差距尚未跨越。结果是，与数字初创企业或科技巨头相比，这些公司的软件交付效率极其低下。</p>
+<p>这种思维方式具有严重的影响。如果目前的发展轨迹不改变，构成世界经济支柱的现有公司将处于内在的重大劣势。这是否意味着在几乎每个企业都在向软件公司转变的时代，每个行业的大型成熟组织都注定要失败？在多个市场中，一种令人不安的趋势已经显而易见。例如，在软件时代开始时，《金融时报》股票平均时间……</p>
+<p>交换周期曾是 75 年；如今，它不到 20 年且还在缩短。</p>
+<p>2</p>
+<p>本书中总结的研究和数据带来了一线希望。组织能够而且必须做出改变，以创建软件创新引擎，确保自身的竞争力和生存。为此，我们需要从以往技术革命的历史中吸取教训，而不是假设我们正处于一个完全独特的时刻。历史可能不会重演，但佩雷斯的模型表明，历史确实有其节奏。</p>
+<p>制造实体商品（无数组织在上个时代已精通此道）与创造数字体验之间的差异巨大。历史背景也有所不同。如我们将看到的那样，盲目复制在大规模生产时代行之有效的方法用于软件时代可能会带来灾难性的误导。我们需要一种新的方式来思考和管理<strong>大规模软件交付</strong>。这本书提出了这种新方法。</p>
+<p>我对莱比锡工厂之行最重要的部分是一个不安的认识，即盲目追随制造业的脚步与完全不追随一样充满危险。软件生产则大不相同 —— 随着软件系统规模的增长，我们改进和管理它的能力会下降。即便如此，我们已经学会了扩大电力分配、汽车生产和其他复杂制造过程的规模，我们也将学会扩大软件生产的规模。问题是，除了少数例外，如科技巨头，绝大多数组织尚未学会如何有效地扩大软件交付系统的规模。</p>
+<p>规模软件交付的市场需求带来了大多数组织都无法应对的问题。我们需要一套新的业务。</p>
+<p>了解大规模软件交付的概念以及一种用于管理它的新型框架，以便我们的企业具有进化的可塑性。本书的第一部分探讨了问题的范围和紧迫性，并介绍了克服该问题的框架。</p>
+<p>在第一部分，我们将涵盖：</p>
+<p>你的企业为何会受到数字颠覆的影响，以及你的思维需要如何改变才能在未来十年中生存下来。</p>
+<p>三种颠覆类型以及哪种类型适用于你的企业。</p>
+<p>《软件时代 “部署期” 概述以及理解它为何对您的数字化转型方法至关重要》</p>
+<p>Flow 框架介绍及软件价值流概念。</p>
+<p>定义业务价值交付的四个流项概述</p>
+<h3 id="Chapter-1">Chapter 1</h3>
+<h4 id="The-age-of-software">The age of software</h4>
+<p>每一次技术革命都会导致那些掌握了新生产方式的人颠覆现有的企业。例如，在短短几年内，优步证明了一个设计精良、在互联网规模上部署的单一屏幕可以颠覆整个行业。随着风险资本推动颠覆，大量初创企业正在威胁着每个企业的各个方面。与此同时，科技巨头继续向新市场扩张。谷歌和脸书几乎占据了全球数字广告支出的 90%，而亚马逊有望在零售业务中占据大部分份额，并利用这一优势向邻近市场扩张。每一位企业领导者都需要弄清楚这何时以及如何影响他们，否则他们的组织就有在未来十年无法生存的风险。</p>
+<p>每年，故事和统计数据看起来都更加可怕。2017 年，Equifax 的首席执行官因安全漏洞而丢了工作。然后，在一次国会听证会上，他将问题归咎于一名软件开发者。没有一家掌握大规模生产时代的公司的首席执行官会将如此灾难性的业务失败归咎于他们生产系统中如此看似微不足道且易于管理的事情。（我们将在第 6 章进一步剖析 Equifax 的情况。）</p>
+<p>很明显，没有哪个经济领域是安全的，这种破坏正在加速，而那些负责世界大部分经济的非常有才华且受过高等培训的商业领袖们并没有一套正确的工具和模型，以便在软件时代正确评估风险并利用机会。</p>
+<p>数字颠覆的话题并不新鲜，已有大量文献记载。然而，卡洛塔・佩雷斯的作品的重要性在于，对于那些不适应新生产方式的公司来说，颠覆是一个可预测的结果。那些掌握了新生产方式的公司，即使在市场中发展较慢的领域，也将取代那些需要更多时间适应的公司。</p>
+<p>适应。例如，提供一流数字体验的保险公司将取代没有提供这种体验的公司。如果保险行业自身在数字化方面行动不够迅速，那么一家科技巨头可能会进入这个市场，寻找新的增长动力，将特定公司的取代转变为整个市场的颠覆。本章中的例子将强调，没有任何企业是安全的 —— 无论它处于哪个行业或市场 —— 因为我们正在经历软件时代的转折点。</p>
+<p>这本书并非关于应对颠覆的商业策略。诸如杰弗里・摩尔的《赢在区域：在颠覆时代组织起来竞争》等书籍讨论了<strong>如何调整商业策略以进行颠覆进攻或防御</strong>。然而，问题不再是公司没有意识到自己容易受到颠覆的影响。2017 年，非科技类《财富》500 强公司对科技公司的投资首次超过了科技公司自身的投资。这是一个迹象，表明公司领导者开始看到颠覆的范围，并利用这一点推动他们的数字化转型。</p>
+<p>然而，正如我们将在本章中了解到的那样，问题在于这些转型正在失败。根据 Altimeter 的报告《2017 年数字转型现状》，<strong>失败的主要原因是数字人才和专业知识短缺（31.4%）、普遍的文化问题（31%）以及将数字转型视为成本中心而非投资（31%）</strong>。这些都不是转型失败的根本原因；相反，它们是企业领导者和技术人员之间根本脱节的症状，我们将在本书中对此进行回顾。这并不是说人才不重要；人才很重要。但是，以项目为导向的方法会创造出将人才推出组织而不是吸引人才进入组织的条件。</p>
+<p>底线是，即使有最好的策略和意图，软件交付能力也是数字化转型的瓶颈。进展太少且速度太慢，业务方不明白为什么会这样，也不知道该怎么办。</p>
+<p>这一章将首先回顾数字颠覆是如何影响经济的不同部门的。它将探讨三种类型的颠覆，并讨论软件交付能力对于应对每种颠覆的关键作用。对过去技术革命的总结将确定我们应对这一次革命所需的东西。这一章将以介绍“三个……”作为结尾。</p>
+<p>导致 “流框架” 的顿悟 —— 这是打破转型失败循环并确保你的公司能够在未来十年生存下去的机制。</p>
+<p><strong>BMW  TRIP Toward the production line</strong> </p>
+<p>走进德国宝马集团莱比锡工厂是一种令人惊叹的体验。我的接待人是雷内・特斯特罗特和弗兰克・舍费尔。弗兰克是工厂经理，负责整车集成。巨大的中央大楼由建筑师扎哈・哈迪德设计，她设计了我们这个时代一些最独特的建筑。这种毫不掩饰的科幻建筑给人一种步入未来的感觉。进入大楼后，最引人注目的景象是生产线的一段高架且外露的部分，高高耸立在视线之上（图 1.1）。车身在悬挂式传送带上移动，然后在一片办公桌的海洋上方缓缓消失在视线之外。生产线对任何进入大楼的人和所有员工来说都是可见的，整个大楼都是围绕着它设计的。大楼的每一部分都有与制造和价值交付相关的一些实际方面。一切都体现了大规模生产时代的大师之一的成熟度和规模。</p>
+<p>吉恩·金，《凤凰项目：一个关于 IT、DevOps 和助力企业成功的小说》以及《DevOps 手册》的导师和合著者，曾告诉我。</p>
+<p>这句话让我震惊，但从许多传统企业在软件时代缓慢的发展速度来看，它也解释了很多问题。整个行业缓慢的发展速度比 2%这个数字本身更令人不安。我开始有动力去亲眼看看大规模生产时代的最终成果是什么样子，这样我就可以从中汲取每一点经验教训，并将这些概念应用到软件时代。</p>
+<p>在我参观莱比锡工厂的一年前，宝马集团通过“下一个百年”活动庆祝了其成立一百周年，该活动认可了过去一个世纪的卓越制造，并展示了宝马集团对未来出行的愿景。活动以施乐帕克研究中心的艾伦·凯的一句话开场，他说：<strong>“预测未来的最好方法就是创造未来</strong>。”最让我印象深刻的是，接下来的一百年会有多么不同。</p>
+<p>“将会来自于最后。”</p>
+<p>汽车行业目前正处于一个转折点，**基于软件的创新开始超越发动机性能和汽车体验其他物理方面的渐进式提升。**2017 年，特斯拉的市值超过了福特。鉴于 2016 年特斯拉生产了 7.6 万辆汽车，而福特生产了 670 万辆，且特斯拉的收入为 7 亿美元，投资者对特斯拉所体现的尚未实现的变革潜力下了很大的赌注。</p>
+<p>billion 与福特的 1520 亿美元。8</p>
+<p>在 “下一个 100 年” 展示中，宝马集团明确表示他们将继续保持领先地位，基于他们迅速将电动 i3 和 i8 汽车推向市场的成就。但这并不是 “下一个 100 年” 愿景中最有趣的部分，该愿景描绘了一个拥有智能助手、增强型和自动驾驶以及重新定义汽车所有权概念的新型出行解决方案的未来。“下一个 100 年” 愿景中最有趣的部分是，宝马集团预测的创新都由软件驱动，正如宝马集团首席执行官的一项声明所强调的那样，该声明称在未来宝马集团期望……more than half its staff to be software developers.10</p>
+<p>我在走访的大多数《财富》500 强公司中都看到了类似的转折点，无论它们处于哪个细分市场。是不是每个行业都会以这种方式被颠覆，以至于在未来几年里超过一半的员工将是 IT 专业人员？考虑到吉恩 “完成了 2%” 的说法，从公司组织和管理的角度来看，所有这些企业组织都为这种转变做好准备了吗？宝马集团在掌握了上一次重大技术革命后是否具有一些根本优势？我们可以从这家工厂的运营方式中学到什么，我们能将其应用于大规模软件的构建方式吗？</p>
+<h4 id="No-sector-ls-Safe"><strong>No sector ls Safe</strong></h4>
+<p> 没有那个行业是安全</p>
+<p>在过去的二十年里，最早接触到向数字通信和协作转变的公司，如柯达和百视达，是一些最早的被颠覆的受害者。现在的不同之处在于，整个经济都面临着被颠覆的风险。</p>
+<p><strong>考虑佐尔坦・肯尼西提出的四个经济部门。第一产业涉及从地球上提取资源，第二产业涉及加工和制造，第三产业涉及服务业，以及第四产业涉及知识工作。</strong></p>
+<p>11 通过软件改进发现、提取和物流的能力使第一产业中的一些公司比那些尚未掌握这些基于软件的解决方案的公司具有根本优势。虽然提取和技术的进步仅带来渐进式的收益，但软件和 IT 系统可以推动更具变革性的发现和效率。例如，自然资源和能源公司越来越多地采用软件和数据驱动的方法进行发现和提取。底线是，没有任何企业或部门能免受数字颠覆的影响，尽管颠覆的速度会因部门和企业而异。</p>
+<p>随着我们从第一产业转向第二产业，软件时代带来的转变变得更加显著。大规模生产的商品，如汽车，已成为商品，其差异化越来越多地来自数字体验。汽车现在是带轮子的电脑。虽然你的笔记本电脑的微软 Windows 操作系统可能有 6000 万行代码，但在 2010 年，汽车已经包含了大约一亿行代码。对于许多汽车制造商来说，这使得汽车中软件的单位成本比发动机更昂贵（图 1.2）。这仅仅是颠覆的开始。自动驾驶系统将使汽车中的软件数量成倍增加，发动机的电气化也将其其余核心部件转变为软件系统。</p>
+<p><img src="/notes-media/img/image-20250104170721963.png" alt="image-20250104170721963"></p>
+<p>转型，其中近一半的工作与软件相关。14 我们的实体产品越来越依赖互联体验，而且，正如我们将在第 7 章中了解到的，<strong>工厂、制造商和装配流程本身也正在被软件所改变</strong>。</p>
+<p>我们在第三产业（服务业）中看到的数字颠覆和变革令人惊叹。这个故事的软件方面始于 1997 年，当时网飞（Netflix）给电影租赁业务带来了变革。在那个时候，互联网带宽太稀缺，无法将数字电影传输到家庭。受计算机科学家安德鲁・S・塔嫩鲍姆（Andrew S. Tanenbaum）著名的数学问题启发，这个问题要求学生计算一辆载着磁带穿越美国的旅行车的带宽，里德・哈斯廷斯（Reed Hastings，网飞的联合创始人兼首席执行官）认定软件可以应用于 DVD 的选择和物流配送。不久之后，风险投资家马克・安德森（Marc Andreessen）在他的开创性文章《为什么软件正在吞噬世界》中把联邦快递（FedEx）描述为 “一个恰好有卡车、飞机和配送中心附属的软件网络”。网飞和联邦快递所意识到的是，软件可以在物流方面带来指数级的收益。</p>
+<p>即便如此，我们仍处于零售和物流颠覆的早期阶段。**亚马逊现在能够将供应链数据与物流和消费者消费习惯相结合，**这可能会颠覆店面本身。正如沃尔玛通过掌握大规模生产时代的方法颠覆了其他零售商一样，亚马逊现在也通过颠覆供应链并呈现出几乎相同的市场份额增长态势来对沃尔玛和其他零售商做同样的事情。从这些趋势中可以清楚地看出，那些在将软件应用于消费者体验和物流方面即使获得了很小的早期优势的公司，也已经在该行业的其他公司中赢得了看似不可逾越的优势。</p>
+<p>最后，第四产业 —— 由技术、媒体、教育和政府等知识型工作产业组成 —— 由于是最新且最具可塑性的产业，在软件如何影响分销和基础设施方面，以更快的数字变革速度发展。例如，**在软件时代，我们已经看到了从电子邮件到即时通讯、再到电话会议和数字助手等多波协作技术浪潮。**无论哪个产业，我们现在都有足够多的来自颠覆的数据点，使这一趋势变得清晰。它正在每个产业中发生，而且速度似乎在加快。公司。</p>
+<p>那些利用了软件创新的人是赢家，而那些落后的人则会衰落或被 “Blockbustered”。</p>
+<h4 id="Types-of-Disruption-">**Types of Disruption **</h4>
+<p>破坏的类型</p>
+<p>虽然颠覆性的例子比比皆是，但并非所有的颠覆都是一样的。为了理解软件交付的影响将如何影响你的业务，我们需要一个不同类型的数字颠覆模型。在《跨越鸿沟：zone to win》中，杰弗里・摩尔提供了一个模型，我将在本书中以此为基础。摩尔的三种颠覆类型是<strong>基础设施模型、运营模型和商业模式颠覆</strong>。对于软件时代的大多数公司来说，应对颠覆将需要掌握软件交付。然而，你的企业为了进攻或防守所需的颠覆类型将决定你如何塑造你的 IT 投资和价值流。</p>
+<p><strong>基础设施模式的颠覆最容易解决。它们涉及客户获取特定产品或服务方式的变化；例如，要求你的产品通过社交媒体进行营销，但不改变你的销售方式。我们看到的基础设施模式的颠覆是具有竞争差异的数字营销和传播。数字服务正在与支撑信任经济的社交网络融合。</strong></p>
+<p>运营模式的颠覆依赖于使用软件来改变消费者与企业的关系。例如，航空公司现在必须提供一流的手机体验，否则就有失去乘客预订的风险。在这里，运营模式从根本上发生了变化，因为代理商和呼叫中心的作用在逐渐减弱。在这方面与初创公司竞争需要一流的数字体验。例如，一家消费者银行可能会被新的金融服务初创公司颠覆，这些初创公司以更好的个人理财管理功能取悦用户。</p>
+<p>商业模式颠覆涉及将软件和技术更根本地应用于企业。这可能意味着软件和物流创新消除了消费者获取商品的一个主要手动步骤，例如去商店。摩尔指出，成熟的企业无法自我颠覆，因此，必须建立一个创新引擎，使他们能够抓住下一波在市场中出现的颠覆浪潮。</p>
+<p>无论你的业务有哪些例子，为了在这个时代取胜。</p>
+<p>软件。你必须准确界定哪种或哪些类型的中断会使你的业务面临风险。无论你处于何种情况，下一步都涉及在软件交付方面进行重大投资。该计划的成功以及你赢得市场的能力将取决于你定义、连接和管理软件价值流的能力。</p>
+<h4 id="Unbundling-of-every-industry">Unbundling of every industry</h4>
+<p>各行业的分拆 </p>
+<p>考虑你的下一辆车。数十家初创公司正在竞相赢得你的汽车出行体验的一部分。这涵盖了互联汽车技术、自动驾驶以及轮胎充气和汽车维修管理等方面。这些初创公司彼此竞争，也与传统上拥有汽车用户体验所有方面的现有汽车供应商竞争。从区域管理的角度来看，这些只是基础设施模式的颠覆。像 Lyft、Uber 和 Car2Go 这样的<strong>公司正处于运营模式和商业模式的颠覆之中，它们在所有权层面上改变了消费者与汽车的关系。</strong></p>
+<p>转向金融领域，银行一直是技术采用的领导者之一。他们的业务从根本上说是一种知识型工作业务，他们能够获得的任何技术优势都可以迅速转化为市场优势。出于这个原因，银行一直是新技术的早期采用者；例如，许多银行在其他企业甚至还没有考虑使用由一群没有报酬的个人生产的不受支持的软件之前，就已经使用开源软件多年了。在过去的十年中，银行一直在为数字颠覆做准备，在其组织中雇佣了数以万计的 IT 工作者。作为规模的一个例子，美国银行全球技术与运营主管凯瑟琳・贝桑特（Catherine Bessant）。</p>
+<p>美国有 95000 名员工和承包商向她汇报。20</p>
+<p>有数百家风投支持的初创企业瞄准了银行业务的关键方面。每家企业都提供不同的产品或服务，这些产品或服务之所以存在，是因为它们能够与现有企业提供的产品或服务竞争。鉴于我们在金融科技领域看到的融资规模，2016 年的一份报告发现，超过 1000 家金融科技（金融技术）公司获得了融资。</p>
+<p><span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">105</span><span class="mord mathnormal">bi</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">nin</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal">u</span><span class="mord mathnormal">n</span><span class="mord mathnormal">d</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">t</span><span class="mord mathnormal">ha</span><span class="mord mathnormal">t</span><span class="mord">’</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span></span></span></span></span>867 billion.21</p>
+<p>一个根本性的转变正在发生。即使配备了数以万计的员工，现有企业创建和交付软件的速度似乎也为颠覆留下了大量且众多的机会。并且……</p>
+<p>并非为缺乏讨论或投资以领先于初创企业，也不是因为缺乏找到创造性的方法来对颠覆者进行进攻或防御。由于他们能够快速构建和迭代软件，并且因为他们不受现有客户或遗留系统的束缚，初创企业正在创新客户与从健康保险到加密货币等各种服务中的产品进行交互的方式。</p>
+<p>上面的例子说明了由风险资本资助的初创企业是如何颠覆根深蒂固的企业和行业的。另一个颠覆的力量是掌握了软件生产的科技巨头。无论颠覆的力量是什么，在制定行动计划之前，我们必须审视我们在这场技术革命中的位置，以及即将到来的变革和颠覆浪潮会是什么样子。</p>
+<h4 id="We-Are-entering-the-deployment-Priod">We Are entering the deployment Priod</h4>
+<p>我们正在进入部署期 </p>
+<p>这些问题的答案对我们的组织至关重要，因为它们可以帮助指导我们在数字战略中投资什么以及如何投资，以便在转折点中生存下来。**转折点是安装期和部署期之间的时期，**其特点是金融崩溃和复苏。如果不理解这些问题，我们的努力可能会像投资马队在蒸汽和铁路时代竞争一样被误导。正如我们将在下一章中看到的那样，这正是大多数企业 IT 组织正在做的事情。</p>
+<p>有几种理论可以解释技术创新周期及其对经济的影响。康德拉季耶夫周期（被描述为因技术创新和创业精神而产生的 50 年扩张、停滞和衰退周期）以及创造性破坏周期（工业突变的过程，不断从内部彻底改变经济结构，摧毁旧的结构并不断创造新的结构）是约瑟夫・熊彼特在 20 世纪 30 年代的著作《资本主义、社会主义与民主》中提出的概念。22 经济学家卡洛塔・佩雷斯在她的深刻著作《技术革命与金融资本》中对这些概念进行了扩展。23</p>
+<p>经济学家们对康德拉季耶夫周期的成因存在分歧。</p>
+<p>并且持续时间。例如，虽然一些人预测当前这一波浪潮将会……</p>
+<p>更长的是，其他人提出波浪一直在连续缩短。24</p>
+<p>虽然目前这一波的准确长度尚无法确定，但佩雷斯的工作为我们提供了一个模型，用于区分上一个时代和这个时代的技术体系，并利用它更好地理解如何在软件时代掌握生产资料。（佩雷斯工作的总结可在博客文章 “部署时代” 中找到。）</p>
+<p>Jerry Neumann，一位杰出的风险投资家。) 25</p>
+<p>为了理解我们在软件时代所处的位置，佩雷斯理论中最重要的方面是新技术系统的安装期和部署期的概念（图 1.3）。在安装期，大量金融资本，如风险资本，被用于利用新的技术系统，该系统已经形成了技术、公司和资本获取的临界质量，以便颠覆之前的时代。这正是我们在创业公司的寒武纪大爆发中所看到的。</p>
+<p><img src="/notes-media/img/image-20250104171641943.png" alt="image-20250104171641943"></p>
+<p>安装期之后是部署期，在这个时期，掌握生产资料的公司在经济和新基础设施中所占的份额越来越大。这就创造了一个时期，生产资本（其中很大一部分由那个时代的新技术巨头控制）开始取代初创企业和金融资本。生产资本是不同的。</p>
+<p>与金融资本不同，它由公司经理控制，他们在现有公司内部寻求创新以提高生产效率（而金融资本则倾向于具有高倍数的激进且高风险的创新）。在部署期间，金融资本和初创企业开始寻找新的发展方向，对下一次技术革命可能是什么进行押注。</p>
+<p>这种模式已经重复了四次，如表 1.1 所示。佩雷斯在她的书中提供了证据，表明我们正处于第五次迭代之中。27 软件时代大约始于 1970 年，随着微处理器的引入而开始。2002 年，佩雷斯预测，在转折点（即安装期和部署期之间的点）附近，新的生产主导者将积累足够的财富和控制权，以至于政府将开始实施监管，而我们现在正看到这方面的证据。</p>
+<p>that today.28</p>
+<p>我们无法确切地确定我们在转折点上的确切位置，也不知道它会持续多久。我们不知道这个时代是否会与其他时代有实质性的不同。在一次采访中，佩雷斯告诉我这一点。</p>
+<p>特定的转折点似乎不断地将自身拖延得越来越久。29</p>
+<p>然而，当我们了解这个时代的确切形态时，再做任何事情都为时已晚，因为那些早早掌握新生产方式的人将已经取代了那些行动迟缓的人。</p>
+<p><img src="/notes-media/img/image-20250104171747577.png" alt="image-20250104171747577"></p>
+<p><img src="/notes-media/img/image-20250104171814876.png" alt="image-20250104171814876"></p>
+<p>表 1.1：技术革命 30</p>
+<p>从今天的角度来看，我们看到金融资本在发挥作用的持续例子，比如由风险资本资助的众多新创企业所引发的各种行业 “分拆” 的故事。然而，我们也开始看到生产资本的影响。</p>
+<p>考虑 Jawbone，一家灵活的数字原生企业，由顶级风险投资家资助，不缺资金。Jawbone 创造了多个定义品类的产品，从蓝牙耳机到无线扬声器再到可穿戴健身追踪器。2006 年至 2016 年间，Jawbone 从顶级公司那里筹集了 9.3 亿美元的金融资本，但最终以资产出售告终，使其成为第二昂贵的由风险资本支持的初创企业。</p>
+<p>of all time.31</p>
+<p>即使有创新和优秀产品的结合，Jawbone 还是输给了像苹果这样的生产资本公司。智能手表创新者 Pebble 也因类似原因在 2016 年 12 月关门大吉。除了这个不断扩大的消费硬件初创公司的墓地之外，它正在变成越来越难以推出一家新的社交媒体公司，使其在被脸书收购或摧毁之前达到规模。33 这些不断增长的生产资本效应是我们正在通过转折点的信号。</p>
+<p>虽然我们不知道这个转折点会持续多久，但如果它遵循佩雷斯的五十年周期模型，并且我们知道自 20 世纪 70 年代以来我们一直在看到安装期的迹象，那么我们可以假设随着时间的推移，我们越来越接近部署期。一旦我们进入部署期，那些没有适应新生产方式的公司在相关性和市场份额方面将会下降。在未来十年，相当多的公司将失去其在市场中的地位。我们已经看到其他公司试图在有意义的时间框架内扩大其 IT、敏捷和现在的 DevOps 转型规模，但都失败了。对于许多这些公司来说，如果他们想在最新的技术时代有一线生机，更不用说下一个时代了，这是最后的机会</p>
+<h4 id="Three-Epiphanies">Three Epiphanies</h4>
+<p>三个顿悟</p>
+<p>我的职业生涯一直致力于理解和改进大规模软件的构建方式。我花了近二十年的时间从事新编程语言和软件开发工具的工作，并有机会与世界上一些最优秀的技术专家合作。但我已经意识到，由于我们正处于转折点，技术改进不再是瓶颈。技术改进将仍然相关，但只是渐进式的，通过新的编程语言、工具、框架和运行时为组织带来的生产力提升不到百分之十。</p>
+<p>相比之下，业务与信息技术之间的脱节非常严重，信息技术组织内部的脱节也是如此。企业架构的常见方法是错误的，因为它往<strong>往侧重于技术人员的需求，而不是业务价值的流动</strong>。与此形成对比的是宝马集团的莱比锡工厂，整个工厂是围绕不断变化的业务需求设计的，从建筑物的可扩展性到生产线本身的模块化。</p>
+<p>对我来说，意识到技术人员的追求正在带来递减的回报并不是在一个顿悟的时刻出现的。相反，我有不同的认识，每一个认识都促使我在职业生涯中做出重大转变。这些 “顿悟” 中的每一个都涉及一系列的经历，这些经历重塑了我对软件交付的看法，并让我彻夜难眠。</p>
+<p>我慢慢地意识到我以前的许多假设是有缺陷的。</p>
+<p>我的第一个顿悟来自于我作为一名开发人员从事一种新编程语言的第一份工作。在那段时间里，我意识到我们正在解决的问题远远超出了源代码的范围。第二个顿悟来自于与企业 IT 领导者的数百次会议的积累，这让我清楚地认识到，管理软件交付和转型的方法从根本上就是错误的。第三个顿悟是在我参观宝马工厂期间产生的，它揭示了我们用于扩展软件交付的整个模式都是错误的。（我将在第三部分详细阐述这些顿悟。）每个顿悟都是通过我们尝试 —— 并失败 —— 将以前技术革命的概念应用于这次革命而联系在一起的。总而言之，我的三个顿悟是：</p>
+<p>顿悟 1：<strong>随着软件规模的扩大，由于架构与价值流之间的脱节，生产力会下降，浪费会增加。</strong></p>
+<p>顿悟 2：<strong>脱节的软件价值流是大规模软件生产力的瓶颈。这些价值流的脱节是由项目管理模型的错误应用引起的。</strong></p>
+<p>顿悟 3：<strong>软件价值流不是线性制造过程，而是需要与产品对齐的复杂协作网络。</strong></p>
+<p>第一次顿悟 —— 当开发人员与价值流脱节时，软件生产力会下降，浪费会增加 —— 是个人危机的结果。在施乐帕克研究中心担任研究员时，我是一名开源软件开发人员，每周持续工作 70 到 80 个小时。大部分时间都花在编码上，而且经常睡在办公室的桌子下，以完成这一老套的行为。在鼠标和键盘前花费的大量时间导致了看似无法克服的重复性劳损（RSI）。随着一次又一次的发布所需的英勇行为和编码，情况越来越糟，我的老板反复警告我，他已经看到几个帕克研究中心的职业生涯以这种方式结束。由于员工护士除了建议小心并提供布洛芬之外几乎没有提供任何帮助，我意识到每一次鼠标点击都很重要。</p>
+<p>这促使我通过加入盖尔・墨菲以及她在不列颠哥伦比亚大学创建的软件实践实验室来进行博士研究。由于鼠标点击成为我的限制因素，我开始通过检测我的操作系统来跟踪每次点击的事件，并且我逐渐意识到大多数</p>
+<p>我的导致 RSI（重复性劳损）的活动并没有产生价值；我只是在窗口和应用程序之间点击，以找到并重新找到完成工作所需的信息。</p>
+<p>然后，我将研究范围扩大到在 IBM 工作的六位专业开发人员，并扩展了监测范围，还添加了一个实验性的开发人员界面，以便围绕价值流调整编码活动。结果让盖尔和我都感到惊讶，所以我们决定将研究扩展到 “实际环境” 中，招募了九十九位在各自组织中工作的专业开发人员，让他们发送所有开发活动的前后跟踪记录。（完整的研究结果在第 7 章中有详细介绍，并在国际软件基础研讨会中发表。）</p>
+<p>Engineering.)34</p>
+<p>结论很明确：随着我们软件系统的规模不断扩大，架构与为最终用户添加数百个被请求功能之一所需的努力之间的距离也在增加。我们使用的协作和跟踪系统的数量也在增加，从而导致了更多的浪费和重复输入。这些发现激励了盖尔和我创立了 Tasktop，一家致力于更好地理解这个问题的软件公司。</p>
+<p>几年后，在对一家大型金融机构的工具链进行概述时，我有了第二次顿悟。这种忙碌无效率的问题并非开发人员所独有；对于任何参与软件交付的专业人员来说，从业务分析师到设计师、测试人员以及运营和支持人员，这都是浪费的一个关键来源。参与软件交付的专业人员越多，他们之间的脱节就越多，花在忙碌无效率、重复数据输入或无休止的状态更新和报告上的时间就越多。</p>
+<p>我个人面临的生产力下降和不断折腾所带来的挑战，在数千名 IT 人员中大规模地显现出来。员工越多、工具越多、软件规模和复杂性越大，这个问题就变得越严重。例如，在对一家银行的软件交付实践进行内部研究后，我们确定，平均而言，每个开发人员和测试人员每天至少在两个不同的敏捷和问题跟踪工具之间重复输入数据上浪费二十分钟。在某些情况下，这一浪费时间会增加到每天两小时，而一线经理的开销甚至更高。当我们更深入地研究开发人员如何分配时间时，我们发现开发人员在键盘前的有效工作时间中只有 34% 用于读写代码。35 然而。</p>
+<p>这是开发人员被支付报酬去做并且他们喜欢做的事情。这是一个深刻且系统性的问题。</p>
+<p>当盖尔和我开始更多地与企业 IT 组织合作时，我们意识到这个世界与更加简单、以开发者为中心的开源、初创企业和科技公司的世界有多么不同，但我们缺乏关于企业 IT 交付的实证数据。在宝马集团工厂，我只需向下看生产线就能看到工作流程。不幸的是，没有关于工作如何在构成企业 IT 组织价值流的工具之间流动的数据。但我们现在有了广泛的企业 IT 客户基础，包括近一半的《财富》100 强企业，并意识到我们有一个非常独特的数据集，因为这些组织中的大多数都与我们分享了他们价值流中涉及的所有工具以及在这些工具之间流动的工件。我们从这些组织中收集并分析了 308 个敏捷、应用生命周期管理（ALM）和 DevOps 工具链。一旦我们看到这些工具是如何相互连接的，我们就开始将这些工具网络称为工具网络。（更多内容见第 8 章）在这个过程中，我亲自会见了其中两百多个组织的 IT 领导，以更好地理解我们在数据中看到的内容。</p>
+<p>想到那 308 张价值流图，在走过莱比锡工厂长达十多公里（约六英里）的生产线时，我感受到了第三次顿悟的核心正在形成。我们对软件价值流的整个思考模式是错误的。它不是一条类似于汽车生产线的管道或线性制造流程；<strong>它是一个复杂的协作网络，需要与 IT 组织创建的内部和外部产品以及业务目标相连接和对齐</strong>。</p>
+<p>这就是数据告诉我们的情况，但这种方法与企业组织管理 IT 投资的项目导向和成本导向心态完全相悖。这些企业工具网络的基本事实（即通过直接观察了解到的事实）告诉我们，IT 领域的所有专家已经开始通过采用敏捷团队和 DevOps 自动化以这种新方式工作，但这些专家缺乏有效做到这一点的基础设施和业务支持。</p>
+<p>另一方面，企业进一步失去了查看或管理技术人员所做工作的能力。领导层似乎在使用一两个技术时代以前的管理工具和框架，而技术人员则感到压力，要以一种用这些过时方法永远无法满足的速度和反馈周期来生产软件。</p>
+<p>在转型举措中，业务人员与技术人员之间的差距正在扩大，而这些举措本应缩小这一差距。我们需要找到更好的方法。</p>
+<h4 id="结论">结论</h4>
+<p>宝马集团莱比锡工厂的一个惊人效果是，它将游客和员工置于大规模生产时代部署期的最后阶段与软件时代安装期的并列位置。你可以看到先进制造和工厂自动化的巅峰之作，生产出越来越多由软件驱动的汽车。相比之下，世界顶级企业 IT 组织更像是近三百家试图掌握生产的汽车制造商。</p>
+<p>20 世纪的底特律，但是在福特等企业崛起的同时走向了衰落。36</p>
+<p>在这一章中，我们看到了由于软件时代的成熟而正在发生的变化规模。最大的问题是，在管理层面上，成熟企业正在使用以前时代的管理和生产方法，因此在这个时代失败了。在下一章中，我们将深入研究从企业 IT 组织收集的证据，这些证据显示了这个问题的症状，并且我们将强调组织转型失败的原因。之后，我们将探索解决方案。</p>
+<h3 id="Chapter-2">Chapter 2</h3>
+<h4 id="From-project-to-product">From project to product</h4>
+<p>转型可能是信息技术中最被过度使用的术语。然而，从技术革命的历史视角来看，这种过度使用并不那么令人惊讶，因为它源于公司面临的一个生存问题，即需要拥抱变革才能在转折点中生存下来。</p>
+<p>在这个时代，生存取决于组织提供软件产品和数字体验的能力。为了强调其规模和紧迫性，市场研究公司国际数据公司（IDC）估计，到 2020 年，数字化转型将带来 18.5 万亿美元的机遇，占全球 GDP 的 25%。1 那些成功的组织将获得回报，并取代那些不成功的组织。许多大型组织已经启动了他们的转型计划；其他组织则注意到他们在软件方面的投资在悄然增加，而首席财务官往往是第一个意识到明年的预算和人员编制中有多少与信息技术相关的人。</p>
+<p>在大规模生产时代，<strong>信息技术是一个独立的孤岛</strong>，发挥着辅助功能，提高其他生产资料的生产力，例如促进通信或实现销售队伍自动化。在这方面，信息技术将继续发挥关键的辅助作用；例如，工业 4.0 所设想的那种工厂自动化将通过工业 4.0 倡议中提出的 “信息物理系统” 在大规模生产中产生显著的生产力成果。然而，这些都是上一个安装期的延伸，与当前正在发生的市场和商业模式的变化相比，它们的破坏性较小。但在软件时代，数字技术已成为组织的核心，不能被划分到一个孤立的部门。</p>
+<p>那么，我们的组织和管理技术需要如何适应呢？在本章中，我们将研究两次转型失败的案例，尽管它们是出于在软件时代生存的良好意图而形成的。第一次是敏捷转型的失败，这导致诺基亚失去了移动市场。第二个涉及一家大型金融机构，我们称之为大型银行，它在敏捷和 DevOps 转型上花费了 10 亿美元，但在业务价值交付方面没有带来任何可衡量的增长。这两个失败案例都有一个共同的主线，即以前时代行之有效的范式在这个时代可能会让我们失败。</p>
+<p>接下来，我们将讨论项目管理范式，以及为什么它会在业务和 IT 之间造成鸿沟。我们将研究波音 787 梦想飞机的创建，并思考它如何体现产品思维。然后，我们将回顾为什么从面向项目的管理转向面向产品的管理对于将软件交付与业务联系起来至关重要，以及我们如何将管理视角从项目转向产品为在软件时代取得成功铺平道路。</p>
+<p>在我们深入探讨流框架及其起源之前，重要的是看看宝马集团莱比锡工厂的运营是如何说明一种不同的衡量流的方式以及沿着产品线定义软件价值流的方式的成功的</p>
+<h4 id="BMW-TrIP-Discovering-the-plant-architecture">BMW TrIP Discovering the plant architecture</h4>
+<p>宝马之旅，探索工厂架构</p>
+<p>中央大楼通向一个巨大的开放空间。左边是暴露的生产线，车身稳步驶过，巨大的橙色机械臂旋转并下降，将汽车一点一点地组装起来。结合未来主义的建筑风格，整个空间给人一种进入了一座可以制造下一代企业号星舰的大楼的感觉。</p>
+<p>“工厂宣传册问道：‘某种类型的建筑是否有可能对工厂内的团队合作和生产力产生积极影响？’‘宝马集团莱比锡工厂的中央大楼由著名建筑师扎哈・哈迪德设计，是这一理念的具体实施。这座独特的建筑是交流的中心，它连接了所有的生产区域。’”</p>
+<p>所有的信息技术设备都位于暴露的生产线的右侧。</p>
+<p>“工厂首席信息官的办公桌就在那边。” 雷内指着暴露在外的生产线右边的几百张办公桌和双显示器工作站组成的区域。</p>
+<p>我从未想过这家工厂会有自己的首席信息官。</p>
+<p>庞大的 IT 基础设施和员工队伍，但鉴于可见的运营规模，肯定有无数内部应用程序在管理从供应链到最终组装的一切事务。</p>
+<p>每个人都穿着蓝色背心、蓝色夹克或全蓝色连体服。一些蓝色服装挂在椅子和桌子上。勒内递给我一件绣有我名字的背心，我一穿上它，就有了在这栋楼里的归属感。</p>
+<p>“这些背心是抗静电的，” 弗兰克说。“在生产线周围，你必须始终穿着它们。我们还会在你的鞋子上安装特殊的静电放电器。” 他从背心口袋里拿出放电贴纸递给我。</p>
+<p>“所有工厂员工都佩戴这些，包括 IT 员工、首席信息官和首席执行官，” 雷内说。</p>
+<p>我走访过的大多数初创公司都有品牌服装来传达其身份和文化，其中 T 恤和连帽衫最为常见。但这些背心的形式和功能还有更多的内涵。</p>
+<p>我们看着 1 系和 2 系汽车在生产线上移动。雷内解释道：“2017 年，我们每天生产 980 辆汽车，每七十秒就有一辆新车完成。你即将看到的一切确保了我们能够实现这些生产率和流程。当天晚些时候，我们还将看到该工厂的最新创新之一，即 i3 和 i8 的生产。”</p>
+<p>我从宣传册中回忆起，该工厂是一项 20 亿欧元的投资，代表着 “生产、自动化和可持续发展的巅峰”。3 这个成本与半导体制造工厂的成本大致相当。但是，现代芯片 “晶圆厂” 是围绕着一遍又一遍地制造相同的尖端处理器而建造的，而这里正在发生一些不同的事情。</p>
+<p>每辆车都是根据客户的订单专门制造的。这体现了 “准时制” 的理念。准时制方法将处理和其他工作推迟到能够经济地完成工作的最后一刻，从而优化工作流程和资源利用。</p>
+<p>“雷内继续说道：‘这家工厂不仅实行准时制库存，而且汽车也是按顺序制造的。’”</p>
+<p>“汽车按照客户订单的顺序下线。每辆车都是根据客户的规格和喜好量身定制的。” 弗兰克补充道。</p>
+<p>汽车在生产线上的整个旅程中都保持相同的顺序吗？” 我很难理解他们如何实现这一点。</p>
+<p>“有趣的问题，” 弗兰克继续说道。“不，在生产线的一个部分，车身需要不按顺序取出。然后它们需要被临时入库，在那之后，再按顺序放回。这是一个非常复杂的过程，并且是我们工厂的瓶颈。”</p>
+<p>“那么，瓶颈在哪里呢？” 我问道，在弗兰克看来，我的语气中一定夹杂着过分的急切和天真。</p>
+<p>“整座大楼都是围绕这个瓶颈设计的。但在我们查看那个之前，让我们先去装配大楼。” 弗兰克说。</p>
+<p>当弗兰克带我们沿着暴露的生产线前行时，我拿出手机，打开卫星模式下的地图。我看到几十个大型且相互连接的建筑物（图 2.1）。这些建筑物的布局看起来与我过去组装自己的个人电脑时使用的电脑主板惊人地相似 —— 相似到让我愣了一下，并且停了一会儿。中央大楼看起来像一个中央处理器及其互连部分。</p>
+<p><img src="/notes-media/img/image-20250104172916554.png" alt="image-20250104172916554"></p>
+<p>啊，对，就是这里。” 弗兰克一边说着，一边用卫星地图解释工厂的布局。“在这里你可以看到中央大楼，并且你可以看到我们正在接近装配大楼。装配大楼的结构非常有趣。” 弗兰克继续说道。“我们把这个叫做‘五指’结构。”</p>
+<p>巨大的建筑确实有长方形手指和一只手的形状。</p>
+<p>“在软件架构中，你有可扩展性，” 雷内说。“也许很难看到，但这家工厂在其主要生产线上也为可扩展性而设计。”</p>
+<p>“是的，” 弗兰克补充道。“当在线路上增加额外的生产步骤时，我们能够延长‘手指’的长度。随着我们的扩张以及增加更多的自动化和更多的生产步骤，这些建筑随着时间的推移而得到了扩展。你可以看到‘手指’的长度是不同的。”</p>
+<p>弗兰克接着指向一座与其他建筑不同的建筑。它是白色的颜色，但也附着在 “手” 上。</p>
+<p>‘手’形建筑里有 1 系和 2 系的生产线，” 弗兰克说。“那座建筑比较新。我们在那里生产 i3 和 i8 电动汽车。”</p>
+<p>我想更好地看看这座建筑，本能地点击了地图上的 “3D” 按钮。它进入 “飞越” 模式，并开始在建筑物周围导航。</p>
+<p>“看那儿，” 弗兰克说。“你看到那些卡车了吗？”</p>
+<p>他指着直接与装配大楼的 “手指” 相连的大型卡车。</p>
+<p>“正如勒内之前提到的，工厂采用准时制库存方式运作。任何库存积压都将是浪费。所以，零件是‘准时’送达的，直接送到装配线上使用它们的地方。宝马集团在全球拥有约 12000 家供应商，所以这是一项相当大的业务。” 弗兰克说，“我们现在先跳过瓶颈区域，因为反正我们午饭时也要去那个区域。我现在直接带你们去 1 系和 2 系生产线。”</p>
+<p>我们走进装配大楼，来到一个悬挂在三层楼高空中的走道上，沿着 “巨手” 的长度望去。这是一个极其广阔的空间，要理解其规模需要一些时间。这个场景在视觉上非常复杂，让人难以理解。但这种复杂性与夏日繁忙的时代广场的混乱和喧嚣完全不同。相反，数百台机器和移动部件以看似令人难以置信的规模完美地协调运作，呈现出完美的秩序。</p>
+<p>这种大规模的机械芭蕾舞产生了一些人类制造的最复杂的物体。超过 12000 家供应商，每辆汽车有超过 30000 个零件，并且生产线具有巨大的功能专业化，按照客户订单的顺序每七十秒生产一辆新车。</p>
+<p>“顺便说一句，米克，你不能再拿出手机了。” 弗兰克以友好但明显严肃的方式说道。</p>
+<h4 id="Agile-Transformation-Failure-at-Nokia">Agile Transformation Failure at Nokia</h4>
+<p>“借鉴汽车制造业的经验并将其应用于软件领域的想法并不新鲜。无数关于敏捷方法的书籍都借鉴了精益制造，尤其是丰田生产系统。当我参观宝马集团工厂时，我已经对那方面的文献很熟悉了。但我原本以为自己对先进制造业的理解和我在工厂里学到的东西之间的差距是巨大的。</p>
+<p>我的日常软件交付使用敏捷方法的历程始于 1999 年，当时规模相对较小，是一个团队在一个开源项目上使用肯特・贝克的极限编程（XP）方法。十年后，在 2009 年敏捷大会上，我介绍了将敏捷方法应用于我领导的一个开源项目中所学到的东西。那是我第一次参加这个会议，我注意到最有趣的话题是敏捷的规模化。</p>
+<p>许多顾问将诺基亚作为敏捷开发方法可扩展到大型企业的证据。“诺基亚测试” 经常被引用。它是一种确定组织是否遵循 Scrum 的简单方法。该测试由诺基亚西门子通信开发，它进一步巩固了诺基亚作为可扩展敏捷方法的代名词和典型代表的地位。</p>
+<p>我看到了扩展敏捷的潜力，当我的公司有机会开始与塞班（Symbian）合作时，我非常激动。塞班是诺基亚在 2008 年收购的移动操作系统（OS）。我与首席信息官的第一次会面是在 2009 年晚些时候与塞班的首席信息官。这使得诺基亚成为 Tasktop 的第一个企业客户，当时我们支持一个将敏捷工具连接到开发人员工作流程的项目。诺基亚和塞班内部有一些了不起的有远见者，此外还聘请了最好的外部承包商和思想领袖来帮助指导他们的转型。</p>
+<p>问题在于，尽管领导们的意图是好的，组织也愿意进行变革，但整个努力却注定失败。大量的精力推动了变革。每个人都在说着正确的话，似乎也在做着正确的事，而各种顾问和供应商也都表示他们进展顺利。</p>
+<p>“诺基亚测试” 提供了一系列关于开发是否迭代进行以及是否遵循 Scrum 原则的问题，为测试每个团队提供了一种机制，以确定他们的敏捷程度。我确实对诺基亚对其敏捷转型的巨大投入以及我们合作的公司和团队在多大程度上按照他们创建的令人印象深刻的敏捷模型跟踪活动印象深刻。很明显，高管们已经意识到敏捷在多大程度上可以使公司受益，因为他们能够适应快速变化的市场。</p>
+<p>然而，随着我与更多开发团队合作，不祥之兆变得显而易见。让我震惊的是，对活动的衡量以及对模型的遵守程度，却没有明确意识到通过这些活动所产生的结果。鉴于我们向诺基亚的开发人员提供开源工具，我们开始越来越多地与开发人员互动，并注意到随着我们朝着组织结构图的末端 —— 开发团队前进，这种脱节变得更加突出。</p>
+<p>为了弄清楚我们如何更好地连接交付层和规划层，我意识到是时候了解实际情况了。我问我的主要联系人我是否可以采访不同团队的一些工程师，以便更好地了解正在发生的事情。结果令人大开眼界。</p>
+<p>我交谈过的开发人员对任何敏捷实践都没有意见，并且对它们略有好感；他们有更大的问题。由于漫长的构建 / 测试 / 部署循环，他们在后续流程中遇到了重大问题，这在一定程度上是由于诺基亚原本强大的软件安全流程造成的。他们对塞班操作系统的架构有更严重的问题，这使得业务部门希望推向市场的许多变更难以实施，或者实施起来过于耗时。塞班操作系统的结构不适合所需的那种可扩展性；例如，它不能支持安装第三方应用程序，也就是我们现在所说的 “应用商店”。</p>
+<p>最后，虽然开发人员总体上对 Scrum 持积极态度，但他们的日常工作与使用一整套不同工具进行的更高级别规划脱节。被选中的企业级敏捷工具没有被开发人员使用，他们更喜欢以开发人员为中心的更简单工具。相反，<strong>他们会在迭代（或 “冲刺”）结束时，在工作完成后，以用户故事（从最终用户角度对软件功能的描述）的形式记录为发布而完成的工作。该工具具有现代一流敏捷工具的所有功能，但实际上却变成了一个文档工具，而不是预期的流程和反馈机制。</strong></p>
+<p>在进行了那些采访之后，我意识到转型陷入了困境。事后看来，这与我在莱比锡工厂看到的情况完全不同。在那里，与业务相关的每一个生产指标都被理解、定义明确、可见且自动化。此外，在该工厂，业务方面深入了解汽车生产。相比之下，在诺基亚，<strong>业务成果与软件生产指标之间的关联要么不明确，要么根本不存在。</strong></p>
+<p>在各个衡量方面，转型都在按计划进行 —— 所有正确的活动都在进行，甚至包括采用敏捷工具。但开发人员在编写代码和部署代码方面都遭遇了重大阻碍。更严重的是，由于塞班操作系统的规模和架构，添加功能变得非常困难。</p>
+<p>如果根据结果而不是活动来衡量转型，情况可能会大不相同。开发人员遇到的根本瓶颈将会显现出来。诺基亚核心平台塞班操作系统所需的投资本可以以一种使其能够与新的、精通软件的市场新进入者（如苹果）竞争的方式进行。但由于开发与业务脱节的方式，这一关键反馈并未反馈回业务部门。而在构建和部署软件方面的下游脱节和低效率意味着，在改善这一状况方面的任何进展都将过于缓慢。</p>
+<p>在业务层面上，作为市场领导者，诺基亚深知自己需要在快速发展的移动生态系统中迅速行动并进行调整。这就是诺基亚首先推行敏捷方法的原因：为了更快地适应这个市场以及其中软件日益重要的作用。尽管代理指标可能认为诺基亚的敏捷转型是成功的，但这种转型缺乏实际的业务成果，这导致了企业的失败以及无法从优雅的手机和按键转向以软件和屏幕为中心的移动体验。</p>
+<p>这并不是说诺基亚在硬件方面没有犯过战略错误。例如，诺基亚在采用电容式触摸屏方面行动迟缓，而苹果公司在推出 iPhone5 时进行了创新。但诺基亚的优势在硬件方面；最终，当苹果的 iOS 和谷歌的 Android 操作系统成为首选移动平台时，他们输给了两家拥有强大软件专业知识的供应商。</p>
+<p>诺基亚在硬件创新方面拥有引擎和基础设施，这在大规模生产时代堪称巅峰，但他们在软件时代却没有有效的引擎和基础设施，也没有适当的管理指标或实践，直到为时已晚才意识到这一点。</p>
+<p>如果我们退后一步，想象一下诺基亚的端到端价值流，<strong>敏捷转型是对价值流的局部优</strong>化。换句话说，虽然在转型中投入了大量资金，但提供能够支持移动生态系统的操作系统的瓶颈并不是敏捷团队。</p>
+<p>是在敏捷团队的下游，缺乏持续集成和交付能力吗？是在架构本身，无法支持所需的功能和产品交付类型吗？还是在开发的上游，更接近业务，与交付以及所需的架构投资（如减少技术债务）如此脱节，以至于他们没有意识到敏捷规划将无法推动任何预期结果？</p>
+<p>我的访谈暗示了这些问题，我感觉到在业务层面上并不清楚真正的瓶颈是什么，因为信息技术部门和开发人员所知道的与业务部门所设想的之间差距如此之大。这反过来又导致了敏捷转型 —— 作为端到端价值流的局部优化来实施 —— 收效甚微，也没有解决瓶颈问题。</p>
+<p>即使团队已经达到了理论上的敏捷性理想状态，诺基亚如果不在业务衡量交付的方式上进行上游变革，是否能够更快地适应？或者在软件部署方式上进行下游变革呢？或者首先解决那些减缓开发人员速度的架构变革呢？</p>
+<p>在我看来，这种狭隘且以活动为导向的敏捷观点是诺基亚数字化转型失败的根本原因。失败的转型使得快速迭代和从市场中学习变得不可能，因为交付新功能（如应用商店和优雅的主屏幕）的交付周期太慢了。这阻碍了业务学习和适应的能力，而这种无法适应的能力是诺基亚衰落的一个关键因素。</p>
+<h4 id="Lesson-one--to-avoid-the-pitfall-of-local-optimization--focun-on">Lesson one : to avoid the pitfall of local optimization , focun on the end-to-end value stream</h4>
+<p>第一课：为避免局部优化的陷阱，应关注端到端的价值流。</p>
+<p>在软件价值流的背景下，“端到端” 的概念包括向客户交付价值的整个过程。它涵盖了从业务战略和构思到使用工具化以确定哪些价值最受客户群采用的各种功能。正是这个端到端的过程，我们需要理解并找到瓶颈，然后再考虑优化该过程的任何特定部分，例如功能设计或部署。</p>
+<p>对比本章前面提到的诺基亚采取的方法与宝马集团的故事。整个莱比锡工厂的设计旨在使价值流可见，并且建筑物是围绕瓶颈构建的。建筑物的架构可扩展，以支持生产技术的发展和市场条件的变化。诺基亚在其设备方面具有这种成熟度，但尽管掌握了大规模生产，却无法将这些经验应用于软件交付。</p>
+<p>接下来，我们将进一步分析业务和 IT 之间这种脱节的原因，这种脱节为何会创造一种环境，使业务在进行数字化转型的努力中注定失败。</p>
+<h4 id="Devops-to-the-Rescue">Devops to the Rescue</h4>
+<p>DevOps 能拯救一切吗？</p>
+<p>人们很容易将诺基亚软件转型的失败归咎于敏捷或 Scrum。但这种说法与声称诺基亚在 2009 年是 Scrum 的成功案例一样有缺陷。诺基亚的问题不在于敏捷或 Scrum；许多组织采用了诺基亚在 Scrum 中采用的完全相同的方法并取得了巨大成功。无论敏捷或 Scrum 对诺基亚可能有多么有效，该组织的问题都超出了敏捷开发团队的范围。</p>
+<p>伊莱休・M・戈德拉特的约束理论及其在敏捷软件开发中的适用性在肯特・贝克的《解析极限编程》一书中进行了讨论。戈德拉特著名地解释了在瓶颈之外的领域进行投资是徒劳的。这就是诺基亚敏捷转型的徒劳之处。诺基亚本可以拥有地球上最支持的领导和文化，以两倍的速度进行转型，实现两倍的敏捷性，并在敏捷转型上投入两倍的资金，但由于努力没有应用在瓶颈上，仍然看不到其衰落斜率的任何变化。更糟糕的是，努力的结果没有被衡量。</p>
+<p>“采用持续交付等 DevOps 实践能否扭转诺基亚的颓势？有可能。其中一些实践已经在我的访谈中，受访者提到了一些主要的低效率问题，而《DevOps 手册》中总结的其他关键实践 —— 整个部署管道的自动化以及对小批量规模的支持 —— 本可以解决这些问题。以自动化测试为例的一些地方，在我的访谈中，受访者表示存在重大的低效率问题，而《DevOps 手册》中总结的其他关键实践本可以解决这些问题，这些实践包括整个部署管道的自动化和对小批量规模的支持。在我的经验中，这些实践对于有效的价值流至关重要，如果不采用这些实践，它们迟早会成为瓶颈。</p>
+<p>然而，认为在其交付管道中应用 DevOps 实践会改变诺基亚衰落的曲线是不正确的。例如，如果业务和开发之间存在管理或文化错位，那可能就是瓶颈，并且有迹象表明这一点。或者，如果架构像一些工程师担心的那样混乱，那也可能是瓶颈。事后看来，最令人震惊的是没有人能看到整个价值流，所以没有人知道。然而，在领导层面上正在对转型进行大量的赌注和投资。</p>
+<p>如果诺基亚采用了 DevOps 的三种方法（图 2.2），他们至少会开始走上识别瓶颈的道路。通过关注从开发到运维的 “流” 和 “反馈”，诺基亚可能会看到部署前置时间非常长的迹象。如果 “持续学习” 不仅仅局限于开发领导者，而是在更高层面得到重视，可能会促使公司领导开始就组织结构或软件架构提出正确的问题</p>
+<p><img src="/notes-media/img/image-20250104174019429.png" alt="image-20250104174019429"></p>
+<p>或者不是这样。诺基亚本可以对 DevOps 转型采取一种非常策略性的方法，仅专注于持续集成和应用程序发布自动化，而没有注意到架构或组织上的瓶颈。在管理层面，他们缺少能够让他们看到其价值流中正在发生什么的基础设施和可见性。如果像对待敏捷那样对待 DevOps，DevOps 就会被降级为一种技术实践，而不是被提升到业务层面，并且不会已经改变了结果。</p>
+<h4 id="Failing-to-Transform--the-story-of-largeBank">Failing to Transform : the story of largeBank</h4>
+<p>转型失败：大银行的故事》</p>
+<p>诺基亚的失败发生在规模化敏捷和 DevOps 实践尚未得到广泛理解的时候。下一次转型的故事始于同样崇高的目标，但也导致了未能交付业务成果，尽管它发生的时间要近得多。这个故事，以及更好地理解为什么这些失败会发生，而不是放弃那些似乎在转型中苦苦挣扎的组织的需求，促使我研究为什么 DevOps 和敏捷原则在规模化时似乎会失败。</p>
+<p>我清楚地记得 2016 年 6 月，我坐在一架从欧洲飞往我在加拿大温哥华的家和办公室的波音梦想客机上，回想着我与一家银行的信息技术领导团队的一次特别会面。我坐在靠近机翼的位置，欣赏着它们看起来很有质感的美；它们灵活的碳复合材料使它们能够向上倾斜，减少阻力。这是在我参观宝马集团工厂很久之前的事，但这是我第一次深刻地在内心挣扎着去理解，在整个行业中，我们怎么能如此擅长制造飞机和汽车，而只有一小部分公司真正掌握了大规模制造软件的方法。盯着机翼微妙的变化看了一个小时后，我意识到我的思维陷入了困境，就像陷入了一个我无法解开的禅宗公案。</p>
+<p>这家银行，我们将其称为大银行，我已删去了所有可识别的细节，正在经历我所遇到过的最大规模的信息技术转型。大银行是全球前二十五大金融机构之一，这个项目本身是一组令人难以置信的令人印象深刻的甘特图，它们像拼图碎片一样在一个精确界定的两年时间框架内组合在一起，并涉及一个价值数十亿美元的信息技术组织的所有部分。值得注意的是，同样的故事也以类似的方式在其他大型机构中上演。</p>
+<p>这是我第三次拜访大型银行，我大约每两年去一次。每次，讨论都是银行正在进行的大型数字化转型计划的一部分，而这是一个从未改变的过程中的第三次尝试。许多工具供应商、顾问和其他专家都会被请来。由于我公司的业务涉及整合各种敏捷和 DevOps 工具，我们将被详细地介绍每一个环节。</p>
+<p>涉及转型的工具和流程。然后，两年后，我们会听到转型未能取得成果，负责的副总裁或高级副总裁会被解雇。当下一次转型开始时，我会见到一些新的领导，并听取新的方法。于是，我们又重新开始。</p>
+<p>LargeBank 现在已进入第三次转型的六个月。这次转型规模比之前的尝试更大，因为它涵盖了整个 IT 部门。时间框架又是两年。预算大约是 <span class="math-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mord mathnormal">bi</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">.</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">h</span><span class="mord mathnormal">tt</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">an</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mord mathnormal">ma</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">na</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">m</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">e</span><span class="mord mathnormal">b</span><span class="mord mathnormal">e</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal">mma</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord mathnormal">a</span><span class="mord mathnormal">tt</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">m</span><span class="mord mathnormal">ee</span><span class="mord mathnormal">t</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">in</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">na</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">ese</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">oo</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ha</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal">i</span><span class="mord mathnormal">t</span><span class="mord mathnormal">n</span><span class="mord mathnormal">esse</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mord mathnormal">iaan</span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">nman</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">an</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mord mathnormal">ma</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mord mathnormal">t</span><span class="mord mathnormal">ha</span><span class="mord mathnormal" style="margin-right:0.0269em;">tw</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mord mathnormal">t</span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord mathnormal">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">d</span><span class="mord mathnormal">see</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">t</span><span class="mord mathnormal">h</span><span class="mord mathnormal">es</span><span class="mord mathnormal">am</span><span class="mord mathnormal">e</span><span class="mord mathnormal">p</span><span class="mord mathnormal">a</span><span class="mord mathnormal">tt</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal">nh</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span><span class="mord mathnormal" style="margin-right:0.0359em;">ey</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">ain</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mord mathnormal">b</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">an</span><span class="mord mathnormal">t</span><span class="mord mathnormal">osee</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span></span></span></span></span>10 亿，世界财富被浪费，却没有为价值交付带来可衡量的改善。</p>
+<p>对于任何具有精益思维的人来说，这是一个极其令人不安的景象，我们想尽一切办法来阻止它。这个景象让我规划出一个框架的想法，使企业能够理解正在发生的事情和哪里出了问题，并希望不会第四次犯同样的错误。也正是这个令人不安的景象促使我开始写这本书，从我写的一篇题为 “如何确保你的敏捷 DevOps 转型失败” 的文章开始。</p>
+<p>会议结束后立即。9</p>
+<p>第三次转型努力现已结束。不出所料，一旦看起来偏离了轨道，领导这次转型的高管们就被撤职了，其他参与其中的 IT 和工具链领导也被撤职。同样，我有机会采访那些坚持得足够久、能够见证转型后情况对关键利益相关者来说比转型开始前更糟的人，并向他们学习。</p>
+<p>虽然一开始我就确信这次转型无法带来生产力的提升，但听到情况变得更糟时我还是感到震惊。我原以为，这一次将 DevOps 作为核心组成部分，至少会有一些成功之处，只是不会达到承诺的业务成果。但在这种情况下，从价值交付和人才保留的角度来看，事情变得更糟了。</p>
+<p>浪费 10 亿美元的股东资金或客户价值应该让人感到应受谴责，但这本书的一个关键前提是，企业和 IT 部门的领导不会故意让这种情况发生。决策框架或组织可见性存在一些根本性的缺陷，这使得企业一次又一次地陷入这种状态。</p>
+<h4 id="A-disconnect-betwen-the-businss-and-it">A disconnect betwen the businss and it</h4>
+<p>业务与信息技术之间的脱节”。</p>
+<p>为了理解大银行转型失败的教训，我们需要更清楚地了解促成这一失败的商业环境。大银行是一家成功的金融服务机构，具有足够的前瞻性，为信息技术分配了数十亿美元的预算。它是一个拥有数千个应用程序组合的组织，渴望凭借其数字资产实现差异化并参与竞争，其对转型的组织和预算投入就证明了这一点。换句话说，从战略角度来看，这个组织在软件时代的定位比诺基亚要准确得多。首席执行官批准了这次转型，但在表面之下发生了什么呢？</p>
+<p>在大型银行，信息技术部门作为成本中心在首席财务官的领导下运作。正在衡量和管理的业务成果是转型带来的成本削减量。一开始，我并不认为这是一个根本性问题，因为我合作过的很多组织都处于类似情况。然而，在采访了参与转型的人员并听取他们的讨论后，许多意想不到的后果似乎都指向这是问题的根源。例如，仅管理成本意味着信息技术部门可以在不密切涉及业务利益相关者的情况下进行转型。如果目标是成本，还有谁比信息技术部门更清楚如何减少基础设施支出、员工成本和其他间接费用呢？</p>
+<p>在业务方面，数字举措正在并行推进，目标是为移动设备和网络设计并创造新的数字体验。然而，这些与 IT 转型相脱离 —— 就像为一辆汽车打造一个很棒的仪表盘，却没有汽车，甚至看不到一辆能够支持所有那些奇妙新功能的汽车。例如，除了在一个国家或地区的部分应用组合中证明一个概念验证之外。由于这种条块分割，无法确定这些移动体验是否能够在银行在全球拥有的每种类型的系统上运行。</p>
+<p>“这次转型再次是大银行的局部优化**。”价值流。在 IT 方面，它只关注 IT 部分，而不关注 “价值” 部分；也就是说，那些需要为客户和企业提供价值的部分**。在数字化方面，它忽略了使数字化愿景成为现实的 IT 部分，例如能够支持所设想的新用户体验的架构和交付管道。而对转型成功的衡量标准是降低成本和遵守转型项目时间表，而不是以更低的成本交付更多的商业价值。从这个意义上说，结果是可以预测的。成本会降低，但实际交付能力会大幅下降。这是在转折点摸索未来生存的秘诀，因为它为初创企业和科技巨头在他们选择的时候进入留下了一扇敞开的门。</p>
+<h4 id="Failling-into-the-cost-center-trap">Failling into the cost center trap</h4>
+<p>Lesson 2： if you manage a transformation according to cost alone. you will reduct productivity </p>
+<p>第2课：如果你仅根据成本来管理转型，你将会降低生产力。</p>
+<p>陷入成本中心陷阱</p>
+<p>LargeBank 的十亿美元转型项目在功能上由无数个子项目组成，所有这些子项目都在这个两年的时间框架内运行。由于作为项目进行管理，它们的目标是按时、在预算内完成，并在终点实现降低成本的业务目标。如果这个庞大项目的每一块拼图都与其他拼图完美契合，并且所有项目都按时、在预算内交付，这是否意味着成功？从以活动和项目为导向的角度来看，答案是肯定的。但业务成果呢？在每个步骤中如何衡量这些成果？如何在数万人、数百个流程和数十种工具中识别瓶颈？底线是他们没有做到。</p>
+<p>在这里，我们找到了脱节的根源。当信息技术被视为成本中心时，转型就会带有同样的心态。重点变成了在项目时间框架结束时成功降低成本。然而，在管理层层面，转型的商业案例本应吹嘘敏捷和 DevOps 的好处，如更快的上市时间、更具竞争力的产品以及更高效的交付。但是，那些结果并不是仅根据成本进行管理的组织所衡量的。虽然降低成本确实可以是转型的关键组成部分，但这不是问题所在。问题是，以成本为中心的框架并没有带来更高的速度、生产力或效率。</p>
+<p>并且结果是企业付出更少却得到更少，而不是付出更少得到更多。</p>
+<p>鉴于大型银行转型的复杂性，不仅仅使用了成本指标。还使用了典型的敏捷转型指标，例如<strong>遵循敏捷模型的团队数量，以及 DevOps 指标，例如每天的部署次数。但这些都是活动指标，而非结果指标。一个 IT 团队可能每天部署一百次，但如果他们的工作投入与业务需求无关，那么业务就不会产生结果。再一次，如果培训或部署是瓶颈，那么 “接受敏捷流程培训的人数” 或 “每天的部署次数” 等代理变量才会有意义。但是，当业务与 IT 脱节时，敏捷团队和 DevOps 流水线永远没有机会成为瓶颈</strong>。</p>
+<p>问题不在于代理指标本身的使用；问题在于我们依赖代理指标进行决策，而不是找到与业务成果直接对应的指标。考虑一下杰夫・贝索斯在 2017 年致股东信中的陈述，其中他谈到了抵制代理指标等内容。</p>
+<p>抵制代理</p>
+<p>随着公司变得越来越大、越来越复杂，就会出现通过代理进行管理的趋势。这种情况有多种形式和规模，它很危险、很微妙，而且非常具有 “第二天” 的特征。</p>
+<p>一个常见的例子是将流程作为代理。良好的流程为你服务，以便你可以为客户服务。但是如果你不小心，流程可能会成为核心。这在大型组织中很容易发生。流程成为你想要的结果的代理。你不再关注结果。</p>
+<p>and just make sure you’re doing the process right.10</p>
+<p>在我们业务的其他部分，我们有基于结果的指标，如收入、日活跃用户数和净推荐值（NPS）。问题在于，组织没有一套商定的指标来衡量和跟踪 IT 方面的工作，因此，只能采用这些替代指标。错误的指标集来自于不是衡量所交付价值的流动，而是 IT 项目的 “成功” 执行。在下一章中，我们将深入探讨确定一种新的基于结果的跟踪价值流的方法。但首先，</p>
+<p>我们需要进一步研究以项目为中心的思维方式在生产中的起源和问题。</p>
+<h4 id="From-Puzzles-to-planes">From Puzzles to planes</h4>
+<p>从谜题到飞机</p>
+<p>LargeBank 的方法与宝马集团莱比锡工厂的方法有何不同？汽车生产在某种程度上更简单吗？它是否更容易进行端到端的测量？宝马集团是如何如此迅速地改变其汽车制造方式，在从未大规模生产过电动汽车或碳纤维车身的情况下创建了 i3 和 i8 生产线？宝马集团只是大规模生产时代所掌握的成熟度、测量和适应性水平的一个例子。</p>
+<p>再考虑另一个高度复杂的代表大规模生产时代的人造物。波音 787 梦想客机包含 230 万个零部件，这些零部件由 5400 家工厂制造。在其所有价值流中，波音每年交付的数百架飞机的生产涉及 7.83 亿个零部件。它需要其产品在几十年内都能在市场上保持竞争力，并在每次推出新产品时都押上公司的赌注。</p>
+<p>宝马集团和波音公司如何能够同时管理现有生产线、转变业务以支持新生产线，并持续适应技术、竞争和市场的变化呢？归根结底，他们没有陷入项目管理的僵局难题中。相反，他们掌握了以产品为中心的向市场交付价值的观点。</p>
+<p>我第一次接触到这个是盖尔・墨菲（Gail Murphy）给我讲的一个故事，当时她是我在一门大三软件工程课程中的教授，这个故事是关于波音 787 的前身 777 的生产。777 是波音公司的第一架 “电传操纵” 飞机。换句话说，软件必须正常工作，因为纯粹是软件在控制襟翼和方向舵并防止飞机从空中坠落。盖尔讲述说，由于软件的关键性质，波音公司决定让所有软件工程负责人参加试飞。在试飞期间，飞机开始摇晃，软件工程师能够通过湍流控制软件在飞行中实施修复。我还没有找到一个更好的例子，说明一个组织让软件领导者在高风险的产品开发中承担风险。</p>
+<p>波音对生产和长期价值流的业务影响的深刻理解，通过一件事得到了强调，这件事是在他们的下一架飞机——787 梦想客机的生产过程中逐渐展开。787 梦想客机项目是波音公司迄今为止最雄心勃勃的项目，甚至比 777 更依赖软件。梦想客机是第一架从客舱供暖到机翼防冰等所有方面都在电气平台上运行的商用飞机，相比之下，以前的商用飞机使用效率低得多的发动机引气系统。此外，波音公司决定大幅重组其供应链以降低飞机的生产成本——同时转向碳纤维机翼和机身部件。这些以及其他复杂情况导致了进一步的延误。</p>
+<p>2008 年，在关注这个项目时，我又读到了一次延迟的消息，但这次的原因似乎更有趣。在这篇文章中，梦想客机的总经理被引述道：“并不是刹车有……”。</p>
+<p>“not work; it’s the traceability of the software.”15 的中文翻译为 “不起作用；这是软件的可追溯性。”15。但不确定这个 “15” 在原文中的具体含义。如果只是无意义的跟随在句子后，可将其单独翻译为 “15”，即 “十五”。如果有其他特定含义，请提供更多上下文以便更准确地翻译。</p>
+<p>这对我来说很吸引人 —— 不仅是因为我很高兴读到新飞机将配备能正常工作的刹车。这对我也很有吸引力，因为在同一时间，我正在 Eclipse Mylyn 开源项目中致力于一些功能，以自动将软件需求和缺陷与开发人员处理这些项目时已更改的源代码行进行链接。对我以及当时我的开源同事来说，手动输入 ID 以确保可追溯性既繁琐又容易出错，而且由于 Mylyn 开发工具始终知道开发人员正在处理的项目，所以很容易实现自动化。</p>
+<p>由于 Mylyn 项目有数百名贡献者，<strong>我要求对每一行代码的每一处更改都要追溯到其起源的特性或缺陷；否则，每次有与该代码相关的新工作进来时，我们都必须手动搜索该代码最初为何在那里</strong>。在一个拥有数百万最终用户不断提交缺陷和请求的资源受限项目中，这样做太繁琐了。所以我添加了一个新功能来实现自动化。但是，波音公司究竟为什么要如此关心可追溯性，以至于进一步危及飞机的交付时间框架呢？当然，波音公司肯定有一个模型表明进一步延迟会带来巨大的成本或风险。他们不可能有我们所经历的资源限制，所以他们对可追溯性的需求肯定有更根本的原因。</p>
+<p>在进一步研究这个问题时，我了解到了更令人着迷的事情。在一次对波音公司的参观中，我记得了解到他们设计飞机的预期是大约三十年的活跃生产期，之后还有另外三十年。</p>
+<p>数十年的维护。16 换句话说，他们在考虑硬件和软件的支持成本时提前了六十年。制动软件已外包给通用电气，而通用电气又将其外包给 Hydro-Aire。17 Hydro-Aire 随后使用 Subversion 配置管理工具交付了可用的制动软件，并向通用电气和波音提供了源代码和二进制文件。18 该软件运行良好，通过了测试并满足了要求。19 然而，源代码与这些要求没有任何可追溯性链接。20 事后添加可追溯性链接既困难又容易出错。考虑到六十年的维护窗口和合规认证的开销，在业务层面上，波音知道最经济的决定是重写制动软件。</p>
+<p>尽管梦想客机很复杂，生产它所需的变革规模也很大，但波音公司创造了一款令人惊叹的产品，在市场上取得了巨大成功。波音公司对产品开发的哪些理解是许多 IT 组织所不具备的呢？波音公司是如何超越典型的一两年项目时间框架进行思考和规划的，从而能够基于技术细节做出如此重大的商业决策呢？我们如何让我们的组织摆脱企业 IT 项目中固定的拼图思维，进入我们在波音和宝马集团的工厂及组织中看到的卓越生产状态呢？我们如何从项目转向产品呢？</p>
+<h4 id="Toward-Product-Development-Flow">Toward Product Development Flow</h4>
+<p>lesson three :Engineering /IT and the business must be connected </p>
+<p>第三课：工程 / 信息技术与业务必须相互关联。</p>
+<p>“迈向产品开发流程”。</p>
+<p>如果你曾在软件初创公司、科技巨头或现代软件供应商工作过，你可能会想知道这一切的喧嚣到底是为了什么。当然，软件产品不仅仅是将成本最小化；还有收入、利润、活跃且满意的用户，以及所有那些填充目标与关键成果（OKR）系统的其他指标。跟踪软件交付对业务成果的影响并将其视为利润中心，这是科技公司比那些陷入玛丽・波平斯代克所称的 “成本中心” 的企业 IT 部门表现好得多的主要原因之一。</p>
+<p>这种成本中心方法在大型企业组织中普遍存在吗？考虑像波音这样大型且非常注重成本的公司是如何管理其梦幻客机的生产的。成本当然是一个关键因素。但是波音的成功不仅取决于降低成本，还取决于每架飞机在其市场生命周期内的采用率和盈利能力 —— 这就是为什么<strong>波音天生就对其软件的可追溯性持长远观点</strong>。波音知道，如果软件无法在经济上进行维护，或者如果当前或未来的法规变化无法在软件中轻松解决，那么生命周期盈利能力将会受到影响。</p>
+<p>波音在其整个运营过程中所展示的是，它将飞机开发视为一个利润中心。该企业在目标、指标、文化和流程的设定上与我们在大型银行看到的完全不同。我不认为波音的成本意识会更低，它一直在努力降低每架飞机的生产和供应链成本。但通过着眼于收入和盈利能力来这样做，可以做出一系列完全不同的决策，比如投资于其价值流的模块化以实现传统产品的现代化。一个非常明显的例子是对 1969 年首次飞行的 747 进行现代化改造的决定，采用 787 风格的机翼和发动机。</p>
+<p>to create the 747-8.22（创造 747-8.22）。</p>
+<p>再举个例子，想想我在宝马集团莱比锡工厂所看到的情景。由于大规模的自动化以及 72 秒的生产节拍时间（即完成一个产品步骤以满足客户需求所需的速率），1 系和 2 系汽车的规模令人印象深刻。但更让我印象深刻的是 i3 和 i8 生产线的设置方式非常不同，正如我将在接下来的一个故事中讲述的那样。</p>
+<p>宝马集团电动汽车的市场占有率和盈利能力在不断变化的市场中很难确定，因此宝马集团创建了一个生产架构，以便在进一步投资生产线自动化之前从市场中学习。盈利能力和产品 / 市场契合度推动了价值流的架构，而非相反。再一次，这与大型银行的方法完全相反，在大型银行，信息技术的转型是为了信息技术本身。生产基础设施、架构和管理方法的差异再明显不过了。这就是我在同一次旅行中参观了大型银行和宝马集团后，在乘坐波音梦幻客机回家的路上，头靠在窗户上时深刻体会到的一点。</p>
+<p>对于那些研究过唐纳德・赖纳森的产品概念的人”。开发流程，这些都不是新闻。赖纳特森为摒弃代理变量并以单一经济目标（生命周期利润）进行衡量提出了一个非常清晰且令人信服的理由。然而，根据你关注的焦点在公司或产品成熟曲线中的位置，这个目标可能会发生变化。</p>
+<p>在《跨越鸿沟》中，摩尔提供了一个具有四个不同投资区域的模型（图 2.3）。24 生产力区域专注于实现盈利底线，包括人力资源和市场营销等系统。绩效区域关乎收入上限，包括收入的主要驱动因素。孵化区域是开发新产品和新业务的地方，之后其中一个会被转移到转型区域，用于进行颠覆性进攻或防御。在为不同产品线定义价值指标时，必须确定区域及其目标。例如，在孵化区域，业务目标可能是每月活跃用户，然后过渡到转型区域，在该区域，重点更多地放在收入而非利润上（图 2.3）。</p>
+<p><img src="/notes-media/img/image-20250104175418587.png" alt="image-20250104175418587"></p>
+<p>许多组织在数字化转型中所犯的错误在于，他们使用来自生产力区域的指标——成本和底线——来衡量其整个 IT 和软件交付能力。在软件时代之前，所有的 IT 都可以归入生产力区域；但数字化转型的全部目的是让组织能够在其他区域推出和管理产品，而这什么将决定他们在市场中的未来相关性。</p>
+<h4 id="Projects-versus-Products">Projects versus Products</h4>
+<p>项目与产品”。</p>
+<p>项目管理是一种实践，它促成了一些世界上最引人瞩目和令人印象深刻的成就。它以甘特图为标志，甘特图由亨利・甘特于 1917 年创建，随后被用于建造胡佛水坝，这是当时最大的混凝土建筑。这是钢铁时代部署期的尾声，在此期间，泰勒主义的实践被采用，以提高劳动效率并扩大规模。这些实践提供了一种创建标准工作流程和最佳实践的方法，以及大规模的劳动专业化和分工。</p>
+<p>虽然这可能并非泰勒的本意，但当其他人付诸实践时，泰勒制假定人可以被当作可互换的资源，可以被分配和重新分配到项目中。这种将工人当作机器的对待方式不仅不人道，而且目光短浅，正如亨利・福特后来所证明的那样，他认识到了分散决策和自主权的重要性。</p>
+<p>这些问题非常根本，以至于大规模生产时代在一定程度上是由福特所采用的方法所催化的。福特主义极大地更加重视实际工人、他们的培训以及他们的经济福祉。26 在大规模生产时代表现出色的公司以福特主义为基础，并通过进一步将生产与…… 的方法对其进行了扩展。</p>
+<p>丰田等企业的创新，如丰田的安灯拉绳。27</p>
+<p>这一点的有效性正是对宝马集团莱比锡工厂的走访所确定的。那次走访让我得出的结论是，许多企业 IT 组织仍在以钢铁时代泰勒主义的项目导向型世界进行管理。这种脱节正是造成企业领导与技术人员之间巨大沟通差距的原因。</p>
+<p>软件交付本质上是创造性工作。软件专家擅长在有机会时将重复的流程自动化，只留下人类仍然擅长的复杂工作和决策。将一百年前的管理框架应用于需要在数字资产上竞争的组织是徒劳的。为了更具体地说明这一点，表 2.1 对比了面向项目的方法和面向产品的方法。</p>
+<h4 id="Budgeting">Budgeting</h4>
+<p>预算编制</p>
+<p>构建 IT 和软件投资最重要的方面之一是预算编制，因为预算对组织行为有很大的影响。项目预算编制假定市场和资源具有高度确定性，因为它创建了一个固定的最终目标，并将按时和按预算完成作为衡量成功的标准。它还促使利益相关者要求尽可能大的预算，因为预算必须考虑到项目时间框架中的任何不确定性。此外，回去争取更多预算需要付出巨大努力或创建一个新项目。</p>
+<p><img src="/notes-media/img/image-20250104175728982.png" alt="image-20250104175728982"></p>
+<p><img src="/notes-media/img/image-20250104175828145.png" alt="image-20250104175828145"></p>
+<p>这就是不匹配立即变得明显的地方。DevOps 和敏捷都是关于创建反馈循环以解决软件交付中固有的不确定性，然后将反馈循环提供给企业以便相应地进行调整。确定性越高，项目计划就能创建出越优化的长期资源分配。然而，由于软件交付的复杂程度以及由于转折点而导致的市场固有变化率，将所有这些不确定性纳入项目计划不仅会造成巨大的浪费，还会让企业看到错误的东西，提供对活动和代理指标的可见性，而不是对业务成果的增量交付的可见性。</p>
+<p>在孵化区或转型区计划中，不确定性可能多于确定性。这导致项目计划倾向于延迟发布和客户测试，以便实施所有内容。</p>
+<p>在项目开始时是需要的。并且这通过消除从市场中进行迭代学习并相应地进行调整的可能性，从而使产品 / 市场契合度（PMF）风险成倍增加。</p>
+<p>相比之下，以产品为导向的管理侧重于衡量为企业带来价值的每一个投资单元的结果。这些单元是产品；它们为客户提供价值，因此，衡量必须基于这些业务成果。新价值流的资金投入基于该产品的商业案例，对这些价值流的持续投资也是如此。</p>
+<p>这种方法不必扰乱年度规划周期。例如，在 Tasktop，我们为产品和工程部门制定年度预算，这些预算由我们的董事会签署；但每个季度我们都会审查这些预算在产品价值流中的分配情况（例如，一旦有客户验证，就为一个有前景的新孵化区产品增加人员配置）。</p>
+<p>更激进的精益预算方法也已被提出，以便更迅速地应对特定价值流的成本超支或收入机会。无论采用年度预算周期还是更频繁的预算周期，重要的是产品而非项目才是投资的单位。</p>
+<p>时间框架</p>
+<p>项目导向型管理面临的最大问题之一源于对时间框架的考虑。一个项目有一个确定的时间框架，在此之后资源会减少。在建造摩天大楼时，这是完全合理的，因为项目有一个明确且易于理解的终点：摩天大楼建成后，项目进入维护期。然而，产品，无论是软件还是硬件，都有一个生命周期，而不是一个明确的终点。产品可以被淘汰；例如，谷歌已经淘汰了数十种产品，包括谷歌阅读器和谷歌波浪。只要产品可用，就会要求修复缺陷和添加新功能，因为软件产品周围的生态系统在不断发展。</p>
+<p>应用创建然后推出软件产品的项目导向心态，并假设在维护模式下它可以缩减为其投资的一小部分，会产生许多意想不到的后果。例如，我曾合作过的一个企业组织进行了一项调查，以评估数千名 IT 人员的项目管理状况。他们发现，一名工程师在一年中被分配的项目数量平均在 6 到 12 个之间，具体取决于他们所在的位置在该组织中工作过。</p>
+<p>我个人在 Tasktop 的早期就经历过这种情况，将人员和团队分配到多个开源服务项目中。我注意到，当一名工程师被分配到多个价值流中时，生产力会大幅下降。这种人员配置的反模式源于每年将人员分配到项目中，以及假设这些项目在维护期间不需要太多工作，这给人们留下的印象是，这只需要占用任何特定人员的一小部分时间。但实际情况是，如果产品被使用，就需要定期进行修复，正如我所看到的，这种混乱对幸福感和生产力都造成了重大拖累。</p>
+<p>一些组织通过将软件的项目后维护外包给全球系统集成商（GSI）等组织来解决这一问题。这进一步降低了维护软件的明显成本，并有可能将其从资产负债表上的负债中移除。这种外包在理论上似乎可行，但它可能会破坏流程和反馈回路，因为需要跨越组织边界。此外，它还进一步使该软件与业务脱节。如果该软件是业务的核心，那么在持续交付业务成果方面，这是有害的，因为软件对变更和更新的需求是持续不断的。</p>
+<p>从经济角度来看，软件项目有终点这一错误观念也是错误的。随着美国实施国际财务报告准则（IFRS）收入确认规则，一些被认为的经济利益将被消除，这也可能消除资产负债表对外包的偏向。但在以产品为导向的管理中，重点需要放在生命周期成本和盈利能力上，就像前面提到的波音公司的例子一样。</p>
+<p>情况变得更糟。由于这种 “项目结束谬论”，软件交付经济学的关键方面对组织来说是不可见的。例如，我们将在下一章回顾的核心概念之一是技术债务。正常软件开发产生的技术债务积累会造成有充分记录的问题。如果不定期减少这种债务，软件在添加功能或修复时会变得异常困难和昂贵。</p>
+<p>这是我们在诺基亚故事中看到的失败的一个关键部分，技术债务导致了它曾经主导的移动市场的丧失。在项目导向型管理中，没有减少技术债务的动力；其影响直到项目结束后才会显现。这导致创建这些应用程序组合对公司来说是死胡同，并且会不断积累更多的遗留系统和代码。</p>
+<h4 id="成功">成功</h4>
+<p>在领导层面，我们对组织和团队设定的成功指标将决定行为。以项目为导向的管理往往采用成本中心方法，这在企业 IT 中仍然很常见。正如我们在大银行的故事中所看到的，期望从成本中心增加业务价值的交付是毫无意义的。</p>
+<p>项目导向型管理也带来了一些违背 DevOps 原则的副作用。例如，软件开发的资本化导致了创建大型项目的激励。利益相关者被激励在项目过程中预先要求可能需要的一切，这直接违背了精益思想和持续学习。正在驾驭转折点的公司根据业务成果（如内部采用或收入产生）来衡量软件投资。这导致了一种快速学习的管理文化，即增量价值交付和定期检查点。</p>
+<p>如图 2.4 所示，产品导向使组织能够与业务成果保持一致，而不是与职能孤岛保持一致。</p>
+<p><img src="/notes-media/img/image-20250104180219181.png" alt="image-20250104180219181"></p>
+<h4 id="Risk">Risk</h4>
+<p>项目导向型管理旨在识别项目期间可能发生的所有风险并为其制定应急计划。然而，这需要预先了解所有风险，这在某些领域可行，但在软件交付这个高度不确定且不断变化的世界中却并非如此。</p>
+<p>Cynefin 框架提供了一种决策情境分类法，包括明显的、复杂的、错综复杂的和混乱的。由于技术栈和市场的变化速度，软件项目往往落入错综复杂或混乱的区域。因此，针对明显和复杂情境进行优化的项目导向型管理，最终会为项目时间框架内可能出现的任何意外情况增加项目缓冲。这导致了过于保守的时间框架和膨胀的预算。但即使是这些也无法避免产品市场风险，在这种风险下，任何前期规划都不如定期的假设检验和学习有效。</p>
+<p>相反，精益创业以及诸如最小可行产品（MVPs）之类的方法是产品导向思维方式的关键部分。此外，</p>
+<p>降低风险方面，以产品为导向的渐进式方法通过允许企业在定期检查点进行调整来创造选择价值。但这并非没有成本，因为更频繁的审查和检查点需要耗费大量的管理带宽。但由于软件的复杂性以及市场的变化速度，这种成本最好在产品生命周期中分摊，而不是在项目开始时和失败时一次性承担。</p>
+<h4 id="Teams">Teams</h4>
+<p>采用项目导向型管理时，资源被分配给各个项目。这遵循泰勒主义哲学，即人是可替代和可消耗的。但在软件交付中，这种假设完全不成立，因为软件交付是知识工作中最复杂的学科之一。</p>
+<p>现代软件价值流建立在数百万或数千万行代码之上。在 Tasktop，我们代码库中最复杂的部分需要一名资深且经验丰富的开发人员花费六个月的时间才能达到完全的生产力。考虑一下每十二个月将人员分配到新项目上对生产力的影响。不幸的是，这与常态相差不远，因为大多数企业 IT 组织既不模拟也不衡量开发人员的生产力、参与度或上手时间；并且持有泰勒主义的思维模式，没有意识到这些开销。</p>
+<p>在个人 IT 专家的生产力和幸福感成本之上的是团队成本。致力于解决复杂问题的团队会经历心理学家布鲁斯・塔克曼（Bruce Tuckman）提出的形成、震荡、规范和执行生命周期。重新分配人员会打乱这个周期；调动的人员越多，团队的生产力成本就越高。</p>
+<p>“‘带人工作’的项目导向管理方法不适合复杂的知识工作，比如软件交付。高效的软件组织已经认识到‘把工作带给人’更有效。长期存在的团队可以让专业知识（个人的和团队的）以及关系随着时间的推移而建立，从而提高速度和士气。这也带来了其他好处，比如问题在组织的最低级别得到解决，而不是因为计划的改变而不断向管理层升级，这种升级是不可扩展的。”</p>
+<p><img src="/notes-media/img/image-20250104180511112.png" alt="image-20250104180511112"></p>
+<p>图 2.5：将人员带到工作中与将工作带给人员。</p>
+<p>在大型软件中，为了最大限度地建设团队和专业知识，最优分配是团队和价值流之间的一对一分配。采用特性团队就是这种分配的一个例子，尽管较大产品的价值流通常由多个特性团队组成。</p>
+<p>优先排序</p>
+<p>在项目导向型管理中，项目计划驱动着优先级。对计划的变更在管理开销、沟通和协调方面成本很高；因此，对计划的调整往往被最小化。在软件交付方面，这往往会推动一种 “瀑布式” 软件交付模型，因为这种模型自然地与级联项目计划相匹配。虽然这适用于具有高度可预测性的项目，但对于软件交付来说却适得其反。产品导向型管理基于功能的产品路线图和持续的假设测试来确定优先级。在组织层面上，这意味着在组织的各个层面，直至高级管理层，都应用 DevOps 的反馈和持续学习原则。</p>
+<h4 id="Visibility">Visibility</h4>
+<p>最后，也许也是最重要的是可见性问题。在本章前面我们回顾过的诺基亚和大银行的例子中，共同的主题是业务和 IT 之间的脱节。脱节的根源是什么？鉴于领导和业务代表有这样一个广阔的视野下，为什么对信息技术的可见性会缺乏呢？在我们可以普遍访问大数据和分析工具的时代，为什么在这么多组织中，信息技术会感觉像一个黑匣子呢？</p>
+<p>问题并非源于数据访问；问题是由 IT 部门所使用的数据模型与业务部门所使用的数据模型不匹配造成的。IT 和软件交付专业人员已经以面向产品的思维模式和方法进行工作和思考。这是业务部门要求他们去做的 —— 通过软件产品提供价值。然而，如果业务方面仍然按照项目的方式进行思考和管理，那么就需要在软件交付的更具迭代性的本质与诸如项目和项目组合管理以及挣值管理等更具静态性的技术之间不断进行映射和重新映射。</p>
+<p>最终结果是 “西瓜” 现象。当项目经理询问工程负责人项目是否在正轨上时，答案是肯定的，因为这个问题很模糊。一旦发布完成，而业务目标没有实现，很明显项目并没有在正轨上。项目外表是 “绿色”（表示进展良好），内部却是 “红色”（表示存在问题）（就像一个西瓜）。但问题不在于项目本身，而在于管理模式，这种管理模式从未被设计用来处理软件交付的复杂性和动态性。</p>
+<h4 id="Conclusion">Conclusion</h4>
+<p>以项目高于产品的心态、强调成本高于利润以及遵守时间框架高于交付商业价值为特征，业务与 IT 之间的这种脱节是 IT 和数字化转型失败的核心。这是我们的组织需要从上一个部署周期中吸取的教训，以便有机会与当前的新贵竞争，并为在未来十年蓬勃发展奠定基础。</p>
+<p>挑战在于，在企业 IT 规模下，我们既没有管理框架，也没有管理大规模软件产品交付所需的基础设施。正如你将在下一章中发现的那样，流框架为管理软件交付以实现业务成果而非技术活动提供了一种新方法。</p>
+<p>Flow 框架的目标是在业务驱动的数字化转型与支撑它们的技术转型之间提供缺失的层次。如果数字化转型聚焦于流程和如果只关注活动而非业务成果，就不太可能成功；而企业往往在为时已晚的时候才意识到这一点。组织结构图和 Scrum 团队的概念将一如既往地重要。但是对于一个想要成为软件创新者的组织来说，这些相对于以产品为导向的价值流来说是次要的。流框架确保你的转型建立在连接、衡量和管理你的价值流网络的基础上，这是大规模成功进行软件交付所需的关键层面。</p>
+<p>无论是向产品导向型管理的转变，还是流框架，都不足以确保在软件时代取得成功。组织需要一种管理文化和对快速变化的市场的理解，以便将基于软件的产品推向市场并进行适应。但在我们考虑如何提供更多价值之前，我们必须首先确定如何在软件交付中衡量业务价值。这就是流框架的用武之地。</p>
+<h3 id="Chapter-3">Chapter 3</h3>
+<p>introducing the flow fremework </p>
+<p>介绍流框架</p>
+<p>到目前为止，我们发现企业组织正试图使用过去时代的管理机制来指导这个时代的软件交付。几十年来，信息技术和软件交付成本一直在增长，但我们的组织对现在作为开展业务的最大成本之一的情况却没有足够的洞察力或理解。与此同时，科技巨头和数字初创公司已经掌握了在软件时代取得成功所必需的管理框架。许多在企业内部工作的技术人员也是如此，这些技术人员正在大力推动他们的组织部署他们知道对转型至关重要的 DevOps 和敏捷实践。</p>
+<p>问题在于现代软件交付方法的原则并未转化到业务中。例如，企业仍将 IT 视为一系列项目或成本中心进行管理，而不是采用定义了大规模生产时代赢家的产品导向心态。</p>
+<p>我们需要我们的企业适应这种以产品为导向的思维模式，并以一种支持生产实体小部件和具有无限可塑性的软件组件之间巨大差异的方式来做到这一点。我们需要一个新的框架，一个将敏捷和精益框架的最佳实践提升到业务层面的框架。我们需要定义以业务成果为导向的指标，而不是依赖于以活动为导向的代理指标。</p>
+<p>在这一章中，我将流程框架作为一种将业务与技术相连接的新方法进行介绍。流程框架并非旨在帮助你发现市场变化或制定能够颠覆破坏者的战略产品；它旨在为你提供一个弥合业务战略与技术交付之间差距的层面。流程框架打开了信息技术的黑匣子，以便你能够创建一个全组织范围内的反馈回路，随着软件时代后半程的市场持续发展，加速业务价值向客户的流动以及组织学习以适应变化。</p>
+<p>为了支持流框架的部署，本章介绍价值流网络作为关键的基础设施概念，它能为软件交付带来与我们在制造业中看到的相同的自动化和可见性。本章最后概述了流框架，并对作为其核心的四个流项进行了定义。但在我们进一步了解之前，让我们再次回顾一下工厂。</p>
+<h4 id="Walk-the-lines">Walk the lines</h4>
+<p>宝马 TRIP（出行伴侣）—— 行走在线路上。</p>
+<p>俯瞰 1 系和 2 系的生产过程，很难不惊叹于机器人和身穿蓝色背心的生产线工人的精心编排的动作。我们在装配大楼周围走了大约一英里，放慢脚步查看各个工作站。有些是完全自动化的，大型机器人进行焊接、组装和胶合。其他的则有工人进行复杂的组装步骤。弗兰克在生产线的一个特别复杂的部分让我们停下来，指出一些线束，并描述这些线束中的每一个将如何构成汽车的电气神经系统。</p>
+<p>“每一个线束都不一样，” 弗兰克说。“每辆车都是定制的，这意味着电子元件有无数种组合选项。正因为如此，每条线束都是在车辆到达生产线之前专门为那辆车组装的。”</p>
+<p>弗兰克描述了生产线上安全带装配是多么复杂。他解释说，如果安装过程中出现问题，并且不能在 70 秒的节拍时间内完成，就会拉一根绳子；然后，下一个工作站可以提供帮助来完成这项工作。生产线的结构确保了这项高度复杂的工作能够可靠地完成，而无需将汽车从生产线上移走进行返工。</p>
+<p>弗兰克解释说，在这一点上把一辆汽车从生产线上拉下来会很复杂，因为在下游还有数英里长的生产线。每一个工作站都需要对零件流的重新排序进行补偿。因此，有许多额外的步骤和流程来避免将汽车从流程中移除。</p>
+<p>我对这与软件团队由于不同步于最新版本而破坏构建时所发生的情况之间的相似之处感到震惊。</p>
+<p>代码，以及这种情况对软件组织来说有多昂贵。在这里，一切都是同步的，以确保连续的流程，包括如果工人不能及时完成线束安装所需的余量。</p>
+<p>沿着这条线再往前走是 “关节”—— 建筑物的这些部分是这条线向左转九十度的地方，进入 “手指” 建筑（看起来像是一条有着无尽额外组装步骤的走廊），然后在继续前往下一个 “手指” 之前回到我们所站的地方。</p>
+<p>“天窗安装非常复杂，我们永远不想移动这个工作站，” 弗兰克说。“机器人直接用螺栓固定在地板上，不像其他工作站，那里的机器人可以移动。现在你明白为什么这栋楼是这种建筑结构了。我们可以用新的制造步骤来扩展‘手指’，但‘关节’本身是生产线上的固定点。”</p>
+<p>整个工厂的物理架构已经围绕着当前以及潜在的未来生产线流程进行了优化。五个关键环节是价值流中最复杂的部分，这就是为什么建筑物围绕着它们而建 —— 以便在生产线价值流架构的这些关键限制内最大限度地提高流程和未来的可扩展性。</p>
+<p>为什么我们不能在软件交付中以这种高层次的清晰性来思考约束和依赖关系呢？为什么我们围绕技术边界而不是围绕价值流来进行架构设计呢？</p>
+<h4 id="why-we-need-a-New-Fremework">why we need a New Fremework</h4>
+<p>为什么我们需要一个新的框架？</p>
+<p>第一部分中概述的转型挑战是根本性的。并非必须对其采取行动，许多公司最终将在管理软件交付的无效方法上坚持到底。目前，有明确的数据可以确定下一次颠覆将以多快的速度发生，或者哪种方法或框架在应对这些挑战方面最为有效。</p>
+<p>等到分析师和研究人员获得数据时，就太晚了。软件时代的赢家和输家将获得足够的市场份额，以至于那些采用前几个时代管理技术的人如果没有监管或其他形式的政府干预，会发现很难或不可能赶上。我们已经看到了这方面的迹象：每当亚马逊的股价上涨时，塔吉特、沃尔玛等零售商的股价就会</p>
+<p>Nordstrom 的股价下跌；反之亦然。这并不代表典型的市场动态。我们看到的是一场零和博弈，随着我们继续度过转折点，这种博弈将在一个又一个行业中不断上演。</p>
+<p>众多的方法和框架可用于对企业的各个方面进行转型、现代化和再造。其中一些，如规模化敏捷框架（SAFe），专注于企业软件交付。DevOps 实践的最新进展解决了软件构建和发布方式中的瓶颈问题。其他框架，如摩尔的区域管理，从业务再造的角度解决转型问题。</p>
+<p>这种做法和框架一如既往地具有相关性，Flow 框架假定最适合您企业的做法已经在进行中。Flow 框架的作用是确保业务层面的框架和转型举措与技术层面的框架和举措相连接。正是这些举措的孤立导致了如此多的转型停滞或失败。</p>
+<p>为了实现 DevOps 的三种方式 —— 流、反馈和持续学习，我们需要将 DevOps 的方式从 IT 扩展到业务领域。我们需要一个新的框架来规划、监控并确保当今以软件为中心的数字化转型取得成功。这个新框架不能与业务分离；它必须直接与业务目标和关键结果的衡量相联系。它也不能忽视软件开发的特性，或者假设软件可以像制造业一样进行管理。而且它不能过度关注软件交付的某一个方面，无论是开发、运营还是客户成功。</p>
+<p>新的框架必须以类似于价值流映射、企业请求处理和供应链管理为掌握制造业提供管理构建模块的方式，封装大规模软件交付的管理。这就是流框架的作用。</p>
+<p>在莱比锡工厂，所有员工都知道客户是谁。所有员工都能看到公司价值流在生产线上的活动。所有员工都知道客户从这些价值流中拉动的业务是什么：提供宝马 “纯粹驾驶乐趣” 口号的汽车。并且所有员工都知道工厂的瓶颈是什么。与此形成对比的是当今的企业 IT 组织，在那里不仅员工，而且领导在回答对生产最基本的问题时都存在问题。</p>
+<p>Who is the customer? </p>
+<p>What value is the customer pulling?</p>
+<p> What are the value streams? </p>
+<p>Where is the bottleneck?</p>
+<p>谁是客户？客户拉动的价值是什么？价值流是什么？瓶颈在哪里？</p>
+<p>例如，在大型银行，交付工作没有组织成由价值流支持的产品，因此没有明确或一致的方法来确定项目组合中每个部分的客户。对于许多内部应用程序和组件，客户未被指定；在许多情况下，交付与遗留软件架构的联系比与内部或外部客户需求的联系更紧密。由于项目之间的所有重叠以及项目与软件架构之间缺乏一致性，从面向项目的管理中提取价值流是不可能的。并且由于所有不同的系统以及对局部优化和活动跟踪（而非结果跟踪）的关注，任何人都不可能可靠地知道瓶颈在哪里。</p>
+<p>Flow 框架为回答这些问题提供了一条简单的途径。在你的组织中，有一些关键人员已经知道答案，但他们的努力和愿景需要与组织战略和方法相联系。最重要的是，它为你提供了一种连接价值流网络的方法，测量业务价值流，并将其与你的战略和业务成果相关联。Flow 框架将使你能够：</p>
+<p>实时查看业务价值的端到端流程。立即发现瓶颈并利用它们确定投资优先级。根据来自每个价值流的实时数据检验假设。围绕最大化流量重新设计组织架构。</p>
+<p>一个没有连接且可见的价值流网络就进行竞争的数字组织，将类似于一家在上个时代没有电网却试图竞争的制造商。这些组织将会认识到，在没有流指标或类似指标的情况下管理信息技术，就如同在没有测量电力和计算机功率成本机制的情况下管理云基础设施。</p>
+<h4 id="Focus-on-End-to-End-Results">Focus on End-to-End Results</h4>
+<p>组织架构图和企业架构是我们所拥有的价值创造的最佳表现形式；但它们正在让我们失望，我们也知道这一点。软件投资和人员配置决策是通过传闻做出的，使用静态和过时的数据片段以及基于活动的业务价值代理，而不是直接将技术投资与业务结果相关联的指标。</p>
+<p>在宝马集团莱比锡工厂，价值流清晰可见。价值单元 —— 汽车 —— 沿着装配线流向最终生产。交付速度以及每个单元的质量和完整性可以单独检查，也可以整体检查。在软件组织中，我们没有有形且可见的物体在生产线上流动所带来的好处。</p>
+<p>但是如果我们这样做了呢？如果我们能对软件组织进行实时的、动态的磁共振成像会怎样呢？我们会看到什么从业务流向客户呢？我们会在流动中看到什么模式呢？我们能发现流动受阻的瓶颈在哪里吗？这些就是流框架所回答的问题。</p>
+<p>Flow 框架提供了一个对软件交付结果进行端到端测量的系统。重点是对软件交付的实际情况（正在进行的实际工作）进行测量，并将工作与结果（如创造收入）联系起来。重点完全放在以结果为导向的业务指标上，如收入和成本，而不是价值创造的代理指标，如创建的代码行数或每天的部署次数。</p>
+<p>这并不是说那种代理指标不重要。例如，如果缺乏持续交付自动化是价值流的瓶颈，那么测量每天的部署次数就成为一个关键指标。然而，流框架专注于用于确定价值流中瓶颈所在位置的端到端指标。此外，流框架避免使用活动度量，而倾向于结果度量。没有衡量一个团队或组织 “有多敏捷” 的指标；只是关注有多少业务价值在流动。如果敏捷开发是一个瓶颈，那么测量诸如接受 Scrum 培训的人数之类的代理指标可能会导致业务价值流的增加。</p>
+<p>但是流框架的作用不是指定如何实现敏捷性；这是敏捷框架和培训计划的作用。流框架的作用是帮助您跟踪、管理和改进您在自动化和敏捷性方面的投资。</p>
+<h4 id="Lean-Thinking-Requried">Lean Thinking Requried</h4>
+<p>精益思维必备</p>
+<p>虽然流框架不要求实施特定的敏捷框架或工作模型，也不要求对 DevOps 或客户成功采取任何特定方法，但它确实要求致力于作为这些方法基础的精益理念。在最高层面上，流框架的目的是为大规模软件交付提供一种实施精益思想概念的可行方法。这些概念由詹姆斯・P・沃麦克和丹尼尔・T・琼斯在他们的《精益思想》一书中定义如下：</p>
+<p>精益思想可以概括为五个原则：通过特定产品精确地确定价值，确定每个产品的价值流，使价值不间断地流动，让客户从生产者处拉动价值。</p>
+<p>and pursue perfection.2</p>
+<p>Flow 框架需要在业务层面致力于产品和价值流思维，以及支撑精益思想的流动和客户拉动原则。在我们阅读本书的过程中，我们将确定这五项原则，并重点关注它们与管理软件交付的关系。为此，我们必须首先准确地定义流动、拉动和价值流这些概念如何从大规模生产时代转化到软件时代。</p>
+<h4 id="What-is-value-Stream-">What is value Stream ?</h4>
+<p>精益思想的首要原则之一是 “确定每个产品的价值流”。我们将在第 9 章详细介绍我们是如何做到这一点的；目前，请认为它包括与交付该软件产品相关的每个人、每个过程、每个活动和每种工具。</p>
+<p>价值流：通过产品或服务为客户提供价值而执行的端到端的一系列活动。</p>
+<p>每个产品都需要被明确界定为客户直接使用或作为另一种实体或数字产品的一部分嵌入其中的软件功能的组合。这意味着客户也需要被明确界定，但是客户不必严格定义为外部用户。例如，计费系统的内部业务用户也是客户，这意味着计费系统可以并且应该有自己的价值流。一些组织可能有一个团队生产内部平台或 API（应用程序编程接口），仅供组织内的其他开发人员使用。在这种情况下，客户就是该 API 的使用者。每个产品都有一个客户，他们消费该产品价值流所产生的软件</p>
+<p>价值流由为客户提供业务价值所需的所有活动、利益相关者、流程和工具组成。虽然这听起来可能很明显，但我的第二个顿悟是，组织没有围绕端到端价值流创建抽象，而是一直在功能孤岛中创建它们。例如，如果支持团队或业务利益相关者被排除在流程之外，结果就不再是价值流，而是价值流的一部分。因此，敏捷团队是价值流的一部分，DevOps 团队也是如此。即使是跨职能的特性团队在大型组织中也很少构成完整的价值流。例如，因为他们往往会排除支持团队。</p>
+<p>这并不是说价值流片段不重要，只是管理和衡量它们不是本书的主题。与组织处理端到端价值流的方式相比，我们围绕各个片段的实践是成熟的。例如，许多企业 IT 组织正在使用需求管理、项目和投资组合管理、企业敏捷、持续交付和 DevOps、ITIL 以及客户成功的强大组合。每个都有多个框架、工具和指标，并且在不断发展。流框架指出，我们需要一种新的实践来管理端到端价值流，就像价值流映射为大规模生产时代提供了掌握大规模交付实体产品所需的推动力一样。</p>
+<h4 id="From-Mapping-to-Architecture">From Mapping to Architecture</h4>
+<p>从映射到架构</p>
+<p>在大规模生产时代，随着制造业的不断成熟，形成了处理端到端流程的复杂性和管理的最佳实践。制造业工厂运营中的一个关键实践是价值流映射，正如迈克・罗瑟（Mike Rother）和约翰・舒克（John Shook）在《学会观察》中所总结的那样。</p>
+<p>这种实践为生产流的管理以及识别生产系统中的浪费和瓶颈提供了一种可视化的表示方法和一套度量标准。价值流图的一个例子可以在图 3.1 中找到，在那里我们可以看到生产是如何规划的，以支持客户通过制造流程拉动小部件。我们需要一种类似的方法来理解、构建架构并优化大规模软件交付中的业务价值流。</p>
+<p><img src="/notes-media/img/image-20250104182754737.png" alt="image-20250104182754737"></p>
+<h4 id="Finding-Flow-in-Software-Delivery">Finding Flow in Software Delivery</h4>
+<p>“Flow 框架始于我尝试将制造可视化，就像软件交付的生产流程一样。Flow 框架的核心前提是我们需要衡量业务价值的端到端流程。如果我们只衡量流程的一部分，例如开发人员所花费的时间……”</p>
+<p>为了完成一个敏捷“用户故事”或软件部署所需的时间，我们只能优化价值流的一部分。流框架的目标是一个端到端的视图，我们可以将其与业务结果相关联。因此，流框架的顶层仅关注端到端流项目和指标如何与业务成果相关联。流的定义与我们从制造业中了解到的类似，但它特定于流经软件交付过程的内容。</p>
+<p><em>软件流程：沿着软件价值流产生业务价值所涉及的活动。</em></p>
+<p>Flow 框架完全专注于端到端价值流以及它与业务结果的关联（图 3.2）。通过观察价值流网络中工件的流动所得到的软件交付的真实情况来进行度量（如第三部分详述）。敏捷和 DevOps 指标及遥测位于 Flow 框架的下一层。例如，如果一个敏捷团队在实现其发布目标方面一直很吃力，那么 SAFe 或 Scrum 框架可以提供指标和指导，以实现更好的优先级确定和规划。相比之下，Flow 框架专注于用于首先确定这些瓶颈可能位于何处的端到端指标——例如，如果它们在开发的上游或下游。</p>
+<p><img src="/notes-media/img/image-20250104183130357.png" alt="image-20250104183130357"></p>
+<p>此外，流框架避免采用活动度量，而是倾向于跟踪流指标并将其与结果相关联。没有衡量组织“有多敏捷”或“有多 DevOps”的指标，只是关注每个价值流中有多少业务价值在流动以及它产生了什么结果。如果对市场的响应能力是一个关键需求，流框架可以突出显示。</p>
+<p>对于特定价值而言流程和反馈循环太慢，这意味着可能需要更多敏捷实践。</p>
+<p>Flow 框架的作用是帮助您确定在敏捷和 DevOps 实践中的投资成果，并为您提供改进这些实践所需的指标。总之，目标是为您提供一种扩展流、反馈和持续学习的方法，使其不仅适用于开发和运维，还适用于软件交付的端到端业务流程。</p>
+<p>在顶层，Flow 框架提供了两件事。首先，价值流指标允许你跟踪组织内的每个价值流，以便你有一种将生产指标与业务成果相关联的方法。其次，价值流网络层提供了测量每个产品交付结果所需的基础设施。</p>
+<p>在最高层面上，Flow 框架是一种机制，可使组织中的所有交付活动围绕软件产品进行调整，并跟踪这些活动的业务结果，以便创建一个结果驱动的反馈循环。</p>
+<p>要做到这一点，我们必须回归基本原则，定义客户、他们所拉动的内容以及这种拉动如何作为价值流实现。一旦定义了一个或多个价值流，我们就需要专注于使价值在这些价值流中顺畅流动。但在我们这样做之前，我们必须定义沿着软件价值流流动的单元。</p>
+<p>Flow 框架旨在在最大的组织规模上运行，并在需要时支持严格的监管要求（在第三部分中讨论）。这意味着即使是最传统、最复杂或对安全至关重要的组织也可以应用这些概念，以适合其业务的正确速度推动软件创新。为了做到这一点，我们首先需要了解构成该框架的四个主要流项。</p>
+<h4 id="The-four-flow-items">The four flow items</h4>
+<p>“四项流动物品”。</p>
+<p>每次我询问高级或执行级别的 IT 领导他们的瓶颈在哪里时，我要么得到茫然的凝视，要么得到含糊的回答。但是，当置于正确的背景下时，仅仅探索这个问题的思维过程就会使一个严重的问题变得明显。绝大多数企业 IT 组织对于其软件生产流程中的内容没有明确的生产力衡量标准。</p>
+<p>如果企业对生产力没有共同的理解，就不可能对瓶颈有共同的理解。与汽车行业形成对比的是，在汽车行业，生产的汽车数量是汽车价值流非常明确的生产力衡量标准。更糟糕的是，不仅仅是那些急于围绕重要指标进行调整的组织；而是整个软件行业都是如此。</p>
+<p>目前，学术界和行业思想领袖对于什么构成软件开发生产力并没有明确的共识。组织在看到它时就知道了 —— 也许是通过比其他产品更快地推动市场采用和收入的产品。但是，将开发活动与这些结果相关联更多的是一种不透明的艺术，而不是一种有纪律的活动。为了在价值流中定义生产力，我们必须首先定义什么在流动。</p>
+<p>要做到这一点，我们需要回到本章前面总结的精益思想的首要原则。精益思想不是从产品开始，而是从客户拉动的价值开始。如果我们回想一下软件的早期，公司推出包装在收缩包装盒子里的安装盘，我们可以尝试与汽车生产进行类比，并将生产的小部件定义为那些盒子。但这种类比在当时就很牵强，在持续交付和云时代，它就变得无关紧要了。如果客户不拉动发布，客户拉动的价值是什么呢？</p>
+<p>为了获取价值，客户必须能够看到该价值，并愿意用一些经济单位来交换它。对于内部产品，这可以是采用率（例如，让不同的业务部门采用一个通用的身份验证系统）。对于外部产品，这个单位可以是收入；或者对于具有间接或基于广告的盈利模式的产品，如社交媒体工具，它可能是用户在产品上花费的时间。对于政府或非营利组织，它可以是新推出的数字产品的采用率。</p>
+<p>在这些场景中，想想你上一次从一个产品中获得新价值，或者重新使用一个你之前没用过的产品的时候。在花费你的时间或金钱方面，是什么引发了这种价值交换呢？很可能是一个满足你使用需求的新功能，并且可能在某种程度上让你感到高兴。或者是修复了一个缺陷，这个缺陷曾阻止你使用一个你原本很重视的产品。这里就隐藏着定义软件价值流中流动内容的关键：如果我们正在获取的是新功能和缺陷修复，那么这些就是软件价值流中的流动项目。</p>
+<p>流程项：由利益相关者通过产品的价值流拉动的业务价值单位。</p>
+<p>如果这些是流项目，那就意味着我们可以将价值流中所有人员和团队的工作描述为适用于这些项目之一 —— 我们确实可以这样做。如果对组织中的每个流程和工具都有完全的可见性，你可以确切地确定有多少设计师、开发人员、经理、测试人员和帮助台专业人员参与了创建、部署和支持特定功能。对于缺陷也是如此。但这是价值流中正在进行的唯一工作吗？</p>
+<p>“对 308 个企业 IT 工具网络进行的‘挖掘企业工具链的真相’分析（我在第 1 章中提到的研究）确定了另外两种对用户不可见但由不同类型的利益相关者拉入价值流的工作。首先，有关于风险的工作。这包括各种安全、法规和合规性工作，必须由业务分析师定义，安排到开发积压工作中，实施、测试、部署和维护。换句话说，这是与功能和缺陷竞争优先级的工作，因此，是主要的流项目之一。这种类型的工作不是由客户拉动的，因为监管或合规风险工作通常在为时已晚之前对客户不可见（例如，安全事件导致许多安全缺陷被修复并添加安全功能）。相反，它是由组织内部拉动的；例如，由首席风险官及其团队拉动。”</p>
+<p>最后一种也是第四种工作是减少技术债务，它描述了对软件和基础设施代码库进行工作的需求，如果不这样做，将来修改或维护该代码的能力将会降低。例如，专注于功能交付可能会导致大量技术债务的积累。如果不进行减少技术债务的工作，那么它可能会阻碍未来交付功能的能力；例如，使软件架构过于混乱而无法进行创新。表 3.1 总结了这四个流项目。</p>
+<p>虽然风险和技术债务的概念在 Flow 框架中并不新鲜，但对每个流项目的测量的关注导致了关于如何管理它们的一系列非常不同的结论。在使用 Flow 框架时，唯一应该优先考虑的技术债务工作是增加未来通过价值流的流量的工作。技术债务永远不应该仅仅为了软件架构而做，比如使用它来改善架构层的分离。这意味着每个流项目的流程应该塑造软件架构，而不是反过来，这与许多企业架构的发展方式背道而驰。</p>
+<p><img src="/notes-media/img/image-20250104183500664.png" alt="image-20250104183500664"></p>
+<p>首先关注流，架构的其他方面，如基础设施成本和信息安全，可以根据其业务相关性进行规划。例如，在孵化区产品得到验证之前投资架构以降低成本，与产品一旦得到验证后围绕成本降低进行重新架构相比，可能是一种浪费。</p>
+<p>已证明具有可行性，并已为转型区做好准备。</p>
+<p>在性能区，对流程的关注需求对于产品来说是相似的。例如：在 2017 年 DevOps 企业峰会中，约翰・奥尔索普提出了将生产软件事件视为对系统架构的意外投资的案例。这正是流程框架旨在衡量和支持的方法。</p>
+<p>与其专注于支持任何意外情况的软件架构，不如把重点放在预测产品价值流中事件的未来走向，并针对此优化架构。这意味着构建具有弹性的架构以最大限度地减少这些事件发生的可能性，并创建一个软件架构、基础设施架构和价值流架构，以便能够快速响应其余不可预见的事件。其结果类似于宝马集团对建筑物 “手指” 结构所做的那样：他们预测了架构如何需要适应未来的流动，而不是预先构建对这些流动的所有支持。</p>
+<p>四个流项目遵循相互独立、完全穷尽的 MECE 原则。换句话说，在软件价值流中流动的所有工作都具有一个（且只有一个）流项目的特征。这意味着对各种流项目进行优先级排序等活动是一种零和博弈，正如我们将在第 4 章探讨的那样。</p>
+<p>软件工作项还有其他特征描述，例如菲利普・克鲁奇滕（Philippe Kruchten）及其同事将工作分解为积极 / 消极和可见 / 不可见四个象限（例如，功能是积极且可见的，而架构改进是积极且不可见的）。这些特征描述对于规划开发工作很有用。同样，ITIL 定义了问题、事件和变更之间的重要区别，这对于描述 IT 服务台工作很有用。然而，这些分类法比流项低一层，对于描述在交付流项过程中正在处理的工件类型更有用。</p>
+<p>由于流项目旨在以对业务利益相关者和客户最有意义的方式跟踪工作的最通用特征，因此其他分类法可能会与流项目交叉。例如，在 SAFe 分类法中，它提供了软件交付中许多种类工作项的详细定义，架构工作的术语是</p>
+<p>这种架构促成因素（enablers）9 的工作可以通过提供支持合规所需的基础设施来减少债务、支持添加新功能、修复缺陷或解决风险。这意味着架构工作项可以归入任何流程项中。对于性能改进也是类似的情况，因为性能工作可以作为功能工作的支持来完成，例如扩展到新市场，或者如果现有用户群正在遇到一系列相关的性能问题，作为缺陷修复的一部分。</p>
+<p>虽然流项下面的层很关键，但流框架的主要重点是将技术和架构与业务联系起来，使用最少数量的概念，这些概念是高管和技术人员能够达成一致并理解的。因此，价值流中所有专家正在进行的每个单元或工作项都需要映射到四个流项之一。</p>
+<p>最后，你会看到没有单独的流项代表对价值流网络的改进以改善流。在从项目向产品的转变中，价值流网络本身需要被视为一个产品，有自己稳定的交付团队，而不是一个有明确终点的项目。大多数价值流网络的改进，无论是连接不同的利益相关者还是为流指标创建仪表板，都将由这个团队负责。在特定价值流上的团队需要对其工作流程进行更改的情况下 —— 例如，通过从手动合规检查切换到自动化安全工具来消除浪费 —— 这项工作属于该团队的债务流项。</p>
+<h4 id="结论-2">结论</h4>
+<p>技术人员所了解的有效软件交付方式与企业处理软件项目的方式之间存在很大差距。虽然 DevOps 和敏捷原则对技术人员的工作方式产生了重大影响，但它们过于以技术为中心，尚未被业务利益相关者广泛采用。为了弥合这一差距，我们需要一种新的框架，它能够跨越业务语言和技术语言，并实现从项目到产品的过渡。我们需要该框架将 DevOps 的三种方式 —— 流动、反馈和持续学习 —— 扩展到整个业务。这就是流框架的目标。</p>
+<h2 id="第一部分小结">第一部分小结</h2>
+<p>第一部分总结</p>
+<p>在第一部分中，我们了解了五次技术革命以及在软件时代取得成功如何取决于组织从项目向产品转变的能力。卡洛塔・佩雷斯的著作描述了每个时代是如何分为安装期，接着是转折点，然后是部署期。我们大约处于软件时代的五十年，根据佩雷斯的说法，我们仍处于转折点的某个阶段。</p>
+<p>掌握基于软件的生产方式及其数字化转型的组织，在这个转折点有机会生存和繁荣。那些继续应用过去时代管理范式的组织很可能会衰落或消亡。科技巨头已经掌握了这种新的生产方式，数字初创企业也在这种新的工作方式中诞生，但世界上大多数组织还没有。这并不是因为缺乏尝试，而是规模、复杂性、传统和过时的管理范式的结合，使得在确保生存的时间框架内无法实现这种转变。我们需要一种新的方法。</p>
+<p>在软件时代蓬勃发展的转型需要从项目管理转向产品管理以进行软件交付。第 2 章总结了以项目为导向的管理的陷阱，而第 3 章介绍了流框架作为一种补救措施。四个流项目 —— 特性、缺陷、风险和债务 —— 提供了打开 IT 和软件交付黑匣子的最简单和最通用的方法。</p>
+<p>现在的挑战是企业要学会在打开那个盒子后看到里面有什么。技术人员已经看到了。他们能够跟踪他们所从事的软件产品所交付的价值，并且已经有十年的时间来掌握敏捷实践，以便相互理解、确定优先级和进行沟通。问题是我们没有为所有利益相关者提供一种共同的语言来弥合业务与技术之间的差距。在第二部分，引入了价值流指标的语言来做到这一点。</p>
+<h2 id="第二部分价值流指标Part-II">第二部分：价值流指标（Part II）</h2>
+<p>Value  Stream Metric </p>
+<h3 id="Chapter-4">Chapter 4</h3>
+<p>第 4 章 捕获流指标</p>
+<p>UST 作为生产线为 BMW Group 提供了对物理生产的可见性，价值流和四个流项目为我们提供了在软件交付中看到业务价值流所需的抽象。为了获得这种可见性，我们首先需要确定与跟踪每个价值流的生产力最相关的关键指标。然后，我们需要一种方法将这些指标应用于我们的价值流。</p>
+<p>例如，我们的目标应该是缩短所有价值流的相同交付周期，还是需要一种方法来决定哪个交付周期适合每个价值流？如果我们考虑一下我在宝马集团莱比锡工厂学到的东西，答案显然是后者。</p>
+<p>本章将继续工厂参观，以帮助描绘流程指标的调整对于使面向产品的价值流与业务目标保持一致的重要性。</p>
+<p>除了研究价值流的一致性之外，我们还将讨论为什么四个流项的分布是将价值流与业务战略保持一致的关键指标，以及如何衡量每个价值流交付的业务价值的速度。</p>
+<p>我们将介绍如何跟踪流程时间，以及此度量与精益和敏捷中使用的其他时间度量的比较。最后，我们将了解跟踪价值流上的负载如何为您提供过度使用影响的高级领先指标，过度使用可能会导致生产力降低。本章将概述如何测量流效率。</p>
+<p>BMW TRIP Architecting for Innovation</p>
+<p>BMW TRIP 创新架构</p>
+<p>在查看了 1 系列和 2 系列生产线的两个 “指节” 后，Frank 转身离开生产线，指向连接到 i 系列生产线的一条大走廊，现在几乎就在眼前。沿着这段话，我们</p>
+</div> <footer class="detail-cta" data-astro-cid-5eggoaxc> <p data-astro-cid-5eggoaxc> <strong data-page-zh="继续探索" data-page-en="Keep exploring" data-astro-cid-5eggoaxc>继续探索</strong> <span data-page-zh="经审核的对外副本收录在知识库中。" data-page-en="Reviewed public copies are available in the knowledge base." data-astro-cid-5eggoaxc>经审核的对外副本收录在知识库中。</span> </p> <div class="cta-links" data-astro-cid-5eggoaxc> <a href="/notes/" data-page-zh="返回笔记" data-page-en="Back to notes" data-astro-cid-5eggoaxc>返回笔记</a> <a href="/knowledge/" data-page-zh="查看知识库 ↗" data-page-en="View knowledge base ↗" data-astro-cid-5eggoaxc>查看知识库 ↗</a> </div> </footer> </main> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"> <span>© 2026 Boyang Wang</span> <span>用好奇心构建，用工程落地。</span> <a class="footer-wechat-link" href="/about/#wechat">微信公众号 ↗</a> <a href="#top">回到顶部 ↑</a> </footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '微信公众号':'WeChat Official Account',
+    '微信公众号 ↗':'WeChat Official Account ↗',
+    '微信搜一搜或扫码关注，阅读技术文章与工程实践':'Follow via WeChat Search or scan for articles and engineering notes',
+    '也可通过微信公众号获取更新；扫码或微信搜一搜即可关注。':'Follow on WeChat for updates—search or scan to subscribe.',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const g=[...document.querySelectorAll("[data-page-zh][data-page-en]")],i=c=>{g.forEach(a=>{a.textContent=c==="en"?a.dataset.pageEn??"":a.dataset.pageZh??""})};i(document.documentElement.lang);window.addEventListener("language-change",c=>{i(c.detail)});const r=[...document.querySelectorAll(".toc-link")];if(r.length>0){const c=new Map(r.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),a=window.expandTocBranchForLink,s=e=>{r.forEach(o=>{const t=decodeURIComponent(o.hash.slice(1))===e;o.classList.toggle("is-active",t),t?(o.setAttribute("aria-current","location"),a?.(o)):o.removeAttribute("aria-current")})},n=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>c.has(e.id));if(n.length>0){s(n[0].id);const e=()=>{const l=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?n[n.length-1]:n.reduce((h,d)=>d.getBoundingClientRect().top<=112?d:h,n[0]);s(l.id)},o=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});n.forEach(t=>o.observe(t)),window.addEventListener("scroll",e,{passive:!0}),r.forEach(t=>t.addEventListener("click",()=>s(decodeURIComponent(t.hash.slice(1)))))}}</script> 

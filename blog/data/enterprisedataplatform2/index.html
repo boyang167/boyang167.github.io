@@ -1,0 +1,2342 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="V2.0 高层设计：以开源组件为底座，建设统一的数据接入、存储、计算、治理、开发、服务与 AI 应用平台。"><meta id="theme-color" name="theme-color" content="#f5f7fb"><script>
+      {
+        const LIGHT_THEME_COLOR = '#f5f7fb';
+        const DARK_THEME_COLOR = '#0d1422';
+        const syncThemeColor = (theme) => {
+          const themeColor = document.querySelector('#theme-color');
+          themeColor?.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+        };
+        const initialTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+        syncThemeColor(initialTheme);
+        window.addEventListener('theme-change', (event) => syncThemeColor(event.detail));
+      }
+    </script><title>自建企业级数据平台总体架构设计2 · Boyang Wang</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/about.t04Za6ld.css">
+<link rel="stylesheet" href="/_astro/_slug_.BBHBVTRi.css">
+<link rel="stylesheet" href="/_astro/_slug_.B3BXc7_W.css"></head> <body> <header class="site-header wrap" data-astro-cid-3ef6ksr2> <a class="brand" href="/" aria-label="返回首页" data-astro-cid-3ef6ksr2><span class="brand-mark" data-astro-cid-3ef6ksr2>B</span><span data-astro-cid-3ef6ksr2>Boyang Wang<span class="brand-sub" data-astro-cid-3ef6ksr2>PERSONAL TECH HUB</span></span></a> <nav id="primary-navigation" aria-label="主导航" data-astro-cid-3ef6ksr2> <a class="nav-link" href="/" data-astro-cid-3ef6ksr2>首页</a><a class="nav-link" href="/about/" data-astro-cid-3ef6ksr2>关于我</a><a class="nav-link active" href="/blog/" aria-current="page" data-astro-cid-3ef6ksr2>技术博客</a><a class="nav-link" href="/notes/" data-astro-cid-3ef6ksr2>笔记</a><a class="nav-link" href="/knowledge/" data-astro-cid-3ef6ksr2>知识库</a><a class="nav-link" href="/skills/" data-astro-cid-3ef6ksr2>Skill</a> </nav> <div class="header-actions" data-astro-cid-3ef6ksr2> <button class="language-button" id="language-toggle" aria-label="切换语言" title="切换语言" data-astro-cid-3ef6ksr2>EN</button> <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式" aria-pressed="false" data-astro-cid-3ef6ksr2>◐</button> <a class="icon-button github-link" href="https://github.com/boyang167" target="_blank" rel="noopener noreferrer" aria-label="GitHub：boyang167" title="GitHub · boyang167" data-astro-cid-3ef6ksr2> <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" data-astro-cid-3ef6ksr2> <path fill="currentColor" d="M12 0C5.37 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.565 22.092 24 17.592 24 12c0-6.627-5.373-12-12-12z" data-astro-cid-3ef6ksr2></path> </svg> </a> <div class="header-cta" aria-label="联系与社交" data-astro-cid-3ef6ksr2> <a class="contact-pill" href="/about/#contact" data-astro-cid-3ef6ksr2>联系我 <span aria-hidden="true" data-astro-cid-3ef6ksr2>↗</span></a> </div> <button class="menu-toggle" id="menu-toggle" aria-label="打开导航" aria-controls="primary-navigation" aria-expanded="false" data-astro-cid-3ef6ksr2>☰</button> </div> </header> <script type="module">const t=document.querySelector("#language-toggle"),a=document.querySelector("#theme-toggle"),s=document.querySelector("#menu-toggle"),i=(e=document.documentElement.lang)=>{const n=document.documentElement.classList.contains("dark"),l=e==="en"?n?"Switch to light mode":"Switch to dark mode":n?"切换浅色模式":"切换深色模式";a?.setAttribute("aria-pressed",String(n)),a?.setAttribute("aria-label",l),a?.setAttribute("title",l)};a?.addEventListener("click",()=>{const e=document.documentElement.classList.toggle("dark");localStorage.setItem("theme",e?"dark":"light"),i(),window.dispatchEvent(new CustomEvent("theme-change",{detail:e?"dark":"light"}))});i();const d=()=>{const e=document.documentElement.lang==="en";t&&(t.textContent=e?"ZH":"EN"),t&&t.setAttribute("aria-label",e?"Switch to Chinese":"切换到英文"),t&&t.setAttribute("title",e?"Switch to Chinese":"切换到英文")};t?.addEventListener("click",()=>{const e=document.documentElement.lang==="en"?"zh":"en";window.dispatchEvent(new CustomEvent("language-change",{detail:e})),d(),c(o?.classList.contains("menu-open")??!1)});window.addEventListener("language-change",e=>i(e.detail));d();const o=document.querySelector(".site-header"),c=e=>{o?.classList.toggle("menu-open",e),s?.setAttribute("aria-expanded",String(e));const n=document.documentElement.lang==="en";s?.setAttribute("aria-label",n?e?"Close navigation":"Open navigation":e?"关闭导航":"打开导航")},u=()=>c(!1);c(!1);s?.addEventListener("click",()=>{c(!o?.classList.contains("menu-open"))});o?.querySelectorAll("nav a").forEach(e=>e.addEventListener("click",u));document.addEventListener("keydown",e=>{e.key==="Escape"&&u()});</script>  <main> <article class="wrap post-page" data-astro-cid-7jjqptxk> <header class="post-top" data-astro-cid-7jjqptxk> <a class="text-link post-back" href="/blog/" data-astro-cid-7jjqptxk>← 返回技术博客</a> <div class="post-banner" data-astro-cid-7jjqptxk> <span class="post-banner-icon" aria-hidden="true" data-astro-cid-7jjqptxk>⌁</span> </div> <div class="post-head" data-astro-cid-7jjqptxk> <div class="eyebrow" data-astro-cid-7jjqptxk>DataPlatform</div> <h1 data-astro-cid-7jjqptxk>自建企业级数据平台总体架构设计2</h1> <p class="post-lead" data-astro-cid-7jjqptxk>V2.0 高层设计：以开源组件为底座，建设统一的数据接入、存储、计算、治理、开发、服务与 AI 应用平台。</p> <p class="post-meta muted" data-astro-cid-7jjqptxk> <span data-astro-cid-7jjqptxk>Boyang Wang</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>2026-11-02</span> <span class="post-meta-sep" data-astro-cid-7jjqptxk>·</span> <span data-astro-cid-7jjqptxk>阅读 50 分钟</span> </p> </div> </header> <div class="post-layout" data-astro-cid-7jjqptxk> <aside class="post-toc article-toc-panel" aria-label="本文目录"> <div class="toc-panel-head"> <p class="post-toc-title">本文目录</p> <button type="button" class="toc-panel-hide" aria-expanded="true" aria-controls="article-toc-nav" data-i18n-label-zh="隐藏目录" data-i18n-label-en="Hide table of contents"> <span class="toc-panel-hide-icon" aria-hidden="true"></span> </button> </div> <nav id="article-toc-nav" class="post-toc-nav"> <div class="toc-branch"><a href="#11-项目背景" class="post-toc-link depth-2 toc-branch-leaf">1.1 项目背景</a></div><div class="toc-branch"><a href="#12-建设目标" class="post-toc-link depth-2 toc-branch-leaf">1.2 建设目标</a></div><div class="toc-branch"><a href="#13-建设原则" class="post-toc-link depth-2 toc-branch-leaf">1.3 建设原则</a></div><div class="toc-branch"><a href="#21-总体架构" class="post-toc-link depth-2 toc-branch-leaf">2.1 总体架构</a></div><div class="toc-branch"><a href="#22-核心架构分区" class="post-toc-link depth-2 toc-branch-leaf">2.2 核心架构分区</a></div><div class="toc-branch"><a href="#31-核心技术栈" class="post-toc-link depth-2 toc-branch-leaf">3.1 核心技术栈</a></div><div class="toc-branch toc-branch--parent"><script type="module">const n=t=>{document.querySelectorAll(".toc-branch-toggle").forEach(e=>{const c=e.getAttribute("aria-expanded")==="true",a=c?e.dataset.i18nAriaZh:e.dataset.i18nExpandZh,o=c?e.dataset.i18nAriaEn:e.dataset.i18nExpandEn;e.setAttribute("aria-label",t==="en"?o??"":a??"")})},r=()=>{document.querySelectorAll(".toc-branch-toggle").forEach(t=>{t.dataset.tocCollapseBound!=="1"&&(t.dataset.tocCollapseBound="1",t.addEventListener("click",()=>{const c=t.closest(".toc-branch")?.querySelector(":scope > .toc-branch-children"),a=t.getAttribute("aria-expanded")==="true";t.setAttribute("aria-expanded",String(!a)),c?.classList.toggle("is-collapsed",a),n(document.documentElement.lang)}))}),n(document.documentElement.lang)};r();window.addEventListener("language-change",t=>{n(t.detail)});window.expandTocBranchForLink=t=>{let e=t.closest(".toc-branch");for(;e;){const c=e.querySelector(":scope > .toc-branch-children"),a=e.querySelector(":scope > .toc-branch-head .toc-branch-toggle");c?.classList.remove("is-collapsed"),a?.setAttribute("aria-expanded","true"),e=e.parentElement?.closest(".toc-branch")??null}n(document.documentElement.lang)};</script><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#32-选型约束" class="post-toc-link depth-2">3.2 选型约束</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#调度引擎" class="post-toc-link depth-3 toc-branch-leaf">调度引擎</a></div><div class="toc-branch"><a href="#数据集成" class="post-toc-link depth-3 toc-branch-leaf">数据集成</a></div><div class="toc-branch"><a href="#湖仓存储" class="post-toc-link depth-3 toc-branch-leaf">湖仓存储</a></div><div class="toc-branch"><a href="#OLAP-引擎" class="post-toc-link depth-3 toc-branch-leaf">OLAP 引擎</a></div></div></div><div class="toc-branch"><a href="#41-数据分层" class="post-toc-link depth-2 toc-branch-leaf">4.1 数据分层</a></div><div class="toc-branch"><a href="#42-数据链路" class="post-toc-link depth-2 toc-branch-leaf">4.2 数据链路</a></div><div class="toc-branch"><a href="#43-存储目录规范" class="post-toc-link depth-2 toc-branch-leaf">4.3 存储目录规范</a></div><div class="toc-branch"><a href="#51-数据开发流程" class="post-toc-link depth-2 toc-branch-leaf">5.1 数据开发流程</a></div><div class="toc-branch"><a href="#52-调度体系" class="post-toc-link depth-2 toc-branch-leaf">5.2 调度体系</a></div><div class="toc-branch"><a href="#61-建设目标" class="post-toc-link depth-2 toc-branch-leaf">6.1 建设目标</a></div><div class="toc-branch"><a href="#62-治理架构" class="post-toc-link depth-2 toc-branch-leaf">6.2 治理架构</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#63-Metadata-Management" class="post-toc-link depth-2">6.3 Metadata Management</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#核心实体" class="post-toc-link depth-3 toc-branch-leaf">核心实体</a></div></div></div><div class="toc-branch"><a href="#64-Data-Catalog" class="post-toc-link depth-2 toc-branch-leaf">6.4 Data Catalog</a></div><div class="toc-branch"><a href="#65-Data-Lineage" class="post-toc-link depth-2 toc-branch-leaf">6.5 Data Lineage</a></div><div class="toc-branch"><a href="#66-Data-Security" class="post-toc-link depth-2 toc-branch-leaf">6.6 Data Security</a></div><div class="toc-branch"><a href="#67-Approval-Workflow" class="post-toc-link depth-2 toc-branch-leaf">6.7 Approval Workflow</a></div><div class="toc-branch"><a href="#68-Data-Discovery" class="post-toc-link depth-2 toc-branch-leaf">6.8 Data Discovery</a></div><div class="toc-branch"><a href="#69-Data-Quality" class="post-toc-link depth-2 toc-branch-leaf">6.9 Data Quality</a></div><div class="toc-branch"><a href="#610-Data-Asset-Management" class="post-toc-link depth-2 toc-branch-leaf">6.10 Data Asset Management</a></div><div class="toc-branch"><a href="#71-产品选型原则" class="post-toc-link depth-2 toc-branch-leaf">7.1 产品选型原则</a></div><div class="toc-branch toc-branch--parent"><div class="toc-branch-head"><button type="button" class="toc-branch-toggle" aria-expanded="false" aria-label="展开子目录" data-i18n-aria-zh="折叠子目录" data-i18n-aria-en="Collapse subsection" data-i18n-expand-zh="展开子目录" data-i18n-expand-en="Expand subsection"><span class="toc-branch-chevron" aria-hidden="true"></span></button><a href="#72-开源产品比较" class="post-toc-link depth-2">7.2 开源产品比较</a></div><div class="toc-branch-children is-collapsed"><div class="toc-branch"><a href="#推荐结论" class="post-toc-link depth-3 toc-branch-leaf">推荐结论</a></div></div></div><div class="toc-branch"><a href="#73-多-Catalog--Unified-Portal" class="post-toc-link depth-2 toc-branch-leaf">7.3 多 Catalog + Unified Portal</a></div><div class="toc-branch"><a href="#81-建设定位" class="post-toc-link depth-2 toc-branch-leaf">8.1 建设定位</a></div><div class="toc-branch"><a href="#82-Portal-菜单建议" class="post-toc-link depth-2 toc-branch-leaf">8.2 Portal 菜单建议</a></div><div class="toc-branch"><a href="#83-自研边界" class="post-toc-link depth-2 toc-branch-leaf">8.3 自研边界</a></div><div class="toc-branch"><a href="#91-集成架构" class="post-toc-link depth-2 toc-branch-leaf">9.1 集成架构</a></div><div class="toc-branch"><a href="#92-核心服务" class="post-toc-link depth-2 toc-branch-leaf">9.2 核心服务</a></div><div class="toc-branch"><a href="#93-权限执行流程" class="post-toc-link depth-2 toc-branch-leaf">9.3 权限执行流程</a></div><div class="toc-branch"><a href="#101-Kubernetes-部署" class="post-toc-link depth-2 toc-branch-leaf">10.1 Kubernetes 部署</a></div><div class="toc-branch"><a href="#102-高可用设计" class="post-toc-link depth-2 toc-branch-leaf">10.2 高可用设计</a></div><div class="toc-branch"><a href="#103-环境隔离" class="post-toc-link depth-2 toc-branch-leaf">10.3 环境隔离</a></div><div class="toc-branch"><a href="#121-Data-Agent" class="post-toc-link depth-2 toc-branch-leaf">12.1 Data Agent</a></div><div class="toc-branch"><a href="#122-MLOps" class="post-toc-link depth-2 toc-branch-leaf">12.2 MLOps</a></div><div class="toc-branch"><a href="#Phase-1基础数据平台" class="post-toc-link depth-2 toc-branch-leaf">Phase 1：基础数据平台</a></div><div class="toc-branch"><a href="#Phase-2实时计算与数据治理基础" class="post-toc-link depth-2 toc-branch-leaf">Phase 2：实时计算与数据治理基础</a></div><div class="toc-branch"><a href="#Phase-3统一治理和数据资产运营" class="post-toc-link depth-2 toc-branch-leaf">Phase 3：统一治理和数据资产运营</a></div><div class="toc-branch"><a href="#Phase-4AI-和智能化数据平台" class="post-toc-link depth-2 toc-branch-leaf">Phase 4：AI 和智能化数据平台</a></div><div class="toc-branch"><a href="#131-阶段优先级" class="post-toc-link depth-2 toc-branch-leaf">13.1 阶段优先级</a></div><div class="toc-branch"><a href="#141-数据计算-POC" class="post-toc-link depth-2 toc-branch-leaf">14.1 数据计算 POC</a></div><div class="toc-branch"><a href="#142-数据治理-POC" class="post-toc-link depth-2 toc-branch-leaf">14.2 数据治理 POC</a></div><div class="toc-branch"><a href="#143-开源产品-POC" class="post-toc-link depth-2 toc-branch-leaf">14.3 开源产品 POC</a></div><div class="toc-branch"><a href="#161-最终架构决策" class="post-toc-link depth-2 toc-branch-leaf">16.1 最终架构决策</a></div> </nav> </aside> <script type="module">const u="portal-article-toc-hidden",y=()=>document.documentElement.lang,i=()=>{const t=y()!=="en";document.querySelectorAll(".toc-panel-hide").forEach(o=>{o.setAttribute("aria-label",t?o.dataset.i18nLabelZh??"":o.dataset.i18nLabelEn??"")}),document.querySelectorAll(".toc-panel-restore").forEach(o=>{o.textContent=t?o.dataset.i18nTextZh??"":o.dataset.i18nTextEn??"",o.setAttribute("aria-label",t?o.dataset.i18nAriaZh??"":o.dataset.i18nAriaEn??"")})},p=e=>e.closest(".detail-layout, .post-layout");let l=null;const d=e=>{l=e;let t=document.body.querySelector(".toc-panel-restore");return t||(t=document.createElement("button"),t.type="button",t.className="toc-panel-restore",t.hidden=!0,t.dataset.i18nTextZh="目录",t.dataset.i18nTextEn="TOC",t.dataset.i18nAriaZh="显示目录",t.dataset.i18nAriaEn="Show table of contents",t.textContent="目录",document.body.appendChild(t),t.addEventListener("click",()=>{l&&r(l,!1)})),t},r=(e,t)=>{const n=e.querySelector(".article-toc-panel")?.querySelector(".toc-panel-hide"),a=d(e);e.classList.toggle("layout--toc-hidden",t),e.classList.toggle("post-layout--solo",t&&e.classList.contains("post-layout")),e.classList.toggle("detail-layout--no-toc",t&&e.classList.contains("detail-layout")),n?.setAttribute("aria-expanded",String(!t)),a&&(a.hidden=!t);try{localStorage.setItem(u,t?"1":"0")}catch{}i()},g=()=>{document.querySelectorAll(".article-toc-panel").forEach(e=>{const t=p(e);if(!t||e.dataset.tocPanelBound==="1")return;e.dataset.tocPanelBound="1";const o=e.querySelector(".toc-panel-hide");d(t),o?.addEventListener("click",()=>r(t,!0));let n=!1;try{n=localStorage.getItem(u)==="1"}catch{n=!1}r(t,n)}),i()},s=()=>{const t=document.querySelector(".detail-layout:not(.layout--toc-hidden), .post-layout:not(.layout--toc-hidden)")?.querySelector(".article-toc-panel"),o=t?.querySelector(".toc-link.is-active, .post-toc-link.is-active");if(!t||!o||t.scrollHeight<=t.clientHeight+1)return;const n=t.getBoundingClientRect(),a=o.getBoundingClientRect(),c=12;a.top<n.top+c?t.scrollTop-=n.top+c-a.top:a.bottom>n.bottom-c&&(t.scrollTop+=a.bottom-n.bottom+c)},h=()=>{const t=document.querySelector(".detail-layout, .post-layout")?.querySelector(".toc-nav, .post-toc-nav");if(!t||t.dataset.tocAutoscrollBound==="1")return;t.dataset.tocAutoscrollBound="1",t.addEventListener("click",()=>requestAnimationFrame(s)),new MutationObserver(()=>s()).observe(t,{subtree:!0,attributes:!0,attributeFilter:["class"]});let n=0;window.addEventListener("scroll",()=>{n||(n=requestAnimationFrame(()=>{n=0,s()}))},{passive:!0})};g();h();window.addEventListener("language-change",()=>i());</script>  <div class="post-main" data-astro-cid-7jjqptxk> <div class="post-prose prose" data-astro-cid-7jjqptxk><h1 id="Enterprise-Data-Platform-Architecture">Enterprise Data Platform Architecture</h1>
+<p><strong>版本：</strong> V2.0<br><strong>文档类型：</strong> High-Level Design（<strong>HLD</strong>，高层设计 / 概要设计）<br><strong>建设模式：</strong> 开源组件底座 + 自研统一门户与治理能力<br><strong>部署模式：</strong> Kubernetes / 私有化部署 / 混合云<br><strong>架构目标：</strong> 建设统一的数据接入、存储、计算、治理、开发、服务和 AI 应用平台。</p>
+<blockquote>
+<p><strong>HLD 读者预期</strong>：本文描述目标态架构、能力域划分、选型原则、分阶段路线与 POC 验收标准，供立项评审与总体设计对齐使用。组件级部署参数、具体库表与接口契约属于 <strong>LLD（Low-Level Design，详细设计）</strong>，不在本文展开。精要版见 <a href="/blog/data/enterprisedataplatform/">EnterpriseDataPlatform.md</a>；系列术语见 <a href="/blog/data/dataplatformseriesoverview/#01-%E6%9C%AF%E8%AF%ADhld--lld--poc--sku">DataPlatformSeriesOverview.md §0.1</a>。</p>
+</blockquote>
+<hr>
+<h1 id="1-项目背景与建设目标">1. 项目背景与建设目标</h1>
+<h2 id="11-项目背景">1.1 项目背景</h2>
+<p>随着企业数据规模、数据来源和业务应用不断增加，传统以数据库、ETL 工具和独立 BI 系统为中心的数据架构，逐渐出现以下问题：</p>
+<ol>
+<li><strong>数据孤岛：</strong> 数据分散在不同业务系统、数据库、云平台和文件存储中。</li>
+<li><strong>开发链路分散：</strong> 数据集成、计算、调度和任务发布缺少统一管理。</li>
+<li><strong>数据资产缺乏统一管理：</strong> 数据表、字段、业务定义、Owner 和使用情况分散。</li>
+<li><strong>数据血缘不完整：</strong> 无法准确追踪数据来源、转换过程和下游影响。</li>
+<li><strong>数据安全管理不足：</strong> 数据发现、访问申请、审批、授权和审计没有形成闭环。</li>
+<li><strong>数据服务能力不足：</strong> 数据资产难以标准化开放给 BI、API 和业务应用。</li>
+<li><strong>AI 能力与数据平台脱节：</strong> 数据 Agent、机器学习和智能分析缺少统一的数据基础设施。</li>
+</ol>
+<p>因此，需要建设一个统一的企业级数据平台，将数据工程能力与数据治理能力整合起来，并为未来 Data Agent、MLOps 和企业 AI 应用提供统一的数据基础。</p>
+<h2 id="12-建设目标">1.2 建设目标</h2>
+<table>
+<thead>
+<tr>
+<th>建设方向</th>
+<th>建设目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据集成</td>
+<td>统一接入数据库、API、文件、CDC 和云数据源</td>
+</tr>
+<tr>
+<td>数据存储</td>
+<td>建立统一 Lakehouse 数据存储体系</td>
+</tr>
+<tr>
+<td>数据计算</td>
+<td>支持批处理、实时计算和交互式分析</td>
+</tr>
+<tr>
+<td>数据开发</td>
+<td>统一 SQL、Notebook、任务开发和发布</td>
+</tr>
+<tr>
+<td>数据调度</td>
+<td>统一管理批任务、工作流和任务依赖</td>
+</tr>
+<tr>
+<td>数据治理</td>
+<td>建立元数据、目录、血缘、质量和安全管理</td>
+</tr>
+<tr>
+<td>数据资产</td>
+<td>建立统一数据资产目录和数据发现入口</td>
+</tr>
+<tr>
+<td>数据服务</td>
+<td>支持 BI、数据 API 和数据市场</td>
+</tr>
+<tr>
+<td>数据运营</td>
+<td>建立数据质量、使用情况和资产健康度监控</td>
+</tr>
+<tr>
+<td>AI 扩展</td>
+<td>支持 Data Agent、MCP、RAG 和机器学习平台</td>
+</tr>
+</tbody></table>
+<h2 id="13-建设原则">1.3 建设原则</h2>
+<ul>
+<li><strong>开源优先：</strong> 优先采用成熟开源项目，减少重复造轮子。</li>
+<li><strong>统一标准：</strong> 统一数据分层、命名规范、元数据模型和接口标准。</li>
+<li><strong>松耦合：</strong> 集成、计算、存储、治理和服务模块独立演进。</li>
+<li><strong>治理前置：</strong> 元数据、质量、安全和血缘融入数据开发流程。</li>
+<li><strong>云原生：</strong> 基于 Kubernetes 建设统一运行环境。</li>
+<li><strong>可扩展：</strong> 支持未来多云、混合云、AI Agent 和 MLOps。</li>
+<li><strong>权威系统明确：</strong> 各数据环境保留原生权限和治理权威系统，统一门户负责聚合，不重复建设多个权威来源。</li>
+</ul>
+<hr>
+<h1 id="2-总体架构设计">2. 总体架构设计</h1>
+<h2 id="21-总体架构">2.1 总体架构</h2>
+<p>整体采用分层架构，将平台划分为八个逻辑层。</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+    subgraph L1[&quot;L1 Data Application&quot;]
+        BI[&quot;BI / Dashboard&quot;]
+        API[&quot;Data API&quot;]
+        DA[&quot;Data Agent&quot;]
+        ML[&quot;ML Platform&quot;]
+        APP[&quot;Business Applications&quot;]
+    end
+
+    subgraph L2[&quot;L2 Data Serving&quot;]
+        DORIS[&quot;Doris / StarRocks&quot;]
+        PG[&quot;PostgreSQL&quot;]
+        GW[&quot;API Gateway&quot;]
+    end
+
+    subgraph L3[&quot;L3 Compute Engine&quot;]
+        SPARK[&quot;Spark&quot;]
+        FLINK[&quot;Flink&quot;]
+        SQL[&quot;SQL Engine&quot;]
+    end
+
+    subgraph L4[&quot;L4 Lakehouse Storage&quot;]
+        ICE[&quot;Apache Iceberg&quot;]
+        OBJ[&quot;COS / MinIO&quot;]
+        CAT[&quot;Hive Metastore / Gravitino&quot;]
+    end
+
+    subgraph L5[&quot;L5 Data Integration&quot;]
+        ST[&quot;SeaTunnel&quot;]
+        CDC[&quot;Flink CDC&quot;]
+        KAFKA[&quot;Kafka&quot;]
+        CON[&quot;API / File Connectors&quot;]
+    end
+
+    subgraph L6[&quot;L6 Data Governance&quot;]
+        META[&quot;Metadata / Catalog&quot;]
+        LIN[&quot;Data Lineage&quot;]
+        SEC[&quot;Data Security&quot;]
+        DQ[&quot;Data Quality&quot;]
+        WF[&quot;Approval Workflow&quot;]
+        DIS[&quot;Data Discovery&quot;]
+        ASSET[&quot;Data Asset Management&quot;]
+        AUDIT[&quot;Audit&quot;]
+    end
+
+    subgraph L7[&quot;L7 DataOps Control Plane&quot;]
+        DEV[&quot;Data Development&quot;]
+        DS[&quot;DolphinScheduler&quot;]
+        DINKY[&quot;Dinky&quot;]
+        CICD[&quot;GitLab CI/CD&quot;]
+        OBS[&quot;Observability&quot;]
+    end
+
+    subgraph L8[&quot;L8 Infrastructure&quot;]
+        K8S[&quot;Kubernetes&quot;]
+        DB[&quot;PostgreSQL / Redis&quot;]
+        IAM[&quot;SSO / IAM&quot;]
+        MON[&quot;Prometheus / Grafana / Loki&quot;]
+    end
+
+    L1 --&gt; L2
+    L2 --&gt; L3
+    L3 --&gt; L4
+    L5 --&gt; L4
+    L6 -. &quot;Metadata / Governance&quot; .-&gt; L1
+    L6 -. &quot;Quality / Security / Lineage&quot; .-&gt; L5
+    L6 -. &quot;Metadata / Quality&quot; .-&gt; L3
+    L7 --&gt; L5
+    L7 --&gt; L3
+    L7 --&gt; L6
+    L8 --&gt; L7
+    L8 --&gt; L6</pre></div>
+<p>说明：</p>
+<ul>
+<li>L1–L5 构成数据生产、计算和消费链路。</li>
+<li>L6 是横向治理层，贯穿数据接入、开发、计算和服务。</li>
+<li>L7 是平台开发和运行控制面。</li>
+<li>L8 提供统一基础设施。</li>
+<li>Data Governance 不直接替代底层引擎权限系统，而是通过统一策略和授权接口实现治理闭环。</li>
+</ul>
+<h2 id="22-核心架构分区">2.2 核心架构分区</h2>
+<p>建议在部署层面进一步划分三个资源平面。</p>
+<table>
+<thead>
+<tr>
+<th>平面</th>
+<th>主要组件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Control Plane</td>
+<td>Portal、Catalog、Metadata、DolphinScheduler、SSO</td>
+<td>平台管理、任务管理、治理和权限</td>
+</tr>
+<tr>
+<td>Compute Plane</td>
+<td>Spark、Flink、Doris、SQL Engine</td>
+<td>数据处理、实时计算和查询</td>
+</tr>
+<tr>
+<td>Storage Plane</td>
+<td>COS / MinIO、Iceberg、Catalog、PostgreSQL</td>
+<td>数据存储、元数据存储和持久化</td>
+</tr>
+</tbody></table>
+<p>三个平面逻辑隔离，资源和网络策略独立管理。</p>
+<hr>
+<h1 id="3-技术选型与组件清单">3. 技术选型与组件清单</h1>
+<h2 id="31-核心技术栈">3.1 核心技术栈</h2>
+<table>
+<thead>
+<tr>
+<th>技术领域</th>
+<th>推荐组件</th>
+<th>主要职责</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Container Platform</td>
+<td>Kubernetes</td>
+<td>容器编排和资源管理</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Data Integration</td>
+<td>SeaTunnel</td>
+<td>批量数据集成</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>CDC</td>
+<td>Flink CDC</td>
+<td>数据库变更捕获</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Message Queue</td>
+<td>Kafka</td>
+<td>实时消息解耦</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Batch Compute</td>
+<td>Spark</td>
+<td>批处理和离线计算</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Stream Compute</td>
+<td>Flink</td>
+<td>实时计算</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Stream Management</td>
+<td>Dinky</td>
+<td>Flink 作业开发和发布</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Orchestration</td>
+<td>DolphinScheduler</td>
+<td>统一工作流调度</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Lakehouse Format</td>
+<td>Apache Iceberg</td>
+<td>统一湖仓表格式</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Object Storage</td>
+<td>COS / MinIO</td>
+<td>数据文件、Checkpoint 和归档</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>Hive Metastore</td>
+<td>Iceberg Catalog</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>OLAP</td>
+<td>Doris / StarRocks</td>
+<td>交互式分析和数据服务</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>DataHub / WeData</td>
+<td>元数据和数据目录</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Lineage</td>
+<td>OpenLineage</td>
+<td>血缘事件标准</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Data Quality</td>
+<td>Great Expectations / WeData</td>
+<td>数据质量检测</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Data Security</td>
+<td>SSO / CAM / Ranger / UC</td>
+<td>身份、权限和审计</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Data API</td>
+<td>APISIX / Kong</td>
+<td>API 网关</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Prometheus + Grafana + Loki</td>
+<td>指标、监控和日志</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>GitLab CI/CD</td>
+<td>代码和数据任务发布</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>ML Platform</td>
+<td>MLflow</td>
+<td>实验、模型和版本管理</td>
+<td>P2</td>
+</tr>
+</tbody></table>
+<h2 id="32-选型约束">3.2 选型约束</h2>
+<h3 id="调度引擎">调度引擎</h3>
+<p>推荐 DolphinScheduler 作为统一批任务调度平台。</p>
+<p>Airflow 不作为第二套平台级主调度系统。只有在 Python DAG、ML Pipeline 或特定生态存在明确需求时，才作为局部工具引入。</p>
+<p>职责划分：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>负责内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DolphinScheduler</td>
+<td>T+1 批处理、任务依赖、跨系统工作流</td>
+</tr>
+<tr>
+<td>Dinky</td>
+<td>Flink SQL/JAR 开发、发布、升级和回滚</td>
+</tr>
+<tr>
+<td>GitLab CI/CD</td>
+<td>代码审核、构建、部署和版本管理</td>
+</tr>
+</tbody></table>
+<p>不建议通过 DolphinScheduler 高频启停长期运行的 Flink 作业。</p>
+<h3 id="数据集成">数据集成</h3>
+<p>优先使用 SeaTunnel 作为批量数据集成组件。</p>
+<ul>
+<li>SeaTunnel：数据库、文件、API 和批量同步。</li>
+<li>Flink CDC：实时数据库变更捕获。</li>
+<li>Kafka：实时消息缓冲、解耦和多消费者订阅。</li>
+<li>DataX：已有任务可保留，后续逐步迁移。</li>
+</ul>
+<h3 id="湖仓存储">湖仓存储</h3>
+<p>推荐 Apache Iceberg 作为统一 Lakehouse 表格式。</p>
+<ul>
+<li>COS / MinIO：底层对象存储。</li>
+<li>Iceberg：ODS、DWD、DWS 数据表。</li>
+<li>Hive Metastore：初期 Catalog。</li>
+<li>Gravitino：未来需要统一多 Catalog 管理时再评估。</li>
+</ul>
+<p>初期不建议同时引入 Iceberg、Hudi、Paimon 三种表格式。</p>
+<h3 id="OLAP-引擎">OLAP 引擎</h3>
+<p>Doris 和 StarRocks 二选一。</p>
+<p>主要评估：</p>
+<ul>
+<li>查询延迟。</li>
+<li>并发能力。</li>
+<li>实时导入能力。</li>
+<li>Iceberg 外表和湖仓查询能力。</li>
+<li>资源消耗。</li>
+<li>运维成本。</li>
+<li>与 BI 工具的兼容性。</li>
+</ul>
+<p>建议通过真实业务 SQL、并发和数据量进行 POC 后确定。</p>
+<hr>
+<h1 id="4-数据存储与数据分层设计">4. 数据存储与数据分层设计</h1>
+<h2 id="41-数据分层">4.1 数据分层</h2>
+<p>采用 ODS、DWD、DWS、ADS 四层模型。</p>
+<table>
+<thead>
+<tr>
+<th>数据层</th>
+<th>主要职责</th>
+<th>存储</th>
+<th>计算</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Landing</td>
+<td>原始文件和原始数据落地区</td>
+<td>COS / MinIO</td>
+<td>SeaTunnel</td>
+</tr>
+<tr>
+<td>ODS</td>
+<td>原始结构化数据</td>
+<td>Iceberg</td>
+<td>SeaTunnel / Spark</td>
+</tr>
+<tr>
+<td>DWD</td>
+<td>清洗、标准化和明细数据</td>
+<td>Iceberg</td>
+<td>Spark</td>
+</tr>
+<tr>
+<td>DWS</td>
+<td>主题汇总和公共指标</td>
+<td>Iceberg</td>
+<td>Spark / Flink</td>
+</tr>
+<tr>
+<td>ADS</td>
+<td>面向业务和应用的数据集</td>
+<td>Doris</td>
+<td>Spark / Flink</td>
+</tr>
+<tr>
+<td>Serving</td>
+<td>API、BI 和业务查询</td>
+<td>Doris / PostgreSQL</td>
+<td>SQL / API</td>
+</tr>
+</tbody></table>
+<h2 id="42-数据链路">4.2 数据链路</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart LR
+    A[&quot;MySQL / PostgreSQL / API / Files&quot;]
+    B[&quot;SeaTunnel / Flink CDC&quot;]
+    C[&quot;Landing / ODS&quot;]
+    D[&quot;Spark / Flink&quot;]
+    E[&quot;DWD / DWS - Iceberg&quot;]
+    F[&quot;ADS - Doris&quot;]
+    G[&quot;BI / API / Data Agent&quot;]
+
+    A --&gt; B --&gt; C --&gt; D --&gt; E --&gt; F --&gt; G</pre></div>
+<h2 id="43-存储目录规范">4.3 存储目录规范</h2>
+<p>建议对象存储采用统一目录结构。</p>
+<pre><code class="language-text">data-platform/
+├── raw-data/
+│   ├── dev/
+│   ├── uat/
+│   └── prd/
+├── warehouse/
+│   ├── ods/
+│   ├── dwd/
+│   ├── dws/
+│   └── ads/
+├── checkpoint/
+│   └── flink/
+├── archive/
+└── temp/
+</code></pre>
+<p>数据文件、Iceberg 元数据、Checkpoint 和归档数据应使用独立存储路径和权限策略。</p>
+<hr>
+<h1 id="5-DataOps-与数据开发体系">5. DataOps 与数据开发体系</h1>
+<h2 id="51-数据开发流程">5.1 数据开发流程</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TD
+    A[&quot;Data Development&quot;] --&gt; B[&quot;SQL / Python / Flink&quot;]
+    B --&gt; C[&quot;Git Repository&quot;]
+    C --&gt; D[&quot;Code Review&quot;]
+    D --&gt; E[&quot;CI/CD&quot;]
+    E --&gt; F[&quot;Dev Environment&quot;]
+    F --&gt; G[&quot;Test / Quality Check&quot;]
+    G --&gt; H[&quot;UAT&quot;]
+    H --&gt; I[&quot;Production Release&quot;]
+    I --&gt; J[&quot;Monitoring&quot;]</pre></div>
+<p>开发环境、测试环境和生产环境应进行隔离。</p>
+<p>建议统一管理：</p>
+<ul>
+<li>数据连接。</li>
+<li>SQL 脚本。</li>
+<li>Spark 作业。</li>
+<li>Flink 作业。</li>
+<li>DolphinScheduler 工作流。</li>
+<li>数据质量规则。</li>
+<li>数据库 Schema 变更。</li>
+<li>数据发布记录。</li>
+</ul>
+<h2 id="52-调度体系">5.2 调度体系</h2>
+<p>DolphinScheduler 作为批任务的统一入口。</p>
+<p>典型任务：</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据同步</td>
+<td>MySQL → ODS</td>
+</tr>
+<tr>
+<td>数据处理</td>
+<td>ODS → DWD</td>
+</tr>
+<tr>
+<td>数据汇总</td>
+<td>DWD → DWS</td>
+</tr>
+<tr>
+<td>数据服务</td>
+<td>DWS → Doris</td>
+</tr>
+<tr>
+<td>数据质量</td>
+<td>DWD/DWS 质量检查</td>
+</tr>
+<tr>
+<td>数据对账</td>
+<td>上下游数据一致性检查</td>
+</tr>
+<tr>
+<td>外部系统</td>
+<td>API、Shell、HTTP 调用</td>
+</tr>
+</tbody></table>
+<p>Flink 长运行任务由 Dinky 管理，DolphinScheduler 负责必要的依赖编排、批对账和告警联动。</p>
+<hr>
+<h1 id="6-Data-Governance-与-Data-Catalog">6. Data Governance 与 Data Catalog</h1>
+<h2 id="61-建设目标">6.1 建设目标</h2>
+<p>数据治理是本次架构升级的核心部分。</p>
+<p>需要从单纯的数据开发平台升级为数据资产全生命周期管理平台。</p>
+<p>核心能力：</p>
+<ol>
+<li>Metadata Management：元数据管理。</li>
+<li>Data Catalog：数据目录。</li>
+<li>Data Lineage：数据血缘。</li>
+<li>Data Security：数据安全。</li>
+<li>Data Discovery：数据发现。</li>
+<li>Approval Workflow：访问审批。</li>
+<li>Data Quality：数据质量。</li>
+<li>Data Asset Management：数据资产运营。</li>
+<li>Data Audit：访问和变更审计。</li>
+</ol>
+<h2 id="62-治理架构">6.2 治理架构</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+    U[&quot;Business User / Data Engineer&quot;]
+    P[&quot;Unified Data Portal&quot;]
+
+    subgraph G[&quot;Data Governance Layer&quot;]
+        M[&quot;Metadata Management&quot;]
+        C[&quot;Data Catalog&quot;]
+        L[&quot;Data Lineage&quot;]
+        S[&quot;Data Security&quot;]
+        D[&quot;Data Discovery&quot;]
+        W[&quot;Approval Workflow&quot;]
+        Q[&quot;Data Quality&quot;]
+        A[&quot;Data Asset Management&quot;]
+        AU[&quot;Audit&quot;]
+    end
+
+    subgraph E[&quot;Metadata Integration Layer&quot;]
+        AD[&quot;Metadata Adapter&quot;]
+        OE[&quot;OpenLineage Event&quot;]
+        API[&quot;Catalog API&quot;]
+    end
+
+    subgraph DATA[&quot;Data Platform&quot;]
+        ST[&quot;SeaTunnel&quot;]
+        SP[&quot;Spark&quot;]
+        FL[&quot;Flink&quot;]
+        IC[&quot;Iceberg&quot;]
+        DO[&quot;Doris&quot;]
+    end
+
+    U --&gt; P
+    P --&gt; G
+    G --&gt; E
+    E --&gt; DATA
+    DATA -. &quot;Metadata / Lineage / Quality Events&quot; .-&gt; E</pre></div>
+<h2 id="63-Metadata-Management">6.3 Metadata Management</h2>
+<p>建立统一的元数据模型，覆盖技术元数据、业务元数据和管理元数据。</p>
+<table>
+<thead>
+<tr>
+<th>元数据类型</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Technical Metadata</td>
+<td>数据源、数据库、表、字段、类型、Schema</td>
+</tr>
+<tr>
+<td>Business Metadata</td>
+<td>业务域、业务定义、指标、术语</td>
+</tr>
+<tr>
+<td>Operational Metadata</td>
+<td>更新时间、任务状态、运行记录</td>
+</tr>
+<tr>
+<td>Governance Metadata</td>
+<td>Owner、分类分级、标签、权限策略</td>
+</tr>
+<tr>
+<td>Lineage Metadata</td>
+<td>上下游数据关系、字段映射、任务依赖</td>
+</tr>
+</tbody></table>
+<p>建议自研统一元数据映射层，但不复制 DataHub、OpenMetadata 或 WeData 的内部数据模型。</p>
+<h3 id="核心实体">核心实体</h3>
+<table>
+<thead>
+<tr>
+<th>实体</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DataSource</td>
+<td>数据源</td>
+</tr>
+<tr>
+<td>DataDomain</td>
+<td>业务数据域</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>数据库</td>
+</tr>
+<tr>
+<td>Dataset</td>
+<td>数据集 / 数据表</td>
+</tr>
+<tr>
+<td>Column</td>
+<td>字段</td>
+</tr>
+<tr>
+<td>DataPipeline</td>
+<td>数据任务</td>
+</tr>
+<tr>
+<td>Lineage</td>
+<td>血缘关系</td>
+</tr>
+<tr>
+<td>DataAsset</td>
+<td>数据资产</td>
+</tr>
+<tr>
+<td>DataPolicy</td>
+<td>数据策略</td>
+</tr>
+<tr>
+<td>AccessRequest</td>
+<td>权限申请</td>
+</tr>
+<tr>
+<td>DataQualityRule</td>
+<td>质量规则</td>
+</tr>
+</tbody></table>
+<p>统一资产 ID 示例：</p>
+<pre><code class="language-text">assetId =
+environment + platform + database + schema + table
+</code></pre>
+<p>同时保留源系统原始资源 ID，避免多 Catalog 同步时丢失资源映射关系。</p>
+<h2 id="64-Data-Catalog">6.4 Data Catalog</h2>
+<p>建立企业统一数据目录。</p>
+<p>主要功能：</p>
+<ul>
+<li>数据源注册。</li>
+<li>数据库和表自动采集。</li>
+<li>Schema 自动更新。</li>
+<li>数据资产目录树。</li>
+<li>数据域管理。</li>
+<li>Owner 管理。</li>
+<li>业务描述。</li>
+<li>标签和分类分级。</li>
+<li>资产搜索。</li>
+<li>数据预览。</li>
+<li>数据资产认证。</li>
+</ul>
+<p>每个数据资产至少需要具备：</p>
+<pre><code class="language-text">Dataset
+├── Basic Information
+├── Business Definition
+├── Schema
+├── Owner
+├── Domain
+├── Tags
+├── Classification
+├── Lineage
+├── Data Quality
+├── Access Policy
+├── Usage Statistics
+└── Access Request
+</code></pre>
+<h2 id="65-Data-Lineage">6.5 Data Lineage</h2>
+<p>采用 OpenLineage 作为统一血缘事件标准。</p>
+<p>血缘建设分三个阶段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>建设内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phase 1</td>
+<td>表级血缘</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>任务级血缘</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>字段级血缘</td>
+</tr>
+</tbody></table>
+<p>数据链路：</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TD
+    A[&quot;SeaTunnel / Spark / Flink&quot;]
+    B[&quot;DolphinScheduler&quot;]
+    C[&quot;OpenLineage Events&quot;]
+    D[&quot;Metadata Adapter&quot;]
+    E[&quot;DataHub / WeData&quot;]
+    F[&quot;Lineage UI&quot;]
+
+    A --&gt; C
+    B --&gt; C
+    C --&gt; D --&gt; E --&gt; F</pre></div>
+<p>OpenLineage 负责标准化血缘事件，不负责完整的元数据持久化和展示。</p>
+<h2 id="66-Data-Security">6.6 Data Security</h2>
+<p>需要将平台权限与数据权限分层。</p>
+<table>
+<thead>
+<tr>
+<th>权限类型</th>
+<th>管理内容</th>
+<th>推荐方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Platform RBAC</td>
+<td>页面、按钮、项目、操作权限</td>
+<td>Portal + Casbin</td>
+</tr>
+<tr>
+<td>Data Asset Permission</td>
+<td>资产查看和申请权限</td>
+<td>Catalog + Approval</td>
+</tr>
+<tr>
+<td>Data Access Permission</td>
+<td>表、行、列访问</td>
+<td>引擎原生权限 / Ranger</td>
+</tr>
+<tr>
+<td>Sensitive Data</td>
+<td>敏感分类、脱敏策略</td>
+<td>原生脱敏 / 数据策略</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td>访问记录、权限变更</td>
+<td>统一审计服务</td>
+</tr>
+</tbody></table>
+<p>统一身份认证：</p>
+<pre><code class="language-text">Enterprise SSO
+      |
+      v
+Unified Data Portal
+      |
+      +---- Platform RBAC
+      |
+      +---- Data Asset Permission
+      |
+      +---- Approval Workflow
+      |
+      v
+Data Engine Authorization
+      |
+      +---- Doris
+      +---- Iceberg / Catalog
+      +---- PostgreSQL
+</code></pre>
+<p>需要注意：Ranger 不应被视为所有引擎的通用权限代理。各引擎应优先使用经过验证的原生权限能力，再根据需要集成 Ranger。</p>
+<h2 id="67-Approval-Workflow">6.7 Approval Workflow</h2>
+<p>建立数据访问申请、审批、授权和回收的完整闭环。</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TD
+    A[&quot;Search Dataset&quot;] --&gt; B[&quot;View Asset&quot;]
+    B --&gt; C[&quot;Request Access&quot;]
+    C --&gt; D[&quot;Select Purpose / Duration&quot;]
+    D --&gt; E[&quot;Owner Approval&quot;]
+    E --&gt; F{&quot;Approved?&quot;}
+    F --&gt;|No| G[&quot;Rejected&quot;]
+    F --&gt;|Yes| H[&quot;Security Approval&quot;]
+    H --&gt; I{&quot;Approved?&quot;}
+    I --&gt;|No| G
+    I --&gt;|Yes| J[&quot;Provision Permission&quot;]
+    J --&gt; K[&quot;Verify Authorization&quot;]
+    K --&gt; L[&quot;Granted&quot;]
+    L --&gt; M[&quot;Audit&quot;]
+    M --&gt; N[&quot;Expire / Revoke&quot;]</pre></div>
+<p>申请信息：</p>
+<ul>
+<li>申请人。</li>
+<li>数据资产。</li>
+<li>申请用途。</li>
+<li>权限类型。</li>
+<li>使用期限。</li>
+<li>数据敏感级别。</li>
+<li>审批人。</li>
+<li>审批结果。</li>
+<li>实际授权结果。</li>
+</ul>
+<p>必须区分 <code>APPROVED</code> 和 <code>GRANTED</code>：</p>
+<p>审批通过不代表权限已经实际生效。授权服务执行成功并验证后，才允许将申请状态更新为 <code>GRANTED</code>。</p>
+<p>权限到期后应支持自动回收。</p>
+<h2 id="68-Data-Discovery">6.8 Data Discovery</h2>
+<p>统一数据搜索入口，支持：</p>
+<ul>
+<li>表名和字段名。</li>
+<li>业务描述。</li>
+<li>业务域。</li>
+<li>Owner。</li>
+<li>标签。</li>
+<li>数据敏感级别。</li>
+<li>更新时间。</li>
+<li>认证状态。</li>
+<li>质量状态。</li>
+</ul>
+<p>未来可增加语义搜索、自然语言找数和 Data Agent。</p>
+<h2 id="69-Data-Quality">6.9 Data Quality</h2>
+<p>数据质量分为三个阶段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>质量检查</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ingestion</td>
+<td>Schema、完整性、数据量</td>
+<td>接入检查</td>
+</tr>
+<tr>
+<td>Transformation</td>
+<td>唯一性、范围、业务规则</td>
+<td>ETL 检查</td>
+</tr>
+<tr>
+<td>Serving</td>
+<td>新鲜度、准确性、指标一致性</td>
+<td>发布前检查</td>
+</tr>
+</tbody></table>
+<p>质量结果需要关联 Data Catalog 中的数据资产，并支持：</p>
+<ul>
+<li>质量规则管理。</li>
+<li>质量任务执行。</li>
+<li>质量评分。</li>
+<li>告警通知。</li>
+<li>异常记录。</li>
+<li>下游任务阻塞。</li>
+<li>质量趋势分析。</li>
+</ul>
+<p>建议先从关键数据表和核心业务指标开始建设，不需要一开始覆盖所有表。</p>
+<h2 id="610-Data-Asset-Management">6.10 Data Asset Management</h2>
+<p>数据资产生命周期：</p>
+<pre><code class="language-text">REGISTERED
+    |
+CLASSIFIED
+    |
+PUBLISHED
+    |
+AVAILABLE
+    |
+ACCESS_REQUESTED
+    |
+APPROVED
+    |
+GRANTED
+    |
+EXPIRED / REVOKED
+</code></pre>
+<p>数据资产运营指标：</p>
+<ul>
+<li>资产总量。</li>
+<li>已认证资产数量。</li>
+<li>有 Owner 的资产比例。</li>
+<li>元数据完整率。</li>
+<li>血缘覆盖率。</li>
+<li>质量规则覆盖率。</li>
+<li>数据访问次数。</li>
+<li>API 订阅数量。</li>
+<li>过期权限数量。</li>
+</ul>
+<hr>
+<h1 id="7-Data-Catalog-产品选型与架构决策">7. Data Catalog 产品选型与架构决策</h1>
+<h2 id="71-产品选型原则">7.1 产品选型原则</h2>
+<p>根据部署环境选择权威治理系统。</p>
+<table>
+<thead>
+<tr>
+<th>部署模式</th>
+<th>权威 Catalog / Governance</th>
+<th>可选统一层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>腾讯云为主</td>
+<td>WeData</td>
+<td>DataHub</td>
+</tr>
+<tr>
+<td>Azure + Databricks</td>
+<td>Purview + Unity Catalog</td>
+<td>DataHub</td>
+</tr>
+<tr>
+<td>完全私有化</td>
+<td>DataHub 或 OpenMetadata</td>
+<td>通常不需要</td>
+</tr>
+<tr>
+<td>多云混合</td>
+<td>WeData + Purview / UC</td>
+<td>DataHub</td>
+</tr>
+</tbody></table>
+<h2 id="72-开源产品比较">7.2 开源产品比较</h2>
+<p>以下评价来自本项目已有调研记录，属于调研阶段的体验和能力判断，正式选型仍需结合当前版本做 POC。</p>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>优势</th>
+<th>局限</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Apache Atlas</td>
+<td>Hadoop 生态、分类、血缘和 REST</td>
+<td>UI 较旧、业务用户体验一般</td>
+<td>Hadoop 深度集成</td>
+</tr>
+<tr>
+<td>DataHub</td>
+<td>社区成熟、搜索、Owner、Tag、Domain、血缘</td>
+<td>权限和企业审批需增强</td>
+<td>现代化企业数据目录</td>
+</tr>
+<tr>
+<td>OpenMetadata</td>
+<td>Catalog、Workflow、Data API 能力较完整</td>
+<td>功能较多、部署和维护复杂</td>
+<td>一体化元数据治理</td>
+</tr>
+<tr>
+<td>OpenDataDiscovery</td>
+<td>Discovery 和 Policy 体验</td>
+<td>社区和生态需要持续验证</td>
+<td>数据发现与策略探索</td>
+</tr>
+<tr>
+<td>Amundsen</td>
+<td>搜索能力</td>
+<td>治理能力相对有限</td>
+<td>轻量数据发现</td>
+</tr>
+<tr>
+<td>CKAN</td>
+<td>开放数据门户</td>
+<td>企业级血缘和治理较弱</td>
+<td>开放数据发布</td>
+</tr>
+</tbody></table>
+<h3 id="推荐结论">推荐结论</h3>
+<ul>
+<li>腾讯云主栈：优先使用 WeData 的元数据、资产目录和权限申请能力。</li>
+<li>Azure / Databricks：使用 Purview + Unity Catalog。</li>
+<li>完全私有化：优先评估 DataHub；若需要更完整的 Workflow 和 Data API，可评估 OpenMetadata。</li>
+<li>跨云：可使用 DataHub 作为只读元数据聚合层。</li>
+<li>不建议默认引入 Informatica / Collibra 全栈 SaaS，以免与现有云治理体系重复。</li>
+</ul>
+<h2 id="73-多-Catalog--Unified-Portal">7.3 多 Catalog + Unified Portal</h2>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+    U[&quot;Business Users&quot;]
+    P[&quot;Unified Data Portal&quot;]
+    M[&quot;Metadata Integration Layer&quot;]
+
+    W[&quot;Tencent WeData&quot;]
+    A[&quot;Azure Purview&quot;]
+    UC[&quot;Unity Catalog&quot;]
+    DH[&quot;DataHub&quot;]
+
+    U --&gt; P --&gt; M
+    M --&gt; W
+    M --&gt; A
+    M --&gt; UC
+    M --&gt; DH
+
+    W --&gt; T[&quot;DLC / COS / WeData Jobs&quot;]
+    A --&gt; AD[&quot;ADF / ADLS&quot;]
+    UC --&gt; DB[&quot;Databricks&quot;]
+    DH --&gt; SELF[&quot;Private Data Platform&quot;]</pre></div>
+<p>架构原则：</p>
+<ol>
+<li>各环境保留自己的权威 Catalog 和权限系统。</li>
+<li>Unified Portal 提供统一用户入口。</li>
+<li>Metadata Integration Layer 负责元数据适配和映射。</li>
+<li>跨云聚合默认以只读方式进行。</li>
+<li>权限申请由对应环境的权威治理系统或授权服务执行。</li>
+<li>不将多个 Catalog 的审批状态和授权状态简单合并为同一个事实来源。</li>
+</ol>
+<hr>
+<h1 id="8-Unified-Data-Portal-自研平台">8. Unified Data Portal 自研平台</h1>
+<h2 id="81-建设定位">8.1 建设定位</h2>
+<p>自研门户不重复实现 Spark、Flink、DolphinScheduler、DataHub 或 WeData 的底层能力。</p>
+<p>主要承担统一入口、用户体验、业务流程和跨系统集成。</p>
+<p>核心模块：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Workspace</td>
+<td>项目、团队和工作空间</td>
+</tr>
+<tr>
+<td>Data Development</td>
+<td>SQL、Notebook、任务入口</td>
+</tr>
+<tr>
+<td>Data Pipeline</td>
+<td>工作流和任务管理</td>
+</tr>
+<tr>
+<td>Data Assets</td>
+<td>数据目录和资产详情</td>
+</tr>
+<tr>
+<td>Data Discovery</td>
+<td>统一搜索</td>
+</tr>
+<tr>
+<td>Data Lineage</td>
+<td>血缘展示和影响分析</td>
+</tr>
+<tr>
+<td>Data Governance</td>
+<td>分类分级、策略和质量</td>
+</tr>
+<tr>
+<td>Access Management</td>
+<td>权限申请、审批和授权</td>
+</tr>
+<tr>
+<td>Data Marketplace</td>
+<td>数据资产上架和 API 订阅</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>任务、质量和资源监控</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>用户、角色、权限和系统配置</td>
+</tr>
+</tbody></table>
+<h2 id="82-Portal-菜单建议">8.2 Portal 菜单建议</h2>
+<pre><code class="language-text">Unified Data Platform
+│
+├── Workspace
+│   ├── Projects
+│   └── Teams
+│
+├── Data Development
+│   ├── SQL Editor
+│   ├── Notebook
+│   └── Job Development
+│
+├── Data Pipeline
+│   ├── Workflow
+│   ├── Batch Jobs
+│   └── Stream Jobs
+│
+├── Data Assets
+│   ├── Data Sources
+│   ├── Databases
+│   ├── Tables
+│   └── Business Domains
+│
+├── Data Discovery
+│   ├── Global Search
+│   ├── Tags
+│   └── Recommendations
+│
+├── Data Governance
+│   ├── Metadata
+│   ├── Lineage
+│   ├── Data Quality
+│   ├── Classification
+│   └── Data Policies
+│
+├── Access Management
+│   ├── Access Request
+│   ├── Approval
+│   ├── Permission Management
+│   └── Audit
+│
+├── Data Marketplace
+│   ├── Certified Assets
+│   ├── Data API
+│   └── Subscriptions
+│
+└── Platform Administration
+    ├── Users &amp; Roles
+    ├── Connections
+    ├── System Configuration
+    └── Monitoring
+</code></pre>
+<h2 id="83-自研边界">8.3 自研边界</h2>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>是否自研</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>统一门户</td>
+<td>是</td>
+<td>统一用户体验</td>
+</tr>
+<tr>
+<td>Metadata Adapter</td>
+<td>是</td>
+<td>连接不同 Catalog</td>
+</tr>
+<tr>
+<td>统一资产映射</td>
+<td>是</td>
+<td>多云资产 ID 和业务模型</td>
+</tr>
+<tr>
+<td>统一搜索 API</td>
+<td>是</td>
+<td>聚合搜索接口</td>
+</tr>
+<tr>
+<td>数据权限审批流程</td>
+<td>是 / 集成</td>
+<td>复杂企业流程可自研</td>
+</tr>
+<tr>
+<td>权限执行引擎</td>
+<td>否</td>
+<td>使用各平台原生权限</td>
+</tr>
+<tr>
+<td>数据计算引擎</td>
+<td>否</td>
+<td>复用 Spark / Flink</td>
+</tr>
+<tr>
+<td>工作流引擎</td>
+<td>否</td>
+<td>复用 DolphinScheduler</td>
+</tr>
+<tr>
+<td>元数据底层存储</td>
+<td>否</td>
+<td>复用 Catalog 产品</td>
+</tr>
+<tr>
+<td>血缘事件标准</td>
+<td>否</td>
+<td>采用 OpenLineage</td>
+</tr>
+<tr>
+<td>数据 API 网关</td>
+<td>否</td>
+<td>复用 APISIX / Kong</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="9-数据接口与集成规范">9. 数据接口与集成规范</h1>
+<h2 id="91-集成架构">9.1 集成架构</h2>
+<p>通过 API、Connector 和事件总线连接各组件。</p>
+<table>
+<thead>
+<tr>
+<th>接口类型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REST API</td>
+<td>元数据查询、任务管理、权限申请</td>
+</tr>
+<tr>
+<td>JDBC / SQL</td>
+<td>数据库和查询引擎访问</td>
+</tr>
+<tr>
+<td>OpenLineage</td>
+<td>血缘事件</td>
+</tr>
+<tr>
+<td>Kafka Event</td>
+<td>元数据变更和运行事件</td>
+</tr>
+<tr>
+<td>Webhook</td>
+<td>任务状态和审批通知</td>
+</tr>
+<tr>
+<td>S3 API</td>
+<td>对象存储访问</td>
+</tr>
+<tr>
+<td>OAuth2 / OIDC</td>
+<td>身份认证</td>
+</tr>
+</tbody></table>
+<h2 id="92-核心服务">9.2 核心服务</h2>
+<p>建议拆分以下服务：</p>
+<pre><code class="language-text">platform-gateway
+├── identity-service
+├── workspace-service
+├── metadata-integration-service
+├── catalog-service
+├── lineage-service
+├── data-quality-service
+├── governance-service
+├── access-request-service
+├── authorization-adapter
+├── data-marketplace-service
+├── data-api-service
+└── audit-service
+</code></pre>
+<p>初期可以采用模块化单体，随着业务规模增长再逐步拆分微服务，避免过早引入大量服务治理成本。</p>
+<h2 id="93-权限执行流程">9.3 权限执行流程</h2>
+<pre><code class="language-text">Portal
+  |
+  v
+Access Request Service
+  |
+  v
+Approval Workflow
+  |
+  v
+Authorization Adapter
+  |
+  +---- WeData API
+  +---- CAM API
+  +---- Unity Catalog API
+  +---- Doris / Database API
+  |
+  v
+Authorization Verification
+  |
+  v
+Audit Service
+</code></pre>
+<p>授权适配器需要支持：</p>
+<ul>
+<li>授权。</li>
+<li>权限查询。</li>
+<li>权限撤销。</li>
+<li>授权状态验证。</li>
+<li>失败重试。</li>
+<li>幂等处理。</li>
+<li>操作审计。</li>
+</ul>
+<hr>
+<h1 id="10-部署架构与资源规划">10. 部署架构与资源规划</h1>
+<h2 id="101-Kubernetes-部署">10.1 Kubernetes 部署</h2>
+<p>建议按职责划分 Namespace。</p>
+<table>
+<thead>
+<tr>
+<th>Namespace</th>
+<th>组件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>platform-system</td>
+<td>Gateway、SSO、配置服务</td>
+</tr>
+<tr>
+<td>data-governance</td>
+<td>Catalog、Metadata、Lineage、Workflow</td>
+</tr>
+<tr>
+<td>dataops</td>
+<td>DolphinScheduler、Dinky、CI/CD</td>
+</tr>
+<tr>
+<td>data-integration</td>
+<td>SeaTunnel、Kafka</td>
+</tr>
+<tr>
+<td>data-compute</td>
+<td>Spark、Flink</td>
+</tr>
+<tr>
+<td>data-serving</td>
+<td>Doris / StarRocks</td>
+</tr>
+<tr>
+<td>observability</td>
+<td>Prometheus、Grafana、Loki</td>
+</tr>
+</tbody></table>
+<p>实际部署时，计算引擎可以使用独立集群或专用资源池，不强制所有组件都运行在同一个 Kubernetes 集群。</p>
+<h2 id="102-高可用设计">10.2 高可用设计</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>高可用策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kubernetes</td>
+<td>多节点控制面和工作节点</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>多副本部署</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>主备、备份和恢复演练</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>高可用部署，明确缓存与持久化边界</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>多 Broker、Replication</td>
+</tr>
+<tr>
+<td>DolphinScheduler</td>
+<td>多 Master / Worker</td>
+</tr>
+<tr>
+<td>Spark</td>
+<td>按任务资源隔离和失败重试</td>
+</tr>
+<tr>
+<td>Flink</td>
+<td>HA、Checkpoint、Savepoint</td>
+</tr>
+<tr>
+<td>Doris</td>
+<td>按部署模式规划 FE / BE 或 CN 高可用</td>
+</tr>
+<tr>
+<td>Object Storage</td>
+<td>MinIO Erasure Coding 或云对象存储</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>多副本、元数据库备份</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>独立监控和告警</td>
+</tr>
+</tbody></table>
+<h2 id="103-环境隔离">10.3 环境隔离</h2>
+<p>建议至少建设：</p>
+<ul>
+<li>DEV：开发与功能验证。</li>
+<li>UAT：集成测试与用户验收。</li>
+<li>PRD：生产运行。</li>
+</ul>
+<p>生产环境应独立配置：</p>
+<ul>
+<li>账号和权限。</li>
+<li>数据源连接。</li>
+<li>存储 Bucket。</li>
+<li>Catalog。</li>
+<li>计算资源。</li>
+<li>密钥和凭据。</li>
+<li>审计策略。</li>
+</ul>
+<hr>
+<h1 id="11-安全与合规设计">11. 安全与合规设计</h1>
+<p>安全能力贯穿整个数据平台。</p>
+<p>主要建设内容：</p>
+<ol>
+<li>统一身份认证：接入企业 SSO。</li>
+<li>RBAC：按用户、角色和项目管理平台功能权限。</li>
+<li>数据分类分级：按照企业数据管理规范识别敏感数据。</li>
+<li>行列级权限：根据底层引擎能力实施。</li>
+<li>数据脱敏：支持静态和动态脱敏。</li>
+<li>访问审批：申请、审批、授权和回收。</li>
+<li>操作审计：记录查询、导出、授权和配置变更。</li>
+<li>密钥管理：避免在代码和配置中明文存储凭据。</li>
+</ol>
+<p>国内场景需结合 GB/T 35273、个人信息保护、数据安全和等级保护等适用要求进行合规评估。具体控制项以企业法务、安全和合规部门确认为准。</p>
+<hr>
+<h1 id="12-AI--ML-扩展架构">12. AI / ML 扩展架构</h1>
+<p>平台建设应预留 AI Agent 和机器学习能力。</p>
+<h2 id="121-Data-Agent">12.1 Data Agent</h2>
+<p>Data Agent 可以基于统一数据资产和服务接口实现：</p>
+<ul>
+<li>自然语言找数。</li>
+<li>数据表和字段解释。</li>
+<li>数据血缘查询。</li>
+<li>数据质量分析。</li>
+<li>SQL 生成。</li>
+<li>数据分析和报告生成。</li>
+<li>数据 API 推荐。</li>
+<li>权限申请辅助。</li>
+</ul>
+<p>建议通过 MCP 或标准 API 暴露平台能力。</p>
+<div class="mermaid-wrap"><pre class="mermaid">flowchart TB
+    U[&quot;User&quot;]
+    A[&quot;Data Agent&quot;]
+    H[&quot;Agent Harness / Workflow&quot;]
+    M[&quot;MCP Server / API Gateway&quot;]
+
+    C[&quot;Catalog API&quot;]
+    L[&quot;Lineage API&quot;]
+    Q[&quot;Quality API&quot;]
+    D[&quot;Data Query API&quot;]
+    P[&quot;Permission API&quot;]
+
+    U --&gt; A --&gt; H --&gt; M
+    M --&gt; C
+    M --&gt; L
+    M --&gt; Q
+    M --&gt; D
+    M --&gt; P</pre></div>
+<p>安全原则：</p>
+<ul>
+<li>Agent 使用用户身份或受控服务身份。</li>
+<li>工具调用遵循现有 RBAC 和数据访问策略。</li>
+<li>不允许 Agent 绕过审批直接获取敏感数据。</li>
+<li>高风险操作需要人工确认。</li>
+<li>所有工具调用保留审计记录。</li>
+</ul>
+<h2 id="122-MLOps">12.2 MLOps</h2>
+<p>未来增加 MLflow，形成完整机器学习生命周期。</p>
+<pre><code class="language-text">Data Platform
+      |
+      v
+Feature Engineering
+      |
+      v
+MLflow Experiment Tracking
+      |
+      v
+Model Training
+      |
+      v
+Model Registry
+      |
+      v
+Model Deployment
+      |
+      v
+Model Monitoring
+</code></pre>
+<p>支持传统机器学习、深度学习和模型服务。</p>
+<hr>
+<h1 id="13-实施路线图">13. 实施路线图</h1>
+<p>建议分四个阶段实施。</p>
+<h2 id="Phase-1基础数据平台">Phase 1：基础数据平台</h2>
+<p><strong>目标：</strong> 建立基础数据湖仓和数据工程能力。</p>
+<p>建设内容：</p>
+<ul>
+<li>Kubernetes。</li>
+<li>PostgreSQL / Redis。</li>
+<li>COS / MinIO。</li>
+<li>Iceberg + Hive Metastore。</li>
+<li>SeaTunnel。</li>
+<li>DolphinScheduler。</li>
+<li>Spark。</li>
+<li>基础监控。</li>
+<li>ODS / DWD / DWS / ADS 分层规范。</li>
+</ul>
+<p>交付物：</p>
+<ul>
+<li>数据接入链路。</li>
+<li>数据存储规范。</li>
+<li>批处理计算能力。</li>
+<li>统一任务调度。</li>
+<li>基础运维监控。</li>
+</ul>
+<h2 id="Phase-2实时计算与数据治理基础">Phase 2：实时计算与数据治理基础</h2>
+<p><strong>目标：</strong> 建立实时处理、数据目录和质量能力。</p>
+<p>建设内容：</p>
+<ul>
+<li>Kafka。</li>
+<li>Flink。</li>
+<li>Dinky。</li>
+<li>Doris / StarRocks。</li>
+<li>Data Catalog。</li>
+<li>Metadata Adapter。</li>
+<li>OpenLineage。</li>
+<li>Data Quality。</li>
+</ul>
+<p>交付物：</p>
+<ul>
+<li>实时数据接入。</li>
+<li>统一数据目录。</li>
+<li>表级和任务级血缘。</li>
+<li>质量规则和质量报告。</li>
+<li>数据查询服务。</li>
+</ul>
+<h2 id="Phase-3统一治理和数据资产运营">Phase 3：统一治理和数据资产运营</h2>
+<p><strong>目标：</strong> 建立数据使用和安全治理闭环。</p>
+<p>建设内容：</p>
+<ul>
+<li>Unified Data Portal。</li>
+<li>SSO / RBAC。</li>
+<li>数据分类分级。</li>
+<li>权限申请。</li>
+<li>审批流程。</li>
+<li>自动授权和回收。</li>
+<li>统一审计。</li>
+<li>数据资产上架。</li>
+</ul>
+<p>交付物：</p>
+<ul>
+<li>数据发现入口。</li>
+<li>数据资产详情。</li>
+<li>权限申请和审批。</li>
+<li>数据授权闭环。</li>
+<li>数据资产运营看板。</li>
+</ul>
+<h2 id="Phase-4AI-和智能化数据平台">Phase 4：AI 和智能化数据平台</h2>
+<p><strong>目标：</strong> 建设 AI Ready Data Platform。</p>
+<p>建设内容：</p>
+<ul>
+<li>Data Agent。</li>
+<li>MCP Server。</li>
+<li>Semantic Search。</li>
+<li>自然语言找数。</li>
+<li>SQL Agent。</li>
+<li>MLflow。</li>
+<li>模型服务。</li>
+<li>数据质量智能分析。</li>
+</ul>
+<p>交付物：</p>
+<ul>
+<li>智能数据助手。</li>
+<li>AI 数据分析能力。</li>
+<li>模型生命周期管理。</li>
+<li>面向 AI 应用的数据服务接口。</li>
+</ul>
+<h2 id="131-阶段优先级">13.1 阶段优先级</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>核心成果</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phase 1</td>
+<td>数据接入、湖仓、批计算和调度</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>实时计算、Catalog、Lineage、Quality</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>权限治理、审批、统一门户</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Phase 4</td>
+<td>Data Agent、MCP、MLOps</td>
+<td>P2</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="14-POC-与验收标准">14. POC 与验收标准</h1>
+<p>正式建设前，需要对关键组件进行 POC。</p>
+<h2 id="141-数据计算-POC">14.1 数据计算 POC</h2>
+<ul>
+<li>Spark 批处理性能。</li>
+<li>Flink CDC 延迟。</li>
+<li>Iceberg 写入和查询。</li>
+<li>Doris / StarRocks 并发查询。</li>
+<li>数据量增长时的资源表现。</li>
+<li>故障恢复和任务重试。</li>
+</ul>
+<h2 id="142-数据治理-POC">14.2 数据治理 POC</h2>
+<ul>
+<li>是否能自动采集数据库和数据平台元数据。</li>
+<li>是否支持关键字、标签和业务域搜索。</li>
+<li>是否支持业务描述和 Owner 管理。</li>
+<li>是否支持集成任务和 ETL 血缘。</li>
+<li>是否支持字段级血缘。</li>
+<li>是否支持敏感数据分类。</li>
+<li>是否能对接企业 SSO / CAM。</li>
+<li>是否支持业务审批和多级审批。</li>
+<li>是否支持质量规则绑定 Pipeline。</li>
+<li>质量失败是否能够阻塞下游任务。</li>
+<li>API 数据服务是否复用同一份资产元数据。</li>
+<li>跨云 Catalog 的同步是否保留源系统资源标识。</li>
+</ul>
+<h2 id="143-开源产品-POC">14.3 开源产品 POC</h2>
+<p>重点验证：</p>
+<ul>
+<li>DataHub / OpenMetadata 的实际部署复杂度。</li>
+<li>元数据采集器的完整度。</li>
+<li>数据目录的业务可用性。</li>
+<li>血缘展示与导出能力。</li>
+<li>SSO 和权限集成。</li>
+<li>Elasticsearch、图数据库或其他依赖的运维成本。</li>
+<li>中英文业务术语适配。</li>
+<li>API 和审批流程二次开发成本。</li>
+</ul>
+<hr>
+<h1 id="15-风险与应对策略">15. 风险与应对策略</h1>
+<table>
+<thead>
+<tr>
+<th>风险</th>
+<th>影响</th>
+<th>应对措施</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>组件过多</td>
+<td>运维复杂度上升</td>
+<td>按阶段建设，控制组件数量</td>
+</tr>
+<tr>
+<td>调度体系重复</td>
+<td>任务管理混乱</td>
+<td>DolphinScheduler 统一批调度</td>
+</tr>
+<tr>
+<td>多 Catalog 数据不一致</td>
+<td>资产信息冲突</td>
+<td>明确权威来源，统一资产映射</td>
+</tr>
+<tr>
+<td>血缘采集不完整</td>
+<td>影响分析不准确</td>
+<td>先表级，再任务级和字段级</td>
+</tr>
+<tr>
+<td>权限系统割裂</td>
+<td>授权不可控</td>
+<td>审批与授权分离，适配原生权限</td>
+</tr>
+<tr>
+<td>开源二开成本高</td>
+<td>项目延期</td>
+<td>优先验证 Connector 和 SSO</td>
+</tr>
+<tr>
+<td>质量规则覆盖不足</td>
+<td>数据可信度下降</td>
+<td>优先关键数据和核心指标</td>
+</tr>
+<tr>
+<td>计算资源争抢</td>
+<td>任务运行不稳定</td>
+<td>资源池隔离和配额控制</td>
+</tr>
+<tr>
+<td>AI Agent 越权</td>
+<td>数据安全风险</td>
+<td>身份传递、权限校验和审计</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="16-最终推荐架构与技术栈">16. 最终推荐架构与技术栈</h1>
+<p>综合数据工程、数据治理、云原生和 AI 扩展需求，最终推荐以下技术体系。</p>
+<table>
+<thead>
+<tr>
+<th>架构领域</th>
+<th>推荐技术</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Container Platform</td>
+<td>Kubernetes</td>
+</tr>
+<tr>
+<td>Data Integration</td>
+<td>SeaTunnel</td>
+</tr>
+<tr>
+<td>CDC</td>
+<td>Flink CDC</td>
+</tr>
+<tr>
+<td>Message Queue</td>
+<td>Kafka</td>
+</tr>
+<tr>
+<td>Batch Compute</td>
+<td>Spark</td>
+</tr>
+<tr>
+<td>Stream Compute</td>
+<td>Flink</td>
+</tr>
+<tr>
+<td>Stream Job Management</td>
+<td>Dinky</td>
+</tr>
+<tr>
+<td>Workflow Orchestration</td>
+<td>DolphinScheduler</td>
+</tr>
+<tr>
+<td>Lakehouse Format</td>
+<td>Iceberg</td>
+</tr>
+<tr>
+<td>Object Storage</td>
+<td>COS / MinIO</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>Hive Metastore</td>
+</tr>
+<tr>
+<td>OLAP</td>
+<td>Doris / StarRocks（二选一）</td>
+</tr>
+<tr>
+<td>Metadata &amp; Catalog</td>
+<td>WeData / DataHub / OpenMetadata（按环境选择）</td>
+</tr>
+<tr>
+<td>Lineage</td>
+<td>OpenLineage</td>
+</tr>
+<tr>
+<td>Data Quality</td>
+<td>WeData / Great Expectations</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Enterprise SSO / CAM / UC / Ranger（按环境组合）</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>APISIX / Kong</td>
+</tr>
+<tr>
+<td>Portal</td>
+<td>自研 Unified Data Portal</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>GitLab CI/CD</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Prometheus / Grafana / Loki</td>
+</tr>
+<tr>
+<td>AI Agent</td>
+<td>LangGraph / MCP / Agent Harness</td>
+</tr>
+<tr>
+<td>MLOps</td>
+<td>MLflow</td>
+</tr>
+</tbody></table>
+<h2 id="161-最终架构决策">16.1 最终架构决策</h2>
+<p>本方案的核心不是把所有开源组件都部署一遍，而是明确平台的职责边界。</p>
+<p><strong>第一，数据工程底座采用成熟开源组件。</strong></p>
+<p>SeaTunnel、Spark、Flink、Iceberg、DolphinScheduler 等负责数据集成、计算、存储和调度。</p>
+<p><strong>第二，数据治理优先复用已有云平台能力。</strong></p>
+<p>腾讯云环境优先使用 WeData；Azure / Databricks 环境采用 Purview + Unity Catalog；完全私有化环境再评估 DataHub 或 OpenMetadata。</p>
+<p><strong>第三，自研统一门户和治理流程。</strong></p>
+<p>重点建设 Metadata Integration、统一资产模型、Access Workflow、Data Marketplace 和 Unified Data Portal，而不是重新开发完整的计算引擎或 Catalog。</p>
+<p><strong>第四，数据权限必须由权威系统执行。</strong></p>
+<p>统一门户负责申请和流程管理，授权适配器调用底层平台接口，完成授权验证、到期回收和审计。</p>
+<p><strong>第五，为 AI Agent 和 MLOps 预留标准接口。</strong></p>
+<p>通过 API、MCP、元数据和统一权限体系，将数据平台能力开放给未来的智能应用。</p>
+<hr>
+<h1 id="17-总结">17. 总结</h1>
+<p>最终建设一套以 Lakehouse 为数据底座、以 DataOps 为工程管理体系、以 Data Governance 为治理核心、以 Unified Portal 为统一入口、以 AI Agent 为智能应用扩展的企业级数据平台。</p>
+<p>整体形成以下能力闭环：</p>
+<pre><code class="language-text">Data Integration
+       |
+       v
+Data Storage &amp; Lakehouse
+       |
+       v
+Data Compute &amp; Processing
+       |
+       v
+DataOps &amp; Orchestration
+       |
+       v
+Metadata &amp; Data Governance
+       |
+       v
+Data Catalog &amp; Discovery
+       |
+       v
+Access Request &amp; Approval
+       |
+       v
+Data Serving &amp; Marketplace
+       |
+       v
+BI / Data API / Data Agent / ML
+</code></pre>
+<p><strong>最终建设定位：</strong></p>
+<p>从传统的数据集成和数据计算平台，升级为集数据工程、数据治理、数据资产运营、数据服务和 AI 应用于一体的 Enterprise Data Platform。</p>
+</div> <footer class="post-end" data-astro-cid-7jjqptxk> <p data-astro-cid-7jjqptxk> <strong data-page-zh="读到这里了？" data-page-en="Made it this far?" data-astro-cid-7jjqptxk>读到这里了？</strong> <span data-page-zh="如果这篇文章对你有帮助，欢迎分享或交流。" data-page-en="If this article helped, feel free to share it or get in touch." data-astro-cid-7jjqptxk>如果这篇文章对你有帮助，欢迎分享或交流。</span> </p> <div class="post-end-links" data-astro-cid-7jjqptxk> <a href="/blog/" data-page-zh="返回博客" data-page-en="Back to blog" data-astro-cid-7jjqptxk>返回博客</a> <a href="/about/#contact" data-page-zh="与我交流 ↗" data-page-en="Get in touch ↗" data-astro-cid-7jjqptxk>与我交流 ↗</a> </div> </footer> </div> </div> </article> <script type="module" src="/_astro/MermaidInit.astro_astro_type_script_index_0_lang.C6nPK8iy.js"></script> </main> <footer class="site-footer wrap"> <span>© 2026 Boyang Wang</span> <span>用好奇心构建，用工程落地。</span> <a class="footer-wechat-link" href="/about/#wechat">微信公众号 ↗</a> <a href="#top">回到顶部 ↑</a> </footer> <script>
+  const zhToEn = {
+    '首页':'Home','关于我':'About','技术博客':'Blog','笔记':'Notes','项目作品':'Projects','知识库':'Knowledge Base','Skill':'Skill','联系我':'Contact','了解我':'About me','阅读博客':'Read blog','阅读最新文章':'Read latest article','持续探索':'Exploring','连接模型能力、数据基础设施与真实业务问题。':'Connecting model capabilities, data infrastructure, and real business problems.','探索项目':'Explore projects','查看项目集':'View projects','全部文章':'All articles','认识我':'About me','技术兴趣与研究方向':'Areas of interest','项目作品集':'Selected projects','技术知识库':'Knowledge base','项目说明':'Project notes','查看项目':'View projects','与我交流':'Let’s connect','回到顶部 ↑':'Back to top ↑','持续迭代':'Iterating','研究中':'Researching','实践项目':'In practice','实践研究':'Applied research','架构探索':'Architecture study','工程实践':'Engineering practice','持续学习':'Always learning','公开内容':'Public notes','持续生长中':'Growing continuously','全部':'All','数据工程':'Data engineering','机器学习':'Machine learning','知识管理':'Knowledge management','系统架构':'System architecture','开发工具':'Developer tools','平台架构':'Platform architecture','你好，我是':'Hi, I’m','具备 AI Agent & Harness Engineering、Data Platform、云原生 DevOps 及 Machine Learning / Deep Learning 的综合技术能力，聚焦 CMC 生物制药领域的数字化与智能化建设。':'Integrated expertise in AI Agent & Harness Engineering, data platforms, cloud-native DevOps, and machine learning / deep learning—focused on digital and intelligent transformation in CMC biopharmaceuticals.','从想法到可用的系统':'From ideas to useful systems','最近在思考什么':'What I’m thinking about','我如何看待技术':'How I approach technology','有相似的问题或想法？':'Have a similar problem or idea?','联系我 ↗':'Get in touch ↗','了解我的方法 ↗':'Learn my approach ↗','用好奇心构建，用工程落地。':'Built with curiosity, grounded in engineering.','一名关注 AI 工程、数据系统与机器学习落地的技术实践者。':'An engineer focused on applying AI, data systems, and machine learning.','没有找到匹配的文章，试试其他关键词。':'No matching articles found. Try another keyword.','查找知识主题…':'Search knowledge topics…','搜索文章…':'Search articles…','知识目录':'Knowledge directory','按主题探索':'Explore by topic','个人技术门户，记录 AI Agent、数据工程、机器学习与平台架构实践。':'A personal technology hub about AI agents, data engineering, machine learning, and platform architecture.','关注从模型能力到工程系统的落地路径，记录真实问题、架构选择与实践复盘，也持续探索 AI 如何改变知识工作。':'I explore how model capabilities become reliable engineering systems, documenting real problems, architecture choices, and lessons learned.','连接 AI 能力、数据基础设施与真实业务问题。':'Connecting AI capabilities, data infrastructure, and real business problems.','不只关注技术是什么，更关注它如何真正发挥作用。':'I care less about what technology is, and more about how it creates real value.','我相信好的技术成果来自清晰的问题定义、可靠的工程实现，以及持续复盘和分享。':'Good technical work comes from clear problem definition, reliable engineering, and continuous reflection and sharing.','记录我正在构建、研究和持续迭代的项目。这里不仅展示结果，也希望说明问题背景、设计思路与工程取舍。':'A collection of projects I am building, researching, and iterating on—with the context, design thinking, and trade-offs behind them.','记录技术学习、工程实践与思考复盘。比起追逐每一个新概念，我更想弄清楚它解决什么问题，以及如何把它做得可靠。':'Notes on learning, engineering practice, and reflection. I care more about the problems a concept solves and how to make it reliable than chasing every new trend.','把零散的阅读、实践与思考组织成可以持续迭代的知识体系。':'A continuously evolving system for organizing reading, practice, and reflection.','从真实问题出发':'Start with real problems','先理解业务约束、数据质量与使用者目标，再选择合适的技术方案。':'Understand constraints, data quality, and user goals before choosing technology.','让 AI 进入工程系统':'Bring AI into engineering systems','关注 Agent 的工具使用、上下文管理、工作流、评估与可靠性，而不止是模型调用。':'Focus on tools, context, workflows, evaluation, and reliability—not just model calls.','把经验沉淀成资产':'Turn experience into assets','通过文档、可复用组件、自动化流程和开源项目，让一次实践产生长期价值。':'Create lasting value through documentation, reusable components, automation, and open source.','关注的技术交叉点':'Technical intersection','以工程实践为导向':'Engineering-led','持续学习与复盘':'Continuous learning and reflection','公开沉淀技术经验':'Share engineering lessons','技术的价值不只在于新颖，':'Technology matters not because it is new,','更在于能否可靠地解决问题。':'but because it reliably solves problems.','技术能力与研究方向':'Skills and research','我的实践路径':'My path in practice','以下为可编辑的经历结构，请替换为真实履历。':'This is an editable structure—replace it with your real experience.','一起交流想法，探索新的可能。':'Let’s exchange ideas and explore what’s next.','阅读技术文章 ↗':'Read technical notes ↗','项目作品':'Projects','技术文章':'Technical notes','知识库':'Knowledge base','上线前请将以上占位链接替换成你的真实账号。':'Replace these placeholder links with your real accounts before launch.','阅读约 6 分钟 ↗':'6 min read ↗','查看项目集 ↗':'View project collection ↗','了解项目 →':'View project →','项目说明':'Project notes','欢迎交流技术方案、开源项目和工程实践。':'Open to discussing technical solutions, open source, and engineering practice.','大语言模型、提示词、推理与应用实践。':'LLMs, prompting, reasoning, and application practice.','Agent 系统':'Agent systems','Agent 架构、工具调用、工作流与评估。':'Agent architecture, tool use, workflows, and evaluation.','数据平台、语义层、数据治理与工程实践。':'Data platforms, semantic layers, governance, and engineering practice.','建模方法、验证策略、指标与可解释性。':'Modeling methods, validation, metrics, and interpretability.','系统设计、API、分布式系统与可靠性。':'System design, APIs, distributed systems, and reliability.','开发环境、自动化、Git 与效率工具。':'Development environments, automation, Git, and productivity tools.','边学习，边整理，边分享。':'Learn, organize, and share.','从一个主题开始，逐步建立完整的知识图谱。':'Start with one topic and build a complete knowledge map.','从知识库到个人 Wiki':'From knowledge base to personal Wiki','建议使用私有 Git 仓库存放原始笔记和工作材料，审核后的内容再发布到这个公开门户。':'Keep raw notes and work materials in a private Git repository, then publish reviewed content here.','打造个人 LLM Wiki：从 0 到 1 的实践':'Building a Personal LLM Wiki: From Zero to One','面向 AI 的数据平台架构思考':'Thinking about Data Platforms for AI','配对数据建模：如何避免验证集泄漏':'Paired-data modeling: avoiding validation leakage','Agent 评估不止看最终答案':'Agent evaluation is more than the final answer','从 ReAct 到 Agentic Workflow：智能体的演进与实践':'From ReAct to Agentic Workflows','从推理循环到工作流编排，梳理 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration, key choices in Agent system design.','把 Markdown、知识组织与 AI 辅助研究组合成可持续的个人知识系统。':'Combining Markdown, knowledge organization, and AI-assisted research into a sustainable personal knowledge system.','从数据管道、语义层到 Agent 工具接口，探索可落地的企业架构。':'From pipelines and semantic layers to Agent tools, exploring practical enterprise architecture.'
+  };
+  Object.assign(zhToEn, {
+    '原始学习记录':'Raw learning notes',
+    '审核后的专题知识':'Reviewed topic knowledge',
+    '实践、思考与取舍':'Practice, reflection, and trade-offs',
+    '可复用的 Agent 工作流':'Reusable Agent workflows',
+    '工程实践':'Engineering practice',
+    '持续研究':'Ongoing research',
+    '开放分享':'Open sharing',
+    '全部文章 ↗':'All articles ↗',
+    '返回首页':'Back to home',
+    '主导航':'Main navigation',
+    '切换语言':'Switch language',
+    '切换到中文':'Switch to Chinese',
+    '切换深色模式':'Toggle dark mode',
+    '切换主题':'Toggle theme',
+    '打开导航':'Open navigation',
+    'AI / 数据':'AI / Data',
+    '基于 Markdown、Git 与 Agent Skills 的个人知识系统。':'A personal knowledge system built with Markdown, Git, and Agent Skills.',
+    '研究自然语言到 SQL、语义层与企业数据问答的工程实践。':'Researching practical natural-language-to-SQL, semantic layers, and enterprise data Q&A.',
+    '围绕生物工艺数据，探索配对数据建模与可靠验证流程。':'Exploring paired-data modeling and reliable validation workflows for bioprocess data.',
+    '不只关注技术是什么，':'I care not only about what technology is,',
+    '更关注它如何真正发挥作用。':'but how it creates real value.',
+    '与我交流 ↗':'Let’s connect ↗',
+    '微信公众号':'WeChat Official Account',
+    '微信公众号 ↗':'WeChat Official Account ↗',
+    '微信搜一搜或扫码关注，阅读技术文章与工程实践':'Follow via WeChat Search or scan for articles and engineering notes',
+    '也可通过微信公众号获取更新；扫码或微信搜一搜即可关注。':'Follow on WeChat for updates—search or scan to subscribe.',
+    '探索 AI Agent 与企业级智能应用':'Exploring AI Agents and enterprise intelligence',
+    '构建数据平台与工程基础设施':'Building data platforms and engineering foundations',
+    '把数据建模应用到实际问题':'Applying data modeling to real problems',
+    '把过程公开，':'Share the process,',
+    '让影响力持续积累。':'and let impact compound.',
+    '我会持续分享项目拆解、技术方案、踩坑记录与学习笔记。希望这些内容不仅是答案，也能帮助其他人更快建立自己的判断框架。':'I share project breakdowns, technical approaches, lessons learned, and study notes to help others build their own judgment frameworks faster.',
+    '系统化记录学习与工程实践':'Structured notes on learning and engineering practice',
+    '展示思路、架构与实现过程':'Ideas, architecture, and implementation',
+    '把零散笔记组织成知识体系':'Turn scattered notes into a knowledge system',
+    '将 Markdown、PARA、Git 与 Agent Skills 结合，构建长期可维护、可检索、可持续发布的个人知识系统。':'Combining Markdown, PARA, Git, and Agent Skills into a maintainable, searchable, and publishable personal knowledge system.',
+    '围绕自然语言数据问答，研究 SQL 生成、语义层、工具调用、权限控制与可观测性。':'Researching SQL generation, semantic layers, tool use, access controls, and observability for natural-language data Q&A.',
+    '探索配对小罐—大罐数据的建模流程，强调分组验证、OOF、独立测试集与结果可解释性。':'Exploring paired small- and large-scale bioprocess modeling with grouped validation, OOF, independent test sets, and interpretability.',
+    '研究多 Agent 协作、工具注册、工作流编排、权限体系与人机协同的工程架构。':'Researching engineering architecture for multi-Agent collaboration, tool registration, workflows, access control, and human-AI collaboration.',
+    '围绕数据集成、元数据、API 治理与自动化运维，沉淀平台工程实践与标准化方法。':'Building reusable platform-engineering practices around data integration, metadata, API governance, and automated operations.',
+    '构建可复用的表格数据回归建模流程，涵盖数据检查、基线模型、调参、评估和模型报告。':'Building a reusable tabular regression workflow covering data checks, baselines, tuning, evaluation, and reporting.',
+    '搜索文章':'Search articles',
+    '从推理循环到可控工作流，理解 Agent 系统设计中的关键选择。':'From reasoning loops to controlled workflows: the key choices in Agent system design.',
+    '将 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a continuously evolving personal knowledge system.',
+    '从数据管道、语义层到 Agent 工具接口，梳理企业数据平台的演进方向。':'From data pipelines and semantic layers to Agent tools: the evolution of enterprise data platforms.',
+    '当样本存在实体关联时，如何设计分组交叉验证、OOF 与独立测试集。':'How to design grouped cross-validation, OOF, and independent test sets when samples are related.',
+    '从工具调用、任务完成率、轨迹质量和可观测性建立评估框架。':'Building an evaluation framework from tool use, task completion, trajectory quality, and observability.',
+    '把零散的阅读、实践与思考组织成可以持续迭代的知识体系。当前为公开知识入口，后续可扩展成独立的 Starlight 文档站。':'Organize scattered reading, practice, and reflection into an evolving knowledge system. This public entry point can later grow into a standalone Starlight documentation site.',
+    '⌂　总览':'⌂ Overview',
+    '◈　Agent 系统':'◈ Agent systems',
+    '⌁　数据工程':'⌁ Data engineering',
+    '◉　机器学习':'◉ Machine learning',
+    '▦　系统架构':'▦ System architecture',
+    '✳　开发工具':'✳ Developer tools',
+    '← 返回技术博客':'← Back to blog',
+    '本文目录':'On this page',
+    '本文围绕一个核心问题展开：如何把技术概念转化为可验证、可维护，并能在真实场景中持续运行的工程实践。':'This article explores one core question: how to turn technical concepts into engineering practices that are verifiable, maintainable, and durable in real-world use.',
+    '实践提醒':'Practice note',
+    '本文为可编辑的示例文章。发布前请结合自己的项目经历补充真实案例、架构图、实验结果和参考链接。':'This is an editable sample article. Before publishing, add real cases, architecture diagrams, experiment results, and references from your own work.',
+    '如果这篇文章对你有帮助，欢迎分享或交流。':'If this article was helpful, feel free to share it or get in touch.',
+    '从推理循环到工作流编排，理解 Agent 系统设计中的关键选择。':'From reasoning loops to workflow orchestration: understanding key choices in Agent system design.',
+    '1. 为什么需要工作流':'1. Why workflows matter',
+    '2. 设计时关注什么':'2. What to focus on in design',
+    '3. 从 Demo 走向生产':'3. Moving from demo to production',
+    '单一 Agent 循环适合开放式探索，但在复杂业务中，任务边界、权限、重试、超时和审计都需要明确约束。工作流可以把模型判断与确定性逻辑组合起来，让系统更容易调试、评估和维护。':'A single Agent loop suits open-ended exploration, but complex business use needs explicit task boundaries, permissions, retries, timeouts, and audit trails. Workflows combine model judgment with deterministic logic, making systems easier to debug, evaluate, and maintain.',
+    '先定义任务输入和完成条件，再划分步骤、工具权限和异常分支。对每个节点记录输入输出、耗时、模型版本与工具结果，能显著降低问题定位成本。':'Define task inputs and completion criteria first, then separate steps, tool permissions, and exception branches. Recording inputs, outputs, latency, model versions, and tool results for each node substantially lowers debugging cost.',
+    '为关键节点建立评估集，分别评估最终任务成功率、工具调用准确率、成本和延迟。对高风险操作保留人工确认，并为失败路径设计可恢复机制。':'Build evaluation sets for critical nodes and separately measure task success, tool-call accuracy, cost, and latency. Keep human approval for high-risk actions and design recoverable failure paths.',
+    '把 Markdown、Git、PARA 与 Agent Skills 组合成可持续迭代的个人知识系统。':'Combining Markdown, Git, PARA, and Agent Skills into a personal knowledge system that can evolve continuously.',
+    '1. 让知识保持可迁移':'1. Keep knowledge portable',
+    '2. 用 PARA 组织行动':'2. Organize action with PARA',
+    '3. 让 AI 帮助整理，而不是代替判断':'3. Let AI organize, not replace judgment',
+    '优先用 Markdown 保存原始笔记、项目复盘和研究摘要。纯文本文件容易搜索、版本管理，也不被单一知识管理工具锁定。':'Use Markdown first for raw notes, project retrospectives, and research summaries. Plain-text files are easy to search and version, and do not lock you into one knowledge tool.',
+    'Projects 管理有明确目标和期限的事项；Areas 管理长期责任；Resources 收集主题资料；Archives 保存已完成或暂时搁置的内容。目录结构服务于检索，不需要一开始就设计得过于复杂。':'Projects manage time-bound goals; Areas cover ongoing responsibilities; Resources collect topical material; Archives hold completed or paused content. Folder structures should serve retrieval, not become overdesigned from day one.',
+    '可以用 Skills 统一摘要、归档、引用和复核流程。重要结论保留来源与日期，生成内容先审核再进入长期知识库；公开发布前再从私有笔记中挑选并编辑。':'Use Skills to standardize summarizing, archiving, citation, and review. Keep sources and dates for important conclusions, review generated content before it enters the long-term base, then select and edit private notes before public release.',
+    '1. 数据底座仍然重要':'1. Data foundations still matter',
+    '2. 语义层连接业务问题与数据模型':'2. Semantic layers connect business questions and data models',
+    '3. 为 Agent 设计受控工具':'3. Design controlled tools for Agents',
+    '数据质量、权限、血缘、元数据和新鲜度决定了 AI 应用可以回答什么。没有可靠的数据治理，模型只能更快地放大已有问题。':'Data quality, access, lineage, metadata, and freshness determine what AI applications can answer. Without reliable governance, models only amplify existing problems faster.',
+    '业务术语、指标定义、维度关系和数据口径应成为可维护的资产。自然语言问答可以复用语义层，而不是每次都从原始表结构猜测业务含义。':'Business terms, metric definitions, dimensional relationships, and data conventions should be maintained as assets. Natural-language Q&A can reuse a semantic layer rather than guessing business meaning from raw tables every time.',
+    '工具接口需要清晰的 schema、权限范围、超时和审计记录。查询执行应优先采用只读、限额和可解释的策略，并为敏感数据设置明确边界。':'Tool interfaces need clear schemas, permission scopes, timeouts, and audit records. Query execution should prefer read-only, limited, explainable strategies with explicit boundaries for sensitive data.',
+    '我喜欢把复杂的问题拆解成清晰的系统：从数据如何流动、模型如何验证，到 Agent 如何可靠地调用工具并融入真实工作流。我也在持续记录实践、分享思考，并把知识转化为可复用的工具。':'I enjoy breaking complex problems into clear systems—from data flow and model validation to reliable Agent tool use in real workflows. I document experiments, share ideas, and turn knowledge into reusable tools.',
+    '研究 Agent 架构、工具编排、数据问答和可观测性，尝试将 AI 能力转化为可维护的工程系统。':'Researching Agent architecture, tool orchestration, data Q&A, and observability to turn AI capabilities into maintainable systems.',
+    '围绕数据集成、平台标准化、API 治理与自动化运维，关注系统稳定性和团队协作效率。':'Working on data integration, platform standards, API governance, and automation with a focus on stability and collaboration.',
+    '关注数据泄漏防控、交叉验证、独立测试集与模型可解释性，让模型评估更接近真实应用场景。':'Focusing on leakage prevention, cross-validation, independent test sets, and interpretability for realistic model evaluation.',
+    '把过程公开，让影响力持续积累。':'Share the process and let impact compound.',
+    '如果你对 AI Agent、数据平台、机器学习工程或知识管理感兴趣，欢迎联系交流。':'If you are interested in AI agents, data platforms, ML engineering, or knowledge management, let’s connect.',
+    '项目展示前请补充可公开的真实结果与脱敏案例。':'Add publishable results and anonymized examples before showcasing this project.',
+    '目标是建立可扩展、可审计的企业级 Agent 基础能力。':'The goal is an extensible and auditable enterprise Agent foundation.',
+    '适合加入架构图、关键决策与工程复盘。':'Add architecture diagrams, key decisions, and engineering retrospectives.',
+    '适合展示可复现代码、实验记录和指标对比。':'Showcase reproducible code, experiment logs, and metric comparisons.',
+    '⌘　LLM & AI':'⌘ LLM & AI',
+    '关注知识结构、自动整理与公开发布工作流。':'Focused on knowledge structure, automated organization, and a publish workflow.',
+    '对比开源项目与可落地的企业架构方案。':'Comparing open-source projects with practical enterprise architecture options.',
+    '了解 Boyang Wang 的技术方向、工程理念、项目实践与联系方式。':'Learn about Boyang Wang’s technical focus, engineering principles, projects, and contact information.',
+    '王渤洋（Boyang Wang）— 算法与数据平台实践者，关注 Agent Harness、CMC 数据工程与企业级智能应用落地。':'Boyang Wang (王渤洋) — data scientist and engineer focused on Agent Harness, CMC data platforms, and enterprise AI delivery.',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家，具备从算法设计与优化、系统架构设计到独立软件产品研发及落地交付的端到端能力。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery—with end-to-end capability from algorithm design and optimization and system architecture to independent software R&D and production rollout.',
+    '具备从 0 到 1 构建算法平台、数据平台与 DevOps 平台的实践经验，打通算法研发、数据治理、知识工程、Agent Engineering 到云原生部署的完整技术链路。在 AI Agent 领域，专注于 Agent Architecture、Harness Engineering、Agent Runtime、Multi-Agent Orchestration、MCP 与 Skills 等核心技术，致力于构建具备任务规划、工具编排、上下文管理、执行控制与可追溯能力的企业级 Agent 系统。':'Hands-on experience building algorithm, data, and DevOps platforms from zero to one—connecting algorithm R&D, data governance, knowledge engineering, Agent Engineering, and cloud-native deployment. In AI Agents, I focus on Agent Architecture, Harness Engineering, Agent Runtime, Multi-Agent Orchestration, MCP, and Skills—building enterprise-grade Agent systems with task planning, tool orchestration, context management, execution control, and traceability.',
+    '深耕生物制药 CMC 领域，擅长将复杂的工艺与质量业务转化为结构化、可计算、可推理的领域知识，融合 Machine Learning、Deep Learning、Knowledge Graph 与 Agent 技术，推动 AI 从算法模型走向工程化平台与业务产品落地。':'Deep experience in biopharmaceutical CMC—turning complex process and quality operations into structured, computable, reasoning-ready domain knowledge; combining machine learning, deep learning, knowledge graphs, and Agents to move AI from models to engineered platforms and business products.',
+    '核心技术方向':'Core technical focus',
+    '核心能力领域':'Core capabilities',
+    '从领域知识到产品交付的方法':'From domain knowledge to product delivery',
+    '把实践沉淀为知识，':'Turn practice into knowledge,',
+    '把技术连接到真实问题。':'and connect technology to real problems.',
+    '持续分享 Agent、数据平台、机器学习与 CMC 数字化实践，也欢迎交流企业级 Agent 与数据智能系统的工程落地。':'I share practical work on Agents, data platforms, machine learning, and CMC digitalization—and welcome conversations about delivering enterprise Agent and data intelligence systems.',
+    '内容与联系':'Content and contact',
+    '实践、架构与复盘':'Practice, architecture, and reflection',
+    '结构化领域知识':'Structured domain knowledge',
+    '代码与公开项目':'Code and public projects',
+    'CMC 数字化':'CMC digitalization',
+    'MLOps':'MLOps',
+    'Deep Learning':'Deep Learning',
+    'DevOps':'DevOps',
+    'Full Stack':'Full Stack',
+    'Boyang Wang — 复合型数据科学家，专注 AI 工程化、Agent Engineering、数据平台与生物制药 CMC 领域落地。':'Boyang Wang — hybrid data scientist focused on AI engineering, Agent Engineering, data platforms, and biopharmaceutical CMC delivery.',
+    'Boyang Wang — 兼具算法研发、工程实践与产品交付的数据科学家，专注 Agent Harness、数据平台与 CMC 领域 AI 工程化落地。':'Boyang Wang — data scientist spanning algorithm R&D, engineering, and product delivery; focused on Agent Harness, data platforms, and engineered AI in CMC.',
+    '端到端':'End-to-end',
+    '算法设计、架构到产品交付':'Algorithm design, architecture, and product delivery',
+    '算法 / 数据 / DevOps 平台':'Algorithm, data, and DevOps platforms',
+    'CMC × Agent':'CMC × Agent',
+    '可计算领域知识与工具调用':'Computable domain knowledge and tool use',
+    '工程化':'Engineering at scale',
+    '云原生部署与 MLOps 治理':'Cloud-native deployment and MLOps governance',
+    '0 → 1':'0 → 1',
+    '我如何将技术转化为价值':'How I turn technology into value',
+    '从业务问题出发，以算法与工程为核心，让技术从模型研发走向产品交付，形成可验证、可复用、可持续演进的闭环。':'Starting from business problems, with algorithms and engineering at the core—moving from model R&D to product delivery in a verifiable, reusable, evolving loop.',
+    '01｜':'01｜',
+    '02｜':'02｜',
+    '03｜':'03｜',
+    '业务知识的可计算化':'Computable domain knowledge',
+    '将复杂业务转化为机器可理解的领域模型。':'Turn complex business into machine-understandable domain models.',
+    '从业务流程、领域术语与数据关系出发，构建统一的领域知识与数据模型，让业务经验转化为可计算、可推理、可复用的数字资产。':'From processes, terminology, and data relationships—unified domain knowledge and data models that turn experience into computable, reasoning-ready digital assets.',
+    '构建可信赖的 Agent 系统':'Trustworthy Agent systems',
+    '让 AI 不止于生成答案，更能执行任务、调用工具并交付结果。':'AI that does more than answer—it executes tasks, uses tools, and delivers outcomes.',
+    '通过任务规划与分解、SQL / 知识图谱 / 业务规则等工具协同，实现过程可追踪、结论有依据、结果可验证的人机协同系统。':'Planning, decomposition, and tools (SQL, knowledge graphs, business rules)—human–AI systems with traceable processes, grounded conclusions, and verifiable results.',
+    '从算法研发到产品交付':'From algorithm R&D to product delivery',
+    '打通算法、数据、工程与云原生部署的完整链路。':'A full chain linking algorithms, data, engineering, and cloud-native deployment.',
+    '通过算法平台、数据平台与 DevOps 工程体系，结合 Skill / MCP 扩展机制，将模型与智能体能力沉淀为可复用、可部署、可持续迭代的软件产品。':'Algorithm and data platforms plus DevOps, with Skills/MCP—turning models and agents into reusable, deployable, iteratively improving software products.',
+    '机器学习与深度学习':'Machine learning and deep learning',
+    '兼具算法研发、AI 工程化与产品交付能力的复合型数据科学家。':'A hybrid data scientist combining algorithm R&D, AI engineering, and product delivery.',
+    '兼具算法研发、工程实践与产品交付能力的数据科学家。':'A data scientist combining algorithm R&D, engineering practice, and product delivery.',
+    '从 0 到 1 构建算法、数据与 DevOps 平台，在 CMC 领域落地可工具调用、结论可追溯的 Agent 系统；推动 AI 从研发走向工程化交付。':'Building algorithm, data, and DevOps platforms from zero to one; shipping traceable, tool-using Agents in CMC—from research to engineered delivery.',
+    'Agent Harness':'Agent Harness',
+    '01 /':'01 /',
+    '02 /':'02 /',
+    '03 /':'03 /',
+    '04 /':'04 /',
+    '05 /':'05 /',
+    'Agent Engineering & Harness':'Agent Engineering & Harness',
+    'Agent Engineering & Harness & Open-Source Ecosystem':'Agent Engineering & Harness & Open-Source Ecosystem',
+    '面向生产环境的智能体架构、运行时编排、上下文工程，以及开源 Agent 生态的持续研究与工程化实践。':'Production agent architecture, runtime orchestration, context engineering, and ongoing open-source Agent ecosystem research and engineering.',
+    '面向生产环境的 Agent 架构、运行时、上下文管理与系统集成。':'Production-oriented Agent architecture, runtime, context management, and system integration.',
+    '01. Architecture & Reasoning · 架构设计与推理范式':'01. Architecture & Reasoning',
+    '02. Agent Runtime & Harness · 运行时与执行控制':'02. Agent Runtime & Harness',
+    '03. Context & Knowledge Engineering · 上下文与知识工程':'03. Context & Knowledge Engineering',
+    '04. Integration & Orchestration · 系统集成与任务编排':'04. Integration & Orchestration',
+    'Open-Source Ecosystem · 开源项目生态':'Open-Source Ecosystem',
+    '按产品定位和工程职责分类，而非按技术名称分类。':'Organized by product role and engineering responsibility, not by technology names.',
+    'Agent Frameworks':'Agent Frameworks',
+    'General-purpose Agents':'General-purpose Agents',
+    'Personal Agents':'Personal Agents',
+    'Coding Agents':'Coding Agents',
+    'Multi-Agent Systems':'Multi-Agent Systems',
+    'Data Agents':'Data Agents',
+    'Workflow & Agent Platforms':'Workflow & Agent Platforms',
+    'Wren AI':'Wren AI',
+    'ORCA':'ORCA',
+    '架构设计与推理范式 · Architecture & Reasoning':'Architecture & Reasoning',
+    'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve':'LangChain · LangGraph · Vercel AI SDK · Multi-Agent Architecture · ReAct · Plan-and-Solve',
+    '运行时与工具编排 · Runtime & Orchestration':'Runtime & Orchestration',
+    'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control':'Agent Harness · MCP · Agent Skills · Tool Calling · Workflow Orchestration · State Management · Execution Control',
+    '检索与上下文工程 · Retrieval & Context Engineering':'Retrieval & Context Engineering',
+    'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking':'RAG · GraphRAG · Memory Management · Context Engineering · Retrieval & Reranking',
+    '开源 Agent 项目研究 · Open-Source Agent Projects':'Open-Source Agent Projects',
+    'Personal Agent':'Personal Agent',
+    'OpenClaw · Hermes Agent':'OpenClaw · Hermes Agent',
+    'General-Purpose Agent':'General-Purpose Agent',
+    'DeerFlow':'DeerFlow',
+    'Code Agent':'Code Agent',
+    'Pi · Codex · Claude Code · Cursor':'Pi · Codex · Claude Code · Cursor',
+    'Multi-Agent Collaboration':'Multi-Agent Collaboration',
+    'Multica · Orca':'Multica · Orca',
+    'Data Agent':'Data Agent',
+    'DB-GPT · Wren':'DB-GPT · Wren',
+    'Agent Development Framework':'Agent Development Framework',
+    'Vercel AI SDK · LangGraph':'Vercel AI SDK · LangGraph',
+    'Workflow Orchestration':'Workflow Orchestration',
+    'Dify · n8n':'Dify · n8n',
+    'Data Engineering & AI for BI':'Data Engineering & AI for BI',
+    '企业级数据平台实践：统一接入、Lakehouse、DataOps 治理，并为 Data Agent / BI 提供可服务化的数据底座。':'Enterprise data platform practice: unified ingestion, Lakehouse, DataOps governance, and a serviceable data foundation for Data Agents and BI.',
+    '01. Data Integration · 数据集成':'01. Data Integration',
+    '02. Lakehouse & Compute · 湖仓与计算':'02. Lakehouse & Compute',
+    '03. DataOps & Governance · 开发与治理':'03. DataOps & Governance',
+    '04. Data Serving & AI Ready · 数据服务与智能分析':'04. Data Serving & AI Ready',
+    'Cloud Data Platform · 云数据中台':'Cloud Data Platform',
+    '基于阿里云数据中台能力实践，覆盖计算、实时服务与开发治理。':'Based on Alibaba Cloud data middle-platform practice—covering compute, real-time serving, and development governance.',
+    'Warehouse & Serving':'Warehouse & Serving',
+    'Dev & Governance':'Dev & Governance',
+    'Stream & Storage':'Stream & Storage',
+    'Landing Zone':'Landing Zone',
+    'Machine Learning & Deep Learning':'Machine Learning & Deep Learning',
+    'Math':'Math',
+    '概率基础、信息论、随机过程与采样方法。':'Probability, information theory, stochastic processes, and sampling.',
+    '概率与采样':'Probability & sampling',
+    '信息论':'Information theory',
+    'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy':'Entropy · Conditional Entropy · Mutual Information · Cross-Entropy',
+    'Monte Carlo Method':'Monte Carlo Method',
+    'Markov Chain':'Markov Chain',
+    'MCMC · Metropolis-Hastings':'MCMC · Metropolis-Hastings',
+    'Gibbs Sampling':'Gibbs Sampling',
+    'Full-Stack Engineering':'Full-Stack Engineering',
+    'Full-Stack Engineering & Product Delivery':'Full-Stack Engineering & Product Delivery',
+    '覆盖前端应用、后端服务、数据架构、安全治理与系统集成，具备从架构设计、技术选型、工程实现到独立产品交付的端到端能力，专注构建可扩展、可维护、可观测、可持续演进的企业级软件系统。':'Covers frontend applications, backend services, data architecture, security governance, and system integration—with end-to-end capability from architecture design and technology selection through engineering implementation to independent product delivery, focused on building scalable, maintainable, observable, and continuously evolving enterprise software systems.',
+    '01. Frontend Engineering · 前端工程':'01. Frontend Engineering',
+    '前端架构、应用开发与交互体验':'Frontend architecture, application development, and interaction experience',
+    '02. Backend & API Engineering · 后端与接口工程':'02. Backend & API Engineering',
+    '服务架构、API 设计与业务逻辑实现':'Service architecture, API design, and business logic implementation',
+    '03. Data Access & Persistence · 数据访问与持久化':'03. Data Access & Persistence',
+    '数据建模、存储抽象与持久化架构':'Data modeling, storage abstraction, and persistence architecture',
+    '04. Security & Engineering Governance · 安全与工程治理':'04. Security & Engineering Governance',
+    '身份认证、权限控制、接口规范与质量保障':'Authentication, authorization, API standards, and quality assurance',
+    'Engineering Practices · 工程方法与交付能力':'Engineering Practices',
+    '01. Architecture & Design · 架构设计':'01. Architecture & Design',
+    '02. Engineering & Integration · 工程实现与系统集成':'02. Engineering & Integration',
+    '03. Production & Delivery · 生产级交付':'03. Production & Delivery',
+    '面向独立产品交付的全栈工程：前端、Go / Python 服务、数据访问，以及认证、API 与工程化质量闭环。':'Full-stack engineering for independent product delivery: frontend, Go/Python services, data access, plus authentication, APIs, and an engineering quality loop.',
+    '02. Backend Services · 后端服务':'02. Backend Services',
+    '04. Auth, API & Quality · 认证、接口与质量':'04. Auth, API & Quality',
+    'Project Practice · 工程实践':'Project Practice',
+    '按产品形态归类，覆盖管理后台、服务骨架、图谱 ORM、认证服务与平台控制面。':'Grouped by product form—covering admin scaffolds, service toolkits, graph ORM, auth services, and platform control planes.',
+    'Admin Scaffold':'Admin Scaffold',
+    'Service Toolkit':'Service Toolkit',
+    'Graph ORM':'Graph ORM',
+    'Auth Service':'Auth Service',
+    'Platform Control Plane':'Platform Control Plane',
+    'Kubernetes Client':'Kubernetes Client',
+    'Platform Engineering & Cloud Native':'Platform Engineering & Cloud Native',
+    'CAPABILITIES':'CAPABILITIES',
+    '覆盖 Harness Engineering、数据平台、建模算法、全栈工程与云原生交付，具备从技术架构设计到生产级落地的端到端能力，注重系统的可扩展性、可审计性与可运维性。':'Covers Harness Engineering, data platforms, modeling algorithms, full-stack engineering, and cloud-native delivery—with end-to-end capability from technical architecture to production rollout, emphasizing scalability, auditability, and operability.',
+    '面向生产环境的智能体架构设计、运行时编排与知识增强能力。':'Production-oriented agent architecture, runtime orchestration, and knowledge augmentation.',
+    '架构与推理范式':'Architecture & reasoning patterns',
+    'LangGraph · Multi-Agent · ReAct · Plan-and-Solve':'LangGraph · Multi-Agent · ReAct · Plan-and-Solve',
+    '运行时与工具编排':'Runtime & tool orchestration',
+    'Agent Harness · MCP · Skills · Workflow Orchestration':'Agent Harness · MCP · Skills · Workflow Orchestration',
+    '检索与上下文工程':'Retrieval & context engineering',
+    'RAG · GraphRAG · Memory · Tool Use · Context Management':'RAG · GraphRAG · Memory · Tool Use · Context Management',
+    '数据接入、平台治理与面向分析场景的智能问数能力。':'Data ingestion, platform governance, and analytics-oriented intelligent Q&A.',
+    '数据计算与接入':'Data compute & ingestion',
+    'NumPy · Pandas · PySpark · Hive · Flink · CDC':'NumPy · Pandas · PySpark · Hive · Flink · CDC',
+    '平台与数据治理':'Platform & data governance',
+    'Atlas · 批流一体 · 数据集成 · 元数据治理 · 语义层':'Atlas · batch/stream · integration · metadata governance · semantic layer',
+    '智能分析与问数':'Intelligent analytics & Q&A',
+    'Data Agent · Text-to-SQL · 自然语言数据分析':'Data Agent · Text-to-SQL · natural-language analytics',
+    '经典机器学习':'Classical machine learning',
+    '分类':'Classification',
+    '回归':'Regression',
+    '聚类':'Clustering',
+    '聚类 · 主题 · 关联':'Clustering · Topic · Association',
+    '序列 · 集成':'Sequence · Ensemble',
+    '降维':'Dimensionality reduction',
+    'PCA · SVD':'PCA · SVD',
+    'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt':'Naive Bayes · Logistic Regression · SVM · Decision Tree · KNN · MaxEnt',
+    'Linear Regression · Ridge · Lasso · Tree Regression':'Linear Regression · Ridge · Lasso · Tree Regression',
+    'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth':'K-Means · Hierarchical Clustering · LDA · pLSA · EM · Apriori · FP-Growth',
+    'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM':'HMM · MEMM · CRF · AdaBoost · GBDT · XGBoost · LightGBM',
+    '典型学习任务：回归（连续值预测）、分类（标签判别）、聚类（无监督分群）':'Typical tasks: regression (continuous prediction), classification (label discrimination), clustering (unsupervised grouping)',
+    '深度学习与 NLP':'Deep learning & NLP',
+    '深度学习 · NLP':'Deep learning · NLP',
+    '深度学习 · Vision & Gen':'Deep learning · Vision & Gen',
+    '深度学习 · Graph':'Deep learning · Graph',
+    'Analytics':'Analytics',
+    'PageRank · HITS':'PageRank · HITS',
+    'Embedding':'Embedding',
+    'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES':'DeepWalk · LINE · node2vec · SDNE · struc2vec · EGES',
+    'Message Passing':'Message passing',
+    'GCN · GAT · GraphSAGE':'GCN · GAT · GraphSAGE',
+    'Signed · Directed':'Signed · Directed',
+    'SGCN · SiGAT · SDGNN':'SGCN · SiGAT · SDGNN',
+    'Heterogeneous':'Heterogeneous',
+    'HAN · GTN · metapath2vec · GATNE · BiNE':'HAN · GTN · metapath2vec · GATNE · BiNE',
+    'Dynamic':'Dynamic',
+    'DySAT · EvolveGCN · TGAT · DGNN':'DySAT · EvolveGCN · TGAT · DGNN',
+    '深度学习 · RL':'Deep learning · RL',
+    'Foundations':'Foundations',
+    'MDP · MRP · POMDP · Bellman':'MDP · MRP · POMDP · Bellman',
+    'Bootstrapping':'Bootstrapping',
+    'MC · TD · DP · n-step TD · TD(λ)':'MC · TD · DP · n-step TD · TD(λ)',
+    'Tabular':'Tabular',
+    'Q-Learning · SARSA':'Q-Learning · SARSA',
+    'Deep Value':'Deep value',
+    'DQN · Double DQN · Prioritized ER':'DQN · Double DQN · Prioritized ER',
+    'Policy · Actor-Critic':'Policy · Actor-Critic',
+    'Policy Gradient · Actor-Critic · PPO · DDPG':'Policy Gradient · Actor-Critic · PPO · DDPG',
+    'Word Repr.':'Word representation',
+    'Autoencoder LM':'Autoencoder LM',
+    'Autoregressive LM':'Autoregressive LM',
+    'Sequence':'Sequence',
+    'Vision':'Vision',
+    'Backbone':'Backbone',
+    'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet':'LeNet · AlexNet · ResNet · ViT · Swin · MobileViT · CapsNet',
+    'Detection':'Detection',
+    'Faster R-CNN · YOLO':'Faster R-CNN · YOLO',
+    'Classical CV':'Classical CV',
+    'Morphology · Binary Ops · Hough · Augmentation':'Morphology · Binary Ops · Hough · Augmentation',
+    'OpenCV':'OpenCV',
+    'OpenCV · cv2 Pipeline':'OpenCV · cv2 Pipeline',
+    'Generative':'Generative',
+    'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo':'One-Hot · GloVe · Word2Vec · FastText · TextCNN · ELMo',
+    'Transformer · Transformer-XL':'Transformer · Transformer-XL',
+    'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5':'BERT · ALBERT · RoBERTa · ERNIE · XLNet · BART · T5',
+    'GPT-1 · GPT-2 · GPT-3 · InstructGPT':'GPT-1 · GPT-2 · GPT-3 · InstructGPT',
+    'RNN · LSTM · Attention':'RNN · LSTM · Attention',
+    'GAN · U-Net · VAE · Flow':'GAN · U-Net · VAE · Flow',
+    'Protein':'Protein',
+    'ESM · AlphaFold2':'ESM · AlphaFold2',
+    '覆盖经典建模、深度网络、训练框架与模型全生命周期工程。':'Classical modeling, deep networks, training frameworks, and full model lifecycle engineering.',
+    '训练与推理框架':'Training & inference frameworks',
+    'PyTorch · TensorFlow · Scikit-learn':'PyTorch · TensorFlow · Scikit-learn',
+    'MLOps 与模型工程':'MLOps & model engineering',
+    'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment':'Feature Engineering · Model Evaluation · Cross-Validation · Ensembling · Explainability · Deployment',
+    '支撑独立产品交付的前后端开发、数据访问与工程化质量保障。':'Full-stack development, data access, and engineering quality for independent product delivery.',
+    '前端工程':'Frontend engineering',
+    'React · Vue · TypeScript · HTML · CSS':'React · Vue · TypeScript · HTML · CSS',
+    '后端与服务架构':'Backend & service architecture',
+    'Go · Python · Java · Microservices · Serverless':'Go · Python · Java · Microservices · Serverless',
+    '持久化与缓存':'Persistence & caching',
+    'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ':'SQL · PostgreSQL · MySQL · Redis · Kafka · RabbitMQ',
+    '集成与交付质量':'Integration & delivery quality',
+    'API Integration · AuthN/AuthZ · Automated Testing · 全栈协同交付':'API Integration · AuthN/AuthZ · Automated Testing · full-stack collaborative delivery',
+    '企业级平台架构、云原生运维与多云环境落地经验。':'Enterprise platform architecture, cloud-native operations, and multi-cloud delivery.',
+    '平台与 API 治理':'Platform & API governance',
+    'Microservices · API Design & Governance · Enterprise Platform':'Microservices · API Design & Governance · Enterprise Platform',
+    'Kubernetes · Docker · CI/CD · Automated Release':'Kubernetes · Docker · CI/CD · Automated Release',
+    '多云基础设施':'Multi-cloud infrastructure',
+    'Microsoft Azure · Alibaba Cloud · Tencent Cloud':'Microsoft Azure · Alibaba Cloud · Tencent Cloud',
+    '经历与教育':'Experience and education',
+    '药明生物 · Manager Data Scientist':'WuXi Biologics · Manager Data Scientist',
+    'CMC 数据底座、Agent 与算法落地':'CMC data foundations, Agents, and algorithm delivery',
+    '对接分子分析与 PD，主导 Atlas 多云数据平台从 0 到 1；交付 Digital Control Tower（CMC Agent）、ProteinKG 知识层、PlatformSuite DevOps 与 Biosuite 生信 PaaS；落地 CLD 单克隆识别、上游 PD 预测与分子分析结构化入图谱等算法服务。':'Partnering with molecular analytics and PD; built Atlas multi-cloud data platform; delivered Digital Control Tower, ProteinKG, PlatformSuite DevOps, Biosuite PaaS, and algorithms including CLD clone picking and upstream PD modeling.',
+    '运去哪 · 算法实习生':'YQN · Algorithm intern',
+    '单证 OCR 与文档理解':'Document OCR and understanding',
+    '单证 OCR / PDF 解析与规则抽取；调研 LayoutLMv2、BiLSTM+CRF 等 NER 方案；使用 Git / Docker 参与团队协作。':'OCR/PDF parsing and rule extraction; explored LayoutLMv2 and BiLSTM+CRF NER; collaborated with Git and Docker.',
+    '货拉拉 · 算法实习生':'Lalamove · Algorithm intern',
+    '亿级 POI 父子关系识别':'Large-scale POI parent–child linking',
+    '面向约 1.5 亿级 POI 的父子关系任务：CRF++ 名称结构化 + 周边召回与语义匹配，准确率 97.97%、召回率 95.35%。':'~150M POI parent–child task with CRF++ structuring and semantic matching—97.97% precision, 95.35% recall.',
+    '上海海事大学 · 硕士':'Shanghai Maritime University · M.Sc.',
+    '计算机科学与技术（NLP 方向）':'Computer Science (NLP focus)',
+    '研究方向：命名实体识别、预训练语言模型。第十七届中国研究生数学建模竞赛全国一等奖。':'NER and pre-trained language models; national first prize in China Graduate Mathematical Contest in Modeling.',
+    '吉林师范大学 · 学士':'Jilin Normal University · B.Sc.',
+    '信息管理与信息系统':'Information Management and Information Systems',
+    'GPA 3.8；第三届图灵杯 ACM 程序设计比赛全国三等奖（团队赛）。':'GPA 3.8; national third prize, 3rd Turing Cup ACM team contest.',
+    '我会持续分享项目拆解、架构选择、踩坑记录与学习笔记——涵盖 Agent、数据平台、机器学习与 CMC 数字化等方向，希望帮助读者更快建立自己的判断框架。':'I share breakdowns, architecture choices, lessons learned, and notes on Agents, data platforms, ML, and CMC digitalization.',
+    '如果你对 Agent Harness、企业数据平台、CMC 数字化、机器学习工程或知识管理感兴趣，欢迎通过 GitHub 联系交流。':'Interested in Agent Harness, enterprise data platforms, CMC digitalization, ML engineering, or knowledge management? Reach out on GitHub.',
+    '⌂ 个人站点':'⌂ Personal site',
+    '算法、数据平台与 Agent Harness 的工程实践者。':'An engineer focused on algorithms, data platforms, and Agent Harness.',
+    '从 0 到 1 搭建数据底座与 DevOps 平台，在 CMC 场景交付可工具接地、结论可追溯的智能体系统；并持续记录架构选择与实践复盘。':'Building data foundations and DevOps from zero to one; delivering traceable, tool-grounded Agents in CMC—and documenting architecture choices along the way.',
+    'AI Agent、数据工程、机器学习与平台架构实践。':'AI agents, data engineering, machine learning, and platform architecture.',
+    'Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'Agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '个人技术门户，记录 Agent、数据平台、DevOps、机器学习、深度学习与 CMC 生物制药实践。':'A personal tech hub for agents, data platforms, DevOps, machine learning, deep learning, and CMC biopharmaceutical practice.',
+    '学习笔记 · Boyang Wang':'Study notes · Boyang Wang',
+    'Markdown 结构化学习笔记，来自 personal-knowledge-wiki 的 wiki 目录。':'Structured Markdown study notes from the wiki folder in personal-knowledge-wiki.',
+    '学习笔记':'Study notes',
+    '展示 wiki 子模块中的 Markdown 笔记（提炼自 raw 资料）。经审核对外发布的副本仍见':'Markdown notes from the wiki submodule (distilled from raw materials). Reviewed public copies are in the',
+    '知识库 ↗':'Knowledge base ↗',
+    '笔记目录':'Notes directory',
+    '全部笔记':'All notes',
+    '渲染 Markdown 正文；含 draft 状态条目，便于持续迭代。':'Renders Markdown bodies, including draft entries for ongoing iteration.',
+    '暂无 wiki 笔记。在':'No wiki notes yet. Add Markdown under',
+    '添加 Markdown 并 push 后重新部署门户即可。':'then redeploy the portal.',
+    '与知识库的区别':'Notes vs knowledge base',
+    '读取':'reads',
+    '（迭代中）；':' (work in progress);',
+    '（审核后公开）。':' (reviewed public).',
+    '← 返回笔记':'← Back to notes',
+    'Wiki 笔记':'Wiki note',
+    '若该主题已有审核版，可在':'If a reviewed version exists, see the',
+    '查看 publish 副本（路径相同时）。':' entry in the knowledge base (when paths match).',
+    '篇 wiki 笔记':' wiki notes',
+    '已关联 wiki':'Wiki linked',
+    '切换到英文':'Switch to English',
+    '1. 为什么随机拆分可能不够':'1. Why random splits may fail',
+    '如果同一实验、批次或小罐—大罐配对的样本同时出现在训练集和验证集，模型可能间接记住相近样本，得到偏乐观的指标。':'If samples from the same experiment, batch, or small-to-large paired runs appear in both train and validation sets, the model may memorize similar examples and report overly optimistic metrics.',
+    '2. 按业务实体分组':'2. Group by business entities',
+    '先确定真正独立的分组单位，再执行 GroupKFold 或等价的分组策略。预处理、特征选择和调参都应限制在每个训练折内部，避免验证信息进入训练流程。':'Identify truly independent grouping units first, then use GroupKFold or an equivalent strategy. Preprocessing, feature selection, and tuning must stay inside each training fold so validation information never leaks into training.',
+    '3. OOF 与独立测试集的职责':'3. Roles of OOF and a holdout test set',
+    'OOF 预测可用于比较候选方案和观察整体误差；独立测试集应尽量锁定，直到模型和参数选择完成后再进行最终评估。指标之外，也要检查残差、分组表现和适用范围。':'OOF predictions help compare candidates and inspect overall error; lock a holdout test set until modeling and tuning are done, then run a final evaluation. Beyond metrics, review residuals, group-level performance, and applicability.',
+    '1. 分层评估':'1. Layered evaluation',
+    '最终答案质量只是一个维度。还应评估任务是否完成、工具选择是否正确、参数是否符合 schema、是否遵守权限边界，以及执行成本和响应延迟。':'Final answer quality is only one dimension. Also measure task completion, correct tool choice, schema-valid parameters, permission boundaries, cost, and latency.',
+    '2. 用可复现的评估集':'2. Use reproducible evaluation sets',
+    '建立覆盖常见、边界和失败场景的测试集，记录输入、期望行为和评分标准。模型、提示词、工具或工作流改动后，运行回归评估。':'Build test sets for common, edge, and failure cases with inputs, expected behavior, and rubrics. Run regression evaluation after changing models, prompts, tools, or workflows.',
+    '3. 评估轨迹与失败原因':'3. Evaluate trajectories and failure modes',
+    '保留关键步骤的结构化日志，区分检索失败、规划失败、工具失败和最终生成失败。失败分类能帮助团队优先修复系统短板，而不是只修改提示词。':'Keep structured logs for critical steps and separate retrieval, planning, tool, and generation failures. Failure taxonomy helps teams fix systemic gaps instead of only tweaking prompts.',
+    'Skill':'Skill',
+    'Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang',
+    '收藏 Cursor Agent Skill，来源 personal-knowledge-wiki/raw/4-Skill。':'A collection of Cursor Agent Skills from personal-knowledge-wiki/raw/4-Skill.',
+    '可复用的 Agent 工作流与规范 · 每个目录一份':'Reusable Agent workflows and conventions · one',
+    '个 Skill':' skills',
+    '未找到目录':'Directory not found',
+    '目录':'Sections',
+    '总览':'Overview',
+    '遵循 Cursor Skill 格式：':'Follow the Cursor Skill format:',
+    '写在 YAML 头；正文为 Agent 执行说明。':' in YAML frontmatter; body text for Agent instructions.',
+    'Wiki 仓库 ↗':'Wiki repo ↗',
+    '暂无 Skill。在 wiki 仓库':'No skills yet. In the wiki repo, add',
+    '下添加文件，保存后重新构建站点即可出现在此。':' then rebuild the site to list them here.',
+    '文件约定':'File conventions',
+    '遵循 Cursor Skill 格式：frontmatter 含':'Follow the Cursor Skill format: frontmatter with',
+    '；正文为 Agent 执行说明。可选子目录':'; body text for Agent instructions. Optional subfolders like',
+    '等不会被当作独立 Skill。':' are not treated as separate skills.',
+    '← 返回 Skill':'← Back to skills',
+    '未找到 Skill 目录':'Skill directory not found',
+  });
+  const enToZh = Object.fromEntries(Object.entries(zhToEn).map(([zh,en]) => [en,zh]));
+  const dictKeysByLength = Object.keys(zhToEn).sort((a, b) => b.length - a.length);
+  const enPatterns = [
+    [/阅读约\s*(\d+)\s*分钟/g, '~$1 min read'],
+    [/阅读\s*(\d+)\s*分钟/g, '$1 min read'],
+    [/(\d+)\s*篇笔记/g, '$1 notes'],
+    [/(\d+)\s*个 Skill/g, '$1 skills'],
+  ];
+  const zhPatterns = [
+    [/~\s*(\d+)\s*min read/g, '阅读约 $1 分钟'],
+    [/(\d+)\s*min read/g, '阅读 $1 分钟'],
+    [/(\d+)\s*notes/g, '$1 篇笔记'],
+    [/(\d+)\s*skills/g, '$1 个 Skill'],
+  ];
+  const transformText = (core, lang, dict) => {
+    if (!core) return core;
+    let translated = core;
+    const keys = lang === 'en' ? dictKeysByLength : Object.keys(dict).sort((a, b) => b.length - a.length);
+    for (const key of keys) {
+      if (!translated.includes(key)) continue;
+      translated = translated.split(key).join(dict[key]);
+    }
+    const patterns = lang === 'en' ? enPatterns : zhPatterns;
+    for (const [pattern, replacement] of patterns) translated = translated.replace(pattern, replacement);
+    return translated;
+  };
+  const translate = (lang) => {
+    const dict = lang === 'en' ? zhToEn : enToZh;
+    const textWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      const value = node.nodeValue ?? '';
+      const match = value.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      if (!match || !match[2]) return;
+      const translated = transformText(match[2], lang, dict);
+      if (translated !== match[2]) node.nodeValue = `${match[1]}${translated}${match[3]}`;
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title]').forEach((el) => {
+      for (const attr of ['placeholder','aria-label','title']) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const next = transformText(value, lang, dict);
+        if (next !== value) el.setAttribute(attr, next);
+      }
+    });
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      const content = metaDescription.getAttribute('content');
+      if (content) {
+        const next = transformText(content, lang, dict);
+        if (next !== content) metaDescription.setAttribute('content', next);
+      }
+    }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    localStorage.setItem('language', lang);
+    const titleMap = {'关于我 · Boyang Wang':'About · Boyang Wang','技术博客 · Boyang Wang':'Technical blog · Boyang Wang','学习笔记 · Boyang Wang':'Study notes · Boyang Wang','技术知识库 · Boyang Wang':'Knowledge base · Boyang Wang','Agent Skill · Boyang Wang':'Agent Skills · Boyang Wang','Boyang Wang · AI & Data Engineering':'Boyang Wang · AI & Data Engineering'};
+    const reverseTitleMap = Object.fromEntries(Object.entries(titleMap).map(([zh,en]) => [en,zh]));
+    const titleSuffix = ' · Boyang Wang';
+    if (document.title.endsWith(titleSuffix)) {
+      const titleCore = document.title.slice(0, -titleSuffix.length);
+      const nextCore = transformText(titleCore, lang, dict);
+      if (nextCore !== titleCore) document.title = `${nextCore}${titleSuffix}`;
+    }
+    if (lang === 'en' && titleMap[document.title]) document.title = titleMap[document.title];
+    if (lang !== 'en' && reverseTitleMap[document.title]) document.title = reverseTitleMap[document.title];
+    const languageButton = document.querySelector('#language-toggle');
+    if (languageButton) {
+      const english = lang === 'en';
+      languageButton.textContent = english ? 'ZH' : 'EN';
+      languageButton.setAttribute('aria-label', english ? 'Switch to Chinese' : '切换到英文');
+      languageButton.setAttribute('title', english ? 'Switch to Chinese' : '切换到英文');
+    }
+  };
+  if (localStorage.getItem('language') === 'en') translate('en');
+  window.addEventListener('language-change', (event) => translate(event.detail));
+</script> </body></html> <script type="module">const g=[...document.querySelectorAll("[data-page-zh][data-page-en]")],i=c=>{g.forEach(a=>{a.textContent=c==="en"?a.dataset.pageEn??"":a.dataset.pageZh??""})};i(document.documentElement.lang);window.addEventListener("language-change",c=>{i(c.detail)});const s=[...document.querySelectorAll(".post-toc-link")];if(s.length>0){const c=new Map(s.map(e=>[decodeURIComponent(e.hash.slice(1)),e])),a=window.expandTocBranchForLink,r=e=>{s.forEach(n=>{const t=decodeURIComponent(n.hash.slice(1))===e;n.classList.toggle("is-active",t),t?(n.setAttribute("aria-current","location"),a?.(n)):n.removeAttribute("aria-current")})},o=[...document.querySelectorAll(".prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id]")].filter(e=>c.has(e.id));if(o.length>0){r(o[0].id);const e=()=>{const l=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2?o[o.length-1]:o.reduce((h,d)=>d.getBoundingClientRect().top<=112?d:h,o[0]);r(l.id)},n=new IntersectionObserver(e,{rootMargin:"-96px 0px -65% 0px",threshold:[0,1]});o.forEach(t=>n.observe(t)),window.addEventListener("scroll",e,{passive:!0}),s.forEach(t=>t.addEventListener("click",()=>r(decodeURIComponent(t.hash.slice(1)))))}}</script> 
